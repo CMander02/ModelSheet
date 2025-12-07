@@ -215,9 +215,12 @@ class ModelParser:
         total_attention = num_layers * attention_per_layer
 
         # MoE FFN layers
-        # Each routed expert has: up_proj + down_proj
-        params_per_routed_expert = 2 * hidden_size * moe_intermediate_size
-        params_per_shared_expert = 2 * hidden_size * moe_intermediate_size if n_shared_experts > 0 else 0
+        # Each routed expert has: gate_proj + up_proj + down_proj
+        # gate_proj: hidden → moe_intermediate
+        # up_proj: hidden → moe_intermediate
+        # down_proj: moe_intermediate → hidden
+        params_per_routed_expert = 3 * hidden_size * moe_intermediate_size
+        params_per_shared_expert = 3 * hidden_size * moe_intermediate_size if n_shared_experts > 0 else 0
 
         # Total: all experts in all MoE layers
         total_routed_params = num_layers * n_routed_experts * params_per_routed_expert

@@ -119,8 +119,8 @@
     "name": "Mixtral-8x7B-Instruct-v0.1",
     "provider": "Mistral AI",
     "huggingfaceUrl": "https://huggingface.co/mistralai/Mixtral-8x7B-Instruct-v0.1",
-    "totalParameters": 32343326720,
-    "activeParameters": 9794748416,
+    "totalParameters": 47375712256,
+    "activeParameters": 13552844800,
     "contextLength": 32768,
     "embeddingDim": 4096,
     "vocabSize": 32000,
@@ -144,7 +144,7 @@
     "isMoe": true,
     "hasChatTemplate": true,
     "isAdapter": false,
-    "updatedAt": "2025-12-07T06:24:42.021955Z"
+    "updatedAt": "2025-12-07T06:30:41.456549Z"
   },
   {
     "id": "Qwen/Qwen2.5-0.5B",
@@ -4062,7 +4062,8 @@
     "name": "Qwen3-30B-A3B",
     "provider": "Alibaba",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-30B-A3B",
-    "totalParameters": 2324430848,
+    "totalParameters": 30107500544,
+    "activeParameters": 2928410624,
     "contextLength": 40960,
     "embeddingDim": 2048,
     "vocabSize": 151936,
@@ -4085,7 +4086,7 @@
     "isMoe": true,
     "hasChatTemplate": true,
     "isAdapter": false,
-    "updatedAt": "2025-12-07T06:15:18.850058Z"
+    "updatedAt": "2025-12-07T06:30:06.679513Z"
   },
   {
     "id": "Qwen/Qwen3-30B-A3B-Base",
@@ -6498,8 +6499,8 @@
     "name": "DeepSeek-R1",
     "provider": "DeepSeek",
     "huggingfaceUrl": "https://huggingface.co/deepseek-ai/DeepSeek-R1",
-    "totalParameters": 473742180352,
-    "activeParameters": 29582163968,
+    "totalParameters": 703881543680,
+    "activeParameters": 37641519104,
     "contextLength": 163840,
     "embeddingDim": 7168,
     "vocabSize": 129280,
@@ -6523,7 +6524,7 @@
     "isMoe": true,
     "hasChatTemplate": true,
     "isAdapter": false,
-    "updatedAt": "2025-12-07T06:24:17.088809Z"
+    "updatedAt": "2025-12-07T06:30:25.875297Z"
   },
   {
     "id": "deepseek-ai/DeepSeek-R1-0528",

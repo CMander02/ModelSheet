@@ -1,0 +1,1052 @@
+  OK Unknown params, ? ctx, Unknown
+[2/520] 01-ai/Yi-1.5-34B
+  OK 30.4B params, 4096 ctx, llama
+[3/520] 01-ai/Yi-1.5-34B-Chat
+  OK 30.4B params, 4096 ctx, llama
+[4/520] 01-ai/Yi-1.5-34B-Chat-16K
+  OK 30.4B params, 16384 ctx, llama
+[5/520] 01-ai/Yi-1.5-6B
+  OK 5.3B params, 4096 ctx, llama
+[6/520] 01-ai/Yi-1.5-6B-Chat
+  OK 5.3B params, 4096 ctx, llama
+[7/520] 01-ai/Yi-1.5-9B
+  OK 7.8B params, 4096 ctx, llama
+[8/520] 01-ai/Yi-1.5-9B-Chat
+  OK 7.8B params, 4096 ctx, llama
+[9/520] AI-MO/Kimina-Autoformalizer-7B
+  OK 5.8B params, 32768 ctx, qwen2
+[10/520] AI-MO/Kimina-Prover-Preview-Distill-7B
+  OK 5.8B params, 16384 ctx, qwen2
+[11/520] AIDC-AI/Ovis2-1B
+  OK Unknown params, ? ctx, ovis
+[12/520] AIDC-AI/Ovis2-2B
+  OK Unknown params, ? ctx, ovis
+[13/520] AIDC-AI/Ovis2.5-2B
+  OK Unknown params, 40960 ctx, ovis2_5
+[14/520] AIDC-AI/Ovis2.5-9B
+  OK Unknown params, 40960 ctx, ovis2_5
+[15/520] Alibaba-NLP/gte-Qwen2-1.5B-instruct
+  OK 1.3B params, 131072 ctx, qwen2
+[16/520] Alibaba-NLP/gte-Qwen2-7B-instruct
+  OK 5.8B params, 131072 ctx, qwen2
+[17/520] BAAI/bge-m3
+  OK 558.0M params, 8194 ctx, xlm-roberta
+[18/520] BAAI/bge-multilingual-gemma2
+  OK 7.4B params, 8192 ctx, gemma2
+[19/520] BAAI/bge-reranker-v2-gemma
+  OK 2.0B params, 8192 ctx, gemma
+[20/520] BAAI/bge-reranker-v2-m3
+  OK 558.0M params, 8194 ctx, xlm-roberta
+[21/520] ByteDance-Seed/Seed-Coder-8B-Base
+  OK 6.5B params, 32768 ctx, llama
+[22/520] ByteDance-Seed/Seed-Coder-8B-Instruct
+  OK 6.5B params, 32768 ctx, llama
+[23/520] ByteDance-Seed/Seed-Coder-8B-Reasoning
+  OK 6.5B params, 65536 ctx, llama
+[24/520] ByteDance-Seed/Seed-OSS-36B-Base
+  OK 25.6B params, 524288 ctx, seed_oss
+[25/520] ByteDance-Seed/Seed-OSS-36B-Base-woSyn
+  OK 25.6B params, 524288 ctx, seed_oss
+[26/520] ByteDance-Seed/Seed-OSS-36B-Instruct
+  OK 25.6B params, 524288 ctx, seed_oss
+[27/520] BytedTsinghua-SIA/DAPO-Qwen-32B
+  OK 25.6B params, 131072 ctx, qwen2
+[28/520] Elron/bleurt-tiny-512
+  OK 4.3M params, 512 ctx, bert
+[29/520] Enxin/MovieChat-vicuna
+  OK 5.2B params, 2048 ctx, llama
+[30/520] FunAudioLLM/CosyVoice-300M-Instruct
+  OK Unknown params, ? ctx, Unknown
+[31/520] GAIR/LIMO
+  OK 25.6B params, 32768 ctx, qwen2
+[32/520] GAIR/ToRL-7B
+  OK 5.8B params, 4096 ctx, qwen2
+[33/520] Helsinki-NLP/opus-mt-en-de
+  OK Unknown params, 512 ctx, marian
+[34/520] HuggingFaceH4/zephyr-7b-beta
+  OK 6.0B params, 32768 ctx, mistral
+[35/520] IAAR-Shanghai/xVerify-0.5B-I
+  OK 422.4M params, 32768 ctx, qwen2
+[36/520] IAAR-Shanghai/xVerify-3B-Ia
+  OK 2.9B params, 131072 ctx, llama
+[37/520] IAAR-Shanghai/xVerify-8B-I
+  OK 6.4B params, 131072 ctx, llama
+[38/520] IAAR-Shanghai/xVerify-9B-C
+  OK Unknown params, 131072 ctx, chatglm
+[39/520] KbsdJames/Omni-Judge
+  OK 6.4B params, 131072 ctx, llama
+[40/520] Maple728/TimeMoE-200M
+  OK Unknown params, 4096 ctx, time_moe
+[41/520] Maple728/TimeMoE-50M
+  OK Unknown params, 4096 ctx, time_moe
+[42/520] MiniMaxAI/MiniMax-M1-80k
+  OK 22.4B params, 10240000 ctx, minimax_m1
+[43/520] MiniMaxAI/MiniMax-Text-01
+  OK 22.4B params, 10240000 ctx, minimax_text_01
+[44/520] NovaSky-AI/Sky-T1-32B-Flash
+  OK 25.6B params, 32768 ctx, qwen2
+[45/520] NovaSky-AI/Sky-T1-32B-Preview
+  OK 25.6B params, 32768 ctx, qwen2
+[46/520] OpenGVLab/InternVL2_5-8B-MPO
+  OK Unknown params, ? ctx, internvl_chat
+[47/520] OrionStarAI/Orion-14B-LongChat
+  OK 10.9B params, 200000 ctx, orion
+[48/520] POLARIS-Project/Polaris-4B-Preview
+  OK 3.1B params, 131072 ctx, qwen3
+[49/520] PRIME-RL/Eurus-2-7B-PRIME
+  OK 5.8B params, 4096 ctx, qwen2
+[50/520] PeterJinGo/SearchR1-nq_hotpotqa_train-qwen2.5-7b-em-ppo
+  OK 5.8B params, 131072 ctx, qwen2
+[51/520] Qdrant/all_miniLM_L6_v2_with_attentions
+  OK 22.3M params, 512 ctx, bert
+[52/520] Qwen/CodeQwen1.5-7B
+  OK 6.0B params, 65536 ctx, qwen2
+[53/520] Qwen/CodeQwen1.5-7B-Chat
+  OK 6.0B params, 65536 ctx, qwen2
+[54/520] Qwen/QVQ-72B-Preview
+  OK 61.5B params, 128000 ctx, qwen2_vl
+[55/520] Qwen/QWen3-1.7B
+  OK 1.5B params, 40960 ctx, qwen3
+[56/520] Qwen/QwQ-32B
+  OK 25.6B params, 40960 ctx, qwen2
+[57/520] Qwen/QwQ-32B-Preview
+  OK 25.6B params, 32768 ctx, qwen2
+[58/520] Qwen/Qwen-14B
+  OK 16.2B params, 8192 ctx, qwen
+[59/520] Qwen/Qwen-14B-Chat
+  OK 16.2B params, 8192 ctx, qwen
+[60/520] Qwen/Qwen-1_8B
+  OK 1.8B params, 8192 ctx, qwen
+[61/520] Qwen/Qwen-1_8B-Chat
+  OK 1.8B params, 8192 ctx, qwen
+[62/520] Qwen/Qwen-72B
+  OK 87.1B params, 32768 ctx, qwen
+[63/520] Qwen/Qwen-72B-Chat
+  OK 87.1B params, 32768 ctx, qwen
+[64/520] Qwen/Qwen-7B
+  OK 8.5B params, 32768 ctx, qwen
+[65/520] Qwen/Qwen-7B-Chat
+  OK 8.5B params, 32768 ctx, qwen
+[66/520] Qwen/Qwen-VL-Chat
+  OK 8.5B params, 8192 ctx, qwen
+[67/520] Qwen/Qwen1.5-0.5B
+  OK 394.7M params, 32768 ctx, qwen2
+[68/520] Qwen/Qwen1.5-0.5B-Chat
+  OK 394.7M params, 32768 ctx, qwen2
+[69/520] Qwen/Qwen1.5-1.8B
+  OK 1.3B params, 32768 ctx, qwen2
+[70/520] Qwen/Qwen1.5-1.8B-Chat
+  OK 1.3B params, 32768 ctx, qwen2
+[71/520] Qwen/Qwen1.5-110B
+  OK 87.1B params, 32768 ctx, qwen2
+[72/520] Qwen/Qwen1.5-110B-Chat
+  OK 87.1B params, 32768 ctx, qwen2
+[73/520] Qwen/Qwen1.5-14B
+  OK 10.6B params, 32768 ctx, qwen2
+[74/520] Qwen/Qwen1.5-14B-Chat
+  OK 10.6B params, 32768 ctx, qwen2
+[75/520] Qwen/Qwen1.5-32B
+  OK 25.4B params, 32768 ctx, qwen2
+[76/520] Qwen/Qwen1.5-32B-Chat
+  OK 25.4B params, 32768 ctx, qwen2
+[77/520] Qwen/Qwen1.5-4B
+  OK 2.9B params, 32768 ctx, qwen2
+[78/520] Qwen/Qwen1.5-4B-Chat
+  OK 2.9B params, 32768 ctx, qwen2
+[79/520] Qwen/Qwen1.5-72B
+  OK 54.9B params, 32768 ctx, qwen2
+[80/520] Qwen/Qwen1.5-72B-Chat
+  OK 54.9B params, 32768 ctx, qwen2
+[81/520] Qwen/Qwen1.5-7B
+  OK 5.7B params, 32768 ctx, qwen2
+[82/520] Qwen/Qwen1.5-7B-Chat
+  OK 5.7B params, 32768 ctx, qwen2
+[83/520] Qwen/Qwen1.5-MoE-A2.7B
+  OK 1.3B params, 8192 ctx, qwen2_moe
+[84/520] Qwen/Qwen1.5-MoE-A2.7B-Chat
+  OK 1.3B params, 32768 ctx, qwen2_moe
+[85/520] Qwen/Qwen2-0.5B
+  OK 422.4M params, 131072 ctx, qwen2
+[86/520] Qwen/Qwen2-0.5B-Instruct
+  OK 422.4M params, 32768 ctx, qwen2
+[87/520] Qwen/Qwen2-1.5B
+  OK 1.3B params, 131072 ctx, qwen2
+[88/520] Qwen/Qwen2-1.5B-Instruct
+  OK 1.3B params, 32768 ctx, qwen2
+[89/520] Qwen/Qwen2-57B-A14B
+  OK 5.8B params, 131072 ctx, qwen2_moe
+[90/520] Qwen/Qwen2-57B-A14B-Instruct
+  OK 5.8B params, 32768 ctx, qwen2_moe
+[91/520] Qwen/Qwen2-72B
+  OK 61.5B params, 131072 ctx, qwen2
+[92/520] Qwen/Qwen2-72B-Instruct
+  OK 61.5B params, 32768 ctx, qwen2
+[93/520] Qwen/Qwen2-7B
+  OK 5.8B params, 131072 ctx, qwen2
+[94/520] Qwen/Qwen2-7B-Instruct
+  OK 5.8B params, 32768 ctx, qwen2
+[95/520] Qwen/Qwen2-Audio-7B
+  OK Unknown params, ? ctx, qwen2_audio
+[96/520] Qwen/Qwen2-Audio-7B-Instruct
+  OK Unknown params, ? ctx, qwen2_audio
+[97/520] Qwen/Qwen2-Math-7B
+  OK 5.8B params, 4096 ctx, qwen2
+[98/520] Qwen/Qwen2-Math-7B-Instruct
+  OK 5.8B params, 4096 ctx, qwen2
+[99/520] Qwen/Qwen2-VL-72B-Instruct
+  OK 61.5B params, 32768 ctx, qwen2_vl
+[100/520] Qwen/Qwen2-VL-7B-Instruct
+  OK 5.8B params, 32768 ctx, qwen2_vl
+[101/520] Qwen/Qwen2.5-0.5B
+  OK 422.4M params, 32768 ctx, qwen2
+[102/520] Qwen/Qwen2.5-0.5B-Instruct
+  OK 422.4M params, 32768 ctx, qwen2
+[103/520] Qwen/Qwen2.5-1.5B
+  OK 1.3B params, 131072 ctx, qwen2
+[104/520] Qwen/Qwen2.5-1.5B-Instruct
+  OK 1.3B params, 32768 ctx, qwen2
+[105/520] Qwen/Qwen2.5-14B
+  OK 12.6B params, 131072 ctx, qwen2
+[106/520] Qwen/Qwen2.5-14B-Instruct
+  OK 12.6B params, 32768 ctx, qwen2
+[107/520] Qwen/Qwen2.5-32B
+  OK 25.6B params, 131072 ctx, qwen2
+[108/520] Qwen/Qwen2.5-32B-Instruct
+  OK 25.6B params, 32768 ctx, qwen2
+[109/520] Qwen/Qwen2.5-3B
+  OK 2.5B params, 32768 ctx, qwen2
+[110/520] Qwen/Qwen2.5-3B-Instruct
+  OK 2.5B params, 32768 ctx, qwen2
+[111/520] Qwen/Qwen2.5-72B
+  OK 61.5B params, 131072 ctx, qwen2
+[112/520] Qwen/Qwen2.5-72B-Instruct
+  OK 61.5B params, 32768 ctx, qwen2
+[113/520] Qwen/Qwen2.5-72B-Instruct-longcontext
+  OK Unknown params, ? ctx, Unknown
+[114/520] Qwen/Qwen2.5-72b-Instruct
+  OK 61.5B params, 32768 ctx, qwen2
+[115/520] Qwen/Qwen2.5-7B
+  OK 5.8B params, 131072 ctx, qwen2
+[116/520] Qwen/Qwen2.5-7B-Instruct
+  OK 5.8B params, 32768 ctx, qwen2
+[117/520] Qwen/Qwen2.5-7B-Instruct-1M
+  OK 5.8B params, 1010000 ctx, qwen2
+[118/520] Qwen/Qwen2.5-7B-Instruct-Longcontext
+  OK Unknown params, ? ctx, Unknown
+[119/520] Qwen/Qwen2.5-7b
+  OK 5.8B params, 131072 ctx, qwen2
+[120/520] Qwen/Qwen2.5-Coder-1.5B
+  OK 1.3B params, 32768 ctx, qwen2
+[121/520] Qwen/Qwen2.5-Coder-1.5B-Instruct
+  OK 1.3B params, 32768 ctx, qwen2
+[122/520] Qwen/Qwen2.5-Coder-32B
+  OK 25.6B params, 32768 ctx, qwen2
+[123/520] Qwen/Qwen2.5-Coder-32B-Instruct
+  OK 25.6B params, 32768 ctx, qwen2
+[124/520] Qwen/Qwen2.5-Coder-7B
+  OK 5.8B params, 32768 ctx, qwen2
+[125/520] Qwen/Qwen2.5-Coder-7B-Instruct
+  OK 5.8B params, 32768 ctx, qwen2
+[126/520] Qwen/Qwen2.5-Math-1.5B
+  OK 1.3B params, 4096 ctx, qwen2
+[127/520] Qwen/Qwen2.5-Math-1.5B-Instruct
+  OK 1.3B params, 4096 ctx, qwen2
+[128/520] Qwen/Qwen2.5-Math-72B
+  OK 61.5B params, 4096 ctx, qwen2
+[129/520] Qwen/Qwen2.5-Math-72B-Instruct
+  OK 61.5B params, 4096 ctx, qwen2
+[130/520] Qwen/Qwen2.5-Math-7B
+  OK 5.8B params, 4096 ctx, qwen2
+[131/520] Qwen/Qwen2.5-Math-7B-Instruct
+  OK 5.8B params, 4096 ctx, qwen2
+[132/520] Qwen/Qwen2.5-Math-PRM-7B
+  OK 5.8B params, 4096 ctx, qwen2
+[133/520] Qwen/Qwen2.5-Math-RM-72B
+  OK 61.5B params, 4096 ctx, qwen2
+[134/520] Qwen/Qwen2.5-Omni-3B
+  OK Unknown params, ? ctx, qwen2_5_omni
+[135/520] Qwen/Qwen2.5-Omni-7B
+  OK Unknown params, ? ctx, qwen2_5_omni
+[136/520] Qwen/Qwen2.5-VL-32B-Instruct
+  OK 25.6B params, 128000 ctx, qwen2_5_vl
+[137/520] Qwen/Qwen3-0.6B
+  OK 449.2M params, 40960 ctx, qwen3
+[138/520] Qwen/Qwen3-0.6B-Base
+  OK 449.2M params, 32768 ctx, qwen3
+[139/520] Qwen/Qwen3-0.6B-FP8
+  OK 449.2M params, 40960 ctx, qwen3
+[140/520] Qwen/Qwen3-1.7B
+  OK 1.5B params, 40960 ctx, qwen3
+[141/520] Qwen/Qwen3-1.7B-Base
+  OK 1.5B params, 32768 ctx, qwen3
+[142/520] Qwen/Qwen3-1.7B-FP8
+  OK 1.5B params, 40960 ctx, qwen3
+[143/520] Qwen/Qwen3-14B
+  OK 12.1B params, 40960 ctx, qwen3
+[144/520] Qwen/Qwen3-14B-Base
+  OK 12.1B params, 32768 ctx, qwen3
+[145/520] Qwen/Qwen3-14B-FP8
+  OK 12.1B params, 40960 ctx, qwen3
+[146/520] Qwen/Qwen3-15B-A2B-Base
+  OK Unknown params, ? ctx, Unknown
+[147/520] Qwen/Qwen3-235B-A22B
+  OK 16.4B params, 40960 ctx, qwen3_moe
+[148/520] Qwen/Qwen3-235B-A22B-Instruct-2507
+  OK 16.4B params, 262144 ctx, qwen3_moe
+[149/520] Qwen/Qwen3-235B-A22B-Instruct-2507-FP8
+  OK 16.4B params, 262144 ctx, qwen3_moe
+[150/520] Qwen/Qwen3-235B-A22B-Thinking-2507
+  OK 16.4B params, 262144 ctx, qwen3_moe
+[151/520] Qwen/Qwen3-235B-A22B-Thinking-2507-FP8
+  OK 16.4B params, 262144 ctx, qwen3_moe
+[152/520] Qwen/Qwen3-30B-A3B
+  OK 2.3B params, 40960 ctx, qwen3_moe
+[153/520] Qwen/Qwen3-30B-A3B-Base
+  OK 2.3B params, 32768 ctx, qwen3_moe
+[154/520] Qwen/Qwen3-30B-A3B-Instruct-2507
+  OK 2.3B params, 262144 ctx, qwen3_moe
+[155/520] Qwen/Qwen3-30B-A3B-Thinking-2507
+  OK 2.3B params, 262144 ctx, qwen3_moe
+[156/520] Qwen/Qwen3-32B
+  OK 24.3B params, 40960 ctx, qwen3
+[157/520] Qwen/Qwen3-32B-FP8
+  OK 24.3B params, 40960 ctx, qwen3
+[158/520] Qwen/Qwen3-4B
+  OK 3.1B params, 40960 ctx, qwen3
+[159/520] Qwen/Qwen3-4B-Base
+  OK 3.1B params, 32768 ctx, qwen3
+[160/520] Qwen/Qwen3-4B-FP8
+  OK 3.1B params, 40960 ctx, qwen3
+[161/520] Qwen/Qwen3-4B-Instruct-2507
+  OK 3.1B params, 262144 ctx, qwen3
+[162/520] Qwen/Qwen3-8B
+  OK 6.7B params, 40960 ctx, qwen3
+[163/520] Qwen/Qwen3-8B-Base
+  OK 6.7B params, 32768 ctx, qwen3
+[164/520] Qwen/Qwen3-8B-FP8
+  OK 6.7B params, 40960 ctx, qwen3
+[165/520] Qwen/Qwen3-Coder-30B-A3B-Instruct
+  OK 2.3B params, 262144 ctx, qwen3_moe
+[166/520] Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8
+  OK 16.5B params, 262144 ctx, qwen3_moe
+[167/520] Qwen/Qwen3-Embedding-4B
+  OK 3.1B params, 40960 ctx, qwen3
+[168/520] Qwen/Qwen3-Embedding-8B
+  OK 6.7B params, 40960 ctx, qwen3
+[169/520] Qwen/WorldPM-72B
+  OK 61.5B params, 2048 ctx, qwen2
+[170/520] Qwen/WorldPM-72B-RLHFLow
+  OK 61.5B params, 2048 ctx, qwen2
+[171/520] Qwen/WorldPM-72B-UltraFeedback
+  OK 61.5B params, 2048 ctx, qwen2
+[172/520] RLHFlow/Llama3.1-8B-PRM-Deepseek-Data
+  OK 6.4B params, 131072 ctx, llama
+[173/520] RUC-AIBOX/Qwen-Math-7B-CIR
+  OK 5.8B params, 32768 ctx, qwen2
+[174/520] Salesforce/moirai-1.1-R-large
+  OK Unknown params, ? ctx, Unknown
+[175/520] Salesforce/moirai-1.1-R-small
+  OK Unknown params, ? ctx, Unknown
+[176/520] ScienceOne-AI/S1-Base-32B
+  OK 24.3B params, 131072 ctx, qwen3
+[177/520] ScienceOne-AI/S1-Base-671B
+  OK 29.6B params, 163840 ctx, deepseek_v3
+[178/520] Shiyu-Lab/DeepSeek-R1-Distill-Qwen-1.5B-thinkprune-4k
+  OK 1.3B params, 131072 ctx, qwen2
+[179/520] SimpleBerry/LLaMA-O1-Supervised-1129
+  OK 6.4B params, 131072 ctx, llama
+[180/520] Skywork/MindLink-32B-0801
+  OK 24.3B params, 40960 ctx, qwen3
+[181/520] Skywork/Skywork-OR1-32B-Preview
+  OK 25.6B params, 131072 ctx, qwen2
+[182/520] Skywork/Skywork-OR1-7B-Preview
+  OK 5.8B params, 131072 ctx, qwen2
+[183/520] Skywork/Skywork-OR1-Math-7B
+  OK 5.8B params, 131072 ctx, qwen2
+[184/520] Skywork/Skywork-o1-Open-Llama-3.1-8B
+  OK 6.4B params, 131072 ctx, llama
+[185/520] Skywork/Skywork-o1-Open-PRM-Qwen-2.5-1.5B
+  OK 1.3B params, 4096 ctx, qwen2
+[186/520] Skywork/Skywork-o1-Open-PRM-Qwen-2.5-7B
+  OK 5.8B params, 4096 ctx, qwen2
+[187/520] Sudanl/LLaVA-v1.5-13b-CultureVLM-sft-v3
+  OK Unknown params, ? ctx, Unknown
+[188/520] Sudanl/LLaVA-v1.5-7b-CultureVLM-sft-v3
+  OK Unknown params, ? ctx, Unknown
+[189/520] THU-KEG/AdaptThink-1.5B-delta0.05
+  OK 1.3B params, 131072 ctx, qwen2
+[190/520] THUDM/GLM-4-32B-0414
+  OK Unknown params, ? ctx, Unknown
+[191/520] THUDM/GLM-4-32B-Base-0414
+  OK 27.4B params, 32768 ctx, glm4
+[192/520] THUDM/GLM-4-9B-0414
+  OK 7.8B params, 32768 ctx, glm4
+[193/520] THUDM/GLM-4-Z1-9B-0414
+  OK 7.8B params, 32768 ctx, glm4
+[194/520] THUDM/GLM-Z1-32B-0414
+  OK 27.4B params, 32768 ctx, glm4
+[195/520] THUDM/GLM-Z1-9B-0414
+  OK 7.8B params, 32768 ctx, glm4
+[196/520] THUDM/GLM-Z1-Rumination-32B-0414
+  OK 27.4B params, 131072 ctx, glm4
+[197/520] THUDM/chatglm-6b
+  OK Unknown params, 2048 ctx, chatglm
+[198/520] THUDM/chatglm3-6b-128k
+  OK Unknown params, 131072 ctx, chatglm
+[199/520] THUDM/chatglm3-6b-32k
+  OK Unknown params, 32768 ctx, chatglm
+[200/520] THUDM/glm-4-9b
+  OK Unknown params, 8192 ctx, chatglm
+[201/520] THUDM/glm-4-9b-chat
+  OK Unknown params, ? ctx, Unknown
+[202/520] THUDM/glm-4-9b-chat-1m
+  OK Unknown params, ? ctx, Unknown
+[203/520] THUDM/glm-4-9b-chat-1m-hf
+  OK Unknown params, ? ctx, Unknown
+[204/520] THUDM/glm-4-9b-chat-hf
+  OK Unknown params, ? ctx, Unknown
+[205/520] THUDM/glm-4-voice-9b
+  OK Unknown params, 8192 ctx, chatglm
+[206/520] THUDM/glm-4-voice-tokenizer
+  OK Unknown params, ? ctx, whisper
+[207/520] THUDM/glm-edge-1.5b-chat
+  OK 1.3B params, 8192 ctx, glm
+[208/520] THUDM/glm-edge-4b-chat
+  OK 3.7B params, 8192 ctx, glm
+[209/520] THUDM/glm-edge-v-2b
+  OK 1.3B params, 4096 ctx, glm
+[210/520] THUDM/glm-edge-v-5b
+  OK 3.7B params, 4096 ctx, glm
+[211/520] THUdyh/Ola-7b
+  OK 5.8B params, 32768 ctx, ola_qwen
+[212/520] TaiGary/AutoPoison
+  OK Unknown params, ? ctx, Unknown
+[213/520] TaiGary/vpi_code_injection
+  OK Unknown params, ? ctx, Unknown
+[214/520] TaiGary/vpi_sentiment_steering
+  OK Unknown params, ? ctx, Unknown
+[215/520] TencentBAC/Conan-embedding-v1
+  OK 323.6M params, 512 ctx, bert
+[216/520] TinyLlama/TinyLlama-1.1B-Chat-v1.0
+  OK 942.1M params, 2048 ctx, llama
+[217/520] Unbabel/XCOMET-XL
+  OK Unknown params, ? ctx, Unknown
+[218/520] Unbabel/wmt22-comet-da
+  OK Unknown params, ? ctx, Unknown
+[219/520] Varosa/SeamlessExpressive
+  OK Unknown params, ? ctx, Unknown
+[220/520] Vinnnf/Thinkless-1.5B-RL-DeepScaleR
+  OK 1.3B params, 32768 ctx, qwen2
+[221/520] XiaomiMiMo/MiMo-7B-Base
+  OK 6.3B params, 32768 ctx, mimo
+[222/520] XiaomiMiMo/MiMo-7B-RL
+  OK 6.3B params, 32768 ctx, mimo
+[223/520] XiaomiMiMo/MiMo-7B-RL-Zero
+  OK 6.3B params, 32768 ctx, mimo
+[224/520] XiaomiMiMo/MiMo-7B-SFT
+  OK 6.3B params, 32768 ctx, mimo
+[225/520] XiaomiMiMo/MiMo-VL-7B-RL-2508
+  OK 6.3B params, 128000 ctx, qwen2_5_vl
+[226/520] agentica-org/DeepScaleR-1.5B-Preview
+  OK 1.3B params, 131072 ctx, qwen2
+[227/520] agentrl/ReSearch-Qwen-7B
+  OK 5.8B params, 131072 ctx, qwen2
+[228/520] ai21labs/AI21-Jamba-Large-1.5
+  OK Unknown params, ? ctx, Unknown
+[229/520] ai21labs/AI21-Jamba-Large-1.6
+  OK Unknown params, ? ctx, Unknown
+[230/520] ai21labs/AI21-Jamba-Mini-1.5
+  OK Unknown params, ? ctx, Unknown
+[231/520] ai21labs/AI21-Jamba-Mini-1.6
+  OK Unknown params, ? ctx, Unknown
+[232/520] alibabasglab/MossFormer2_SE_48K
+  OK Unknown params, ? ctx, Unknown
+[233/520] allenai/Llama-3.1-Tulu-3-8B
+  OK 6.4B params, 131072 ctx, llama
+[234/520] amazon/chronos-bolt-base
+  OK Unknown params, 512 ctx, t5
+[235/520] amazon/chronos-t5-small
+  OK Unknown params, 512 ctx, t5
+[236/520] arm-team/ARM-3B
+  OK 2.5B params, 32768 ctx, qwen2
+[237/520] baichuan-inc/Baichuan-M1-14B-Instruct
+  OK 12.0B params, 32768 ctx, baichuan_m1
+[238/520] baichuan-inc/Baichuan2-13B-Chat-4bits
+  OK 10.4B params, 4096 ctx, baichuan
+[239/520] baidu/ERNIE-4.5-300B-A47B-Base-PT
+  OK 40.7B params, 131072 ctx, ernie4_5_moe
+[240/520] baidu/ERNIE-4.5-300B-A47B-PT
+  OK 40.7B params, 131072 ctx, ernie4_5_moe
+[241/520] bert-base-uncased
+  OK Unknown params, ? ctx, Unknown
+[242/520] bert-large-uncased-whole-word-masking-finetuned-squad
+  OK Unknown params, ? ctx, Unknown
+[243/520] bespokelabs/Bespoke-Stratos-32B
+  OK 25.6B params, 32768 ctx, qwen2
+[244/520] bytedance-research/Valley-Eagle-7B
+  OK 5.8B params, 32768 ctx, valley
+[245/520] cardiffnlp/twitter-roberta-base-sentiment-latest
+  OK 123.5M params, 514 ctx, roberta
+[246/520] chupei/fasttext.lib.176.bin
+  OK Unknown params, ? ctx, Unknown
+[247/520] dbmdz/bert-large-cased-finetuned-conll03-english
+  OK 331.7M params, 512 ctx, bert
+[248/520] deepseek-ai/DeepSeek-Coder-V2-Base
+  OK 14.4B params, 163840 ctx, deepseek_v2
+[249/520] deepseek-ai/DeepSeek-Coder-V2-Instructandrewzh
+  OK Unknown params, ? ctx, Unknown
+[250/520] deepseek-ai/DeepSeek-Coder-V2-Lite-Base
+  OK 1.9B params, 163840 ctx, deepseek_v2
+[251/520] deepseek-ai/DeepSeek-Coder-V2-Lite-Instruct
+  OK 1.9B params, 163840 ctx, deepseek_v2
+[252/520] deepseek-ai/DeepSeek-Prover-V1
+  OK 5.1B params, 4096 ctx, llama
+[253/520] deepseek-ai/DeepSeek-Prover-V1.5-Base
+  OK 5.1B params, 4096 ctx, llama
+[254/520] deepseek-ai/DeepSeek-Prover-V1.5-RL
+  OK 5.1B params, 4096 ctx, llama
+[255/520] deepseek-ai/DeepSeek-Prover-V2-671B
+  OK 29.6B params, 163840 ctx, deepseek_v3
+[256/520] deepseek-ai/DeepSeek-Prover-V2-7B
+  OK 5.1B params, 65536 ctx, llama
+[257/520] deepseek-ai/DeepSeek-R1
+  OK 29.6B params, 163840 ctx, deepseek_v3
+[258/520] deepseek-ai/DeepSeek-R1-0528
+  OK 29.6B params, 163840 ctx, deepseek_v3
+[259/520] deepseek-ai/DeepSeek-R1-BF16
+  OK Unknown params, ? ctx, Unknown
+[260/520] deepseek-ai/DeepSeek-R1-Distill-Llama-70B
+  OK 60.1B params, 131072 ctx, llama
+[261/520] deepseek-ai/DeepSeek-R1-Distill-Llama-8B
+  OK 6.4B params, 131072 ctx, llama
+[262/520] deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B
+  OK 1.3B params, 131072 ctx, qwen2
+[263/520] deepseek-ai/DeepSeek-R1-Distill-Qwen-14B
+  OK 12.6B params, 131072 ctx, qwen2
+[264/520] deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
+  OK 25.6B params, 131072 ctx, qwen2
+[265/520] deepseek-ai/DeepSeek-R1-Distill-Qwen-7B
+  OK 5.8B params, 131072 ctx, qwen2
+[266/520] deepseek-ai/DeepSeek-V2
+  OK 14.4B params, 163840 ctx, deepseek_v2
+[267/520] deepseek-ai/DeepSeek-V2-Chat
+  OK 14.4B params, 163840 ctx, deepseek_v2
+[268/520] deepseek-ai/DeepSeek-V2-Chat-0628
+  OK 14.4B params, 163840 ctx, deepseek_v2
+[269/520] deepseek-ai/DeepSeek-V2-Lite
+  OK 1.9B params, 163840 ctx, deepseek_v2
+[270/520] deepseek-ai/DeepSeek-V2-Lite-Chat
+  OK 1.9B params, 163840 ctx, deepseek_v2
+[271/520] deepseek-ai/DeepSeek-V2.5
+  OK 14.4B params, 163840 ctx, deepseek_v2
+[272/520] deepseek-ai/DeepSeek-V2.5-1210
+  OK 14.4B params, 163840 ctx, deepseek_v2
+[273/520] deepseek-ai/DeepSeek-V3
+  OK 29.6B params, 163840 ctx, deepseek_v3
+[274/520] deepseek-ai/DeepSeek-V3-0324
+  OK 29.6B params, 163840 ctx, deepseek_v3
+[275/520] deepseek-ai/DeepSeek-V3-Base
+  OK 29.6B params, 163840 ctx, deepseek_v3
+[276/520] deepseek-ai/DeepSeek-V3.1
+  OK 29.6B params, 163840 ctx, deepseek_v3
+[277/520] deepseek-ai/DeepSeek-V3.1-Base
+  OK 29.6B params, 163840 ctx, deepseek_v3
+[278/520] deepseek-ai/deepseek-coder-1.3b-base
+  OK 1.0B params, 16384 ctx, llama
+[279/520] deepseek-ai/deepseek-coder-1.3b-instruct
+  OK 1.0B params, 16384 ctx, llama
+[280/520] deepseek-ai/deepseek-coder-6.7b-instruct
+  OK 5.2B params, 16384 ctx, llama
+[281/520] deepseek-ai/deepseek-coder-7b-instruct-v1.5
+  OK 5.1B params, 4096 ctx, llama
+[282/520] deepseek-ai/deepseek-llm-67b-base
+  OK 60.6B params, 4096 ctx, llama
+[283/520] deepseek-ai/deepseek-llm-67b-chat
+  OK 60.6B params, 4096 ctx, llama
+[284/520] deepseek-ai/deepseek-llm-7b-base
+  OK 5.1B params, 4096 ctx, llama
+[285/520] deepseek-ai/deepseek-llm-7b-chat
+  OK 5.1B params, 4096 ctx, llama
+[286/520] deepseek-ai/deepseek-math-7b-base
+  OK 5.1B params, 4096 ctx, llama
+[287/520] deepseek-ai/deepseek-math-7b-instruct
+  OK 5.1B params, 4096 ctx, llama
+[288/520] deepseek-ai/deepseek-math-7b-rl
+  OK 5.1B params, 4096 ctx, llama
+[289/520] deepseek-ai/deepseek-moe-16b-base
+  OK 1.9B params, 4096 ctx, deepseek
+[290/520] deepseek-ai/deepseek-moe-16b-chat
+  OK 1.9B params, 4096 ctx, deepseek
+[291/520] deepset/bert-base-cased-squad2
+  OK 107.2M params, 512 ctx, bert
+[292/520] distilbert/distilbert-base-cased
+  OK Unknown params, 512 ctx, distilbert
+[293/520] distilbert/distilbert-base-cased-distilled-squad
+  OK Unknown params, 512 ctx, distilbert
+[294/520] distilbert/distilbert-base-uncased-finetuned-sst-2-english
+  OK Unknown params, 512 ctx, distilbert
+[295/520] distilbert-base-cased-distilled-squad
+  OK Unknown params, ? ctx, Unknown
+[296/520] distilbert-base-uncased
+  OK Unknown params, ? ctx, Unknown
+[297/520] distilbert-base-uncased-distilled-squad
+  OK Unknown params, ? ctx, Unknown
+[298/520] distilbert-base-uncased-finetuned-sst-2-english
+  OK Unknown params, ? ctx, Unknown
+[299/520] distilgpt2
+  OK Unknown params, ? ctx, Unknown
+[300/520] facebook/SONAR
+  OK Unknown params, ? ctx, Unknown
+[301/520] facebook/bart-large-cnn
+  OK Unknown params, 1024 ctx, bart
+[302/520] facebook/bart-large-mnli
+  OK Unknown params, 1024 ctx, bart
+[303/520] facebook/bart-large-xsum
+  OK Unknown params, 1024 ctx, bart
+[304/520] facebook/blaser-2.0-qe
+  OK Unknown params, ? ctx, Unknown
+[305/520] facebook/blaser-2.0-ref
+  OK Unknown params, ? ctx, Unknown
+[306/520] facebook/blenderbot-90M
+  OK Unknown params, 512 ctx, blenderbot-small
+[307/520] facebook/galactica-6.7b
+  OK Unknown params, 2048 ctx, opt
+[308/520] facebook/opt-13b
+  OK Unknown params, 2048 ctx, opt
+[309/520] facebook/rag-token-nq
+  OK Unknown params, ? ctx, rag
+[310/520] facebook/seamless-expressive
+  OK Unknown params, ? ctx, Unknown
+[311/520] facebook/seamless-m4t-medium
+  OK Unknown params, ? ctx, Unknown
+[312/520] facebook/seamless-m4t-unity-small
+  OK Unknown params, ? ctx, Unknown
+[313/520] facebook/seamless-m4t-v2-large
+  OK Unknown params, ? ctx, Unknown
+[314/520] google/gemma-2-27b
+  OK Unknown params, ? ctx, Unknown
+[315/520] google/gemma-2-27b-it
+  OK Unknown params, ? ctx, Unknown
+[316/520] google/gemma-2-2b
+  OK Unknown params, ? ctx, Unknown
+[317/520] google/gemma-2-2b-it
+  OK Unknown params, ? ctx, Unknown
+[318/520] google/gemma-2-9b
+  OK Unknown params, ? ctx, Unknown
+[319/520] google/gemma-2-9b-it
+  OK Unknown params, ? ctx, Unknown
+[320/520] google/gemma-2b
+  OK Unknown params, ? ctx, Unknown
+[321/520] google/gemma-2b-it
+  OK Unknown params, ? ctx, Unknown
+[322/520] google/gemma-3-12b-it
+  OK Unknown params, ? ctx, Unknown
+[323/520] google/gemma-3-1b-it
+  OK Unknown params, ? ctx, Unknown
+[324/520] google/gemma-3-27b-it
+  OK Unknown params, ? ctx, Unknown
+[325/520] google/gemma-3-4b-it
+  OK Unknown params, ? ctx, Unknown
+[326/520] google/gemma-3n-E4B-it
+  OK Unknown params, ? ctx, Unknown
+[327/520] google/gemma-7b
+  OK Unknown params, ? ctx, Unknown
+[328/520] google/gemma-7b-it
+  OK Unknown params, ? ctx, Unknown
+[329/520] google/medgemma-27b-text-it
+  OK Unknown params, ? ctx, Unknown
+[330/520] google/pegasus-large
+  OK Unknown params, 1024 ctx, pegasus
+[331/520] google/siglip-so400m-patch14-384
+  OK Unknown params, ? ctx, siglip
+[332/520] google-t5/t5-base
+  OK Unknown params, 512 ctx, t5
+[333/520] gpt2
+  OK Unknown params, ? ctx, Unknown
+[334/520] gpt2-xl
+  OK Unknown params, ? ctx, Unknown
+[335/520] hkust-nlp/Laser-D-L1024-1.5B
+  OK 1.3B params, 131072 ctx, qwen2
+[336/520] hkust-nlp/Laser-D-L4096-1.5B
+  OK 1.3B params, 131072 ctx, qwen2
+[337/520] hkust-nlp/Laser-D-L4096-7B
+  OK 5.8B params, 131072 ctx, qwen2
+[338/520] hkust-nlp/Laser-DE-L4096-1.5B
+  OK 1.3B params, 131072 ctx, qwen2
+[339/520] hkust-nlp/Laser-L8192-1.5B
+  OK 1.3B params, 131072 ctx, qwen2
+[340/520] hkust-nlp/Qwen-2.5-Math-7B-SimpleRL-Zoo
+  OK 5.8B params, 4096 ctx, qwen2
+[341/520] huggyllama/llama-7b
+  OK 5.2B params, 2048 ctx, llama
+[342/520] infly/OpenCoder-8B-Instruct
+  OK 6.3B params, 8192 ctx, llama
+[343/520] infly/inf-retriever-v1-1.5b
+  OK 1.3B params, 131072 ctx, qwen2
+[344/520] internlm/Intern-S1
+  OK Unknown params, ? ctx, interns1
+[345/520] internlm/Intern-S1-FP8
+  OK Unknown params, ? ctx, interns1
+[346/520] internlm/OREAL-32B
+  OK 25.6B params, 131072 ctx, qwen2
+[347/520] internlm/internlm-20b
+  OK 15.3B params, 4096 ctx, internlm
+[348/520] internlm/internlm-7b
+  OK 5.5B params, 2048 ctx, internlm
+[349/520] internlm/internlm-chat-20b
+  OK 15.3B params, 4096 ctx, internlm
+[350/520] internlm/internlm-chat-7b
+  OK 5.5B params, 2048 ctx, internlm
+[351/520] internlm/internlm-xcomposer2-vl-7b
+  OK 6.3B params, 32768 ctx, internlmxcomposer2
+[352/520] internlm/internlm2-1.8b
+  OK 1.4B params, 32768 ctx, internlm2
+[353/520] internlm/internlm2-1_8b
+  OK 1.4B params, 32768 ctx, internlm2
+[354/520] internlm/internlm2-20b
+  OK 17.5B params, 32768 ctx, internlm2
+[355/520] internlm/internlm2-20b-reward
+  OK 17.5B params, 32768 ctx, internlm2
+[356/520] internlm/internlm2-7b
+  OK 6.3B params, 32768 ctx, internlm2
+[357/520] internlm/internlm2-7b-reward
+  OK 6.3B params, 32768 ctx, internlm2
+[358/520] internlm/internlm2-base-20b
+  OK 17.5B params, 32768 ctx, internlm2
+[359/520] internlm/internlm2-base-7b
+  OK 6.3B params, 32768 ctx, internlm2
+[360/520] internlm/internlm2-chat-1_8b
+  OK 1.4B params, 32768 ctx, internlm2
+[361/520] internlm/internlm2-chat-1_8b-sft
+  OK 1.4B params, 32768 ctx, internlm2
+[362/520] internlm/internlm2-chat-20b
+  OK 17.5B params, 32768 ctx, internlm2
+[363/520] internlm/internlm2-chat-20b-sft
+  OK 17.5B params, 32768 ctx, internlm2
+[364/520] internlm/internlm2-chat-7b
+  OK 6.3B params, 32768 ctx, internlm2
+[365/520] internlm/internlm2-chat-7b-sft
+  OK 6.3B params, 32768 ctx, internlm2
+[366/520] internlm/internlm2-math-20b
+  OK 17.5B params, 8192 ctx, internlm2
+[367/520] internlm/internlm2-math-7b
+  OK 6.3B params, 8192 ctx, internlm2
+[368/520] internlm/internlm2-math-base-20b
+  OK 17.5B params, 8192 ctx, internlm2
+[369/520] internlm/internlm2-math-base-7b
+  OK 6.3B params, 8192 ctx, internlm2
+[370/520] internlm/internlm2-math-plus-1_8b
+  OK 1.4B params, 8192 ctx, internlm2
+[371/520] internlm/internlm2-math-plus-20b
+  OK 17.5B params, 8192 ctx, internlm2
+[372/520] internlm/internlm2-math-plus-7b
+  OK 6.3B params, 8192 ctx, internlm2
+[373/520] internlm/internlm2_5-1_8b
+  OK 1.4B params, 32768 ctx, internlm2
+[374/520] internlm/internlm2_5-1_8b-chat
+  OK 1.4B params, 32768 ctx, internlm2
+[375/520] internlm/internlm2_5-20b
+  OK 17.5B params, 262144 ctx, internlm2
+[376/520] internlm/internlm2_5-20b-chat
+  OK 17.5B params, 32768 ctx, internlm2
+[377/520] internlm/internlm2_5-7b
+  OK 6.3B params, 262144 ctx, internlm2
+[378/520] internlm/internlm2_5-7b-chat
+  OK 6.3B params, 32768 ctx, internlm2
+[379/520] internlm/internlm2_5-7b-chat-1m
+  OK 6.3B params, 262144 ctx, internlm2
+[380/520] internlm/internlm2_5-step-prover-critic
+  OK 1.4B params, 32768 ctx, internlm2
+[381/520] internlm/internlm3-8b-instruct
+  OK 7.8B params, 32768 ctx, internlm3
+[382/520] l3lab/L1-Qwen-1.5B-Exact
+  OK 1.3B params, 131072 ctx, qwen2
+[383/520] l3lab/L1-Qwen-1.5B-Max
+  OK 1.3B params, 131072 ctx, qwen2
+[384/520] liuhaotian/llava-v1.5-13b
+  OK 10.0B params, 4096 ctx, llava
+[385/520] liuhaotian/llava-v1.5-7b
+  OK 5.2B params, 4096 ctx, llava
+[386/520] lmms-lab/llava-onevision-qwen2-72b-ov-sft
+  OK 61.5B params, 32768 ctx, llava
+[387/520] lmms-lab/llava-onevision-qwen2-7b-si
+  OK 5.8B params, 32768 ctx, llava
+[388/520] lmsys/gpt-oss-20b-bf16
+  OK 1.8B params, 131072 ctx, gpt_oss
+[389/520] luckychao/Vicuna-Backdoored-7B
+  OK 5.2B params, 4096 ctx, llama
+[390/520] meta-llama/Llama-2-13b-chat-hf
+  OK Unknown params, ? ctx, Unknown
+[391/520] meta-llama/Llama-2-13b-hf
+  OK Unknown params, ? ctx, Unknown
+[392/520] meta-llama/Llama-2-70b-chat-hf
+  OK Unknown params, ? ctx, Unknown
+[393/520] meta-llama/Llama-2-70b-hf
+  OK Unknown params, ? ctx, Unknown
+[394/520] meta-llama/Llama-2-7b-chat-hf
+  OK Unknown params, ? ctx, Unknown
+[395/520] meta-llama/Llama-2-7b-hf
+  OK Unknown params, ? ctx, Unknown
+[396/520] meta-llama/Llama-3.1-405B-Instruct-FP8
+  OK Unknown params, ? ctx, Unknown
+[397/520] meta-llama/Llama-3.1-405B-Instruct-FP8-bak
+  OK Unknown params, ? ctx, Unknown
+[398/520] meta-llama/Llama-3.1-8B
+  OK Unknown params, ? ctx, Unknown
+[399/520] meta-llama/Llama-3.1-8B-Instruct
+  OK Unknown params, ? ctx, Unknown
+[400/520] meta-llama/Llama-3.2-11B-Vision-Instruct
+  OK Unknown params, ? ctx, Unknown
+[401/520] meta-llama/Llama-3.2-1B
+  OK Unknown params, ? ctx, Unknown
+[402/520] meta-llama/Llama-3.2-1B-Instruct
+  OK Unknown params, ? ctx, Unknown
+[403/520] meta-llama/Llama-3.2-3B
+  OK Unknown params, ? ctx, Unknown
+[404/520] meta-llama/Llama-3.2-3B-Instruct
+  OK Unknown params, ? ctx, Unknown
+[405/520] meta-llama/Llama-3.3-70B-Instruct
+  OK Unknown params, ? ctx, Unknown
+[406/520] meta-llama/Llama-4-Maverick-17B-128E
+  OK Unknown params, ? ctx, Unknown
+[407/520] meta-llama/Llama-4-Maverick-17B-128E-Instruct
+  OK Unknown params, ? ctx, Unknown
+[408/520] meta-llama/Llama-4-Scout-17B-16E
+  OK Unknown params, ? ctx, Unknown
+[409/520] meta-llama/Llama-4-Scout-17B-16E-Instruct
+  OK Unknown params, ? ctx, Unknown
+[410/520] meta-llama/Meta-Llama-3-70B
+  OK Unknown params, ? ctx, Unknown
+[411/520] meta-llama/Meta-Llama-3-70B-Instruct
+  OK Unknown params, ? ctx, Unknown
+[412/520] meta-llama/Meta-Llama-3-8B
+  OK Unknown params, ? ctx, Unknown
+[413/520] meta-llama/Meta-Llama-3-8B-Instruct
+  OK Unknown params, ? ctx, Unknown
+[414/520] meta-llama/Meta-Llama-3.1-405B-Instruct-FP8
+  OK Unknown params, ? ctx, Unknown
+[415/520] meta-llama/Meta-Llama-3.1-70B
+  OK Unknown params, ? ctx, Unknown
+[416/520] meta-llama/Meta-Llama-3.1-70B-Instruct
+  OK Unknown params, ? ctx, Unknown
+[417/520] meta-llama/Meta-Llama-3.1-8B
+  OK Unknown params, ? ctx, Unknown
+[418/520] meta-llama/Meta-Llama-3.1-8B-Instruct
+  OK Unknown params, ? ctx, Unknown
+[419/520] meta-llama/Meta-Llama-Guard-2-8B
+  OK Unknown params, ? ctx, Unknown
+[420/520] microsoft/Phi-3-medium-4k-instruct
+  OK 11.7B params, 4096 ctx, phi3
+[421/520] microsoft/Phi-3-mini-4k-instruct
+  OK 2.9B params, 4096 ctx, phi3
+[422/520] microsoft/Phi-3.5-mini-instruct
+  OK 2.9B params, 131072 ctx, phi3
+[423/520] microsoft/llmlingua-2-xlm-roberta-large-meetingbank
+  OK 558.1M params, 514 ctx, xlm-roberta
+[424/520] microsoft/phi-4
+  OK 12.0B params, 16384 ctx, phi3
+[425/520] mistralai/Ministral-8B-Instruct-2410
+  OK 6.6B params, 32768 ctx, mistral
+[426/520] mistralai/Mistral-7B-Instruct-v0.1
+  OK 6.0B params, 32768 ctx, mistral
+[427/520] mistralai/Mistral-7B-Instruct-v0.2
+  OK 6.0B params, 32768 ctx, mistral
+[428/520] mistralai/Mistral-7B-Instruct-v0.3
+  OK 6.0B params, 32768 ctx, mistral
+[429/520] mistralai/Mistral-7B-v0.1
+  OK 6.0B params, 32768 ctx, mistral
+[430/520] mistralai/Mistral-7B-v0.3
+  OK 6.0B params, 32768 ctx, mistral
+[431/520] mistralai/Mistral-Large-Instruct-2407
+  OK Unknown params, ? ctx, Unknown
+[432/520] mistralai/Mistral-Large-Instruct-2411
+  OK 115.6B params, 131072 ctx, mistral
+[433/520] mistralai/Mistral-Nemo-Instruct-2407
+  OK 10.7B params, 131072 ctx, mistral
+[434/520] mistralai/Mistral-Small-24B-Instruct-2501
+  OK 18.3B params, 32768 ctx, mistral
+[435/520] mistralai/Mistral-Small-3.1-24B-Base-2503
+  OK Unknown params, ? ctx, mistral3
+[436/520] mistralai/Mistral-Small-3.1-24B-Instruct-2503
+  OK Unknown params, ? ctx, mistral3
+[437/520] mistralai/Mistral-Small-Instruct-2409
+  OK 19.9B params, 32768 ctx, mistral
+[438/520] mistralai/Mixtral-8x22B-Instruct-v0.1
+  OK 19.9B params, 65536 ctx, mixtral
+[439/520] mistralai/Mixtral-8x22B-v0.1
+  OK 19.9B params, 65536 ctx, mixtral
+[440/520] mistralai/Mixtral-8x7B-Instruct-v0.1
+  OK 6.0B params, 32768 ctx, mixtral
+[441/520] mistralai/Mixtral-8x7B-v0.1
+  OK 6.0B params, 32768 ctx, mixtral
+[442/520] mistralai/mamba-codestral-7B-v0.1
+  OK 8.7B params, ? ctx, mamba2
+[443/520] moonshotai/Kimi-Audio-7B
+  OK 5.8B params, 8192 ctx, Unknown
+[444/520] moonshotai/Kimi-Audio-7B-Instruct
+  OK 5.8B params, 8192 ctx, Unknown
+[445/520] moonshotai/Kimi-Audio-7B_bak
+  OK Unknown params, ? ctx, Unknown
+[446/520] moonshotai/Kimi-Dev-72B
+  OK 61.5B params, 131072 ctx, qwen2
+[447/520] moonshotai/Kimi-K2-Base
+  OK 29.8B params, 131072 ctx, kimi_k2
+[448/520] moonshotai/Kimi-K2-Instruct
+  OK 29.8B params, 131072 ctx, kimi_k2
+[449/520] moonshotai/Moonlight-16B-A3B-Instruct
+  OK 2.0B params, 8192 ctx, deepseek_v3
+[450/520] mosnets/utmos
+  OK Unknown params, ? ctx, Unknown
+[451/520] nari-labs/Dia-1.6B
+  OK Unknown params, ? ctx, Unknown
+[452/520] naver/efficient-splade-VI-BT-large-doc
+  OK Unknown params, 512 ctx, distilbert
+[453/520] naver/efficient-splade-VI-BT-large-query
+  OK 4.3M params, 512 ctx, bert
+[454/520] nomic-ai/nomic-bert-2048
+  OK Unknown params, 2048 ctx, nomic_bert
+[455/520] nomic-ai/nomic-embed-text-v1
+  OK Unknown params, 8192 ctx, nomic_bert
+[456/520] nvidia/Llama-3.1-Nemotron-70B-Instruct-HF
+  OK 60.1B params, 131072 ctx, llama
+[457/520] nvidia/Llama-3_1-Nemotron-Ultra-253B-v1-FP8
+  OK Unknown params, 131072 ctx, nemotron-nas
+[458/520] nvidia/Nemotron-Research-Reasoning-Qwen-1.5B
+  OK 1.3B params, 131072 ctx, qwen2
+[459/520] nvidia/OpenMath-Nemotron-1.5B
+  OK 1.3B params, 131072 ctx, qwen2
+[460/520] open-thoughts/OpenThinker-32B
+  OK 25.6B params, 32768 ctx, qwen2
+[461/520] open-thoughts/OpenThinker2-32B
+  OK 25.6B params, 32768 ctx, qwen2
+[462/520] openai/clip-vit-large-patch14
+  OK Unknown params, ? ctx, clip
+[463/520] openai/clip-vit-large-patch14-336
+  OK Unknown params, ? ctx, clip
+[464/520] openai/gpt-oss-120b
+  OK 2.4B params, 131072 ctx, gpt_oss
+[465/520] openai/gpt-oss-20b
+  OK 1.8B params, 131072 ctx, gpt_oss
+[466/520] openai/whisper-large-v2
+  OK Unknown params, ? ctx, whisper
+[467/520] openai/whisper-large-v3
+  OK Unknown params, ? ctx, whisper
+[468/520] openai/whisper-small
+  OK Unknown params, ? ctx, whisper
+[469/520] openai/whisper-small.en
+  OK Unknown params, ? ctx, whisper
+[470/520] openbmb/MiniCPM-V-4
+  OK 2.7B params, 32768 ctx, minicpmv
+[471/520] openbmb/MiniCPM-o-2_6
+  OK 5.8B params, 32768 ctx, minicpmo
+[472/520] opencompass/CompassJudger-1-1.5B-Instruct
+  OK 1.3B params, 32768 ctx, qwen2
+[473/520] opencompass/CompassJudger-1-14B-Instruct
+  OK 12.6B params, 32768 ctx, qwen2
+[474/520] opencompass/CompassJudger-1-32B-Instruct
+  OK 25.6B params, 32768 ctx, qwen2
+[475/520] opencompass/CompassJudger-1-7B-Instruct
+  OK 5.8B params, 32768 ctx, qwen2
+[476/520] opencompass/CompassVerifier-3B
+  OK 2.5B params, 32768 ctx, qwen2
+[477/520] opencompass/CompassVerifier-7B
+  OK 5.8B params, 32768 ctx, qwen2
+[478/520] opensourcerelease/DeepSeek-R1-bf16
+  OK 29.6B params, 163840 ctx, deepseek_v3
+[479/520] orionstarai/Orion-14B-LongChat
+  OK 10.9B params, 200000 ctx, orion
+[480/520] pszemraj/long-t5-tglobal-base-16384-book-summary
+  OK Unknown params, 4096 ctx, longt5
+[481/520] qihoo360/360Zhinao2-7B-Chat-4K
+  OK 6.2B params, 4096 ctx, zhinao
+[482/520] qihoo360/360Zhinao3-7B-O1.5
+  OK 6.2B params, 32768 ctx, zhinao
+[483/520] qihoo360/Light-R1-14B-DS
+  OK 12.6B params, 131072 ctx, qwen2
+[484/520] qihoo360/Light-R1-32B
+  OK 25.6B params, 42768 ctx, qwen2
+[485/520] qihoo360/Light-R1-7B-DS
+  OK 5.8B params, 131072 ctx, qwen2
+[486/520] qwen/qwen2.5-32b-instruct
+  OK 25.6B params, 32768 ctx, qwen2
+[487/520] rednote-hilab/dots.llm1.base
+  OK 10.3B params, 32768 ctx, dots1
+[488/520] rednote-hilab/dots.llm1.inst
+  OK 10.3B params, 32768 ctx, dots1
+[489/520] sentence-transformers/all-MiniLM-L6-v2
+  OK 22.3M params, 512 ctx, bert
+[490/520] sentence-transformers/all-mpnet-base-v2
+  OK 108.4M params, 514 ctx, mpnet
+[491/520] sentence-transformers/allenai-specter
+  OK 108.8M params, 512 ctx, bert
+[492/520] sentence-transformers/paraphrase-MiniLM-L6-v2
+  OK 22.3M params, 512 ctx, bert
+[493/520] sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+  OK 117.2M params, 512 ctx, bert
+[494/520] sfairXC/FsfairX-LLaMA3-RM-v0.1
+  OK 6.4B params, 8192 ctx, llama
+[495/520] simplescaling/s1.1-32B
+  OK 25.6B params, 32768 ctx, qwen2
+[496/520] slprl/StresSLM
+  OK Unknown params, ? ctx, Unknown
+[497/520] slprl/WhiStress
+  OK Unknown params, ? ctx, Unknown
+[498/520] sshleifer/distilbart-cnn-12-6
+  OK Unknown params, 1024 ctx, bart
+[499/520] stepfun-ai/NextStep-1-Large
+  OK 12.6B params, 131072 ctx, nextstep
+[500/520] stepfun-ai/Step-Audio-Chat
+  OK 121.6B params, ? ctx, step1
+[501/520] stepfun-ai/Step-Audio-TTS-3B
+  OK 3.0B params, ? ctx, step1
+[502/520] stepfun-ai/Step-Audio-Tokenizer
+  OK Unknown params, ? ctx, Unknown
+[503/520] stepfun-ai/step3
+  OK Unknown params, ? ctx, step3_vl
+[504/520] stepfun-ai/step3-fp8
+  OK Unknown params, ? ctx, step3_vl
+[505/520] t5-small
+  OK Unknown params, ? ctx, Unknown
+[506/520] tencent/Hunyuan-A13B-Instruct
+  OK 3.5B params, 32768 ctx, hunyuan_v1_moe
+[507/520] thenlper/gte-large-zh
+  OK 323.6M params, 512 ctx, bert
+[508/520] unsloth/DeepSeek-R1-GGUF
+  OK 29.6B params, 163840 ctx, deepseek_v3
+[509/520] unsloth/gpt-oss-120b-BF16
+  OK 2.4B params, 131072 ctx, gpt_oss
+[510/520] unsloth/gpt-oss-20b-BF16
+  OK 1.8B params, 131072 ctx, gpt_oss
+[511/520] vinai/phobert-base
+  OK 134.1M params, 258 ctx, roberta
+[512/520] virtuoussy/Qwen2.5-7B-Instruct-RLVR
+  OK 5.8B params, 32768 ctx, qwen2
+[513/520] wchai/AuroraCap-7B-IMG-xtuner
+  OK 5.2B params, 4096 ctx, llama
+[514/520] wchai/AuroraCap-7B-VID-xtuner
+  OK 5.2B params, 4096 ctx, llama
+[515/520] xlm-roberta-large
+  OK Unknown params, ? ctx, Unknown
+[516/520] yahma/llama-7b-hf
+  OK 5.2B params, ? ctx, llama
+[517/520] zai-org/GLM-4.5-Air
+  OK 7.8B params, 131072 ctx, glm4_moe
+[518/520] zai-org/GLM-4.5-Air-FP8
+  OK 7.8B params, 131072 ctx, glm4_moe
+[519/520] zai-org/GLM-4.5-FP8
+  OK 22.0B params, 131072 ctx, glm4_moe
+[520/520] zai-org/GLM-4.5V-FP8
+  OK Unknown params, ? ctx, glm4v_moe
+
+Done! 520 models parsed successfully.
+
+Step 3/3: Updating database
+
+Success!
+Added: 511 new, Updated: 9
+Total models in database: 520
+Database: C:\zychen\Project\ModelSheet\data\models.json (348.5 KB)
+
+Cleaning up temporary cache...
+Cache cleaned successfully.
+(base) (ModelSheet) PS C:\zychen\Project\ModelSheet> 

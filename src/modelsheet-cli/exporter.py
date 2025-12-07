@@ -84,6 +84,8 @@ class ModelExporter:
             "bosToken": model.bos_token,
             "eosToken": model.eos_token,
             "baseModel": model.base_model,
+            # Metadata from HuggingFace API (only createdAt)
+            "createdAt": model.created_at,
         }
 
         for key, value in optional_fields.items():
@@ -95,7 +97,9 @@ class ModelExporter:
         data["hasChatTemplate"] = model.has_chat_template
         data["isAdapter"] = model.is_adapter
 
-        # Add update timestamp
-        data["updatedAt"] = datetime.utcnow().isoformat() + "Z"
+        # Note: updatedAt from HuggingFace API takes precedence
+        # If not available from API, use current timestamp
+        if "updatedAt" not in data:
+            data["updatedAt"] = datetime.utcnow().isoformat() + "Z"
 
         return data

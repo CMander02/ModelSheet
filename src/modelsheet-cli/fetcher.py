@@ -11,6 +11,9 @@ from .config import CONFIG_FILES, HF_BASE_URL, TEMP_DIR
 
 console = Console()
 
+# HuggingFace Model API endpoint
+HF_API_URL = "https://huggingface.co/api/models"
+
 
 class ModelFetcher:
     """Fetches model configuration files from HuggingFace."""
@@ -39,6 +42,31 @@ class ModelFetcher:
         model_dir = TEMP_DIR / org / model_name
         model_dir.mkdir(parents=True, exist_ok=True)
         return model_dir
+
+    def fetch_model_metadata(self, model_id: str) -> Optional[dict]:
+        """Fetch model metadata from HuggingFace API.
+
+        Args:
+            model_id: Model ID in format "org/model"
+
+        Returns:
+            Metadata dict with createdAt, lastModified, downloads, likes, etc.
+        """
+        url = f"{HF_API_URL}/{model_id}"
+
+        try:
+            resp = self.client.get(url)
+            resp.raise_for_status()
+            return resp.json()
+        except httpx.HTTPStatusError as e:
+            if e.response.status_code == 404:
+                console.print(f"[yellow]  WARN metadata: Model not found[/yellow]")
+                return None
+            console.print(f"[yellow]  WARN metadata: HTTP {e.response.status_code}[/yellow]")
+            return None
+        except Exception as e:
+            console.print(f"[yellow]  WARN metadata: {str(e)}[/yellow]")
+            return None
 
     def fetch_file(self, model_id: str, filename: str) -> Optional[dict]:
         """Fetch a single configuration file from HuggingFace.
@@ -71,7 +99,10 @@ class ModelFetcher:
     def save_config(self, model_dir: Path, filename: str, content: dict):
         """Save configuration to local file."""
         filepath = model_dir / filename
-        filepath.write_text(json.dumps(content, indent=2, ensure_ascii=False))
+        filepath.write_text(
+            json.dumps(content, indent=2, ensure_ascii=False),
+            encoding="utf-8"
+        )
 
     def fetch_model(self, model_id: str) -> dict:
         """Fetch all configuration files for a model.
@@ -82,13 +113,39 @@ class ModelFetcher:
             model_id: Model ID in format "org/model"
 
         Returns:
-            Dictionary of fetched configs: {filename: content}
+            Dictionary of fetched configs: {filename: content, '_metadata': {createdAt: ...}}
         """
         model_dir = self.get_model_dir(model_id)
         result = {}
 
         console.print(f"\n[bold cyan]Fetching {model_id}[/bold cyan]")
 
+        # Fetch metadata from HuggingFace API (extract createdAt and accurate params)
+        metadata_response = self.fetch_model_metadata(model_id)
+        if metadata_response:
+            metadata = {}
+
+            # Extract creation time
+            created_at = metadata_response.get('createdAt')
+            if created_at:
+                metadata['createdAt'] = created_at
+
+            # Extract accurate parameter count from safetensors
+            safetensors = metadata_response.get('safetensors', {})
+            total_params = safetensors.get('total')
+            if total_params:
+                metadata['totalParameters'] = total_params
+
+            if metadata:
+                result["_metadata"] = metadata
+                info_parts = []
+                if created_at:
+                    info_parts.append(f"createdAt: {created_at[:10]}")
+                if total_params:
+                    info_parts.append(f"params: {total_params/1e9:.2f}B")
+                console.print(f"  [green]OK[/green] metadata ({', '.join(info_parts)})")
+
+        # Fetch config files
         for filename in CONFIG_FILES:
             content = self.fetch_file(model_id, filename)
 
@@ -137,10 +194,12 @@ class ModelFetcher:
 
         Returns:
             Dictionary of cached configs: {filename: content}
+            Note: _metadata is NOT cached, must fetch fresh from API
         """
         model_dir = self.get_model_dir(model_id)
         result = {}
 
+        # Load config files (no metadata caching)
         for filename in CONFIG_FILES:
             filepath = model_dir / filename
             if filepath.exists():

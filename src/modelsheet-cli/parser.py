@@ -55,6 +55,7 @@ class ParsedModel:
 
     # Metadata
     huggingface_url: Optional[str] = None
+    created_at: Optional[str] = None
 
     def to_dict(self) -> dict:
         """Convert to dictionary, excluding None values."""
@@ -82,7 +83,7 @@ class ModelParser:
 
         Args:
             model_id: Model ID in format "org/model"
-            configs: Dictionary of configuration files
+            configs: Dictionary of configuration files (including _metadata)
 
         Returns:
             ParsedModel instance
@@ -91,9 +92,10 @@ class ModelParser:
         tokenizer_config = configs.get("tokenizer_config.json", {})
         generation_config = configs.get("generation_config.json", {})
         adapter_config = configs.get("adapter_config.json")
+        metadata = configs.get("_metadata", {})
 
-        # Calculate parameters (handles MoE specially)
-        total_params, active_params = self._calc_parameters(config)
+        # Calculate parameters (handles MoE specially, uses API metadata if available)
+        total_params, active_params = self._calc_parameters(config, metadata)
 
         return ParsedModel(
             # Identification
@@ -133,6 +135,7 @@ class ModelParser:
             base_model=adapter_config.get("base_model_name_or_path") if adapter_config else None,
             # Metadata
             huggingface_url=f"https://huggingface.co/{model_id}",
+            created_at=metadata.get("createdAt"),
         )
 
     def _extract_name(self, model_id: str) -> str:
@@ -144,16 +147,30 @@ class ModelParser:
         org = model_id.split("/")[0]
         return self.PROVIDER_MAP.get(org, org)
 
-    def _calc_parameters(self, config: dict) -> tuple[Optional[int], Optional[int]]:
+    def _calc_parameters(self, config: dict, metadata: dict = None) -> tuple[Optional[int], Optional[int]]:
         """Calculate total and active parameters.
 
         For MoE models, calculates both total (all experts) and active (per token).
         For dense models, both values are the same.
 
+        Args:
+            config: Model config from config.json
+            metadata: Metadata from HuggingFace API (contains accurate totalParameters)
+
         Returns:
             Tuple of (total_parameters, active_parameters)
         """
-        # Explicit parameter count
+        # Priority 1: Accurate parameter count from HuggingFace API safetensors
+        if metadata and "totalParameters" in metadata:
+            total = metadata["totalParameters"]
+            # For non-MoE, active = total
+            if not self._is_moe(config):
+                return total, total
+            # For MoE, try to calculate active
+            active = self._calc_moe_active_params(config, total)
+            return total, active
+
+        # Priority 2: Explicit parameter count in config
         if "num_parameters" in config:
             total = config["num_parameters"]
             # For non-MoE, active = total

@@ -63,7 +63,7 @@
     "isMoe": false,
     "hasChatTemplate": false,
     "isAdapter": false,
-    "updatedAt": "2025-12-07T06:15:18.851142Z"
+    "updatedAt": "2025-12-07T08:50:46.854983Z"
   },
   {
     "id": "meta-llama/Llama-3.2-3B",
@@ -152,6 +152,7 @@
     "provider": "Alibaba",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-0.5B",
     "totalParameters": 422395904,
+    "activeParameters": 422395904,
     "contextLength": 32768,
     "embeddingDim": 896,
     "vocabSize": 151936,
@@ -169,10 +170,11 @@
     "mlpFactor": 5.43,
     "gqaRatio": 7.0,
     "eosToken": "<|endoftext|>",
+    "createdAt": "2024-09-15T12:15:39.000Z",
     "isMoe": false,
     "hasChatTemplate": true,
     "isAdapter": false,
-    "updatedAt": "2025-12-07T06:15:18.849694Z"
+    "updatedAt": "2025-12-07T08:51:32.576947Z"
   },
   {
     "id": "Qwen/Qwen2.5-32B-Instruct",
@@ -2851,6 +2853,7 @@
     "provider": "Alibaba",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-1.5B",
     "totalParameters": 1268318208,
+    "activeParameters": 1268318208,
     "contextLength": 131072,
     "embeddingDim": 1536,
     "vocabSize": 151936,
@@ -2868,10 +2871,11 @@
     "mlpFactor": 5.83,
     "gqaRatio": 6.0,
     "eosToken": "<|endoftext|>",
+    "createdAt": "2024-09-15T12:16:50.000Z",
     "isMoe": false,
     "hasChatTemplate": true,
     "isAdapter": false,
-    "updatedAt": "2025-12-07T06:15:18.849714Z"
+    "updatedAt": "2025-12-07T08:55:28.576655Z"
   },
   {
     "id": "Qwen/Qwen2.5-1.5B-Instruct",
@@ -2990,7 +2994,8 @@
     "name": "Qwen2.5-3B",
     "provider": "Alibaba",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-3B",
-    "totalParameters": 2538340352,
+    "totalParameters": 3085938688,
+    "activeParameters": 3085938688,
     "contextLength": 32768,
     "embeddingDim": 2048,
     "vocabSize": 151936,
@@ -3008,10 +3013,11 @@
     "mlpFactor": 5.38,
     "gqaRatio": 8.0,
     "eosToken": "<|endoftext|>",
+    "createdAt": "2024-09-15T12:17:03.000Z",
     "isMoe": false,
     "hasChatTemplate": true,
     "isAdapter": false,
-    "updatedAt": "2025-12-07T06:15:18.849751Z"
+    "updatedAt": "2025-12-07T09:03:08.132169Z"
   },
   {
     "id": "Qwen/Qwen2.5-3B-Instruct",

@@ -4086,7 +4086,7 @@
     "isMoe": true,
     "hasChatTemplate": true,
     "isAdapter": false,
-    "updatedAt": "2025-12-07T06:30:06.679513Z"
+    "updatedAt": "2025-12-07T06:34:43.082578Z"
   },
   {
     "id": "Qwen/Qwen3-30B-A3B-Base",
@@ -6499,8 +6499,8 @@
     "name": "DeepSeek-R1",
     "provider": "DeepSeek",
     "huggingfaceUrl": "https://huggingface.co/deepseek-ai/DeepSeek-R1",
-    "totalParameters": 703881543680,
-    "activeParameters": 37641519104,
+    "totalParameters": 670719279104,
+    "activeParameters": 37245157376,
     "contextLength": 163840,
     "embeddingDim": 7168,
     "vocabSize": 129280,
@@ -6524,7 +6524,7 @@
     "isMoe": true,
     "hasChatTemplate": true,
     "isAdapter": false,
-    "updatedAt": "2025-12-07T06:30:25.875297Z"
+    "updatedAt": "2025-12-07T06:34:24.234075Z"
   },
   {
     "id": "deepseek-ai/DeepSeek-R1-0528",

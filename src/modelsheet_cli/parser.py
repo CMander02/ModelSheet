@@ -207,12 +207,24 @@ class ModelParser:
         n_shared_experts = config.get("n_shared_experts", 0)
         num_experts_per_tok = config.get("num_experts_per_tok") or config.get("num_experts_per_token", 1)
         moe_intermediate_size = config.get("moe_intermediate_size") or config.get("intermediate_size")
+        intermediate_size = config.get("intermediate_size")
 
         if not all([n_routed_experts, moe_intermediate_size]):
             return None, None
 
-        # Attention layers (same for all)
+        # Check for dense layers at the beginning (DeepSeek models)
+        first_k_dense_replace = config.get("first_k_dense_replace", 0)
+        num_dense_layers = first_k_dense_replace
+        num_moe_layers = num_layers - num_dense_layers
+
+        # Attention layers (same for all layers)
         total_attention = num_layers * attention_per_layer
+
+        # Dense FFN layers (if any)
+        dense_ffn_params = 0
+        if num_dense_layers > 0 and intermediate_size:
+            # Dense layers use standard FFN: 2 * hidden * intermediate
+            dense_ffn_params = num_dense_layers * 2 * hidden_size * intermediate_size
 
         # MoE FFN layers
         # Each routed expert has: gate_proj + up_proj + down_proj
@@ -223,16 +235,16 @@ class ModelParser:
         params_per_shared_expert = 3 * hidden_size * moe_intermediate_size if n_shared_experts > 0 else 0
 
         # Total: all experts in all MoE layers
-        total_routed_params = num_layers * n_routed_experts * params_per_routed_expert
-        total_shared_params = num_layers * n_shared_experts * params_per_shared_expert
+        total_routed_params = num_moe_layers * n_routed_experts * params_per_routed_expert
+        total_shared_params = num_moe_layers * n_shared_experts * params_per_shared_expert
 
-        # Active: only activated experts per token
-        active_routed_params = num_layers * num_experts_per_tok * params_per_routed_expert
+        # Active: only activated experts per token (in MoE layers) + all params in dense layers
+        active_routed_params = num_moe_layers * num_experts_per_tok * params_per_routed_expert
         active_shared_params = total_shared_params  # Shared experts always active
 
         # Final totals
-        total_params = embedding + total_attention + total_routed_params + total_shared_params
-        active_params = embedding + total_attention + active_routed_params + active_shared_params
+        total_params = embedding + total_attention + dense_ffn_params + total_routed_params + total_shared_params
+        active_params = embedding + total_attention + dense_ffn_params + active_routed_params + active_shared_params
 
         return total_params, active_params
 

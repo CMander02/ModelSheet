@@ -15,3 +15,9 @@ meta-llama/Llama-3.1-8B-Instruct
 # Mistral Series
 mistralai/Mistral-7B-Instruct-v0.3
 mistralai/Mixtral-8x7B-Instruct-v0.1
+
+# DeepSeek Series
+
+# Jina Series
+jinaai/jina-embeddings-v3
+jinaai/jina-embeddings-v4

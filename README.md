@@ -32,7 +32,7 @@ ModelSheet/
 │   ├── schema.md                  # 字段定义
 │   └── deployment.md              # 部署方案
 ├── src/
-│   └── modelsheet_cli/            # Python CLI 工具
+│   └── modelsheet-cli/            # Python CLI 工具
 ├── data/                          # 数据目录
 │   ├── temp/                      # 下载的配置文件缓存
 │   └── models.json                # 导出的模型数据

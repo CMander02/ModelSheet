@@ -1,0 +1,17 @@
+# ModelSheet - Model List Configuration
+# One model ID per line in format: org/model
+# Lines starting with # are comments
+
+# Qwen Series
+Qwen/Qwen2.5-0.5B
+Qwen/Qwen2.5-7B-Instruct
+Qwen/Qwen2.5-72B-Instruct
+
+# Llama Series
+meta-llama/Llama-3.2-1B
+meta-llama/Llama-3.2-3B
+meta-llama/Llama-3.1-8B-Instruct
+
+# Mistral Series
+mistralai/Mistral-7B-Instruct-v0.3
+mistralai/Mixtral-8x7B-Instruct-v0.1

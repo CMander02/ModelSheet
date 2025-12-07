@@ -19,6 +19,7 @@ class ParsedModel:
 
     # Basic specs
     total_parameters: Optional[int] = None
+    active_parameters: Optional[int] = None  # For MoE: parameters used per token
     context_length: Optional[int] = None
     embedding_dim: Optional[int] = None
     vocab_size: Optional[int] = None
@@ -91,13 +92,17 @@ class ModelParser:
         generation_config = configs.get("generation_config.json", {})
         adapter_config = configs.get("adapter_config.json")
 
+        # Calculate parameters (handles MoE specially)
+        total_params, active_params = self._calc_parameters(config)
+
         return ParsedModel(
             # Identification
             id=model_id,
             name=self._extract_name(model_id),
             provider=self._extract_provider(model_id),
             # Basic specs
-            total_parameters=self._calc_parameters(config),
+            total_parameters=total_params,
+            active_parameters=active_params,
             context_length=self._get_context_length(config),
             embedding_dim=config.get("hidden_size"),
             vocab_size=config.get("vocab_size"),
@@ -117,8 +122,8 @@ class ModelParser:
             gqa_ratio=self._calc_gqa_ratio(config),
             # MoE
             is_moe=self._is_moe(config),
-            num_experts=config.get("num_local_experts") or config.get("num_experts"),
-            num_experts_per_token=config.get("num_experts_per_tok"),
+            num_experts=config.get("n_routed_experts") or config.get("num_local_experts") or config.get("num_experts"),
+            num_experts_per_token=config.get("num_experts_per_tok") or config.get("num_experts_per_token"),
             # Tokenizer
             has_chat_template="chat_template" in tokenizer_config,
             bos_token=self._get_token(tokenizer_config, "bos_token"),
@@ -139,30 +144,118 @@ class ModelParser:
         org = model_id.split("/")[0]
         return self.PROVIDER_MAP.get(org, org)
 
-    def _calc_parameters(self, config: dict) -> Optional[int]:
-        """Calculate total parameters.
+    def _calc_parameters(self, config: dict) -> tuple[Optional[int], Optional[int]]:
+        """Calculate total and active parameters.
 
-        First tries to use explicit num_parameters field,
-        then estimates from architecture parameters.
+        For MoE models, calculates both total (all experts) and active (per token).
+        For dense models, both values are the same.
+
+        Returns:
+            Tuple of (total_parameters, active_parameters)
         """
         # Explicit parameter count
         if "num_parameters" in config:
-            return config["num_parameters"]
+            total = config["num_parameters"]
+            # For non-MoE, active = total
+            if not self._is_moe(config):
+                return total, total
+            # For MoE, try to calculate active
+            active = self._calc_moe_active_params(config, total)
+            return total, active
 
         # Estimate from architecture
         h = config.get("hidden_size")
         l = config.get("num_hidden_layers")
         v = config.get("vocab_size")
-        i = config.get("intermediate_size")
 
-        if all([h, l, v, i]):
-            # Simplified estimation: embedding + attention + ffn
-            embedding = v * h
-            attention = l * (4 * h * h)  # Q, K, V, O projections
+        if not all([h, l, v]):
+            return None, None
+
+        # Embedding layer (shared)
+        embedding = v * h
+
+        # Attention (same for all models)
+        attention_per_layer = 4 * h * h  # Q, K, V, O projections
+
+        # Check if MoE
+        is_moe = self._is_moe(config)
+
+        if is_moe:
+            # MoE model: calculate with expert layers
+            total, active = self._calc_moe_params(config, embedding, attention_per_layer, h, l)
+            return total, active
+        else:
+            # Dense model: standard calculation
+            i = config.get("intermediate_size")
+            if not i:
+                return None, None
+
+            attention = l * attention_per_layer
             ffn = l * (2 * h * i)  # up and down projections
-            return embedding + attention + ffn
+            total = embedding + attention + ffn
+            return total, total
 
-        return None
+    def _calc_moe_params(self, config: dict, embedding: int, attention_per_layer: int,
+                         hidden_size: int, num_layers: int) -> tuple[Optional[int], Optional[int]]:
+        """Calculate parameters for MoE models.
+
+        Returns:
+            Tuple of (total_parameters, active_parameters)
+        """
+        # Get MoE-specific parameters
+        n_routed_experts = config.get("n_routed_experts") or config.get("num_local_experts") or config.get("num_experts")
+        n_shared_experts = config.get("n_shared_experts", 0)
+        num_experts_per_tok = config.get("num_experts_per_tok") or config.get("num_experts_per_token", 1)
+        moe_intermediate_size = config.get("moe_intermediate_size") or config.get("intermediate_size")
+
+        if not all([n_routed_experts, moe_intermediate_size]):
+            return None, None
+
+        # Attention layers (same for all)
+        total_attention = num_layers * attention_per_layer
+
+        # MoE FFN layers
+        # Each routed expert has: up_proj + down_proj
+        params_per_routed_expert = 2 * hidden_size * moe_intermediate_size
+        params_per_shared_expert = 2 * hidden_size * moe_intermediate_size if n_shared_experts > 0 else 0
+
+        # Total: all experts in all MoE layers
+        total_routed_params = num_layers * n_routed_experts * params_per_routed_expert
+        total_shared_params = num_layers * n_shared_experts * params_per_shared_expert
+
+        # Active: only activated experts per token
+        active_routed_params = num_layers * num_experts_per_tok * params_per_routed_expert
+        active_shared_params = total_shared_params  # Shared experts always active
+
+        # Final totals
+        total_params = embedding + total_attention + total_routed_params + total_shared_params
+        active_params = embedding + total_attention + active_routed_params + active_shared_params
+
+        return total_params, active_params
+
+    def _calc_moe_active_params(self, config: dict, total_params: int) -> Optional[int]:
+        """Estimate active parameters from total for MoE when we have explicit total.
+
+        This is a rough estimation based on the ratio of activated experts.
+        """
+        n_routed_experts = config.get("n_routed_experts") or config.get("num_local_experts") or config.get("num_experts")
+        num_experts_per_tok = config.get("num_experts_per_tok") or config.get("num_experts_per_token")
+
+        if not all([n_routed_experts, num_experts_per_tok]):
+            return None
+
+        # Rough estimation: assume FFN dominates parameter count
+        # active = total * (activated_experts / total_experts)
+        ratio = num_experts_per_tok / n_routed_experts
+
+        # This is a rough estimate - the actual calculation would need to know
+        # what fraction of params are in the MoE layers vs other layers
+        # For now, we assume ~70% of params are in MoE layers (typical for large MoE models)
+        moe_fraction = 0.7
+        non_moe_params = total_params * (1 - moe_fraction)
+        moe_params_active = total_params * moe_fraction * ratio
+
+        return int(non_moe_params + moe_params_active)
 
     def _get_context_length(self, config: dict) -> Optional[int]:
         """Get context length from various possible keys."""
@@ -193,6 +286,7 @@ class ModelParser:
         return (
             config.get("num_local_experts", 0) > 1
             or config.get("num_experts", 0) > 1
+            or config.get("n_routed_experts", 0) > 1
             or "moe" in config.get("model_type", "").lower()
         )
 

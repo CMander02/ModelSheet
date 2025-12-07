@@ -62,6 +62,7 @@ class ModelExporter:
         # Add optional fields only if they have values
         optional_fields = {
             "totalParameters": model.total_parameters,
+            "activeParameters": model.active_parameters,
             "contextLength": model.context_length,
             "embeddingDim": model.embedding_dim,
             "vocabSize": model.vocab_size,

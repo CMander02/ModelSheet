@@ -119,7 +119,8 @@
     "name": "Mixtral-8x7B-Instruct-v0.1",
     "provider": "Mistral AI",
     "huggingfaceUrl": "https://huggingface.co/mistralai/Mixtral-8x7B-Instruct-v0.1",
-    "totalParameters": 6036652032,
+    "totalParameters": 32343326720,
+    "activeParameters": 9794748416,
     "contextLength": 32768,
     "embeddingDim": 4096,
     "vocabSize": 32000,
@@ -143,7 +144,7 @@
     "isMoe": true,
     "hasChatTemplate": true,
     "isAdapter": false,
-    "updatedAt": "2025-12-07T06:15:18.851299Z"
+    "updatedAt": "2025-12-07T06:24:42.021955Z"
   },
   {
     "id": "Qwen/Qwen2.5-0.5B",
@@ -6497,7 +6498,8 @@
     "name": "DeepSeek-R1",
     "provider": "DeepSeek",
     "huggingfaceUrl": "https://huggingface.co/deepseek-ai/DeepSeek-R1",
-    "totalParameters": 29582163968,
+    "totalParameters": 473742180352,
+    "activeParameters": 29582163968,
     "contextLength": 163840,
     "embeddingDim": 7168,
     "vocabSize": 129280,
@@ -6514,13 +6516,14 @@
     "attentionDropout": 0.0,
     "mlpFactor": 2.57,
     "gqaRatio": 1.0,
+    "numExperts": 256,
     "numExpertsPerToken": 8,
     "bosToken": "<｜begin▁of▁sentence｜>",
     "eosToken": "<｜end▁of▁sentence｜>",
-    "isMoe": false,
+    "isMoe": true,
     "hasChatTemplate": true,
     "isAdapter": false,
-    "updatedAt": "2025-12-07T06:17:38.905921Z"
+    "updatedAt": "2025-12-07T06:24:17.088809Z"
   },
   {
     "id": "deepseek-ai/DeepSeek-R1-0528",

@@ -422,19 +422,30 @@ def show(
     console.print(f"\n[bold]Architecture:[/bold]")
     console.print(f"  Type: {model_data.get('architecture', 'Unknown')}")
 
-    params = model_data.get('totalParameters')
-    if params:
+    # Helper function to format parameter counts
+    def format_params(params):
+        if params is None:
+            return "Unknown"
         if params >= 1e12:
-            params_str = f"{params / 1e12:.1f}T"
+            return f"{params / 1e12:.1f}T"
         elif params >= 1e9:
-            params_str = f"{params / 1e9:.1f}B"
+            return f"{params / 1e9:.1f}B"
         elif params >= 1e6:
-            params_str = f"{params / 1e6:.1f}M"
+            return f"{params / 1e6:.1f}M"
         else:
-            params_str = str(params)
+            return str(params)
+
+    # Display parameters (handle MoE vs dense models)
+    total_params = model_data.get('totalParameters')
+    active_params = model_data.get('activeParameters')
+
+    if model_data.get('isMoe') and active_params and active_params != total_params:
+        # MoE model with different active/total
+        console.print(f"  Total Parameters: {format_params(total_params)}")
+        console.print(f"  Active Parameters: {format_params(active_params)}")
     else:
-        params_str = "Unknown"
-    console.print(f"  Parameters: {params_str}")
+        # Dense model or MoE where we only have one value
+        console.print(f"  Parameters: {format_params(total_params)}")
 
     console.print(f"  Context Length: {model_data.get('contextLength', 'Unknown')}")
     console.print(f"  Layers: {model_data.get('numLayers', 'Unknown')}")

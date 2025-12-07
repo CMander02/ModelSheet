@@ -26,7 +26,6 @@ env/
 
 # Data and cache
 data/temp/
-data/models.json
 
 # IDE
 .vscode/

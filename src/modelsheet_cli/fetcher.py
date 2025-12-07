@@ -97,7 +97,7 @@ class ModelFetcher:
                 result[filename] = content
                 console.print(f"  [green]OK[/green] {filename}")
             else:
-                console.print(f"  [dim]--[/dim] {filename} (not found)")
+                console.print(f"  [white]--[/white] {filename} (not found)")
 
         return result
 

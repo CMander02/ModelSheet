@@ -7,12 +7,21 @@ from typing import Optional
 
 import typer
 from rich.console import Console
+from rich.theme import Theme
 
 from .config import OUTPUT_FILE, TEMP_DIR
 from .exporter import ModelExporter
 from .fetcher import ModelFetcher
 from .parser import ModelParser
 from .utils import read_model_list, validate_model_id
+
+# Custom theme to make dim text white
+custom_theme = Theme({
+    "dim": "white",
+    "option": "bold cyan",
+    "switch": "bold green",
+    "repr.dim": "white",
+})
 
 app = typer.Typer(
     name="modelsheet",
@@ -23,13 +32,14 @@ app = typer.Typer(
 
     \b
     Quick Start:
-        1. Create a model list file (models.txt or models.yaml)
-        2. Run: modelsheet add --file models.txt
+        1. Add a single model: modelsheet add Qwen/Qwen2.5-7B
+        2. Or add from file: modelsheet add --file models.txt
         3. Check: modelsheet list
 
     \b
     Common Commands:
-        modelsheet add --file models.txt      # Add models to database
+        modelsheet add Qwen/Qwen2.5-7B       # Add single model
+        modelsheet add --file models.txt      # Add models from file
         modelsheet show Qwen/Qwen2.5-7B      # View model details
         modelsheet list                       # List all models
         modelsheet remove --model <id>        # Remove a model
@@ -41,26 +51,39 @@ app = typer.Typer(
     """,
     no_args_is_help=True,
     rich_markup_mode="rich",
+    pretty_exceptions_show_locals=False,
 )
-console = Console()
+
+# Patch typer's rich console to use our theme
+try:
+    import typer.rich_utils
+    _original_get_rich_console = typer.rich_utils._get_rich_console
+
+    def _get_custom_rich_console(**kwargs):
+        """Custom console with our theme."""
+        return Console(theme=custom_theme, **kwargs)
+
+    typer.rich_utils._get_rich_console = _get_custom_rich_console
+except Exception:
+    pass
+
+console = Console(theme=custom_theme)
 
 
 @app.command()
 def add(
+    model_id: Optional[str] = typer.Argument(
+        None,
+        help="Model ID to add (format: org/model, e.g., Qwen/Qwen3-8B)",
+    ),
     models_file: Optional[Path] = typer.Option(
         None,
         "--file",
         "-f",
         help="Path to file containing model IDs (.txt or .yaml)",
     ),
-    model_id: Optional[str] = typer.Option(
-        None,
-        "--model",
-        "-m",
-        help="Single model ID to add (format: org/model)",
-    ),
     timeout: int = typer.Option(
-        30,
+        60,
         "--timeout",
         "-t",
         help="Request timeout in seconds",
@@ -75,30 +98,30 @@ def add(
 
     \b
     Examples:
+        # Add single model (default)
+        modelsheet add Qwen/Qwen2.5-7B-Instruct
+        modelsheet add mistralai/Mistral-7B-v0.3
+
         # Add from file
         modelsheet add --file models.txt
         modelsheet add -f models.yaml
 
-        # Add single model
-        modelsheet add --model Qwen/Qwen2.5-7B-Instruct
-        modelsheet add -m mistralai/Mistral-7B-v0.3
-
-        # With custom timeout
-        modelsheet add -f models.txt --timeout 60
+        # With custom timeout (default: 60 seconds)
+        modelsheet add Qwen/Qwen3-8B --timeout 120
 
     \b
     What it does:
         1. Downloads config files from HuggingFace
         2. Parses and extracts model parameters
         3. Updates models.json database
-        4. Cleans up temporary cache
+        4. Cleans up temporary cache automatically
 
     \b
     Notes:
         - Existing models in JSON are preserved
         - Duplicate models are updated with new data
         - Failed downloads are skipped
-        - Cache is cleaned after successful export
+        - Cache is automatically cleaned after completion
     """
     # Get model IDs
     if models_file:
@@ -176,7 +199,11 @@ def add(
     console.print(f"Database: {OUTPUT_FILE} ({file_size:.1f} KB)")
 
     # Clean up cache
-    console.print("\n[dim]Cleaning up temporary cache...[/dim]")
+    console.print("\n[white]Cleaning up temporary cache...[/white]")
+    if TEMP_DIR.exists():
+        shutil.rmtree(TEMP_DIR)
+        TEMP_DIR.mkdir(exist_ok=True)
+        console.print("[green]Cache cleaned successfully.[/green]")
 
 
 @app.command()
@@ -414,6 +441,21 @@ def show(
     console.print(f"  Attention Heads: {model_data.get('numHeads', 'Unknown')}")
     console.print(f"  Hidden Size: {model_data.get('hiddenSize', 'Unknown')}")
     console.print(f"  Position Encoding: {model_data.get('positionEncoding', 'Unknown')}")
+    console.print(f"  Activation: {model_data.get('activation', 'Unknown')}")
+    console.print(f"  Norm Type: {model_data.get('normType', 'Unknown')}")
+
+    if model_data.get('normEps') is not None:
+        console.print(f"  Norm Eps: {model_data['normEps']:.0e}")
+
+    if model_data.get('attentionDropout') is not None:
+        console.print(f"  Attention Dropout: {model_data['attentionDropout']}")
+
+    if model_data.get('mlpFactor') is not None:
+        console.print(f"  MLP Factor: {model_data['mlpFactor']}")
+
+    if model_data.get('gqaRatio') is not None:
+        console.print(f"  GQA Ratio: {model_data['gqaRatio']}")
+
     console.print(f"  MoE: {'Yes' if model_data.get('isMoe') else 'No'}")
 
     if model_data.get('isMoe') and model_data.get('numExperts'):
@@ -430,66 +472,6 @@ def show(
         console.print(f"  Base Model: {model_data.get('baseModel', 'Unknown')}")
 
 
-@app.command()
-def purge(
-    confirm: bool = typer.Option(
-        False,
-        "--yes",
-        "-y",
-        help="Skip confirmation prompt",
-    )
-):
-    """
-    Delete all cached configuration files.
-
-    \b
-    Removes the entire cache directory (data/temp/).
-    This does NOT affect the models database (models.json).
-
-    \b
-    Examples:
-        # With confirmation
-        modelsheet purge
-
-        # Skip confirmation
-        modelsheet purge --yes
-        modelsheet purge -y
-
-    \b
-    What it does:
-        - Deletes all cached config files
-        - Removes data/temp/ directory
-        - Keeps models.json intact
-
-    \b
-    Notes:
-        - Cache is automatically cleaned after 'add' anyway
-        - Use this to free up disk space
-        - Models database is unaffected
-    """
-    if not TEMP_DIR.exists():
-        console.print("[yellow]Cache directory does not exist. Nothing to purge.[/yellow]")
-        return
-
-    # Count files
-    total_files = sum(1 for _ in TEMP_DIR.rglob('*.json'))
-    total_dirs = sum(1 for d in TEMP_DIR.rglob('*') if d.is_dir())
-
-    if not confirm:
-        console.print(f"[yellow]About to delete cache:[/yellow]")
-        console.print(f"  Files: {total_files}")
-        console.print(f"  Directories: {total_dirs}")
-        console.print(f"  Location: {TEMP_DIR}")
-
-        response = typer.confirm("\nAre you sure?")
-        if not response:
-            console.print("Cancelled.")
-            raise typer.Exit(0)
-
-    # Delete cache
-    shutil.rmtree(TEMP_DIR)
-    console.print(f"[bold green]Cache purged successfully![/bold green]")
-    console.print(f"Deleted {total_files} files in {total_dirs} directories")
 
 
 if __name__ == "__main__":

@@ -31,6 +31,12 @@ class ParsedModel:
     hidden_size: Optional[int] = None
     intermediate_size: Optional[int] = None
     position_encoding: Optional[str] = None
+    activation: Optional[str] = None
+    norm_type: Optional[str] = None
+    norm_eps: Optional[float] = None
+    attention_dropout: Optional[float] = None
+    mlp_factor: Optional[float] = None
+    gqa_ratio: Optional[float] = None
 
     # MoE
     is_moe: bool = False
@@ -103,6 +109,12 @@ class ModelParser:
             hidden_size=config.get("hidden_size"),
             intermediate_size=config.get("intermediate_size"),
             position_encoding=self._detect_position_encoding(config),
+            activation=config.get("hidden_act"),
+            norm_type=self._detect_norm_type(config),
+            norm_eps=self._get_norm_eps(config),
+            attention_dropout=config.get("attention_dropout"),
+            mlp_factor=self._calc_mlp_factor(config),
+            gqa_ratio=self._calc_gqa_ratio(config),
             # MoE
             is_moe=self._is_moe(config),
             num_experts=config.get("num_local_experts") or config.get("num_experts"),
@@ -190,6 +202,44 @@ class ModelParser:
         if isinstance(token, dict):
             return token.get("content")
         return token
+
+    def _detect_norm_type(self, config: dict) -> Optional[str]:
+        """Detect normalization type."""
+        if "rms_norm_eps" in config:
+            return "RMSNorm"
+        if "layer_norm_eps" in config or "layer_norm_epsilon" in config:
+            return "LayerNorm"
+        # Infer from model type
+        model_type = config.get("model_type", "").lower()
+        if model_type in ["llama", "mistral", "mixtral", "qwen", "qwen2"]:
+            return "RMSNorm"
+        return None
+
+    def _get_norm_eps(self, config: dict) -> Optional[float]:
+        """Get normalization epsilon value."""
+        return (
+            config.get("rms_norm_eps")
+            or config.get("layer_norm_eps")
+            or config.get("layer_norm_epsilon")
+        )
+
+    def _calc_mlp_factor(self, config: dict) -> Optional[float]:
+        """Calculate MLP expansion factor (intermediate_size / hidden_size)."""
+        hidden_size = config.get("hidden_size")
+        intermediate_size = config.get("intermediate_size")
+
+        if hidden_size and intermediate_size and hidden_size > 0:
+            return round(intermediate_size / hidden_size, 2)
+        return None
+
+    def _calc_gqa_ratio(self, config: dict) -> Optional[float]:
+        """Calculate GQA ratio (num_attention_heads / num_key_value_heads)."""
+        num_heads = config.get("num_attention_heads")
+        num_kv_heads = config.get("num_key_value_heads")
+
+        if num_heads and num_kv_heads and num_kv_heads > 0:
+            return round(num_heads / num_kv_heads, 2)
+        return None
 
     def parse_models(self, models_configs: dict[str, dict]) -> list[ParsedModel]:
         """Parse multiple models.

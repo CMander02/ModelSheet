@@ -4,6 +4,7 @@ from dataclasses import dataclass, asdict
 from typing import Optional
 
 from rich.console import Console
+from tqdm import tqdm
 
 console = Console()
 
@@ -377,26 +378,26 @@ class ModelParser:
             List of ParsedModel instances
         """
         results = []
+        failed = []
 
-        console.print(f"\n[bold]Parsing {len(models_configs)} models...[/bold]\n")
+        print()  # Add newline before progress bar
+        with tqdm(total=len(models_configs), desc="Parsing models", unit="model") as pbar:
+            for model_id, configs in models_configs.items():
+                try:
+                    parsed = self.parse(model_id, configs)
+                    results.append(parsed)
+                except Exception as e:
+                    failed.append((model_id, str(e)))
 
-        for i, (model_id, configs) in enumerate(models_configs.items(), 1):
-            try:
-                parsed = self.parse(model_id, configs)
-                results.append(parsed)
-
-                # Show summary
-                params = parsed.total_parameters
-                params_str = self._format_params(params) if params else "Unknown"
-                ctx = parsed.context_length or "?"
-                console.print(f"[{i}/{len(models_configs)}] {model_id}")
-                console.print(f"  [green]OK[/green] {params_str} params, {ctx} ctx, {parsed.architecture or 'Unknown'}")
-
-            except Exception as e:
-                console.print(f"[{i}/{len(models_configs)}] {model_id}")
-                console.print(f"  [red]FAILED[/red] Parse failed: {str(e)}")
+                pbar.update(1)
 
         console.print(f"\n[bold green]Done![/bold green] {len(results)} models parsed successfully.")
+
+        if failed:
+            console.print(f"\n[red]Failed to parse {len(failed)} model(s):[/red]")
+            for model_id, error in failed:
+                console.print(f"  - {model_id}: {error}")
+
         return results
 
     def _format_params(self, num: int) -> str:

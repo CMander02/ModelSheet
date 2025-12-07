@@ -72,9 +72,9 @@ console = Console(theme=custom_theme)
 
 @app.command()
 def add(
-    model_id: Optional[str] = typer.Argument(
+    model_ids: Optional[list[str]] = typer.Argument(
         None,
-        help="Model ID to add (format: org/model, e.g., Qwen/Qwen3-8B)",
+        help="Model ID(s) to add (format: org/model, e.g., Qwen/Qwen3-8B). Can specify multiple models separated by space.",
     ),
     models_file: Optional[Path] = typer.Option(
         None,
@@ -98,9 +98,11 @@ def add(
 
     \b
     Examples:
-        # Add single model (default)
+        # Add single model
         modelsheet add Qwen/Qwen2.5-7B-Instruct
-        modelsheet add mistralai/Mistral-7B-v0.3
+
+        # Add multiple models (like pip install)
+        modelsheet add Qwen/Qwen2.5-7B mistralai/Mistral-7B-v0.3 google/gemma-2-9b
 
         # Add from file
         modelsheet add --file models.txt
@@ -125,34 +127,39 @@ def add(
     """
     # Get model IDs
     if models_file:
-        model_ids = read_model_list(models_file)
-        if not model_ids:
+        final_model_ids = read_model_list(models_file)
+        if not final_model_ids:
             console.print("[red]No valid model IDs found in file[/red]")
             raise typer.Exit(1)
-    elif model_id:
-        if not validate_model_id(model_id):
-            console.print(f"[red]Invalid model ID format: {model_id}[/red]")
-            console.print("Expected format: org/model (e.g., Qwen/Qwen2.5-7B)")
-            raise typer.Exit(1)
-        model_ids = [model_id]
+    elif model_ids:
+        # Validate all model IDs
+        final_model_ids = []
+        for model_id in model_ids:
+            if not validate_model_id(model_id):
+                console.print(f"[red]Invalid model ID format: {model_id}[/red]")
+                console.print("Expected format: org/model (e.g., Qwen/Qwen2.5-7B)")
+                raise typer.Exit(1)
+            final_model_ids.append(model_id)
     else:
-        console.print("[red]Error: Must provide either --file or --model[/red]")
+        console.print("[red]Error: Must provide model ID(s) or --file option[/red]")
+        console.print("Examples:")
+        console.print("  modelsheet add Qwen/Qwen2.5-7B")
+        console.print("  modelsheet add Qwen/Qwen2.5-7B mistralai/Mistral-7B-v0.3")
+        console.print("  modelsheet add --file models.txt")
         raise typer.Exit(1)
 
-    console.print(f"[bold]Adding {len(model_ids)} model(s)...[/bold]\n")
+    console.print(f"[bold]Adding {len(final_model_ids)} model(s)...[/bold]\n")
 
     # Step 1: Fetch
-    console.print("[bold cyan]Step 1/3: Fetching configurations[/bold cyan]")
     with ModelFetcher(timeout=timeout) as fetcher:
-        models_configs = fetcher.fetch_models(model_ids)
+        models_configs = fetcher.fetch_models(final_model_ids)
 
     # Step 2: Parse
-    console.print("\n[bold cyan]Step 2/3: Parsing configurations[/bold cyan]")
     parser = ModelParser()
     new_models = parser.parse_models(models_configs)
 
     # Step 3: Update JSON
-    console.print("\n[bold cyan]Step 3/3: Updating database[/bold cyan]")
+    console.print("\n[bold cyan]Updating database...[/bold cyan]")
 
     # Load existing models
     existing_models = []

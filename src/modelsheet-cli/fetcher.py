@@ -1,11 +1,13 @@
 """Fetch model configuration files from HuggingFace."""
 
 import json
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Optional
 
 import httpx
 from rich.console import Console
+from tqdm import tqdm
 
 from .config import CONFIG_FILES, HF_BASE_URL, TEMP_DIR
 
@@ -13,6 +15,10 @@ console = Console()
 
 # HuggingFace Model API endpoint
 HF_API_URL = "https://huggingface.co/api/models"
+
+# Concurrent settings
+MAX_WORKERS = 4
+MAX_RETRIES = 3
 
 
 class ModelFetcher:
@@ -104,21 +110,20 @@ class ModelFetcher:
             encoding="utf-8"
         )
 
-    def fetch_model(self, model_id: str) -> dict:
+    def fetch_model(self, model_id: str, show_details: bool = False) -> dict:
         """Fetch all configuration files for a model.
 
         Always downloads and overwrites existing files.
 
         Args:
             model_id: Model ID in format "org/model"
+            show_details: Whether to show detailed output (for error reporting)
 
         Returns:
             Dictionary of fetched configs: {filename: content, '_metadata': {createdAt: ...}}
         """
         model_dir = self.get_model_dir(model_id)
         result = {}
-
-        console.print(f"\n[bold cyan]Fetching {model_id}[/bold cyan]")
 
         # Fetch metadata from HuggingFace API (extract createdAt and accurate params)
         metadata_response = self.fetch_model_metadata(model_id)
@@ -138,12 +143,6 @@ class ModelFetcher:
 
             if metadata:
                 result["_metadata"] = metadata
-                info_parts = []
-                if created_at:
-                    info_parts.append(f"createdAt: {created_at[:10]}")
-                if total_params:
-                    info_parts.append(f"params: {total_params/1e9:.2f}B")
-                console.print(f"  [green]OK[/green] metadata ({', '.join(info_parts)})")
 
         # Fetch config files
         for filename in CONFIG_FILES:
@@ -152,14 +151,11 @@ class ModelFetcher:
             if content:
                 self.save_config(model_dir, filename, content)
                 result[filename] = content
-                console.print(f"  [green]OK[/green] {filename}")
-            else:
-                console.print(f"  [white]--[/white] {filename} (not found)")
 
         return result
 
     def fetch_models(self, model_ids: list[str]) -> dict[str, dict]:
-        """Fetch configurations for multiple models.
+        """Fetch configurations for multiple models with concurrent execution and retry.
 
         Args:
             model_ids: List of model IDs
@@ -168,23 +164,86 @@ class ModelFetcher:
             Dictionary: {model_id: {filename: content}}
         """
         results = {}
+        failed_models = []
 
-        console.print(f"\n[bold]Fetching {len(model_ids)} models...[/bold]\n")
+        # Phase 1: Concurrent fetching with progress bar
+        print()  # Add newline before progress bar
+        with tqdm(total=len(model_ids), desc="Fetching models", unit="model") as pbar:
+            with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+                # Submit all tasks
+                future_to_model = {
+                    executor.submit(self._fetch_with_error_handling, model_id): model_id
+                    for model_id in model_ids
+                }
 
-        for i, model_id in enumerate(model_ids, 1):
-            console.print(f"[{i}/{len(model_ids)}]", end=" ")
-            try:
-                configs = self.fetch_model(model_id)
-                results[model_id] = configs
-            except Exception as e:
-                console.print(f"[red]FAILED: {str(e)}[/red]")
-                results[model_id] = {}
+                # Collect results as they complete
+                for future in as_completed(future_to_model):
+                    model_id = future_to_model[future]
+                    configs, error = future.result()
+
+                    if configs:
+                        results[model_id] = configs
+                    else:
+                        failed_models.append((model_id, error))
+
+                    pbar.update(1)
+
+        # Phase 2: Retry failed models (up to MAX_RETRIES times)
+        retry_count = 0
+        while failed_models and retry_count < MAX_RETRIES:
+            retry_count += 1
+            console.print(f"\n[yellow]Retrying {len(failed_models)} failed model(s) (attempt {retry_count}/{MAX_RETRIES})...[/yellow]")
+
+            current_failures = failed_models
+            failed_models = []
+
+            with tqdm(total=len(current_failures), desc=f"Retry {retry_count}", unit="model") as pbar:
+                with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+                    future_to_model = {
+                        executor.submit(self._fetch_with_error_handling, model_id): model_id
+                        for model_id, _ in current_failures
+                    }
+
+                    for future in as_completed(future_to_model):
+                        model_id = future_to_model[future]
+                        configs, error = future.result()
+
+                        if configs:
+                            results[model_id] = configs
+                        else:
+                            failed_models.append((model_id, error))
+
+                        pbar.update(1)
 
         # Summary
         success_count = sum(1 for configs in results.values() if configs)
         console.print(f"\n[bold green]Done![/bold green] {success_count}/{len(model_ids)} models fetched successfully.")
 
+        # Report final failures
+        if failed_models:
+            console.print(f"\n[red]Failed to fetch {len(failed_models)} model(s) after {MAX_RETRIES} retries:[/red]")
+            for model_id, error in failed_models:
+                console.print(f"  - {model_id}: {error}")
+                results[model_id] = {}  # Add empty entry for failed models
+
         return results
+
+    def _fetch_with_error_handling(self, model_id: str) -> tuple[dict, Optional[str]]:
+        """Fetch a model with error handling.
+
+        Args:
+            model_id: Model ID to fetch
+
+        Returns:
+            Tuple of (configs dict, error message or None)
+        """
+        try:
+            configs = self.fetch_model(model_id)
+            if not configs:
+                return {}, "No configs found"
+            return configs, None
+        except Exception as e:
+            return {}, str(e)
 
     def load_cached_configs(self, model_id: str) -> dict:
         """Load cached configuration files for a model.

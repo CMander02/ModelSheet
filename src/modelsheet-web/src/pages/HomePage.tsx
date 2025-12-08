@@ -228,7 +228,7 @@ export function HomePage() {
       )}
 
       {/* Main Content */}
-      <main className="container py-6">
+      <main className="container pt-6 pb-2">
         <ModelTable
           models={models}
           columns={columns}
@@ -242,7 +242,7 @@ export function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t py-4 mt-4">
+      <footer className="py-2">
         <div className="container text-center text-sm text-muted-foreground">
           {t.common.footer}
         </div>

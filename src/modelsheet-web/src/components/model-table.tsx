@@ -222,7 +222,7 @@ export function ModelTable({
       {/* Table Container - 固定高度容器 */}
       <div
         className="rounded-md border"
-        style={{ height: 'calc(100vh - 16rem)' }}
+        style={{ height: 'calc(100vh - 13rem)' }}
       >
         {/* 滚动容器 */}
         <div className="h-full overflow-auto">
@@ -243,13 +243,11 @@ export function ModelTable({
                     key={column.key}
                     className={`h-12 px-4 text-left align-middle font-medium text-muted-foreground whitespace-nowrap ${
                       index === 0
-                        ? `sticky z-30 bg-card border-r`
+                        ? `sticky z-30 bg-card`
                         : ''
                     }`}
                     style={index === 0 ? {
-                      left: onModelSelect ? '48px' : '0px',
-                      minWidth: '180px',
-                      maxWidth: '180px'
+                      left: onModelSelect ? '48px' : '0px'
                     } : { minWidth: '120px' }}
                   >
                     {column.sortable ? (
@@ -291,11 +289,11 @@ export function ModelTable({
                 sortedModels.map((model) => (
                   <tr
                     key={model.id}
-                    className="border-b transition-colors hover:bg-muted/50"
+                    className="group border-b transition-colors"
                   >
                     {onModelSelect && (
                       <td
-                        className="p-4 align-middle sticky left-0 z-10 bg-card"
+                        className="p-4 align-middle sticky left-0 z-10 bg-card group-hover:bg-muted transition-colors"
                         style={{ minWidth: '48px', maxWidth: '48px' }}
                       >
                         <Checkbox
@@ -308,15 +306,13 @@ export function ModelTable({
                     {visibleColumns.map((column, colIndex) => (
                       <td
                         key={column.key}
-                        className={`p-4 align-middle ${
+                        className={`p-4 align-middle bg-card group-hover:bg-muted transition-colors ${
                           colIndex === 0
-                            ? `sticky z-10 bg-card border-r overflow-hidden text-ellipsis whitespace-nowrap`
+                            ? `sticky z-10 whitespace-nowrap`
                             : ''
                         }`}
                         style={colIndex === 0 ? {
-                          left: onModelSelect ? '48px' : '0px',
-                          minWidth: '180px',
-                          maxWidth: '180px'
+                          left: onModelSelect ? '48px' : '0px'
                         } : undefined}
                       >
                         {formatValue(model[column.key], column.type)}

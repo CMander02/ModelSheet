@@ -54,43 +54,43 @@ export function EnhancedComparisonTable({
 
   const renderModelCard = (model: ModelInfo) => (
     <div key={model.id} className="flex-1 min-w-[280px] max-w-[400px]">
-      <div className="rounded-lg border bg-card h-full">
-        {/* Model Header */}
-        <div className="p-4 border-b bg-muted/30">
-          <div className="flex items-start justify-between gap-2 mb-2">
+      <div className="rounded-lg border bg-card h-full shadow-sm hover:shadow-md transition-shadow">
+        {/* Model Header - 增强视觉层级 */}
+        <div className="p-6 border-b bg-gradient-to-br from-primary/5 to-accent/5">
+          <div className="flex items-start justify-between gap-2 mb-3">
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-lg truncate">{model.name}</h3>
-              <p className="text-sm text-muted-foreground">{model.provider}</p>
+              <h3 className="font-bold text-xl truncate mb-1">{model.name}</h3>
+              <p className="text-sm font-medium text-muted-foreground">{model.provider}</p>
             </div>
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 shrink-0"
+              className="h-8 w-8 shrink-0 hover:bg-destructive/10 hover:text-destructive"
               onClick={() => onRemoveModel(model.id)}
             >
               <X className="h-4 w-4" />
             </Button>
           </div>
 
-          {/* Key Specs */}
-          <div className="space-y-1 mt-3">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">参数量:</span>
-              <span className="font-semibold">
+          {/* Key Specs - 使用卡片展示 */}
+          <div className="grid grid-cols-1 gap-2 mt-4">
+            <div className="flex justify-between items-center px-3 py-2 rounded-md bg-background/50">
+              <span className="text-xs text-muted-foreground">参数量</span>
+              <span className="font-bold text-sm">
                 {formatValue(model.totalParameters, "number", "totalParameters")}
               </span>
             </div>
             {model.activeParameters && (
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">激活参数:</span>
-                <span className="font-medium text-green-600 dark:text-green-400">
+              <div className="flex justify-between items-center px-3 py-2 rounded-md bg-accent/10">
+                <span className="text-xs text-muted-foreground">激活参数</span>
+                <span className="font-bold text-sm text-accent">
                   {formatValue(model.activeParameters, "number", "activeParameters")}
                 </span>
               </div>
             )}
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">上下文:</span>
-              <span className="font-semibold">
+            <div className="flex justify-between items-center px-3 py-2 rounded-md bg-background/50">
+              <span className="text-xs text-muted-foreground">上下文</span>
+              <span className="font-bold text-sm">
                 {formatValue(model.contextLength, "number", "contextLength")}
               </span>
             </div>
@@ -102,10 +102,10 @@ export function EnhancedComparisonTable({
               href={model.huggingfaceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs text-primary hover:underline mt-2"
+              className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline mt-3 font-medium"
             >
-              <ExternalLink className="h-3 w-3" />
-              HuggingFace
+              <ExternalLink className="h-3.5 w-3.5" />
+              查看 HuggingFace
             </a>
           )}
         </div>
@@ -202,18 +202,18 @@ function DetailsSection({ title, fields, model, models, isExpanded, onToggle }: 
     <div>
       <button
         onClick={onToggle}
-        className="w-full px-4 py-2 flex items-center justify-between hover:bg-muted/50 transition-colors"
+        className="w-full px-4 py-3 flex items-center justify-between hover:bg-muted/30 transition-colors group"
       >
-        <span className="font-medium text-sm">{title}</span>
+        <span className="font-semibold text-sm group-hover:text-primary transition-colors">{title}</span>
         {isExpanded ? (
-          <ChevronUp className="h-4 w-4 text-muted-foreground" />
+          <ChevronUp className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
         ) : (
-          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+          <ChevronDown className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
         )}
       </button>
 
       {isExpanded && (
-        <div className="px-4 py-2 space-y-2">
+        <div className="px-4 py-3 space-y-2.5 bg-muted/10 animate-in fade-in-50 duration-200">
           {fields.map((col) => {
             const value = model[col.key]
             const allValues = col.type === "number"
@@ -224,9 +224,9 @@ function DetailsSection({ title, fields, model, models, isExpanded, onToggle }: 
               : ""
 
             return (
-              <div key={col.key} className="flex justify-between text-sm">
-                <span className="text-muted-foreground">{col.label}:</span>
-                <span className={`font-medium ${highlightClass} px-1 rounded`}>
+              <div key={col.key} className="flex justify-between items-center text-sm">
+                <span className="text-muted-foreground font-medium">{col.label}</span>
+                <span className={`font-semibold ${highlightClass} px-2 py-0.5 rounded transition-colors`}>
                   {formatValue(value, col.type, col.key)}
                 </span>
               </div>

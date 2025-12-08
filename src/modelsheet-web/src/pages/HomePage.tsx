@@ -137,8 +137,41 @@ export function HomePage() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-muted-foreground">{t.common.loading}</p>
+      <div className="min-h-screen bg-background">
+        {/* Header Skeleton */}
+        <header className="sticky top-0 z-50 w-full border-b bg-background">
+          <div className="container flex h-16 items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="h-8 w-48 bg-muted animate-pulse rounded" />
+              <div className="h-5 w-16 bg-muted animate-pulse rounded" />
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="h-10 w-24 bg-muted animate-pulse rounded" />
+              <div className="h-10 w-10 bg-muted animate-pulse rounded" />
+              <div className="h-10 w-10 bg-muted animate-pulse rounded" />
+            </div>
+          </div>
+        </header>
+
+        {/* Content Skeleton */}
+        <main className="container py-8">
+          <div className="space-y-4">
+            {/* Search and Controls Skeleton */}
+            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+              <div className="h-10 w-full sm:w-96 bg-muted animate-pulse rounded" />
+              <div className="h-10 w-full sm:w-80 bg-muted animate-pulse rounded" />
+            </div>
+
+            {/* Table Skeleton */}
+            <div className="rounded-md border">
+              <div className="p-4 space-y-3">
+                {[...Array(8)].map((_, i) => (
+                  <div key={i} className="h-12 bg-muted animate-pulse rounded" style={{ animationDelay: `${i * 50}ms` }} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </main>
       </div>
     )
   }
@@ -153,15 +186,6 @@ export function HomePage() {
             <span className="text-sm text-muted-foreground">{t.nav.version}</span>
           </div>
           <div className="flex items-center gap-2">
-            {selectedModels.size > 0 && (
-              <Button
-                variant="default"
-                onClick={handleCompare}
-                disabled={selectedModels.size < 2}
-              >
-                {t.common.compareSelected} ({selectedModels.size})
-              </Button>
-            )}
             <Link to="/compare">
               <Button variant="outline">{t.nav.compareModels}</Button>
             </Link>
@@ -174,8 +198,37 @@ export function HomePage() {
         </div>
       </header>
 
+      {/* Batch Operation Bar - TDesign "所见即所得" 模式 */}
+      {selectedModels.size > 0 && (
+        <div className="sticky top-16 z-40 w-full border-b bg-primary/10 backdrop-blur supports-[backdrop-filter]:bg-primary/5">
+          <div className="container flex h-14 items-center justify-between">
+            <div className="flex items-center gap-4">
+              <span className="text-sm font-medium">
+                {language === "zh" ? "已选择" : "Selected"} {selectedModels.size} {language === "zh" ? "个模型" : "models"}
+              </span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSelectedModels(new Set())}
+              >
+                {language === "zh" ? "清除选择" : "Clear Selection"}
+              </Button>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="default"
+                onClick={handleCompare}
+                disabled={selectedModels.size < 2}
+              >
+                {t.common.compareSelected}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Main Content */}
-      <main className="container py-8">
+      <main className="container py-6">
         <ModelTable
           models={models}
           columns={columns}
@@ -189,7 +242,7 @@ export function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t py-8 mt-12">
+      <footer className="border-t py-4 mt-4">
         <div className="container text-center text-sm text-muted-foreground">
           {t.common.footer}
         </div>

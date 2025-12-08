@@ -39,6 +39,10 @@ const COLUMN_CONFIGS: Omit<ColumnConfig, "label">[] = [
   // Type flags
   { key: "isAdapter", visible: false, sortable: true, type: "boolean" },
   { key: "baseModel", visible: false, sortable: true, type: "string" },
+
+  // Timestamps
+  { key: "createdAt", visible: false, sortable: true, type: "date" },
+  { key: "updatedAt", visible: false, sortable: true, type: "date" },
 ]
 
 // 根据语言生成列配置
@@ -57,8 +61,8 @@ export const DEFAULT_COLUMNS: ColumnConfig[] = getColumnConfigs("zh")
 export const COMPLEXITY_PRESETS: Record<string, ComplexityPreset> = {
   simple: {
     level: "simple",
-    columns: ["name", "provider", "totalParameters", "contextLength"],
-    description: "基础信息：名称、提供商、参数量、上下文长度",
+    columns: ["name", "provider", "totalParameters", "contextLength", "createdAt"],
+    description: "基础信息：名称、提供商、参数量、上下文长度、创建时间",
   },
   enthusiast: {
     level: "enthusiast",

@@ -42,6 +42,9 @@ const translations = {
       compareSelected: "比较选中",
       loading: "加载中...",
       searchModels: "搜索模型...",
+      modelsShowing: "显示",
+      modelsTotal: "个模型",
+      modelsOf: "/",
     },
     // 列标题
     columns: {
@@ -74,6 +77,7 @@ const translations = {
       isAdapter: "Adapter模型",
       baseModel: "基座模型",
       huggingfaceUrl: "HuggingFace链接",
+      createdAt: "创建时间",
       updatedAt: "更新时间",
     },
   },
@@ -119,6 +123,9 @@ const translations = {
       compareSelected: "Compare Selected",
       loading: "Loading...",
       searchModels: "Search models...",
+      modelsShowing: "Showing",
+      modelsTotal: "models",
+      modelsOf: "/",
     },
     // Column headers
     columns: {
@@ -151,6 +158,7 @@ const translations = {
       isAdapter: "Adapter Model",
       baseModel: "Base Model",
       huggingfaceUrl: "HuggingFace URL",
+      createdAt: "Created At",
       updatedAt: "Updated At",
     },
   },

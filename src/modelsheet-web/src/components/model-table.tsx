@@ -1,5 +1,5 @@
-import { useState } from "react"
-import { ArrowUpDown, Search, Settings2 } from "lucide-react"
+import { useState, useEffect, useMemo } from "react"
+import { ArrowUpDown, Search, Settings2, ArrowUp, ArrowDown } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
   Table,
@@ -37,51 +37,71 @@ export function ModelTable({
   language,
 }: ModelTableProps) {
   const [searchTerm, setSearchTerm] = useState("")
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("")
   const [sortConfig, setSortConfig] = useState<SortConfig>({
     key: null,
     direction: "asc",
   })
 
+  // Debounce search - 立即生效模式 (300ms延迟)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm)
+    }, 300)
+
+    return () => clearTimeout(timer)
+  }, [searchTerm])
+
   // Get visible columns based on complexity
   const preset = COMPLEXITY_PRESETS[currentComplexity]
-  const visibleColumns = columns.filter((col) => preset.columns.includes(col.key))
+  const visibleColumns = useMemo(
+    () => columns.filter((col) => preset.columns.includes(col.key)),
+    [columns, preset.columns]
+  )
 
-  // Filter models
-  const filteredModels = models.filter((model) => {
-    const searchLower = searchTerm.toLowerCase()
-    return (
-      model.name?.toLowerCase().includes(searchLower) ||
-      model.provider?.toLowerCase().includes(searchLower) ||
-      model.baseModel?.toLowerCase().includes(searchLower)
-    )
-  })
+  // Filter models - 使用 debounced search term
+  const filteredModels = useMemo(() => {
+    if (!debouncedSearchTerm) return models
+
+    const searchLower = debouncedSearchTerm.toLowerCase()
+    return models.filter((model) => {
+      return (
+        model.name?.toLowerCase().includes(searchLower) ||
+        model.provider?.toLowerCase().includes(searchLower) ||
+        model.baseModel?.toLowerCase().includes(searchLower) ||
+        model.id?.toLowerCase().includes(searchLower)
+      )
+    })
+  }, [models, debouncedSearchTerm])
 
   // Sort models
-  const sortedModels = [...filteredModels].sort((a, b) => {
-    if (!sortConfig.key) return 0
+  const sortedModels = useMemo(() => {
+    if (!sortConfig.key) return filteredModels
 
-    const aVal = a[sortConfig.key]
-    const bVal = b[sortConfig.key]
+    return [...filteredModels].sort((a, b) => {
+      const aVal = a[sortConfig.key!]
+      const bVal = b[sortConfig.key!]
 
-    if (aVal == null) return 1
-    if (bVal == null) return -1
+      if (aVal == null) return 1
+      if (bVal == null) return -1
 
-    if (typeof aVal === "number" && typeof bVal === "number") {
-      return sortConfig.direction === "asc" ? aVal - bVal : bVal - aVal
-    }
+      if (typeof aVal === "number" && typeof bVal === "number") {
+        return sortConfig.direction === "asc" ? aVal - bVal : bVal - aVal
+      }
 
-    if (sortConfig.key.includes("Date") || sortConfig.key.includes("date")) {
-      const aDate = new Date(aVal as string).getTime()
-      const bDate = new Date(bVal as string).getTime()
-      return sortConfig.direction === "asc" ? aDate - bDate : bDate - aDate
-    }
+      if (sortConfig.key!.includes("Date") || sortConfig.key!.includes("date")) {
+        const aDate = new Date(aVal as string).getTime()
+        const bDate = new Date(bVal as string).getTime()
+        return sortConfig.direction === "asc" ? aDate - bDate : bDate - aDate
+      }
 
-    const aStr = String(aVal).toLowerCase()
-    const bStr = String(bVal).toLowerCase()
-    return sortConfig.direction === "asc"
-      ? aStr.localeCompare(bStr)
-      : bStr.localeCompare(aStr)
-  })
+      const aStr = String(aVal).toLowerCase()
+      const bStr = String(bVal).toLowerCase()
+      return sortConfig.direction === "asc"
+        ? aStr.localeCompare(bStr)
+        : bStr.localeCompare(aStr)
+    })
+  }, [filteredModels, sortConfig])
 
   const handleSort = (key: string) => {
     setSortConfig((prev) => {
@@ -125,22 +145,55 @@ export function ModelTable({
     }
   }
 
+  const t = useMemo(() => {
+    return language === "zh"
+      ? {
+          modelsShowing: "显示",
+          modelsTotal: "个模型",
+          modelsOf: "/",
+          complexityLabel: "复杂度:",
+          simple: "简单",
+          enthusiast: "爱好者",
+          developer: "开发者",
+          custom: "自定义",
+          searchModels: "搜索模型...",
+          noResults: "没有找到匹配的模型"
+        }
+      : {
+          modelsShowing: "Showing",
+          modelsTotal: "models",
+          modelsOf: "/",
+          complexityLabel: "Complexity:",
+          simple: "Simple",
+          enthusiast: "Enthusiast",
+          developer: "Developer",
+          custom: "Custom",
+          searchModels: "Search models...",
+          noResults: "No matching models found"
+        }
+  }, [language])
+
   return (
     <div className="space-y-4">
       {/* Search and Controls */}
       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-        <div className="relative w-full sm:w-96">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-          <Input
-            placeholder={language === "zh" ? "搜索模型..." : "Search models..."}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div className="relative flex-1 sm:w-96">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Input
+              placeholder={t.searchModels}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          <div className="text-sm text-muted-foreground whitespace-nowrap">
+            {t.modelsShowing} {sortedModels.length} {t.modelsOf} {models.length} {t.modelsTotal}
+          </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">{language === "zh" ? "复杂度:" : "Complexity:"}</span>
+          <span className="text-sm text-muted-foreground">{t.complexityLabel}</span>
           <ToggleGroup
             type="single"
             value={currentComplexity}
@@ -150,91 +203,131 @@ export function ModelTable({
               }
             }}
           >
-            <ToggleGroupItem value="simple" aria-label={language === "zh" ? "简单" : "Simple"}>
-              {language === "zh" ? "简单" : "Simple"}
+            <ToggleGroupItem value="simple" aria-label={t.simple}>
+              {t.simple}
             </ToggleGroupItem>
-            <ToggleGroupItem value="enthusiast" aria-label={language === "zh" ? "爱好者" : "Enthusiast"}>
-              {language === "zh" ? "爱好者" : "Enthusiast"}
+            <ToggleGroupItem value="enthusiast" aria-label={t.enthusiast}>
+              {t.enthusiast}
             </ToggleGroupItem>
-            <ToggleGroupItem value="developer" aria-label={language === "zh" ? "开发者" : "Developer"}>
-              {language === "zh" ? "开发者" : "Developer"}
+            <ToggleGroupItem value="developer" aria-label={t.developer}>
+              {t.developer}
             </ToggleGroupItem>
-            <ToggleGroupItem value="custom" aria-label={language === "zh" ? "自定义" : "Custom"}>
-              {language === "zh" ? "自定义" : "Custom"}
+            <ToggleGroupItem value="custom" aria-label={t.custom}>
+              {t.custom}
             </ToggleGroupItem>
           </ToggleGroup>
         </div>
       </div>
 
-      {/* Table */}
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              {onModelSelect && (
-                <TableHead className="w-12">
-                  <span className="sr-only">选择</span>
-                </TableHead>
+      {/* Table Container - 固定高度容器 */}
+      <div
+        className="rounded-md border"
+        style={{ height: 'calc(100vh - 16rem)' }}
+      >
+        {/* 滚动容器 */}
+        <div className="h-full overflow-auto">
+          <table className="w-full caption-bottom text-sm border-collapse">
+            {/* 表头 - 使用thead sticky */}
+            <thead className="sticky top-0 z-20 bg-card border-b">
+              <tr>
+                {onModelSelect && (
+                  <th
+                    className="h-12 px-4 text-left align-middle font-medium text-muted-foreground sticky left-0 z-30 bg-card w-12"
+                    style={{ minWidth: '48px', maxWidth: '48px' }}
+                  >
+                    <span className="sr-only">选择</span>
+                  </th>
+                )}
+                {visibleColumns.map((column, index) => (
+                  <th
+                    key={column.key}
+                    className={`h-12 px-4 text-left align-middle font-medium text-muted-foreground whitespace-nowrap ${
+                      index === 0
+                        ? `sticky z-30 bg-card border-r`
+                        : ''
+                    }`}
+                    style={index === 0 ? {
+                      left: onModelSelect ? '48px' : '0px',
+                      minWidth: '180px',
+                      maxWidth: '180px'
+                    } : { minWidth: '120px' }}
+                  >
+                    {column.sortable ? (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="-ml-3 h-8 data-[state=open]:bg-accent"
+                        onClick={() => handleSort(column.key)}
+                      >
+                        {column.label}
+                        {sortConfig.key === column.key ? (
+                          sortConfig.direction === "asc" ? (
+                            <ArrowUp className="ml-2 h-4 w-4 text-primary" />
+                          ) : (
+                            <ArrowDown className="ml-2 h-4 w-4 text-primary" />
+                          )
+                        ) : (
+                          <ArrowUpDown className="ml-2 h-4 w-4 text-muted-foreground" />
+                        )}
+                      </Button>
+                    ) : (
+                      <span>{column.label}</span>
+                    )}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {sortedModels.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={visibleColumns.length + (onModelSelect ? 1 : 0)}
+                    className="h-24 text-center p-4"
+                  >
+                    {t.noResults}
+                  </td>
+                </tr>
+              ) : (
+                sortedModels.map((model) => (
+                  <tr
+                    key={model.id}
+                    className="border-b transition-colors hover:bg-muted/50"
+                  >
+                    {onModelSelect && (
+                      <td
+                        className="p-4 align-middle sticky left-0 z-10 bg-card"
+                        style={{ minWidth: '48px', maxWidth: '48px' }}
+                      >
+                        <Checkbox
+                          checked={selectedModels.has(model.id)}
+                          onCheckedChange={() => onModelSelect(model.id)}
+                          aria-label={`选择 ${model.name}`}
+                        />
+                      </td>
+                    )}
+                    {visibleColumns.map((column, colIndex) => (
+                      <td
+                        key={column.key}
+                        className={`p-4 align-middle ${
+                          colIndex === 0
+                            ? `sticky z-10 bg-card border-r overflow-hidden text-ellipsis whitespace-nowrap`
+                            : ''
+                        }`}
+                        style={colIndex === 0 ? {
+                          left: onModelSelect ? '48px' : '0px',
+                          minWidth: '180px',
+                          maxWidth: '180px'
+                        } : undefined}
+                      >
+                        {formatValue(model[column.key], column.type)}
+                      </td>
+                    ))}
+                  </tr>
+                ))
               )}
-              {visibleColumns.map((column) => (
-                <TableHead key={column.key}>
-                  {column.sortable ? (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="-ml-3 h-8 data-[state=open]:bg-accent"
-                      onClick={() => handleSort(column.key)}
-                    >
-                      {column.label}
-                      <ArrowUpDown className="ml-2 h-4 w-4" />
-                    </Button>
-                  ) : (
-                    <span>{column.label}</span>
-                  )}
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {sortedModels.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  colSpan={visibleColumns.length + (onModelSelect ? 1 : 0)}
-                  className="h-24 text-center"
-                >
-                  {language === "zh" ? "没有找到匹配的模型" : "No matching models found"}
-                </TableCell>
-              </TableRow>
-            ) : (
-              sortedModels.map((model) => (
-                <TableRow
-                  key={model.id}
-                  className="hover:bg-muted/50"
-                >
-                  {onModelSelect && (
-                    <TableCell className="w-12">
-                      <Checkbox
-                        checked={selectedModels.has(model.id)}
-                        onCheckedChange={() => onModelSelect(model.id)}
-                        aria-label={`选择 ${model.name}`}
-                      />
-                    </TableCell>
-                  )}
-                  {visibleColumns.map((column) => (
-                    <TableCell key={column.key}>
-                      {formatValue(model[column.key], column.type)}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
-
-      {/* Results count */}
-      <div className="text-sm text-muted-foreground">
-        显示 {sortedModels.length} / {models.length} 个模型
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   )

@@ -6,7 +6,6 @@ import {
   loadModelsFromFile,
   loadColumnConfigFromStorage,
   saveColumnConfigToStorage,
-  DEFAULT_COLUMNS,
   getColumnConfigs,
 } from "@/lib/model-data"
 import { getTranslations } from "@/lib/i18n"
@@ -15,7 +14,6 @@ import { EnhancedComparisonTable } from "@/components/enhanced-comparison-table"
 import { CustomFieldSelector } from "@/components/custom-field-selector"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { LanguageToggle } from "@/components/language-toggle"
-import { Button } from "@/components/ui/button"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { COMPLEXITY_PRESETS } from "@/lib/model-data"
 
@@ -64,7 +62,7 @@ export function ComparePage() {
         const selectedIds = sessionStorage.getItem("selectedModelIds")
         if (selectedIds) {
           const ids = JSON.parse(selectedIds) as string[]
-          const preSelected = allModels.filter(m => ids.includes(m.id))
+          const preSelected = loadedModels.filter((m: ModelInfo) => ids.includes(m.id))
           setSelectedModels(preSelected)
           // Clear after loading
           sessionStorage.removeItem("selectedModelIds")

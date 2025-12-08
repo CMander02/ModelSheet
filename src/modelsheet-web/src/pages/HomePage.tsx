@@ -6,7 +6,6 @@ import {
   loadModelsFromFile,
   loadColumnConfigFromStorage,
   saveColumnConfigToStorage,
-  DEFAULT_COLUMNS,
   getColumnConfigs,
 } from "@/lib/model-data"
 import { getTranslations } from "@/lib/i18n"
@@ -198,35 +197,6 @@ export function HomePage() {
         </div>
       </header>
 
-      {/* Batch Operation Bar - TDesign "所见即所得" 模式 */}
-      {selectedModels.size > 0 && (
-        <div className="sticky top-16 z-40 w-full border-b bg-primary/10 backdrop-blur supports-[backdrop-filter]:bg-primary/5">
-          <div className="container flex h-14 items-center justify-between">
-            <div className="flex items-center gap-4">
-              <span className="text-sm font-medium">
-                {language === "zh" ? "已选择" : "Selected"} {selectedModels.size} {language === "zh" ? "个模型" : "models"}
-              </span>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSelectedModels(new Set())}
-              >
-                {language === "zh" ? "清除选择" : "Clear Selection"}
-              </Button>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="default"
-                onClick={handleCompare}
-                disabled={selectedModels.size < 2}
-              >
-                {t.common.compareSelected}
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Main Content */}
       <main className="container pt-6 pb-2">
         <ModelTable
@@ -238,6 +208,8 @@ export function HomePage() {
           language={language}
           selectedModels={selectedModels}
           onModelSelect={handleModelSelect}
+          onClearSelection={() => setSelectedModels(new Set())}
+          onCompare={handleCompare}
         />
       </main>
 

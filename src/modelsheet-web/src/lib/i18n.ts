@@ -42,9 +42,9 @@ const translations = {
       compareSelected: "比较选中",
       loading: "加载中...",
       searchModels: "搜索模型...",
-      modelsShowing: "显示",
-      modelsTotal: "个模型",
-      modelsOf: "/",
+      modelsTotal: "共 {count} 个模型",
+      selectedCount: "已选 {count} 个",
+      clearSelection: "清除",
     },
     // 列标题
     columns: {
@@ -123,9 +123,9 @@ const translations = {
       compareSelected: "Compare Selected",
       loading: "Loading...",
       searchModels: "Search models...",
-      modelsShowing: "Showing",
-      modelsTotal: "models",
-      modelsOf: "/",
+      modelsTotal: "{count} models in total",
+      selectedCount: "{count} selected",
+      clearSelection: "Clear",
     },
     // Column headers
     columns: {

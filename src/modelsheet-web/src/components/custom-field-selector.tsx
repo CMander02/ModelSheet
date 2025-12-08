@@ -144,12 +144,7 @@ export function CustomFieldSelector({
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Checkbox
-                        checked={allSelected}
-                        ref={(el) => {
-                          if (el) {
-                            el.indeterminate = someSelected && !allSelected
-                          }
-                        }}
+                        checked={someSelected && !allSelected ? "indeterminate" : allSelected}
                         onCheckedChange={() => handleToggleGroup(group.fields)}
                       />
                       <h3 className="font-semibold text-sm">

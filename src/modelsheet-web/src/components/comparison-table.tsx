@@ -57,7 +57,7 @@ export function ComparisonTable({
   }
 
   // Find max/min values for numeric columns for highlighting
-  const getHighlightClass = (column: ColumnConfig, value: any, modelId: string) => {
+  const getHighlightClass = (column: ColumnConfig, value: any, _modelId: string) => {
     if (column.type !== "number" || value == null) return ""
 
     const values = models

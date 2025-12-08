@@ -1,14 +1,6 @@
 import { useState, useEffect, useMemo } from "react"
-import { ArrowUpDown, Search, Settings2, ArrowUp, ArrowDown } from "lucide-react"
+import { ArrowUpDown, Search, ArrowUp, ArrowDown } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
@@ -25,6 +17,8 @@ interface ModelTableProps {
   language: Language
   selectedModels?: Set<string>
   onModelSelect?: (modelId: string) => void
+  onClearSelection?: () => void
+  onCompare?: () => void
 }
 
 export function ModelTable({
@@ -34,6 +28,8 @@ export function ModelTable({
   onComplexityChange,
   selectedModels = new Set(),
   onModelSelect,
+  onClearSelection,
+  onCompare,
   language,
 }: ModelTableProps) {
   const [searchTerm, setSearchTerm] = useState("")
@@ -148,9 +144,10 @@ export function ModelTable({
   const t = useMemo(() => {
     return language === "zh"
       ? {
-          modelsShowing: "显示",
-          modelsTotal: "个模型",
-          modelsOf: "/",
+          modelsTotal: (count: number) => `共 ${count} 个模型`,
+          selectedCount: (count: number) => `已选 ${count} 个`,
+          clearSelection: "清除",
+          compareSelected: "比较选中",
           complexityLabel: "复杂度:",
           simple: "简单",
           enthusiast: "爱好者",
@@ -160,9 +157,10 @@ export function ModelTable({
           noResults: "没有找到匹配的模型"
         }
       : {
-          modelsShowing: "Showing",
-          modelsTotal: "models",
-          modelsOf: "/",
+          modelsTotal: (count: number) => `${count} models in total`,
+          selectedCount: (count: number) => `${count} selected`,
+          clearSelection: "Clear",
+          compareSelected: "Compare Selected",
           complexityLabel: "Complexity:",
           simple: "Simple",
           enthusiast: "Enthusiast",
@@ -177,21 +175,50 @@ export function ModelTable({
     <div className="space-y-4">
       {/* Search and Controls */}
       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-        <div className="flex items-center gap-3 w-full sm:w-auto">
-          <div className="relative flex-1 sm:w-96">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              placeholder={t.searchModels}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-          <div className="text-sm text-muted-foreground whitespace-nowrap">
-            {t.modelsShowing} {sortedModels.length} {t.modelsOf} {models.length} {t.modelsTotal}
-          </div>
+        {/* Left: Search box */}
+        <div className="relative flex-1 sm:flex-none sm:w-80">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+          <Input
+            placeholder={t.searchModels}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
         </div>
 
+        {/* Center: Model count and selection info */}
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-muted-foreground whitespace-nowrap">
+            {t.modelsTotal(sortedModels.length)}
+          </span>
+          {selectedModels.size > 0 && (
+            <>
+              <span className="text-sm text-muted-foreground">|</span>
+              <span className="text-sm font-medium whitespace-nowrap">
+                {t.selectedCount(selectedModels.size)}
+              </span>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 px-2 text-muted-foreground hover:text-foreground"
+                onClick={onClearSelection}
+              >
+                {t.clearSelection}
+              </Button>
+              <Button
+                variant="default"
+                size="sm"
+                className="h-7"
+                onClick={onCompare}
+                disabled={selectedModels.size < 2}
+              >
+                {t.compareSelected}
+              </Button>
+            </>
+          )}
+        </div>
+
+        {/* Right: Complexity toggle */}
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">{t.complexityLabel}</span>
           <ToggleGroup

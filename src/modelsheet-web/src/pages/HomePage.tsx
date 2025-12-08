@@ -214,7 +214,7 @@ export function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="py-2">
+      <footer className="pt-3 pb-2">
         <div className="container text-center text-sm text-muted-foreground">
           {t.common.footer}
         </div>

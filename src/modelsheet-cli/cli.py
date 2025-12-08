@@ -82,6 +82,12 @@ def add(
         "-f",
         help="Path to file containing model IDs (.txt or .yaml)",
     ),
+    update_all: bool = typer.Option(
+        False,
+        "--update-all",
+        "-u",
+        help="Re-fetch and update all existing models in the database",
+    ),
     timeout: int = typer.Option(
         60,
         "--timeout",
@@ -108,6 +114,10 @@ def add(
         modelsheet add --file models.txt
         modelsheet add -f models.yaml
 
+        # Update all existing models in database
+        modelsheet add --update-all
+        modelsheet add -u
+
         # With custom timeout (default: 60 seconds)
         modelsheet add Qwen/Qwen3-8B --timeout 120
 
@@ -126,7 +136,23 @@ def add(
         - Cache is automatically cleaned after completion
     """
     # Get model IDs
-    if models_file:
+    if update_all:
+        # Load existing models from database
+        if not OUTPUT_FILE.exists():
+            console.print("[yellow]No database found. Nothing to update.[/yellow]")
+            raise typer.Exit(1)
+        try:
+            with open(OUTPUT_FILE, 'r', encoding='utf-8') as f:
+                existing_data = json.load(f)
+                final_model_ids = [m['id'] for m in existing_data]
+        except Exception as e:
+            console.print(f"[red]Error reading database: {e}[/red]")
+            raise typer.Exit(1)
+        if not final_model_ids:
+            console.print("[yellow]Database is empty. Nothing to update.[/yellow]")
+            raise typer.Exit(1)
+        console.print(f"[bold]Updating all {len(final_model_ids)} model(s) in database...[/bold]\n")
+    elif models_file:
         final_model_ids = read_model_list(models_file)
         if not final_model_ids:
             console.print("[red]No valid model IDs found in file[/red]")
@@ -141,14 +167,16 @@ def add(
                 raise typer.Exit(1)
             final_model_ids.append(model_id)
     else:
-        console.print("[red]Error: Must provide model ID(s) or --file option[/red]")
+        console.print("[red]Error: Must provide model ID(s), --file, or --update-all[/red]")
         console.print("Examples:")
         console.print("  modelsheet add Qwen/Qwen2.5-7B")
         console.print("  modelsheet add Qwen/Qwen2.5-7B mistralai/Mistral-7B-v0.3")
         console.print("  modelsheet add --file models.txt")
+        console.print("  modelsheet add --update-all")
         raise typer.Exit(1)
 
-    console.print(f"[bold]Adding {len(final_model_ids)} model(s)...[/bold]\n")
+    if not update_all:
+        console.print(f"[bold]Adding {len(final_model_ids)} model(s)...[/bold]\n")
 
     # Step 1: Fetch
     with ModelFetcher(timeout=timeout) as fetcher:
@@ -374,8 +402,6 @@ def show(
         - Layer/head configuration
         - Position encoding method
         - MoE configuration (if applicable)
-        - Tokenizer details
-        - Type classification (base/adapter)
 
     \b
     Examples:
@@ -429,18 +455,18 @@ def show(
     console.print(f"\n[bold]Architecture:[/bold]")
     console.print(f"  Type: {model_data.get('architecture', 'Unknown')}")
 
-    # Helper function to format parameter counts
+    # Helper function to format parameter counts (returns number and unit separately)
     def format_params(params):
         if params is None:
-            return "Unknown"
+            return "Unknown", ""
         if params >= 1e12:
-            return f"{params / 1e12:.1f}T"
+            return f"{params / 1e12:.1f}", "T"
         elif params >= 1e9:
-            return f"{params / 1e9:.1f}B"
+            return f"{params / 1e9:.1f}", "B"
         elif params >= 1e6:
-            return f"{params / 1e6:.1f}M"
+            return f"{params / 1e6:.1f}", "M"
         else:
-            return str(params)
+            return str(params), ""
 
     # Display parameters (handle MoE vs dense models)
     total_params = model_data.get('totalParameters')
@@ -448,11 +474,14 @@ def show(
 
     if model_data.get('isMoe') and active_params and active_params != total_params:
         # MoE model with different active/total
-        console.print(f"  Total Parameters: {format_params(total_params)}")
-        console.print(f"  Active Parameters: {format_params(active_params)}")
+        num, unit = format_params(total_params)
+        console.print(f"  Total Parameters: {num} {unit}")
+        num, unit = format_params(active_params)
+        console.print(f"  Active Parameters: {num} {unit}")
     else:
         # Dense model or MoE where we only have one value
-        console.print(f"  Parameters: {format_params(total_params)}")
+        num, unit = format_params(total_params)
+        console.print(f"  Parameters: {num} {unit}")
 
     console.print(f"  Context Length: {model_data.get('contextLength', 'Unknown')}")
     console.print(f"  Layers: {model_data.get('numLayers', 'Unknown')}")
@@ -474,20 +503,19 @@ def show(
     if model_data.get('gqaRatio') is not None:
         console.print(f"  GQA Ratio: {model_data['gqaRatio']}")
 
-    console.print(f"  MoE: {'Yes' if model_data.get('isMoe') else 'No'}")
-
-    if model_data.get('isMoe') and model_data.get('numExperts'):
-        console.print(f"  Experts: {model_data['numExperts']}")
-
-    console.print(f"\n[bold]Tokenizer:[/bold]")
-    console.print(f"  Chat Template: {'Yes' if model_data.get('hasChatTemplate') else 'No'}")
-    console.print(f"  BOS Token: {model_data.get('bosToken', 'N/A')}")
-    console.print(f"  EOS Token: {model_data.get('eosToken', 'N/A')}")
-
-    console.print(f"\n[bold]Type:[/bold]")
-    console.print(f"  Adapter: {'Yes' if model_data.get('isAdapter') else 'No'}")
-    if model_data.get('isAdapter'):
-        console.print(f"  Base Model: {model_data.get('baseModel', 'Unknown')}")
+    # MoE section
+    if model_data.get('isMoe'):
+        console.print(f"\n[bold]MoE:[/bold]")
+        if model_data.get('numExperts') is not None:
+            console.print(f"  Total Experts: {model_data['numExperts']}")
+        if model_data.get('numSharedExperts') is not None:
+            console.print(f"  Shared Experts: {model_data['numSharedExperts']}")
+        if model_data.get('numExpertsPerToken') is not None:
+            console.print(f"  Experts Per Token: {model_data['numExpertsPerToken']}")
+        if model_data.get('numActivatedExperts') is not None:
+            console.print(f"  Activated Experts: {model_data['numActivatedExperts']}")
+        if model_data.get('moeIntermediateSize') is not None:
+            console.print(f"  MoE Intermediate Size: {model_data['moeIntermediateSize']}")
 
 
 

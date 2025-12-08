@@ -1,7 +1,6 @@
 """Export parsed model data to JSON."""
 
 import json
-from datetime import datetime
 from pathlib import Path
 
 from rich.console import Console
@@ -57,15 +56,20 @@ class ModelExporter:
             "name": model.name,
             "provider": model.provider,
             "huggingfaceUrl": model.huggingface_url,
+            "techReport": model.tech_report,
         }
 
         # Add optional fields only if they have values
         optional_fields = {
+            # URLs
+            "arxivUrl": model.arxiv_url,
+            # Basic specs
             "totalParameters": model.total_parameters,
             "activeParameters": model.active_parameters,
             "contextLength": model.context_length,
             "embeddingDim": model.embedding_dim,
             "vocabSize": model.vocab_size,
+            # Architecture
             "architecture": model.architecture,
             "numLayers": model.num_layers,
             "numHeads": model.num_heads,
@@ -79,12 +83,13 @@ class ModelExporter:
             "attentionDropout": model.attention_dropout,
             "mlpFactor": model.mlp_factor,
             "gqaRatio": model.gqa_ratio,
+            # MoE fields
             "numExperts": model.num_experts,
+            "numSharedExperts": model.num_shared_experts,
             "numExpertsPerToken": model.num_experts_per_token,
-            "bosToken": model.bos_token,
-            "eosToken": model.eos_token,
-            "baseModel": model.base_model,
-            # Metadata from HuggingFace API (only createdAt)
+            "numActivatedExperts": model.num_activated_experts,
+            "moeIntermediateSize": model.moe_intermediate_size,
+            # Metadata
             "createdAt": model.created_at,
         }
 
@@ -92,14 +97,7 @@ class ModelExporter:
             if value is not None:
                 data[key] = value
 
-        # Always include boolean flags
+        # Always include isMoe flag
         data["isMoe"] = model.is_moe
-        data["hasChatTemplate"] = model.has_chat_template
-        data["isAdapter"] = model.is_adapter
-
-        # Note: updatedAt from HuggingFace API takes precedence
-        # If not available from API, use current timestamp
-        if "updatedAt" not in data:
-            data["updatedAt"] = datetime.utcnow().isoformat() + "Z"
 
         return data

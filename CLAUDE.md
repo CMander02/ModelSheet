@@ -273,6 +273,10 @@ This unusual mapping means imports use `modelsheet_cli` but files are in `src/mo
 2. **纯静态部署**: 前端为纯静态 SPA，无后端依赖
 3. **简单可维护**: Python CLI + React 前端，主流技术栈
 
+## Git Policy
+
+**重要**: Git 操作（commit、checkout、reset、push 等）只能在用户明确要求时执行。Claude 不得在未经用户要求的情况下自行执行 Git 命令。
+
 ## Common Issues
 
 ### Path Issues

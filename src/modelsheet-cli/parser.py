@@ -6,6 +6,45 @@ from typing import Optional
 from rich.console import Console
 from tqdm import tqdm
 
+from .extractors import (
+    ConfigContext,
+    # Metadata
+    extract_id,
+    extract_name,
+    extract_provider,
+    extract_huggingface_url,
+    extract_tech_report,
+    extract_arxiv_url,
+    extract_created_at,
+    # Architecture
+    extract_architecture,
+    extract_vocab_size,
+    extract_num_layers,
+    extract_num_heads,
+    extract_num_kv_heads,
+    extract_hidden_size,
+    extract_embedding_dim,
+    extract_intermediate_size,
+    extract_context_length,
+    extract_activation,
+    extract_norm_type,
+    extract_norm_eps,
+    extract_position_encoding,
+    extract_attention_dropout,
+    extract_mlp_factor,
+    extract_gqa_ratio,
+    # MoE
+    extract_is_moe,
+    extract_num_experts,
+    extract_num_shared_experts,
+    extract_num_experts_per_token,
+    extract_num_activated_experts,
+    extract_moe_intermediate_size,
+    # Parameters
+    extract_total_parameters,
+    extract_active_parameters,
+)
+
 console = Console()
 
 
@@ -18,9 +57,14 @@ class ParsedModel:
     name: str
     provider: str
 
+    # URLs
+    huggingface_url: Optional[str] = None
+    tech_report: str = ""
+    arxiv_url: Optional[str] = None
+
     # Basic specs
     total_parameters: Optional[int] = None
-    active_parameters: Optional[int] = None  # For MoE: parameters used per token
+    active_parameters: Optional[int] = None
     context_length: Optional[int] = None
     embedding_dim: Optional[int] = None
     vocab_size: Optional[int] = None
@@ -43,41 +87,38 @@ class ParsedModel:
     # MoE
     is_moe: bool = False
     num_experts: Optional[int] = None
+    num_shared_experts: Optional[int] = None
     num_experts_per_token: Optional[int] = None
-
-    # Tokenizer
-    has_chat_template: bool = False
-    bos_token: Optional[str] = None
-    eos_token: Optional[str] = None
-
-    # Type flags
-    is_adapter: bool = False
-    base_model: Optional[str] = None
+    num_activated_experts: Optional[int] = None
+    moe_intermediate_size: Optional[int] = None
 
     # Metadata
-    huggingface_url: Optional[str] = None
     created_at: Optional[str] = None
 
     def to_dict(self) -> dict:
         """Convert to dictionary, excluding None values."""
         return {k: v for k, v in asdict(self).items() if v is not None}
 
+    def is_valid(self) -> bool:
+        """Check if model has minimum required fields.
+
+        A valid model must have at least:
+        - architecture
+        - num_layers
+        - hidden_size
+
+        Models missing these core fields are considered invalid
+        (likely failed to fetch config.json properly).
+        """
+        return all([
+            self.architecture is not None,
+            self.num_layers is not None,
+            self.hidden_size is not None,
+        ])
+
 
 class ModelParser:
-    """Parses model configuration files."""
-
-    PROVIDER_MAP = {
-        "meta-llama": "Meta",
-        "Qwen": "Alibaba",
-        "mistralai": "Mistral AI",
-        "google": "Google",
-        "microsoft": "Microsoft",
-        "01-ai": "01.AI",
-        "deepseek-ai": "DeepSeek",
-        "THUDM": "Tsinghua",
-        "internlm": "Shanghai AI Lab",
-        "baichuan-inc": "Baichuan",
-    }
+    """Parses model configuration files using modular extractors."""
 
     def parse(self, model_id: str, configs: dict) -> ParsedModel:
         """Parse model configurations.
@@ -89,284 +130,47 @@ class ModelParser:
         Returns:
             ParsedModel instance
         """
-        config = configs.get("config.json", {})
-        tokenizer_config = configs.get("tokenizer_config.json", {})
-        generation_config = configs.get("generation_config.json", {})
-        adapter_config = configs.get("adapter_config.json")
-        metadata = configs.get("_metadata", {})
-
-        # Calculate parameters (handles MoE specially, uses API metadata if available)
-        total_params, active_params = self._calc_parameters(config, metadata)
+        ctx = ConfigContext.from_configs(model_id, configs)
 
         return ParsedModel(
             # Identification
-            id=model_id,
-            name=self._extract_name(model_id),
-            provider=self._extract_provider(model_id),
+            id=extract_id(ctx),
+            name=extract_name(ctx),
+            provider=extract_provider(ctx),
+            # URLs
+            huggingface_url=extract_huggingface_url(ctx),
+            tech_report=extract_tech_report(ctx),
+            arxiv_url=extract_arxiv_url(ctx),
             # Basic specs
-            total_parameters=total_params,
-            active_parameters=active_params,
-            context_length=self._get_context_length(config),
-            embedding_dim=config.get("hidden_size"),
-            vocab_size=config.get("vocab_size"),
+            total_parameters=extract_total_parameters(ctx),
+            active_parameters=extract_active_parameters(ctx),
+            context_length=extract_context_length(ctx),
+            embedding_dim=extract_embedding_dim(ctx),
+            vocab_size=extract_vocab_size(ctx),
             # Architecture
-            architecture=config.get("model_type"),
-            num_layers=config.get("num_hidden_layers"),
-            num_heads=config.get("num_attention_heads"),
-            num_kv_heads=config.get("num_key_value_heads"),
-            hidden_size=config.get("hidden_size"),
-            intermediate_size=config.get("intermediate_size"),
-            position_encoding=self._detect_position_encoding(config),
-            activation=config.get("hidden_act"),
-            norm_type=self._detect_norm_type(config),
-            norm_eps=self._get_norm_eps(config),
-            attention_dropout=config.get("attention_dropout"),
-            mlp_factor=self._calc_mlp_factor(config),
-            gqa_ratio=self._calc_gqa_ratio(config),
+            architecture=extract_architecture(ctx),
+            num_layers=extract_num_layers(ctx),
+            num_heads=extract_num_heads(ctx),
+            num_kv_heads=extract_num_kv_heads(ctx),
+            hidden_size=extract_hidden_size(ctx),
+            intermediate_size=extract_intermediate_size(ctx),
+            position_encoding=extract_position_encoding(ctx),
+            activation=extract_activation(ctx),
+            norm_type=extract_norm_type(ctx),
+            norm_eps=extract_norm_eps(ctx),
+            attention_dropout=extract_attention_dropout(ctx),
+            mlp_factor=extract_mlp_factor(ctx),
+            gqa_ratio=extract_gqa_ratio(ctx),
             # MoE
-            is_moe=self._is_moe(config),
-            num_experts=config.get("n_routed_experts") or config.get("num_local_experts") or config.get("num_experts"),
-            num_experts_per_token=config.get("num_experts_per_tok") or config.get("num_experts_per_token"),
-            # Tokenizer
-            has_chat_template="chat_template" in tokenizer_config,
-            bos_token=self._get_token(tokenizer_config, "bos_token"),
-            eos_token=self._get_token(tokenizer_config, "eos_token"),
-            # Type flags
-            is_adapter=adapter_config is not None,
-            base_model=adapter_config.get("base_model_name_or_path") if adapter_config else None,
+            is_moe=extract_is_moe(ctx),
+            num_experts=extract_num_experts(ctx),
+            num_shared_experts=extract_num_shared_experts(ctx),
+            num_experts_per_token=extract_num_experts_per_token(ctx),
+            num_activated_experts=extract_num_activated_experts(ctx),
+            moe_intermediate_size=extract_moe_intermediate_size(ctx),
             # Metadata
-            huggingface_url=f"https://huggingface.co/{model_id}",
-            created_at=metadata.get("createdAt"),
+            created_at=extract_created_at(ctx),
         )
-
-    def _extract_name(self, model_id: str) -> str:
-        """Extract display name from model ID."""
-        return model_id.split("/")[-1]
-
-    def _extract_provider(self, model_id: str) -> str:
-        """Extract provider from model ID."""
-        org = model_id.split("/")[0]
-        return self.PROVIDER_MAP.get(org, org)
-
-    def _calc_parameters(self, config: dict, metadata: dict = None) -> tuple[Optional[int], Optional[int]]:
-        """Calculate total and active parameters.
-
-        For MoE models, calculates both total (all experts) and active (per token).
-        For dense models, both values are the same.
-
-        Args:
-            config: Model config from config.json
-            metadata: Metadata from HuggingFace API (contains accurate totalParameters)
-
-        Returns:
-            Tuple of (total_parameters, active_parameters)
-        """
-        # Priority 1: Accurate parameter count from HuggingFace API safetensors
-        if metadata and "totalParameters" in metadata:
-            total = metadata["totalParameters"]
-            # For non-MoE, active = total
-            if not self._is_moe(config):
-                return total, total
-            # For MoE, try to calculate active
-            active = self._calc_moe_active_params(config, total)
-            return total, active
-
-        # Priority 2: Explicit parameter count in config
-        if "num_parameters" in config:
-            total = config["num_parameters"]
-            # For non-MoE, active = total
-            if not self._is_moe(config):
-                return total, total
-            # For MoE, try to calculate active
-            active = self._calc_moe_active_params(config, total)
-            return total, active
-
-        # Estimate from architecture
-        h = config.get("hidden_size")
-        l = config.get("num_hidden_layers")
-        v = config.get("vocab_size")
-
-        if not all([h, l, v]):
-            return None, None
-
-        # Embedding layer (shared)
-        embedding = v * h
-
-        # Attention (same for all models)
-        attention_per_layer = 4 * h * h  # Q, K, V, O projections
-
-        # Check if MoE
-        is_moe = self._is_moe(config)
-
-        if is_moe:
-            # MoE model: calculate with expert layers
-            total, active = self._calc_moe_params(config, embedding, attention_per_layer, h, l)
-            return total, active
-        else:
-            # Dense model: standard calculation
-            i = config.get("intermediate_size")
-            if not i:
-                return None, None
-
-            attention = l * attention_per_layer
-            ffn = l * (2 * h * i)  # up and down projections
-            total = embedding + attention + ffn
-            return total, total
-
-    def _calc_moe_params(self, config: dict, embedding: int, attention_per_layer: int,
-                         hidden_size: int, num_layers: int) -> tuple[Optional[int], Optional[int]]:
-        """Calculate parameters for MoE models.
-
-        Returns:
-            Tuple of (total_parameters, active_parameters)
-        """
-        # Get MoE-specific parameters
-        n_routed_experts = config.get("n_routed_experts") or config.get("num_local_experts") or config.get("num_experts")
-        n_shared_experts = config.get("n_shared_experts", 0)
-        num_experts_per_tok = config.get("num_experts_per_tok") or config.get("num_experts_per_token", 1)
-        moe_intermediate_size = config.get("moe_intermediate_size") or config.get("intermediate_size")
-        intermediate_size = config.get("intermediate_size")
-
-        if not all([n_routed_experts, moe_intermediate_size]):
-            return None, None
-
-        # Check for dense layers at the beginning (DeepSeek models)
-        first_k_dense_replace = config.get("first_k_dense_replace", 0)
-        num_dense_layers = first_k_dense_replace
-        num_moe_layers = num_layers - num_dense_layers
-
-        # Attention layers (same for all layers)
-        total_attention = num_layers * attention_per_layer
-
-        # Dense FFN layers (if any)
-        dense_ffn_params = 0
-        if num_dense_layers > 0 and intermediate_size:
-            # Dense layers use standard FFN: 2 * hidden * intermediate
-            dense_ffn_params = num_dense_layers * 2 * hidden_size * intermediate_size
-
-        # MoE FFN layers
-        # Each routed expert has: gate_proj + up_proj + down_proj
-        # gate_proj: hidden → moe_intermediate
-        # up_proj: hidden → moe_intermediate
-        # down_proj: moe_intermediate → hidden
-        params_per_routed_expert = 3 * hidden_size * moe_intermediate_size
-        params_per_shared_expert = 3 * hidden_size * moe_intermediate_size if n_shared_experts > 0 else 0
-
-        # Total: all experts in all MoE layers
-        total_routed_params = num_moe_layers * n_routed_experts * params_per_routed_expert
-        total_shared_params = num_moe_layers * n_shared_experts * params_per_shared_expert
-
-        # Active: only activated experts per token (in MoE layers) + all params in dense layers
-        active_routed_params = num_moe_layers * num_experts_per_tok * params_per_routed_expert
-        active_shared_params = total_shared_params  # Shared experts always active
-
-        # Final totals
-        total_params = embedding + total_attention + dense_ffn_params + total_routed_params + total_shared_params
-        active_params = embedding + total_attention + dense_ffn_params + active_routed_params + active_shared_params
-
-        return total_params, active_params
-
-    def _calc_moe_active_params(self, config: dict, total_params: int) -> Optional[int]:
-        """Estimate active parameters from total for MoE when we have explicit total.
-
-        This is a rough estimation based on the ratio of activated experts.
-        """
-        n_routed_experts = config.get("n_routed_experts") or config.get("num_local_experts") or config.get("num_experts")
-        num_experts_per_tok = config.get("num_experts_per_tok") or config.get("num_experts_per_token")
-
-        if not all([n_routed_experts, num_experts_per_tok]):
-            return None
-
-        # Rough estimation: assume FFN dominates parameter count
-        # active = total * (activated_experts / total_experts)
-        ratio = num_experts_per_tok / n_routed_experts
-
-        # This is a rough estimate - the actual calculation would need to know
-        # what fraction of params are in the MoE layers vs other layers
-        # For now, we assume ~70% of params are in MoE layers (typical for large MoE models)
-        moe_fraction = 0.7
-        non_moe_params = total_params * (1 - moe_fraction)
-        moe_params_active = total_params * moe_fraction * ratio
-
-        return int(non_moe_params + moe_params_active)
-
-    def _get_context_length(self, config: dict) -> Optional[int]:
-        """Get context length from various possible keys."""
-        keys = [
-            "max_position_embeddings",
-            "n_positions",
-            "max_sequence_length",
-            "seq_length",
-            "model_max_length",
-        ]
-        for key in keys:
-            if key in config:
-                return config[key]
-        return None
-
-    def _detect_position_encoding(self, config: dict) -> Optional[str]:
-        """Detect position encoding type."""
-        if config.get("rope_scaling") or config.get("rope_theta"):
-            return "RoPE"
-        if config.get("use_alibi"):
-            return "ALiBi"
-        if config.get("rotary_pct"):
-            return "RoPE"
-        return None
-
-    def _is_moe(self, config: dict) -> bool:
-        """Check if model uses MoE architecture."""
-        return (
-            config.get("num_local_experts", 0) > 1
-            or config.get("num_experts", 0) > 1
-            or config.get("n_routed_experts", 0) > 1
-            or "moe" in config.get("model_type", "").lower()
-        )
-
-    def _get_token(self, config: dict, key: str) -> Optional[str]:
-        """Get token value, handling both string and dict formats."""
-        token = config.get(key)
-        if isinstance(token, dict):
-            return token.get("content")
-        return token
-
-    def _detect_norm_type(self, config: dict) -> Optional[str]:
-        """Detect normalization type."""
-        if "rms_norm_eps" in config:
-            return "RMSNorm"
-        if "layer_norm_eps" in config or "layer_norm_epsilon" in config:
-            return "LayerNorm"
-        # Infer from model type
-        model_type = config.get("model_type", "").lower()
-        if model_type in ["llama", "mistral", "mixtral", "qwen", "qwen2"]:
-            return "RMSNorm"
-        return None
-
-    def _get_norm_eps(self, config: dict) -> Optional[float]:
-        """Get normalization epsilon value."""
-        return (
-            config.get("rms_norm_eps")
-            or config.get("layer_norm_eps")
-            or config.get("layer_norm_epsilon")
-        )
-
-    def _calc_mlp_factor(self, config: dict) -> Optional[float]:
-        """Calculate MLP expansion factor (intermediate_size / hidden_size)."""
-        hidden_size = config.get("hidden_size")
-        intermediate_size = config.get("intermediate_size")
-
-        if hidden_size and intermediate_size and hidden_size > 0:
-            return round(intermediate_size / hidden_size, 2)
-        return None
-
-    def _calc_gqa_ratio(self, config: dict) -> Optional[float]:
-        """Calculate GQA ratio (num_attention_heads / num_key_value_heads)."""
-        num_heads = config.get("num_attention_heads")
-        num_kv_heads = config.get("num_key_value_heads")
-
-        if num_heads and num_kv_heads and num_kv_heads > 0:
-            return round(num_heads / num_kv_heads, 2)
-        return None
 
     def parse_models(self, models_configs: dict[str, dict]) -> list[ParsedModel]:
         """Parse multiple models.
@@ -375,23 +179,32 @@ class ModelParser:
             models_configs: Dictionary mapping model_id to configs
 
         Returns:
-            List of ParsedModel instances
+            List of valid ParsedModel instances (invalid models are filtered out)
         """
         results = []
         failed = []
+        invalid = []
 
         print()  # Add newline before progress bar
         with tqdm(total=len(models_configs), desc="Parsing models", unit="model") as pbar:
             for model_id, configs in models_configs.items():
                 try:
                     parsed = self.parse(model_id, configs)
-                    results.append(parsed)
+                    if parsed.is_valid():
+                        results.append(parsed)
+                    else:
+                        invalid.append(model_id)
                 except Exception as e:
                     failed.append((model_id, str(e)))
 
                 pbar.update(1)
 
         console.print(f"\n[bold green]Done![/bold green] {len(results)} models parsed successfully.")
+
+        if invalid:
+            console.print(f"\n[yellow]Skipped {len(invalid)} model(s) with incomplete data:[/yellow]")
+            for model_id in invalid:
+                console.print(f"  - {model_id}")
 
         if failed:
             console.print(f"\n[red]Failed to parse {len(failed)} model(s):[/red]")

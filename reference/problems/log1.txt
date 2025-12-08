@@ -1,0 +1,114 @@
+2025-12-08T12:44:19.747Z	Initializing build environment...
+2025-12-08T12:44:21.625Z	Success: Finished initializing build environment
+2025-12-08T12:44:22.178Z	Cloning repository...
+2025-12-08T12:44:23.526Z	No build output detected to cache. Skipping.
+2025-12-08T12:44:23.526Z	No dependencies detected to cache. Skipping.
+2025-12-08T12:44:24.684Z	Detected the following tools from environment: nodejs@22.21.1, python@3.13.11, bun@1.2.15
+2025-12-08T12:44:24.685Z	Installing nodejs 22.21.1
+2025-12-08T12:44:28.917Z	Installing python 3.13.11
+2025-12-08T12:46:49.135Z	Installing project dependencies: bun install
+2025-12-08T12:46:49.292Z	bun install v1.2.15 (df017990)
+2025-12-08T12:46:49.325Z	Resolving dependencies
+2025-12-08T12:46:52.390Z	Resolved, downloaded and extracted [1190]
+2025-12-08T12:46:52.759Z	Saved lockfile
+2025-12-08T12:46:52.760Z	
+2025-12-08T12:46:52.760Z	+ @eslint/js@9.39.1
+2025-12-08T12:46:52.760Z	+ @tailwindcss/vite@4.1.17
+2025-12-08T12:46:52.763Z	+ @types/node@24.10.1
+2025-12-08T12:46:52.764Z	+ @types/react@19.2.7
+2025-12-08T12:46:52.764Z	+ @types/react-dom@19.2.3
+2025-12-08T12:46:52.764Z	+ @vitejs/plugin-react@5.1.2
+2025-12-08T12:46:52.764Z	+ class-variance-authority@0.7.1
+2025-12-08T12:46:52.764Z	+ clsx@2.1.1
+2025-12-08T12:46:52.764Z	+ eslint@9.39.1
+2025-12-08T12:46:52.764Z	+ eslint-plugin-react-hooks@7.0.1
+2025-12-08T12:46:52.764Z	+ eslint-plugin-react-refresh@0.4.24
+2025-12-08T12:46:52.764Z	+ globals@16.5.0
+2025-12-08T12:46:52.764Z	+ postcss@8.5.6
+2025-12-08T12:46:52.764Z	+ tailwind-merge@3.4.0
+2025-12-08T12:46:52.764Z	+ tailwindcss@4.1.17
+2025-12-08T12:46:52.764Z	+ tw-animate-css@1.4.0
+2025-12-08T12:46:52.764Z	+ typescript@5.9.3
+2025-12-08T12:46:52.764Z	+ typescript-eslint@8.48.1
+2025-12-08T12:46:52.765Z	+ vite@7.2.7
+2025-12-08T12:46:52.765Z	+ vite-plugin-static-copy@3.1.4
+2025-12-08T12:46:52.765Z	+ @radix-ui/react-checkbox@1.3.3
+2025-12-08T12:46:52.766Z	+ @radix-ui/react-dialog@1.1.15
+2025-12-08T12:46:52.766Z	+ @radix-ui/react-dropdown-menu@2.1.16
+2025-12-08T12:46:52.766Z	+ @radix-ui/react-popover@1.1.15
+2025-12-08T12:46:52.766Z	+ @radix-ui/react-scroll-area@1.2.10
+2025-12-08T12:46:52.766Z	+ @radix-ui/react-separator@1.1.8
+2025-12-08T12:46:52.766Z	+ @radix-ui/react-slot@1.2.4
+2025-12-08T12:46:52.766Z	+ @radix-ui/react-toggle@1.1.10
+2025-12-08T12:46:52.766Z	+ @radix-ui/react-toggle-group@1.1.11
+2025-12-08T12:46:52.766Z	+ lucide-react@0.556.0
+2025-12-08T12:46:52.766Z	+ react@19.2.1
+2025-12-08T12:46:52.766Z	+ react-dom@19.2.1
+2025-12-08T12:46:52.766Z	+ react-router-dom@7.10.1
+2025-12-08T12:46:52.766Z	
+2025-12-08T12:46:52.767Z	265 packages installed [3.51s]
+2025-12-08T12:46:52.944Z	Executing user build command: npm install && npm run build
+2025-12-08T12:46:53.766Z	
+2025-12-08T12:46:53.767Z	up to date, audited 271 packages in 639ms
+2025-12-08T12:46:53.767Z	
+2025-12-08T12:46:53.767Z	57 packages are looking for funding
+2025-12-08T12:46:53.767Z	  run `npm fund` for details
+2025-12-08T12:46:53.767Z	
+2025-12-08T12:46:53.767Z	found 0 vulnerabilities
+2025-12-08T12:46:54.029Z	
+2025-12-08T12:46:54.029Z	> modelsheet-web@0.0.0 build
+2025-12-08T12:46:54.029Z	> tsc -b && vite build
+2025-12-08T12:46:54.029Z	
+2025-12-08T12:46:57.267Z	vite v7.2.7 building client environment for production...
+2025-12-08T12:46:57.346Z	transforming...
+2025-12-08T12:46:59.944Z	✓ 1802 modules transformed.
+2025-12-08T12:47:00.321Z	rendering chunks...
+2025-12-08T12:47:00.334Z	computing gzip size...
+2025-12-08T12:47:00.346Z	[vite-plugin-static-copy] Copied 1 items.
+2025-12-08T12:47:00.350Z	dist/index.html                   0.46 kB │ gzip:   0.30 kB
+2025-12-08T12:47:00.350Z	dist/assets/index-gE4AEa7c.css   47.18 kB │ gzip:   8.66 kB
+2025-12-08T12:47:00.351Z	dist/assets/index-DM_4dC_E.js   401.96 kB │ gzip: 129.07 kB
+2025-12-08T12:47:00.351Z	✓ built in 3.05s
+2025-12-08T12:47:00.420Z	Success: Build command completed
+2025-12-08T12:47:00.606Z	Executing user deploy command: npx wrangler deploy
+2025-12-08T12:47:01.654Z	npm warn exec The following package was not found and will be installed: wrangler@4.53.0
+2025-12-08T12:47:09.969Z	
+2025-12-08T12:47:09.969Z	 ⛅️ wrangler 4.53.0
+2025-12-08T12:47:09.969Z	───────────────────
+2025-12-08T12:47:09.987Z	
+2025-12-08T12:47:10.047Z	✘ [ERROR] Missing entry-point to Worker script or to assets directory
+2025-12-08T12:47:10.047Z	
+2025-12-08T12:47:10.047Z	  
+2025-12-08T12:47:10.047Z	  If there is code to deploy, you can either:
+2025-12-08T12:47:10.047Z	  - Specify an entry-point to your Worker script via the command line (ex: `npx wrangler deploy src/index.ts`)
+2025-12-08T12:47:10.047Z	  - Or create a "wrangler.jsonc" file containing:
+2025-12-08T12:47:10.047Z	  
+2025-12-08T12:47:10.047Z	  ```
+2025-12-08T12:47:10.051Z	  {
+2025-12-08T12:47:10.052Z	    "name": "worker-name",
+2025-12-08T12:47:10.052Z	    "compatibility_date": "2025-12-08",
+2025-12-08T12:47:10.052Z	    "main": "src/index.ts"
+2025-12-08T12:47:10.052Z	  }
+2025-12-08T12:47:10.054Z	  ```
+2025-12-08T12:47:10.054Z	  
+2025-12-08T12:47:10.054Z	  
+2025-12-08T12:47:10.054Z	  If are uploading a directory of assets, you can either:
+2025-12-08T12:47:10.054Z	  - Specify the path to the directory of assets via the command line: (ex: `npx wrangler deploy --assets=./dist`)
+2025-12-08T12:47:10.054Z	  - Or create a "wrangler.jsonc" file containing:
+2025-12-08T12:47:10.055Z	  
+2025-12-08T12:47:10.055Z	  ```
+2025-12-08T12:47:10.055Z	  {
+2025-12-08T12:47:10.058Z	    "name": "worker-name",
+2025-12-08T12:47:10.058Z	    "compatibility_date": "2025-12-08",
+2025-12-08T12:47:10.058Z	    "assets": {
+2025-12-08T12:47:10.058Z	      "directory": "./dist"
+2025-12-08T12:47:10.058Z	    }
+2025-12-08T12:47:10.059Z	  }
+2025-12-08T12:47:10.059Z	  ```
+2025-12-08T12:47:10.059Z	  
+2025-12-08T12:47:10.059Z	
+2025-12-08T12:47:10.059Z	
+2025-12-08T12:47:10.066Z	
+2025-12-08T12:47:10.066Z	Cloudflare collects anonymous telemetry about your usage of Wrangler. Learn more at https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler/telemetry.md
+2025-12-08T12:47:10.082Z	🪵  Logs were written to "/opt/buildhome/.config/.wrangler/logs/wrangler-2025-12-08_12-47-09_418.log"
+2025-12-08T12:47:12.404Z	Failed: error occurred while running deploy command

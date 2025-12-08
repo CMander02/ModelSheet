@@ -12,7 +12,7 @@ shadcn/ui 御用图标站
 
 ### 4.3. Lobehub AI/LLM 模型图标集
 
-[link](https://lobehub.com/zh/icons?q=inr)
+[link](https://lobehub.com/zh/icons)
 
 因为绝大多数的 AI/LLM 的矢量图很分散或者找不到，在这里找是最方便和快捷的。
 

@@ -11,29 +11,56 @@
 | `generation_config.json` | P2 部署 | 默认生成参数 |
 | `adapter_config.json` | P1 类型 | LoRA 判断 |
 | `model.safetensors.index.json` | P2 部署 | 精确文件大小 |
+| `_metadata` (API) | P0 核心 | 参数量、创建时间、tags |
 
 ### 1.2 字段来源详细映射
 
-| 字段 | 来源文件 | JSON Path | 备注 |
-|------|----------|-----------|------|
-| architecture | config.json | `model_type` | 如 "llama", "qwen2" |
-| hidden_size | config.json | `hidden_size` | 隐藏层维度 |
-| num_layers | config.json | `num_hidden_layers` | Transformer 层数 |
-| num_heads | config.json | `num_attention_heads` | 注意力头数 |
-| num_kv_heads | config.json | `num_key_value_heads` | KV 头数 (GQA) |
-| vocab_size | config.json | `vocab_size` | 词表大小 |
-| intermediate_size | config.json | `intermediate_size` | FFN 中间层大小 |
-| context_length | config.json | `max_position_embeddings` | 多个可能的 key |
-| rope_theta | config.json | `rope_theta` | RoPE base 频率 |
-| rope_scaling | config.json | `rope_scaling.type` | RoPE 扩展类型 |
-| is_moe | config.json | `num_local_experts > 1` | 计算字段 |
-| num_experts | config.json | `num_local_experts` | MoE 专家数 |
-| chat_template | tokenizer_config.json | `chat_template` | Jinja2 模板 |
-| bos_token | tokenizer_config.json | `bos_token` | 序列开始 token |
-| eos_token | tokenizer_config.json | `eos_token` | 序列结束 token |
-| is_adapter | adapter_config.json | 存在性检测 | 是否为 LoRA |
-| base_model | adapter_config.json | `base_model_name_or_path` | LoRA 基座 |
-| total_size | *.index.json | `metadata.total_size` | 精确字节数 |
+#### 标识字段 (Metadata)
+| 字段 | Python 名 | JSON 名 | 来源 | 备注 |
+|------|-----------|---------|------|------|
+| ID | `id` | `id` | API modelId | HuggingFace 模型 ID |
+| 名称 | `name` | `name` | modelId 分割 | 去除组织前缀 |
+| 提供商 | `provider` | `provider` | modelId + PROVIDER_MAP | 映射后的显示名称 |
+| HuggingFace URL | `huggingface_url` | `huggingfaceUrl` | 字符串拼接 | 模型页面链接 |
+| 技术报告 | `tech_report` | `techReport` | (待实现) | 技术报告 URL |
+| arXiv URL | `arxiv_url` | `arxivUrl` | API tags 数组 | 匹配 `arxiv:XXXX.XXXXX` |
+| 创建时间 | `created_at` | `createdAt` | API metadata | ISO 格式时间戳 |
+
+#### 规模参数 (Parameters)
+| 字段 | Python 名 | JSON 名 | 来源 | 备注 |
+|------|-----------|---------|------|------|
+| 总参数量 | `total_parameters` | `totalParameters` | API safetensors.total > config num_parameters > 计算 | 优先使用 API 数据 |
+| 活跃参数量 | `active_parameters` | `activeParameters` | 计算 | MoE 模型专用，每 token 激活的参数 |
+| 上下文长度 | `context_length` | `contextLength` | config.json | 多个可能的 key |
+| 嵌入维度 | `embedding_dim` | `embeddingDim` | config.json hidden_size | 等于 hidden_size |
+| 词表大小 | `vocab_size` | `vocabSize` | config.json vocab_size | 词表大小 |
+
+#### 架构参数 (Architecture)
+| 字段 | Python 名 | JSON 名 | 来源 | 备注 |
+|------|-----------|---------|------|------|
+| 架构类型 | `architecture` | `architecture` | config.json model_type | 如 "llama", "qwen2" |
+| 层数 | `num_layers` | `numLayers` | config.json num_hidden_layers | 回退: n_layer, num_layers |
+| 注意力头数 | `num_heads` | `numHeads` | config.json num_attention_heads | 回退: n_head |
+| KV 头数 | `num_kv_heads` | `numKvHeads` | config.json num_key_value_heads | 默认等于 num_heads |
+| 隐藏层大小 | `hidden_size` | `hiddenSize` | config.json hidden_size | 回退: n_embd, d_model |
+| FFN 中间层大小 | `intermediate_size` | `intermediateSize` | config.json intermediate_size | 回退: n_inner |
+| 位置编码 | `position_encoding` | `positionEncoding` | 推断 | rope_theta → RoPE, use_alibi → ALiBi |
+| 激活函数 | `activation` | `activation` | config.json hidden_act | 回退: activation_function |
+| 归一化类型 | `norm_type` | `normType` | 推断 | rms_norm_eps → RMSNorm, layer_norm_eps → LayerNorm |
+| 归一化 eps | `norm_eps` | `normEps` | config.json rms_norm_eps | 回退: layer_norm_eps |
+| 注意力 Dropout | `attention_dropout` | `attentionDropout` | config.json attention_dropout | 注意力层 dropout |
+| MLP 扩展因子 | `mlp_factor` | `mlpFactor` | 计算 | intermediate_size / hidden_size |
+| GQA 比率 | `gqa_ratio` | `gqaRatio` | 计算 | num_heads / num_kv_heads |
+
+#### MoE 参数
+| 字段 | Python 名 | JSON 名 | 来源 | 备注 |
+|------|-----------|---------|------|------|
+| 是否 MoE | `is_moe` | `isMoe` | 推断 | num_experts > 1 或 model_type 含 "moe" |
+| 专家数量 | `num_experts` | `numExperts` | config.json n_routed_experts | 回退: num_local_experts, num_experts |
+| 共享专家数 | `num_shared_experts` | `numSharedExperts` | config.json n_shared_experts | DeepSeek 风格 |
+| 每 token 专家数 | `num_experts_per_token` | `numExpertsPerToken` | config.json num_experts_per_tok | 回退: num_experts_per_token |
+| 激活专家总数 | `num_activated_experts` | `numActivatedExperts` | 计算 | num_experts_per_tok + n_shared_experts |
+| MoE FFN 大小 | `moe_intermediate_size` | `moeIntermediateSize` | config.json moe_intermediate_size | MoE 专家 FFN 维度 |
 
 ## 2. 前端数据模型
 
@@ -46,12 +73,16 @@
 interface ModelInfo {
   // === 基础标识 ===
   id: string                    // HuggingFace model ID，如 "meta-llama/Llama-3.2-1B"
-  name: string                  // 显示名称，如 "Llama 3.2 1B"
+  name: string                  // 显示名称，如 "Llama-3.2-1B"
   provider: string              // 提供商，如 "Meta"
-  releaseDate?: string          // 发布日期，ISO 格式
+  huggingfaceUrl?: string       // HuggingFace 链接
+  techReport?: string           // 技术报告 URL
+  arxivUrl?: string             // arXiv 论文链接
+  createdAt?: string            // 创建时间，ISO 格式
 
   // === 规模参数 ===
-  totalParameters?: number      // 总参数量（估算）
+  totalParameters?: number      // 总参数量
+  activeParameters?: number     // 活跃参数量（MoE 模型）
   contextLength?: number        // 最大上下文长度
   embeddingDim?: number         // Embedding 维度（= hidden_size）
   vocabSize?: number            // 词表大小
@@ -63,27 +94,21 @@ interface ModelInfo {
   numKvHeads?: number           // KV 头数 (GQA)
   hiddenSize?: number           // 隐藏层维度
   intermediateSize?: number     // FFN 中间层维度
-  positionEncoding?: string     // 位置编码类型
+  positionEncoding?: string     // 位置编码类型 (RoPE, ALiBi)
+  activation?: string           // 激活函数 (silu, gelu)
+  normType?: string             // 归一化类型 (RMSNorm, LayerNorm)
+  normEps?: number              // 归一化 epsilon
+  attentionDropout?: number     // 注意力 dropout 率
+  mlpFactor?: number            // MLP 扩展因子
+  gqaRatio?: number             // GQA 比率
 
   // === MoE 参数 ===
   isMoe: boolean                // 是否为 MoE 架构
-  numExperts?: number           // 专家数量
-  numExpertsPerToken?: number   // 每个 token 激活的专家数
-
-  // === Tokenizer 参数 ===
-  hasChatTemplate: boolean      // 是否有 Chat Template
-  bosToken?: string             // 序列开始 token
-  eosToken?: string             // 序列结束 token
-
-  // === 类型标记 ===
-  isAdapter: boolean            // 是否为 LoRA/Adapter
-  baseModel?: string            // 基座模型 (如果是 Adapter)
-  isInstructModel?: boolean     // 是否为指令微调模型
-
-  // === 元信息 ===
-  huggingfaceUrl?: string       // HuggingFace 链接
-  tags?: string[]               // 标签
-  updatedAt?: string            // 数据更新时间
+  numExperts?: number           // 路由专家数量
+  numSharedExperts?: number     // 共享专家数量
+  numExpertsPerToken?: number   // 每个 token 激活的路由专家数
+  numActivatedExperts?: number  // 激活专家总数（路由+共享）
+  moeIntermediateSize?: number  // MoE 专家 FFN 维度
 }
 
 /**
@@ -113,23 +138,23 @@ interface ColumnConfig {
 const FIELD_GROUPS = {
   basic: {
     label: '基础信息',
-    fields: ['name', 'provider', 'releaseDate', 'totalParameters', 'contextLength']
+    fields: ['name', 'provider', 'createdAt', 'totalParameters', 'contextLength']
   },
   architecture: {
     label: '架构信息',
-    fields: ['architecture', 'numLayers', 'numHeads', 'numKvHeads', 'hiddenSize', 'intermediateSize', 'positionEncoding']
+    fields: ['architecture', 'numLayers', 'numHeads', 'numKvHeads', 'hiddenSize', 'intermediateSize', 'positionEncoding', 'activation', 'normType']
   },
   moe: {
     label: 'MoE 参数',
-    fields: ['isMoe', 'numExperts', 'numExpertsPerToken']
+    fields: ['isMoe', 'numExperts', 'numSharedExperts', 'numExpertsPerToken', 'numActivatedExperts', 'moeIntermediateSize', 'activeParameters']
   },
-  tokenizer: {
-    label: 'Tokenizer',
-    fields: ['vocabSize', 'hasChatTemplate', 'bosToken', 'eosToken']
+  metrics: {
+    label: '计算指标',
+    fields: ['vocabSize', 'embeddingDim', 'mlpFactor', 'gqaRatio', 'normEps', 'attentionDropout']
   },
-  type: {
-    label: '类型标记',
-    fields: ['isAdapter', 'baseModel', 'isInstructModel']
+  links: {
+    label: '链接',
+    fields: ['huggingfaceUrl', 'arxivUrl', 'techReport']
   }
 }
 ```
@@ -141,8 +166,8 @@ const FIELD_GROUPS = {
 | 等级 | 显示字段 | 适用人群 |
 |------|----------|----------|
 | simple | name, provider, totalParameters, contextLength | 普通用户 |
-| enthusiast | + releaseDate, architecture, embeddingDim, isMoe | 爱好者 |
-| developer | + numLayers, numHeads, positionEncoding, vocabSize | 开发者 |
+| enthusiast | + createdAt, architecture, embeddingDim, isMoe | 爱好者 |
+| developer | + numLayers, numHeads, positionEncoding, vocabSize, activation | 开发者 |
 | custom | 用户自定义 | 高级用户 |
 
 ### 3.2 预设详细定义
@@ -159,7 +184,7 @@ const COMPLEXITY_PRESETS: Record<ComplexityLevel, string[]> = {
   enthusiast: [
     'name',
     'provider',
-    'releaseDate',
+    'createdAt',
     'totalParameters',
     'contextLength',
     'architecture',
@@ -170,8 +195,9 @@ const COMPLEXITY_PRESETS: Record<ComplexityLevel, string[]> = {
   developer: [
     'name',
     'provider',
-    'releaseDate',
+    'createdAt',
     'totalParameters',
+    'activeParameters',
     'contextLength',
     'architecture',
     'numLayers',
@@ -180,202 +206,23 @@ const COMPLEXITY_PRESETS: Record<ComplexityLevel, string[]> = {
     'hiddenSize',
     'intermediateSize',
     'positionEncoding',
+    'activation',
+    'normType',
     'vocabSize',
     'isMoe',
     'numExperts',
-    'hasChatTemplate',
-    'isAdapter',
+    'numExpertsPerToken',
+    'mlpFactor',
+    'gqaRatio',
   ],
 
   custom: [], // 用户自定义，读取 localStorage
 }
 ```
 
-## 4. 列配置定义
+## 4. 数据格式化
 
-```typescript
-const DEFAULT_COLUMNS: ColumnConfig[] = [
-  // 基础信息
-  {
-    key: 'name',
-    label: '模型名称',
-    labelEn: 'Model Name',
-    visible: true,
-    sortable: true,
-    type: 'string',
-  },
-  {
-    key: 'provider',
-    label: '提供商',
-    labelEn: 'Provider',
-    visible: true,
-    sortable: true,
-    type: 'string',
-  },
-  {
-    key: 'releaseDate',
-    label: '发布时间',
-    labelEn: 'Release Date',
-    visible: true,
-    sortable: true,
-    type: 'date',
-    format: 'date',
-  },
-  {
-    key: 'totalParameters',
-    label: '参数量',
-    labelEn: 'Parameters',
-    visible: true,
-    sortable: true,
-    type: 'number',
-    format: 'params',
-    description: '模型总参数量，估算值',
-  },
-  {
-    key: 'contextLength',
-    label: '上下文长度',
-    labelEn: 'Context Length',
-    visible: true,
-    sortable: true,
-    type: 'number',
-    description: '最大支持的 token 数',
-  },
-
-  // 架构信息
-  {
-    key: 'architecture',
-    label: '架构',
-    labelEn: 'Architecture',
-    visible: false,
-    sortable: true,
-    type: 'string',
-    description: '模型架构类型',
-  },
-  {
-    key: 'embeddingDim',
-    label: 'Embedding 维度',
-    labelEn: 'Embedding Dim',
-    visible: false,
-    sortable: true,
-    type: 'number',
-    description: '隐藏层维度',
-  },
-  {
-    key: 'numLayers',
-    label: '层数',
-    labelEn: 'Layers',
-    visible: false,
-    sortable: true,
-    type: 'number',
-    description: 'Transformer 层数',
-  },
-  {
-    key: 'numHeads',
-    label: '注意力头数',
-    labelEn: 'Attention Heads',
-    visible: false,
-    sortable: true,
-    type: 'number',
-  },
-  {
-    key: 'numKvHeads',
-    label: 'KV 头数',
-    labelEn: 'KV Heads',
-    visible: false,
-    sortable: true,
-    type: 'number',
-    description: 'Grouped Query Attention 的 KV 头数',
-  },
-  {
-    key: 'hiddenSize',
-    label: '隐藏层大小',
-    labelEn: 'Hidden Size',
-    visible: false,
-    sortable: true,
-    type: 'number',
-  },
-  {
-    key: 'intermediateSize',
-    label: 'FFN 大小',
-    labelEn: 'FFN Size',
-    visible: false,
-    sortable: true,
-    type: 'number',
-    description: 'Feed Forward Network 中间层大小',
-  },
-  {
-    key: 'positionEncoding',
-    label: '位置编码',
-    labelEn: 'Position Encoding',
-    visible: false,
-    sortable: true,
-    type: 'string',
-    description: 'RoPE, ALiBi 等',
-  },
-  {
-    key: 'vocabSize',
-    label: '词表大小',
-    labelEn: 'Vocab Size',
-    visible: false,
-    sortable: true,
-    type: 'number',
-  },
-
-  // MoE 信息
-  {
-    key: 'isMoe',
-    label: 'MoE',
-    labelEn: 'MoE',
-    visible: false,
-    sortable: true,
-    type: 'boolean',
-    description: '是否为 Mixture of Experts 架构',
-  },
-  {
-    key: 'numExperts',
-    label: '专家数',
-    labelEn: 'Num Experts',
-    visible: false,
-    sortable: true,
-    type: 'number',
-  },
-
-  // Tokenizer 信息
-  {
-    key: 'hasChatTemplate',
-    label: 'Chat Template',
-    labelEn: 'Chat Template',
-    visible: false,
-    sortable: true,
-    type: 'boolean',
-    description: '是否支持对话格式',
-  },
-
-  // 类型信息
-  {
-    key: 'isAdapter',
-    label: 'Adapter',
-    labelEn: 'Adapter',
-    visible: false,
-    sortable: true,
-    type: 'boolean',
-    description: '是否为 LoRA 等 Adapter',
-  },
-  {
-    key: 'baseModel',
-    label: '基座模型',
-    labelEn: 'Base Model',
-    visible: false,
-    sortable: true,
-    type: 'string',
-    description: 'Adapter 的基座模型',
-  },
-]
-```
-
-## 5. 数据格式化
-
-### 5.1 参数量格式化
+### 4.1 参数量格式化
 
 ```typescript
 function formatParameters(value: number | undefined): string {
@@ -400,7 +247,7 @@ function formatParameters(value: number | undefined): string {
 // 1500000       → "1.5M"
 ```
 
-### 5.2 上下文长度格式化
+### 4.2 上下文长度格式化
 
 ```typescript
 function formatContextLength(value: number | undefined): string {
@@ -421,7 +268,7 @@ function formatContextLength(value: number | undefined): string {
 // 1000000 → "1.0M"
 ```
 
-### 5.3 日期格式化
+### 4.3 日期格式化
 
 ```typescript
 function formatDate(value: string | undefined, locale: string = 'zh-CN'): string {
@@ -442,7 +289,7 @@ function formatDate(value: string | undefined, locale: string = 'zh-CN'): string
 // "2024-07-23" → "07/23/2024"
 ```
 
-### 5.4 布尔值格式化
+### 4.4 布尔值格式化
 
 ```typescript
 function formatBoolean(value: boolean | undefined, locale: string = 'zh'): string {
@@ -455,15 +302,17 @@ function formatBoolean(value: boolean | undefined, locale: string = 'zh'): strin
 }
 ```
 
-## 6. JSON 输出示例
+## 5. JSON 输出示例
 
 ```json
 [
   {
     "id": "meta-llama/Llama-3.2-1B",
-    "name": "Llama 3.2 1B",
+    "name": "Llama-3.2-1B",
     "provider": "Meta",
-    "releaseDate": "2024-09-25",
+    "huggingfaceUrl": "https://huggingface.co/meta-llama/Llama-3.2-1B",
+    "techReport": "",
+    "arxivUrl": "https://arxiv.org/abs/2407.21783",
     "totalParameters": 1235814400,
     "contextLength": 131072,
     "embeddingDim": 2048,
@@ -475,41 +324,78 @@ function formatBoolean(value: boolean | undefined, locale: string = 'zh'): strin
     "hiddenSize": 2048,
     "intermediateSize": 8192,
     "positionEncoding": "RoPE",
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-05,
+    "mlpFactor": 4.0,
+    "gqaRatio": 4.0,
     "isMoe": false,
-    "numExperts": null,
-    "hasChatTemplate": true,
-    "bosToken": "<|begin_of_text|>",
-    "eosToken": "<|end_of_text|>",
-    "isAdapter": false,
-    "baseModel": null,
-    "huggingfaceUrl": "https://huggingface.co/meta-llama/Llama-3.2-1B",
-    "updatedAt": "2024-12-07T10:30:00Z"
+    "createdAt": "2024-09-18T09:53:43.000Z"
   },
   {
-    "id": "Qwen/Qwen2.5-72B-Instruct",
-    "name": "Qwen 2.5 72B Instruct",
-    "provider": "Alibaba",
-    "releaseDate": "2024-09-19",
-    "totalParameters": 72706343936,
+    "id": "deepseek-ai/DeepSeek-V3-Base",
+    "name": "DeepSeek-V3-Base",
+    "provider": "DeepSeek",
+    "huggingfaceUrl": "https://huggingface.co/deepseek-ai/DeepSeek-V3-Base",
+    "techReport": "",
+    "totalParameters": 671000000000,
+    "activeParameters": 37000000000,
     "contextLength": 131072,
-    "embeddingDim": 8192,
-    "vocabSize": 152064,
-    "architecture": "qwen2",
-    "numLayers": 80,
-    "numHeads": 64,
-    "numKvHeads": 8,
-    "hiddenSize": 8192,
-    "intermediateSize": 29568,
+    "embeddingDim": 7168,
+    "vocabSize": 129280,
+    "architecture": "deepseek_v3",
+    "numLayers": 61,
+    "numHeads": 128,
+    "numKvHeads": 128,
+    "hiddenSize": 7168,
+    "intermediateSize": 18432,
     "positionEncoding": "RoPE",
-    "isMoe": false,
-    "numExperts": null,
-    "hasChatTemplate": true,
-    "bosToken": null,
-    "eosToken": "<|im_end|>",
-    "isAdapter": false,
-    "baseModel": null,
-    "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-72B-Instruct",
-    "updatedAt": "2024-12-07T10:30:00Z"
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-06,
+    "mlpFactor": 2.57,
+    "gqaRatio": 1.0,
+    "isMoe": true,
+    "numExperts": 256,
+    "numSharedExperts": 1,
+    "numExpertsPerToken": 8,
+    "numActivatedExperts": 9,
+    "moeIntermediateSize": 2048,
+    "createdAt": "2024-12-26T10:00:00.000Z"
   }
 ]
 ```
+
+## 6. 提取器模块结构
+
+字段提取逻辑位于 `src/modelsheet-cli/extractors/`：
+
+```
+extractors/
+├── __init__.py          # 导出所有提取器
+├── base.py              # ConfigContext 和辅助函数
+├── metadata.py          # 标识字段：id, name, provider, URLs, timestamps
+├── architecture.py      # 架构字段：layers, heads, sizes, encodings
+├── moe.py               # MoE 字段：experts, shared experts
+└── parameters.py        # 参数计算：total, active (dense/MoE)
+```
+
+### 6.1 提取优先级
+
+对于有多个可能 key 的字段，使用 `get_first_of()` 函数按优先级查找：
+
+| 字段 | 优先级 1 | 优先级 2 | 优先级 3 |
+|------|----------|----------|----------|
+| num_layers | `num_hidden_layers` | `n_layer` | `num_layers` |
+| num_heads | `num_attention_heads` | `n_head` | - |
+| hidden_size | `hidden_size` | `n_embd` | `d_model` |
+| intermediate_size | `intermediate_size` | `n_inner` | - |
+| context_length | `max_position_embeddings` | `seq_length` | `n_ctx` |
+| num_experts | `n_routed_experts` | `num_local_experts` | `num_experts` |
+
+### 6.2 参数计算优先级
+
+总参数量 (`total_parameters`) 的计算优先级：
+1. API metadata `totalParameters`（最准确）
+2. config.json `num_parameters`（显式声明）
+3. 从架构计算（Dense 或 MoE 公式）

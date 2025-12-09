@@ -4,37 +4,12 @@ import re
 from typing import Optional
 
 from .base import ConfigContext
+from ..config import load_provider_map
 
-
-# Provider mapping: HuggingFace org name -> display name
-PROVIDER_MAP = {
-    "meta-llama": "Meta",
-    "Qwen": "Alibaba",
-    "mistralai": "Mistral AI",
-    "google": "Google",
-    "microsoft": "Microsoft",
-    "01-ai": "01.AI",
-    "deepseek-ai": "DeepSeek",
-    "THUDM": "Tsinghua",
-    "internlm": "Shanghai AI Lab",
-    "baichuan-inc": "Baichuan",
-    "bigscience": "BigScience",
-    "EleutherAI": "EleutherAI",
-    "tiiuae": "TII",
-    "stabilityai": "Stability AI",
-    "NousResearch": "Nous Research",
-    "teknium": "Teknium",
-    "Open-Orca": "Open Orca",
-    "lmsys": "LMSYS",
-    "HuggingFaceH4": "Hugging Face",
-    "mosaicml": "MosaicML",
-    "databricks": "Databricks",
-    "allenai": "Allen AI",
-    "CohereForAI": "Cohere",
-    "nvidia": "NVIDIA",
-    "amazon": "Amazon",
-    "apple": "Apple",
-}
+# Load provider mapping from data/providers.json
+# Maps HuggingFace org name -> normalized display name
+# Frontend i18n will translate these display names to localized versions
+PROVIDER_MAP = load_provider_map()
 
 
 def extract_id(ctx: ConfigContext) -> str:
@@ -59,6 +34,8 @@ def extract_provider(ctx: ConfigContext) -> str:
 
     Source: modelId (String split) + PROVIDER_MAP
     Logic: Split by '/', lookup org in mapping, fallback to org name
+
+    Note: Frontend i18n will translate these display names to localized versions.
     """
     org = ctx.model_id.split("/")[0]
     return PROVIDER_MAP.get(org, org)
@@ -85,7 +62,7 @@ def extract_arxiv_url(ctx: ConfigContext) -> Optional[str]:
     tags = ctx.metadata.get("tags", [])
     if not isinstance(tags, list):
         return None
-
+    # TODO Sometimes the tech report is not in arxiv, should find the correct website.
     # Pattern: arxiv:XXXX.XXXXX (year month . number)
     arxiv_pattern = re.compile(r"^arxiv:(\d{4}\.\d{4,5}(?:v\d+)?)$")
 

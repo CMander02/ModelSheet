@@ -1,3 +1,22 @@
+// Provider data loaded from providers.json
+import providersData from "../../../../data/providers.json"
+
+// Build provider translations from providers.json
+function buildProviderTranslations(): { en: Record<string, string>; zh: Record<string, string> } {
+  const en: Record<string, string> = {}
+  const zh: Record<string, string> = {}
+
+  for (const [displayName, config] of Object.entries(providersData.providers)) {
+    const i18n = (config as { i18n: { en: string; zh: string } }).i18n
+    en[displayName] = i18n.en
+    zh[displayName] = i18n.zh
+  }
+
+  return { en, zh }
+}
+
+const providerTranslations = buildProviderTranslations()
+
 // 翻译文件
 const translations = {
   zh: {
@@ -7,6 +26,8 @@ const translations = {
       compareModels: "对比模型",
       version: "v1.0",
     },
+    // Provider 名称翻译
+    providers: providerTranslations.zh,
     // 首页
     home: {
       clickTip: "点击表格中的任意行查看模型详情",
@@ -88,6 +109,8 @@ const translations = {
       compareModels: "Compare Models",
       version: "v1.0",
     },
+    // Provider name translations
+    providers: providerTranslations.en,
     // Home
     home: {
       clickTip: "Click any row in the table to view model details",
@@ -172,4 +195,17 @@ export function getTranslations(lang: Language) {
 
 export function useI18n(lang: Language) {
   return getTranslations(lang)
+}
+
+/**
+ * Translate provider display name to localized version.
+ * Falls back to the original name if no translation found.
+ *
+ * @param provider - Provider display name from models.json (e.g., "Qwen Team")
+ * @param lang - Target language
+ * @returns Translated provider name (e.g., "通义千问团队" for zh)
+ */
+export function translateProvider(provider: string, lang: Language): string {
+  const t = getTranslations(lang)
+  return t.providers[provider] || provider
 }

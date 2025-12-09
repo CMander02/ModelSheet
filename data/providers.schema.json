@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Provider Configuration",
+  "description": "Configuration for mapping HuggingFace organizations to display names with i18n support",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference"
+    },
+    "$comment": {
+      "type": "string",
+      "description": "Comment about this file"
+    },
+    "providers": {
+      "type": "object",
+      "description": "Map of display name to provider configuration",
+      "additionalProperties": {
+        "type": "object",
+        "description": "Provider configuration",
+        "properties": {
+          "orgs": {
+            "type": "array",
+            "description": "HuggingFace organization names that map to this provider",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "i18n": {
+            "type": "object",
+            "description": "Internationalized display names",
+            "properties": {
+              "en": {
+                "type": "string",
+                "description": "English display name"
+              },
+              "zh": {
+                "type": "string",
+                "description": "Chinese display name"
+              }
+            },
+            "required": ["en", "zh"],
+            "additionalProperties": {
+              "type": "string",
+              "description": "Display name in other languages"
+            }
+          }
+        },
+        "required": ["orgs", "i18n"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["providers"],
+  "additionalProperties": true
+}

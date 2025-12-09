@@ -1,0 +1,284 @@
+{
+    "$schema": "./providers.schema.json",
+    "$comment": "Provider mapping configuration. CLI and frontend both read from this file.",
+    "providers": {
+        "Qwen Team": {
+            "orgs": [
+                "Qwen",
+                "alibaba-PAI",
+                "Alibaba-NLP"
+            ],
+            "i18n": {
+                "en": "Qwen Team",
+                "zh": "通义千问团队"
+            }
+        },
+        "Damo Academy": {
+            "orgs": [
+                "Alibaba-DAMO-Academy"
+            ],
+            "i18n": {
+                "en": "Damo Academy",
+                "zh": "达摩院"
+            }
+        },
+        "Meta": {
+            "orgs": [
+                "facebook"
+            ],
+            "i18n": {
+                "en": "Meta",
+                "zh": "Meta"
+            }
+        },
+        "Llama Team": {
+            "orgs": [
+                "meta-llama"
+            ],
+            "i18n": {
+                "en": "Llama Team",
+                "zh": "Llama 团队"
+            }
+        },
+        "Google DeepMind": {
+            "orgs": [
+                "google",
+                "deepmind"
+            ],
+            "i18n": {
+                "en": "Google DeepMind",
+                "zh": "Google DeepMind"
+            }
+        },
+        "Microsoft": {
+            "orgs": [
+                "microsoft"
+            ],
+            "i18n": {
+                "en": "Microsoft",
+                "zh": "微软"
+            }
+        },
+        "Mistral AI": {
+            "orgs": [
+                "mistralai"
+            ],
+            "i18n": {
+                "en": "Mistral AI",
+                "zh": "Mistral AI"
+            }
+        },
+        "DeepSeek": {
+            "orgs": [
+                "deepseek-ai"
+            ],
+            "i18n": {
+                "en": "DeepSeek",
+                "zh": "深度求索"
+            }
+        },
+        "01.AI": {
+            "orgs": [
+                "01-ai"
+            ],
+            "i18n": {
+                "en": "01.AI",
+                "zh": "零一万物"
+            }
+        },
+        "Zhipu AI": {
+            "orgs": [
+                "THUDM",
+                "zai-org"
+            ],
+            "i18n": {
+                "en": "Zhipu AI",
+                "zh": "智谱AI"
+            }
+        },
+        "Shanghai AI Lab": {
+            "orgs": [
+                "internlm",
+                "OpenGVLab",
+                "OpenMMLab"
+            ],
+            "i18n": {
+                "en": "Shanghai AI Lab",
+                "zh": "上海人工智能实验室"
+            }
+        },
+        "Baichuan": {
+            "orgs": [
+                "baichuan-inc"
+            ],
+            "i18n": {
+                "en": "Baichuan",
+                "zh": "百川智能"
+            }
+        },
+        "BigScience": {
+            "orgs": [
+                "bigscience"
+            ],
+            "i18n": {
+                "en": "BigScience",
+                "zh": "BigScience"
+            }
+        },
+        "EleutherAI": {
+            "orgs": [
+                "EleutherAI"
+            ],
+            "i18n": {
+                "en": "EleutherAI",
+                "zh": "EleutherAI"
+            }
+        },
+        "TII": {
+            "orgs": [
+                "tiiuae"
+            ],
+            "i18n": {
+                "en": "TII",
+                "zh": "阿联酋技术创新研究院"
+            }
+        },
+        "Stability AI": {
+            "orgs": [
+                "stabilityai"
+            ],
+            "i18n": {
+                "en": "Stability AI",
+                "zh": "Stability AI"
+            }
+        },
+        "Nous Research": {
+            "orgs": [
+                "NousResearch"
+            ],
+            "i18n": {
+                "en": "Nous Research",
+                "zh": "Nous Research"
+            }
+        },
+        "Teknium": {
+            "orgs": [
+                "teknium"
+            ],
+            "i18n": {
+                "en": "Teknium",
+                "zh": "Teknium"
+            }
+        },
+        "Open Orca": {
+            "orgs": [
+                "Open-Orca"
+            ],
+            "i18n": {
+                "en": "Open Orca",
+                "zh": "Open Orca"
+            }
+        },
+        "LMSYS": {
+            "orgs": [
+                "lmsys"
+            ],
+            "i18n": {
+                "en": "LMSYS",
+                "zh": "LMSYS"
+            }
+        },
+        "Hugging Face": {
+            "orgs": [
+                "HuggingFaceH4",
+                "huggingface"
+            ],
+            "i18n": {
+                "en": "Hugging Face",
+                "zh": "Hugging Face"
+            }
+        },
+        "Databricks": {
+            "orgs": [
+                "mosaicml",
+                "databricks"
+            ],
+            "i18n": {
+                "en": "Databricks",
+                "zh": "Databricks"
+            }
+        },
+        "Allen AI": {
+            "orgs": [
+                "allenai"
+            ],
+            "i18n": {
+                "en": "Allen AI",
+                "zh": "艾伦人工智能研究所"
+            }
+        },
+        "Cohere": {
+            "orgs": [
+                "CohereForAI"
+            ],
+            "i18n": {
+                "en": "Cohere",
+                "zh": "Cohere"
+            }
+        },
+        "NVIDIA": {
+            "orgs": [
+                "nvidia"
+            ],
+            "i18n": {
+                "en": "NVIDIA",
+                "zh": "英伟达"
+            }
+        },
+        "Amazon": {
+            "orgs": [
+                "amazon"
+            ],
+            "i18n": {
+                "en": "Amazon",
+                "zh": "亚马逊"
+            }
+        },
+        "Apple": {
+            "orgs": [
+                "apple"
+            ],
+            "i18n": {
+                "en": "Apple",
+                "zh": "苹果"
+            }
+        },
+        "xAI": {
+            "orgs": [
+                "xai-org"
+            ],
+            "i18n": {
+                "en": "xAI",
+                "zh": "xAI"
+            }
+        },
+        "openai": {
+            "orgs": [
+                "openai"
+            ],
+            "i18n": {
+                "en": "Openai",
+                "zh": "OpenAI"
+            }
+        },
+        "moonshotai": {
+            "orgs": [
+                "moonshotai"
+            ],
+            "i18n": {
+                "en": "Moonshot AI",
+                "zh": "月之暗面"
+            }
+        }
+    }
+}

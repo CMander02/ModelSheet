@@ -103,31 +103,105 @@ The CLI is located in `src/modelsheet-cli/` with the following modules:
 
 ## Important Implementation Details
 
+### Parsed Fields
+
+The CLI extracts the following fields from HuggingFace model configs:
+
+#### Metadata Fields
+| Python Name | JSON Name | Source | Description |
+|-------------|-----------|--------|-------------|
+| `id` | `id` | API modelId | HuggingFace model ID (e.g., "Qwen/Qwen2.5-7B") |
+| `name` | `name` | modelId split | Display name (e.g., "Qwen2.5-7B") |
+| `provider` | `provider` | modelId + PROVIDER_MAP | Mapped provider name |
+| `huggingface_url` | `huggingfaceUrl` | String format | HuggingFace page URL |
+| `tech_report` | `techReport` | (TODO) | Technical report URL |
+| `arxiv_url` | `arxivUrl` | API tags (arxiv:XXXX.XXXXX) | arXiv paper URL |
+| `created_at` | `createdAt` | API metadata | Model creation timestamp |
+
+#### Parameter Fields
+| Python Name | JSON Name | Source | Description |
+|-------------|-----------|--------|-------------|
+| `total_parameters` | `totalParameters` | API safetensors.total / calculated | Total parameter count |
+| `active_parameters` | `activeParameters` | Calculated | Active parameters per token (MoE) |
+| `context_length` | `contextLength` | config.json max_position_embeddings | Max context length |
+| `embedding_dim` | `embeddingDim` | config.json hidden_size | Embedding dimension |
+| `vocab_size` | `vocabSize` | config.json vocab_size | Vocabulary size |
+
+#### Architecture Fields
+| Python Name | JSON Name | Source | Description |
+|-------------|-----------|--------|-------------|
+| `architecture` | `architecture` | config.json model_type | Architecture type (llama, qwen2, etc.) |
+| `num_layers` | `numLayers` | config.json num_hidden_layers | Transformer layer count |
+| `num_heads` | `numHeads` | config.json num_attention_heads | Attention head count |
+| `num_kv_heads` | `numKvHeads` | config.json num_key_value_heads | KV head count (GQA) |
+| `hidden_size` | `hiddenSize` | config.json hidden_size | Hidden layer dimension |
+| `intermediate_size` | `intermediateSize` | config.json intermediate_size | FFN intermediate size |
+| `position_encoding` | `positionEncoding` | Inferred (rope_theta/rope_scaling) | RoPE, ALiBi, etc. |
+| `activation` | `activation` | config.json hidden_act | Activation function (silu, gelu) |
+| `norm_type` | `normType` | Inferred (rms_norm_eps/layer_norm_eps) | RMSNorm or LayerNorm |
+| `norm_eps` | `normEps` | config.json rms_norm_eps | Normalization epsilon |
+| `attention_dropout` | `attentionDropout` | config.json attention_dropout | Attention dropout rate |
+| `mlp_factor` | `mlpFactor` | Calculated: intermediate_size/hidden_size | MLP expansion factor |
+| `gqa_ratio` | `gqaRatio` | Calculated: num_heads/num_kv_heads | GQA ratio |
+
+#### MoE Fields
+| Python Name | JSON Name | Source | Description |
+|-------------|-----------|--------|-------------|
+| `is_moe` | `isMoe` | Inferred (num_experts > 1) | Whether MoE architecture |
+| `num_experts` | `numExperts` | config.json n_routed_experts/num_local_experts | Routed expert count |
+| `num_shared_experts` | `numSharedExperts` | config.json n_shared_experts | Shared expert count |
+| `num_experts_per_token` | `numExpertsPerToken` | config.json num_experts_per_tok | Activated experts per token |
+| `num_activated_experts` | `numActivatedExperts` | Calculated: routed + shared | Total activated experts |
+| `moe_intermediate_size` | `moeIntermediateSize` | config.json moe_intermediate_size | Expert FFN size |
+
+### Extractor Modules
+
+The field extraction logic is modularized in `src/modelsheet-cli/extractors/`:
+- `base.py`: ConfigContext and helper functions
+- `metadata.py`: ID, name, provider, URLs, timestamps
+- `architecture.py`: Architecture-related fields with fallback keys
+- `moe.py`: MoE-specific fields
+- `parameters.py`: Parameter calculation (dense and MoE)
+
 ### MoE Parameter Calculation
 
 The parser handles MoE (Mixture of Experts) models specially:
 
 1. **Total Parameters**: Sum of all experts across all layers
 2. **Active Parameters**: Only the experts activated per token
-3. **Dense Layers**: Some models (DeepSeek) have initial dense layers (`first_k_dense_replace`)
-4. **Shared Experts**: Always active, counted separately from routed experts
+3. **Shared Experts**: Always active, counted separately from routed experts
 
-Formula in `_calc_moe_params()`:
+Formula in `parameters.py:_calc_moe_params()`:
 ```python
-# Each routed expert: gate_proj + up_proj + down_proj (3 weight matrices)
+# Each expert: gate_proj + up_proj + down_proj (3 matrices for SwiGLU)
 params_per_routed_expert = 3 * hidden_size * moe_intermediate_size
 
-# Total = embedding + attention + dense_ffn + routed_experts + shared_experts
-# Active = embedding + attention + dense_ffn + active_experts + shared_experts
+# Total = embedding + attention + all_routed_experts + all_shared_experts
+# Active = embedding + attention + activated_routed_experts + all_shared_experts
 ```
 
 ### Provider Mapping
 
-`PROVIDER_MAP` in `parser.py` maps HuggingFace org names to display names:
-- `meta-llama` → Meta
-- `Qwen` → Alibaba
-- `mistralai` → Mistral AI
-- etc.
+Provider mapping is configured in `data/providers.json` - a single source of truth for both CLI and frontend:
+
+```json
+{
+  "providers": {
+    "Qwen Team": {
+      "orgs": ["Qwen", "alibaba-PAI", "Alibaba-NLP"],
+      "i18n": { "en": "Qwen Team", "zh": "通义千问团队" }
+    }
+  }
+}
+```
+
+- **CLI** (`config.py:load_provider_map()`): Reads JSON and builds org → display name mapping
+- **Frontend** (`i18n.ts`): Imports JSON and builds display name → localized name mapping
+
+Example flow:
+1. HuggingFace org: `Qwen`
+2. CLI maps to display name: `Qwen Team` (stored in models.json)
+3. Frontend translates: `通义千问团队` (zh) or `Qwen Team` (en)
 
 ### Field Name Conversion
 

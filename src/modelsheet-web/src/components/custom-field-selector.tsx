@@ -43,6 +43,11 @@ const FIELD_GROUPS = {
     labelEn: "MoE Configuration",
     fields: ["isMoe", "numExperts", "numSharedExperts", "numExpertsPerToken", "numActivatedExperts", "moeIntermediateSize"]
   },
+  modalities: {
+    label: "模态",
+    labelEn: "Modalities",
+    fields: ["inputModalities", "outputModalities"]
+  },
   other: {
     label: "其他信息",
     labelEn: "Other Information",

@@ -36,6 +36,10 @@ export interface ModelInfo {
   numActivatedExperts?: number    // Total activated experts (routed + shared)
   moeIntermediateSize?: number    // Expert FFN size
 
+  // Modalities (text, image, audio, video)
+  inputModalities?: string[]      // Input modalities
+  outputModalities?: string[]     // Output modalities
+
   // Metadata
   createdAt?: string       // Model creation timestamp
 

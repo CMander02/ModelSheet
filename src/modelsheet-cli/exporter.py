@@ -89,6 +89,9 @@ class ModelExporter:
             "numExpertsPerToken": model.num_experts_per_token,
             "numActivatedExperts": model.num_activated_experts,
             "moeIntermediateSize": model.moe_intermediate_size,
+            # Modalities
+            "inputModalities": model.input_modalities,
+            "outputModalities": model.output_modalities,
             # Metadata
             "createdAt": model.created_at,
         }

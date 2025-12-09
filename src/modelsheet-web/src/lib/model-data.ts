@@ -36,6 +36,10 @@ const COLUMN_CONFIGS: Omit<ColumnConfig, "label">[] = [
   { key: "numActivatedExperts", visible: false, sortable: true, type: "number" },
   { key: "moeIntermediateSize", visible: false, sortable: true, type: "number" },
 
+  // Modalities
+  { key: "inputModalities", visible: false, sortable: false, type: "array" },
+  { key: "outputModalities", visible: false, sortable: false, type: "array" },
+
   // Other Information
   { key: "huggingfaceUrl", visible: false, sortable: false, type: "string" },
   { key: "techReport", visible: false, sortable: false, type: "string" },

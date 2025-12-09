@@ -9,6 +9,8 @@ from .metadata import (
     extract_tech_report,
     extract_arxiv_url,
     extract_created_at,
+    extract_input_modalities,
+    extract_output_modalities,
 )
 from .architecture import (
     extract_architecture,
@@ -53,6 +55,8 @@ __all__ = [
     "extract_tech_report",
     "extract_arxiv_url",
     "extract_created_at",
+    "extract_input_modalities",
+    "extract_output_modalities",
     # Architecture
     "extract_architecture",
     "extract_vocab_size",

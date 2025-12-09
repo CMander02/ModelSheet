@@ -279,6 +279,33 @@
                 "en": "Moonshot AI",
                 "zh": "月之暗面"
             }
+        },
+        "tencent": {
+            "orgs": [
+                "tencent"
+            ],
+            "i18n": {
+                "en": "Tencent",
+                "zh": "腾讯"
+            }
+        },
+        "ByteDance": {
+            "orgs": [
+                "ByteDance"
+            ],
+            "i18n": {
+                "en": "ByteDance",
+                "zh": "字节跳动"
+            }
+        },
+        "ByteDance-Seed": {
+            "orgs": [
+                "ByteDance-Seed"
+            ],
+            "i18n": {
+                "en": "ByteDance Seed",
+                "zh": "字节Seed"
+            }
         }
     }
 }

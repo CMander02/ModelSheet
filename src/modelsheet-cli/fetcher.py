@@ -125,7 +125,7 @@ class ModelFetcher:
         model_dir = self.get_model_dir(model_id)
         result = {}
 
-        # Fetch metadata from HuggingFace API (extract createdAt and accurate params)
+        # Fetch metadata from HuggingFace API (extract createdAt, params, pipeline_tag)
         metadata_response = self.fetch_model_metadata(model_id)
         if metadata_response:
             metadata = {}
@@ -140,6 +140,16 @@ class ModelFetcher:
             total_params = safetensors.get('total')
             if total_params:
                 metadata['totalParameters'] = total_params
+
+            # Extract pipeline_tag for modality detection
+            pipeline_tag = metadata_response.get('pipeline_tag')
+            if pipeline_tag:
+                metadata['pipelineTag'] = pipeline_tag
+
+            # Extract tags for additional info
+            tags = metadata_response.get('tags', [])
+            if tags:
+                metadata['tags'] = tags
 
             if metadata:
                 result["_metadata"] = metadata

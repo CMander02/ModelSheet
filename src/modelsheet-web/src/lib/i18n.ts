@@ -97,7 +97,16 @@ const translations = {
       numExpertsPerToken: "每Token激活专家数",
       numActivatedExperts: "总激活专家数",
       moeIntermediateSize: "专家FFN大小",
+      inputModalities: "输入模态",
+      outputModalities: "输出模态",
       createdAt: "创建时间",
+    },
+    // Modality names
+    modalities: {
+      text: "文本",
+      image: "图片",
+      audio: "音频",
+      video: "视频",
     },
   },
   en: {
@@ -178,7 +187,16 @@ const translations = {
       numExpertsPerToken: "Experts per Token",
       numActivatedExperts: "Total Activated Experts",
       moeIntermediateSize: "Expert FFN Size",
+      inputModalities: "Input Modalities",
+      outputModalities: "Output Modalities",
       createdAt: "Created At",
+    },
+    // Modality names
+    modalities: {
+      text: "Text",
+      image: "Image",
+      audio: "Audio",
+      video: "Video",
     },
   },
 }

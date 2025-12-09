@@ -4,6 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import { ModalityIcons } from "@/components/modality-icons"
 import type { ModelInfo, ColumnConfig, ComplexityLevel, SortConfig } from "@/lib/types"
 import { COMPLEXITY_PRESETS } from "@/lib/model-data"
 import type { Language } from "@/lib/i18n"
@@ -356,7 +357,12 @@ export function ModelTable({
                           left: onModelSelect ? '48px' : '0px'
                         } : undefined}
                       >
-                        {formatValue(model[column.key], column.type)}
+                        {/* Special handling for modality columns */}
+                        {(column.key === "inputModalities" || column.key === "outputModalities") ? (
+                          <ModalityIcons modalities={model[column.key] || []} />
+                        ) : (
+                          formatValue(model[column.key], column.type)
+                        )}
                       </td>
                     ))}
                   </tr>

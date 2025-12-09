@@ -92,3 +92,94 @@ def extract_created_at(ctx: ConfigContext) -> Optional[str]:
     Source: API metadata createdAt
     """
     return ctx.metadata.get("createdAt")
+
+
+# Pipeline tag to modality mapping
+# Input/Output modalities: text, image, audio, video
+PIPELINE_TAG_MODALITIES = {
+    # Text only
+    "text-generation": (["text"], ["text"]),
+    "text2text-generation": (["text"], ["text"]),
+    "fill-mask": (["text"], ["text"]),
+    "summarization": (["text"], ["text"]),
+    "translation": (["text"], ["text"]),
+    "question-answering": (["text"], ["text"]),
+    "conversational": (["text"], ["text"]),
+    "feature-extraction": (["text"], ["text"]),
+    "sentence-similarity": (["text"], ["text"]),
+    "text-classification": (["text"], ["text"]),
+    "token-classification": (["text"], ["text"]),
+    "table-question-answering": (["text"], ["text"]),
+    "zero-shot-classification": (["text"], ["text"]),
+
+    # Audio input
+    "automatic-speech-recognition": (["audio"], ["text"]),
+    "audio-classification": (["audio"], ["text"]),
+
+    # Audio output
+    "text-to-speech": (["text"], ["audio"]),
+    "text-to-audio": (["text"], ["audio"]),
+
+    # Image input
+    "image-classification": (["image"], ["text"]),
+    "object-detection": (["image"], ["text"]),
+    "image-segmentation": (["image"], ["text"]),
+    "depth-estimation": (["image"], ["image"]),
+    "image-feature-extraction": (["image"], ["text"]),
+    "zero-shot-image-classification": (["image", "text"], ["text"]),
+    "zero-shot-object-detection": (["image", "text"], ["text"]),
+
+    # Image output
+    "text-to-image": (["text"], ["image"]),
+    "image-to-image": (["image"], ["image"]),
+    "unconditional-image-generation": ([], ["image"]),
+
+    # Vision-Language (multimodal)
+    "image-text-to-text": (["image", "text"], ["text"]),
+    "visual-question-answering": (["image", "text"], ["text"]),
+    "document-question-answering": (["image", "text"], ["text"]),
+    "image-to-text": (["image"], ["text"]),
+
+    # Video
+    "text-to-video": (["text"], ["video"]),
+    "video-classification": (["video"], ["text"]),
+    "image-to-video": (["image"], ["video"]),
+    "video-text-to-text": (["video", "text"], ["text"]),
+
+    # Audio-to-Audio
+    "audio-to-audio": (["audio"], ["audio"]),
+}
+
+
+def extract_input_modalities(ctx: ConfigContext) -> list[str]:
+    """Extract input modalities from pipeline_tag.
+
+    Source: API metadata pipelineTag
+    Returns: List of modalities: ["text"], ["image", "text"], ["audio"], ["video"], etc.
+    """
+    pipeline_tag = ctx.metadata.get("pipelineTag")
+    if not pipeline_tag:
+        return ["text"]  # Default to text for unknown
+
+    modalities = PIPELINE_TAG_MODALITIES.get(pipeline_tag)
+    if modalities:
+        return modalities[0] if modalities[0] else ["text"]
+
+    return ["text"]  # Default fallback
+
+
+def extract_output_modalities(ctx: ConfigContext) -> list[str]:
+    """Extract output modalities from pipeline_tag.
+
+    Source: API metadata pipelineTag
+    Returns: List of modalities: ["text"], ["image"], ["audio"], ["video"], etc.
+    """
+    pipeline_tag = ctx.metadata.get("pipelineTag")
+    if not pipeline_tag:
+        return ["text"]  # Default to text for unknown
+
+    modalities = PIPELINE_TAG_MODALITIES.get(pipeline_tag)
+    if modalities:
+        return modalities[1] if modalities[1] else ["text"]
+
+    return ["text"]  # Default fallback

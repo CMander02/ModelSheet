@@ -16,6 +16,8 @@ from .extractors import (
     extract_tech_report,
     extract_arxiv_url,
     extract_created_at,
+    extract_input_modalities,
+    extract_output_modalities,
     # Architecture
     extract_architecture,
     extract_vocab_size,
@@ -91,6 +93,10 @@ class ParsedModel:
     num_experts_per_token: Optional[int] = None
     num_activated_experts: Optional[int] = None
     moe_intermediate_size: Optional[int] = None
+
+    # Modalities
+    input_modalities: Optional[list[str]] = None
+    output_modalities: Optional[list[str]] = None
 
     # Metadata
     created_at: Optional[str] = None
@@ -168,6 +174,9 @@ class ModelParser:
             num_experts_per_token=extract_num_experts_per_token(ctx),
             num_activated_experts=extract_num_activated_experts(ctx),
             moe_intermediate_size=extract_moe_intermediate_size(ctx),
+            # Modalities
+            input_modalities=extract_input_modalities(ctx),
+            output_modalities=extract_output_modalities(ctx),
             # Metadata
             created_at=extract_created_at(ctx),
         )

@@ -204,6 +204,7 @@ export function HomePage() {
           columns={columns}
           onColumnChange={handleColumnChange}
           onComplexityChange={handleComplexityChange}
+          onCustomFieldsClick={() => setShowFieldSelector(true)}
           currentComplexity={complexityLevel}
           language={language}
           selectedModels={selectedModels}

@@ -4,6 +4,7 @@ export interface ModelInfo {
   name: string
   provider: string
   huggingfaceUrl?: string
+  techReport?: string      // Technical report URL
 
   // Basic specs
   totalParameters?: number
@@ -30,19 +31,13 @@ export interface ModelInfo {
   // MoE
   isMoe: boolean
   numExperts?: number
+  numSharedExperts?: number       // Shared expert count (always active)
   numExpertsPerToken?: number
-
-  // Tokenizer
-  hasChatTemplate: boolean
-  bosToken?: string
-  eosToken?: string
-
-  // Type flags
-  isAdapter: boolean
-  baseModel?: string
+  numActivatedExperts?: number    // Total activated experts (routed + shared)
+  moeIntermediateSize?: number    // Expert FFN size
 
   // Metadata
-  updatedAt?: string
+  createdAt?: string       // Model creation timestamp
 
   [key: string]: any
 }

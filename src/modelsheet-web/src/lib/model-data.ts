@@ -23,26 +23,23 @@ const COLUMN_CONFIGS: Omit<ColumnConfig, "label">[] = [
   { key: "positionEncoding", visible: false, sortable: true, type: "string" },
   { key: "activation", visible: false, sortable: true, type: "string" },
   { key: "normType", visible: false, sortable: true, type: "string" },
+  { key: "normEps", visible: false, sortable: true, type: "number" },
+  { key: "attentionDropout", visible: false, sortable: true, type: "number" },
   { key: "mlpFactor", visible: false, sortable: true, type: "number" },
   { key: "gqaRatio", visible: false, sortable: true, type: "number" },
 
   // MoE
   { key: "isMoe", visible: false, sortable: true, type: "boolean" },
   { key: "numExperts", visible: false, sortable: true, type: "number" },
+  { key: "numSharedExperts", visible: false, sortable: true, type: "number" },
   { key: "numExpertsPerToken", visible: false, sortable: true, type: "number" },
+  { key: "numActivatedExperts", visible: false, sortable: true, type: "number" },
+  { key: "moeIntermediateSize", visible: false, sortable: true, type: "number" },
 
-  // Tokenizer
-  { key: "hasChatTemplate", visible: false, sortable: true, type: "boolean" },
-  { key: "bosToken", visible: false, sortable: false, type: "string" },
-  { key: "eosToken", visible: false, sortable: false, type: "string" },
-
-  // Type flags
-  { key: "isAdapter", visible: false, sortable: true, type: "boolean" },
-  { key: "baseModel", visible: false, sortable: true, type: "string" },
-
-  // Timestamps
+  // Other Information
+  { key: "huggingfaceUrl", visible: false, sortable: false, type: "string" },
+  { key: "techReport", visible: false, sortable: false, type: "string" },
   { key: "createdAt", visible: false, sortable: true, type: "date" },
-  { key: "updatedAt", visible: false, sortable: true, type: "date" },
 ]
 
 // 根据语言生成列配置
@@ -74,7 +71,7 @@ export const COMPLEXITY_PRESETS: Record<string, ComplexityPreset> = {
       "contextLength",
       "architecture",
       "isMoe",
-      "hasChatTemplate",
+      "createdAt",
     ],
     description: "爱好者级：增加架构、MoE等信息",
   },
@@ -95,9 +92,10 @@ export const COMPLEXITY_PRESETS: Record<string, ComplexityPreset> = {
       "positionEncoding",
       "isMoe",
       "numExperts",
+      "numSharedExperts",
       "numExpertsPerToken",
-      "hasChatTemplate",
-      "isAdapter",
+      "numActivatedExperts",
+      "moeIntermediateSize",
     ],
     description: "开发者级：完整的技术参数和架构信息",
   },

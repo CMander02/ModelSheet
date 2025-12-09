@@ -18,11 +18,16 @@ export function ModelSelector({
   const [searchTerm, setSearchTerm] = useState("")
 
   const filteredModels = models.filter((model) => {
+    if (!searchTerm.trim()) return true
     const searchLower = searchTerm.toLowerCase()
-    return (
-      model.name?.toLowerCase().includes(searchLower) ||
-      model.provider?.toLowerCase().includes(searchLower)
-    )
+    // 将 id 按 / 分割，分别搜索
+    const idParts = model.id?.toLowerCase().split("/") || []
+    const searchableText = [
+      model.name?.toLowerCase(),
+      model.provider?.toLowerCase(),
+      ...idParts
+    ].filter(Boolean).join(" ")
+    return searchableText.includes(searchLower)
   })
 
   const isSelected = (model: ModelInfo) => {

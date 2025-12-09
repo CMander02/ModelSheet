@@ -13,6 +13,7 @@ interface ModelTableProps {
   columns: ColumnConfig[]
   onColumnChange?: (columns: ColumnConfig[]) => void
   onComplexityChange?: (level: ComplexityLevel) => void
+  onCustomFieldsClick?: () => void
   currentComplexity: ComplexityLevel
   language: Language
   selectedModels?: Set<string>
@@ -26,6 +27,7 @@ export function ModelTable({
   columns,
   currentComplexity,
   onComplexityChange,
+  onCustomFieldsClick,
   selectedModels = new Set(),
   onModelSelect,
   onClearSelection,
@@ -56,17 +58,20 @@ export function ModelTable({
   )
 
   // Filter models - 使用 debounced search term
+  // 支持：1. 不区分大小写 2. 部分匹配 3. 搜索 id 中 / 前后的内容
   const filteredModels = useMemo(() => {
     if (!debouncedSearchTerm) return models
 
     const searchLower = debouncedSearchTerm.toLowerCase()
     return models.filter((model) => {
-      return (
-        model.name?.toLowerCase().includes(searchLower) ||
-        model.provider?.toLowerCase().includes(searchLower) ||
-        model.baseModel?.toLowerCase().includes(searchLower) ||
-        model.id?.toLowerCase().includes(searchLower)
-      )
+      // 将 id 按 / 分割，分别搜索
+      const idParts = model.id?.toLowerCase().split("/") || []
+      const searchableText = [
+        model.name?.toLowerCase(),
+        model.provider?.toLowerCase(),
+        ...idParts
+      ].filter(Boolean).join(" ")
+      return searchableText.includes(searchLower)
     })
   }, [models, debouncedSearchTerm])
 
@@ -239,7 +244,16 @@ export function ModelTable({
             <ToggleGroupItem value="developer" aria-label={t.developer}>
               {t.developer}
             </ToggleGroupItem>
-            <ToggleGroupItem value="custom" aria-label={t.custom}>
+            <ToggleGroupItem
+              value="custom"
+              aria-label={t.custom}
+              onClick={() => {
+                // 当已经是 custom 模式时，点击仍然打开选择器
+                if (currentComplexity === "custom" && onCustomFieldsClick) {
+                  onCustomFieldsClick()
+                }
+              }}
+            >
               {t.custom}
             </ToggleGroupItem>
           </ToggleGroup>

@@ -41,17 +41,12 @@ const FIELD_GROUPS = {
   moe: {
     label: "MoE配置",
     labelEn: "MoE Configuration",
-    fields: ["isMoe", "numExperts", "numExpertsPerToken"]
+    fields: ["isMoe", "numExperts", "numSharedExperts", "numExpertsPerToken", "numActivatedExperts", "moeIntermediateSize"]
   },
-  tokenizer: {
-    label: "Tokenizer",
-    labelEn: "Tokenizer",
-    fields: ["hasChatTemplate", "bosToken", "eosToken"]
-  },
-  type: {
-    label: "类型标记",
-    labelEn: "Type Flags",
-    fields: ["isAdapter", "baseModel"]
+  other: {
+    label: "其他信息",
+    labelEn: "Other Information",
+    fields: ["huggingfaceUrl", "techReport", "createdAt"]
   }
 }
 
@@ -157,7 +152,7 @@ export function CustomFieldSelector({
                   </div>
 
                   {/* Group Fields */}
-                  <div className="ml-6 grid grid-cols-2 gap-3">
+                  <div className="ml-6 grid grid-cols-3 gap-3">
                     {groupCols.map((col) => (
                       <div key={col.key} className="flex items-center space-x-2">
                         <Checkbox

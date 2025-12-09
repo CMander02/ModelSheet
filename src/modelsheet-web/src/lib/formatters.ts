@@ -161,11 +161,11 @@ export function getHighlightClass(
   const min = Math.min(...validValues)
 
   if (higherIsBetter) {
-    if (value === max) return "bg-green-100 dark:bg-green-900/20 font-semibold"
-    if (value === min) return "bg-red-100 dark:bg-red-900/20"
+    if (value === max) return "bg-green-100 dark:bg-[#14532d] font-semibold"
+    if (value === min) return "bg-red-100 dark:bg-[#881337]"
   } else {
-    if (value === min) return "bg-green-100 dark:bg-green-900/20 font-semibold"
-    if (value === max) return "bg-red-100 dark:bg-red-900/20"
+    if (value === min) return "bg-green-100 dark:bg-[#14532d] font-semibold"
+    if (value === max) return "bg-red-100 dark:bg-[#881337]"
   }
 
   return ""

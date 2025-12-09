@@ -3,7 +3,7 @@
  * 电商比价风格的模型对比表格
  */
 
-import { X, ExternalLink, ChevronDown, ChevronUp } from "lucide-react"
+import { X, ChevronDown, ChevronUp } from "lucide-react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import type { ModelInfo, ColumnConfig, ComplexityLevel } from "@/lib/types"
@@ -59,7 +59,18 @@ export function EnhancedComparisonTable({
         <div className="p-6 border-b bg-gradient-to-br from-primary/5 to-accent/5">
           <div className="flex items-start justify-between gap-2 mb-3">
             <div className="flex-1 min-w-0">
-              <h3 className="font-bold text-xl truncate mb-1">{model.name}</h3>
+              {model.huggingfaceUrl ? (
+                <a
+                  href={model.huggingfaceUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-bold text-xl truncate mb-1 hover:text-primary hover:underline transition-colors block"
+                >
+                  {model.name}
+                </a>
+              ) : (
+                <h3 className="font-bold text-xl truncate mb-1">{model.name}</h3>
+              )}
               <p className="text-sm font-medium text-muted-foreground">{model.provider}</p>
             </div>
             <Button
@@ -72,42 +83,29 @@ export function EnhancedComparisonTable({
             </Button>
           </div>
 
-          {/* Key Specs - 使用卡片展示 */}
-          <div className="grid grid-cols-1 gap-2 mt-4">
-            <div className="flex justify-between items-center px-3 py-2 rounded-md bg-background/50">
+          {/* Key Specs */}
+          <div className="grid grid-cols-1 gap-1 mt-4">
+            <div className="flex justify-between items-center px-3 py-1.5">
               <span className="text-xs text-muted-foreground">参数量</span>
               <span className="font-bold text-sm">
                 {formatValue(model.totalParameters, "number", "totalParameters")}
               </span>
             </div>
             {model.activeParameters && (
-              <div className="flex justify-between items-center px-3 py-2 rounded-md bg-accent/10">
+              <div className="flex justify-between items-center px-3 py-1.5">
                 <span className="text-xs text-muted-foreground">激活参数</span>
-                <span className="font-bold text-sm text-accent">
+                <span className="font-bold text-sm">
                   {formatValue(model.activeParameters, "number", "activeParameters")}
                 </span>
               </div>
             )}
-            <div className="flex justify-between items-center px-3 py-2 rounded-md bg-background/50">
+            <div className="flex justify-between items-center px-3 py-1.5">
               <span className="text-xs text-muted-foreground">上下文</span>
               <span className="font-bold text-sm">
                 {formatValue(model.contextLength, "number", "contextLength")}
               </span>
             </div>
           </div>
-
-          {/* Links */}
-          {model.huggingfaceUrl && (
-            <a
-              href={model.huggingfaceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline mt-3 font-medium"
-            >
-              <ExternalLink className="h-3.5 w-3.5" />
-              查看 HuggingFace
-            </a>
-          )}
         </div>
 
         {/* Model Details */}

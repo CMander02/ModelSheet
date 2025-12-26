@@ -100,12 +100,25 @@ def extract_intermediate_size(ctx: ConfigContext) -> Optional[int]:
 
     Source: config.json intermediate_size
     Fallback: n_inner (GPT-2)
+
+    Note: Some models (e.g., Gemma 3n) use per-layer intermediate_size as a list.
+    In this case, we take the first value (or the unique value if all are the same).
     """
-    return get_first_of(
+    value = get_first_of(
         ctx.config,
         "intermediate_size",
         "n_inner",
     )
+
+    # Handle list of per-layer intermediate sizes (e.g., Gemma 3n)
+    if isinstance(value, list) and len(value) > 0:
+        # If all values are the same, return that value
+        if len(set(value)) == 1:
+            return value[0]
+        # Otherwise return the first value (most common case)
+        return value[0]
+
+    return value
 
 
 def extract_context_length(ctx: ConfigContext) -> Optional[int]:
@@ -228,3 +241,14 @@ def extract_gqa_ratio(ctx: ConfigContext) -> Optional[float]:
     if num_heads and num_kv_heads and num_kv_heads > 0:
         return round(num_heads / num_kv_heads, 1)
     return None
+
+
+def extract_torch_dtype(ctx: ConfigContext) -> Optional[str]:
+    """Extract PyTorch data type.
+
+    Source: config.json torch_dtype
+    Common values: float16, bfloat16, float32, int8
+
+    Note: This indicates the precision the model was trained/stored in
+    """
+    return ctx.config.get("torch_dtype")

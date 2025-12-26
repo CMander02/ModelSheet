@@ -93,54 +93,43 @@ def _calc_moe_params(ctx: ConfigContext) -> Tuple[Optional[int], Optional[int]]:
     return total, active
 
 
-def _estimate_moe_active_from_total(ctx: ConfigContext, total: int) -> Optional[int]:
-    """Estimate active parameters when we have explicit total from API.
-
-    Uses ratio-based estimation since we know the total but not the breakdown.
-    """
-    n_routed_experts = extract_num_experts(ctx)
-    num_experts_per_tok = extract_num_experts_per_token(ctx)
-
-    if not all([n_routed_experts, num_experts_per_tok]):
-        return None
-
-    # Estimate: assume ~70% of params are in MoE layers (typical for large MoE)
-    ratio = num_experts_per_tok / n_routed_experts
-    moe_fraction = 0.7
-    non_moe_params = total * (1 - moe_fraction)
-    moe_params_active = total * moe_fraction * ratio
-
-    return int(non_moe_params + moe_params_active)
-
-
 def _calc_parameters(ctx: ConfigContext) -> Tuple[Optional[int], Optional[int]]:
     """Calculate total and active parameters.
 
-    Priority:
+    Priority for total:
         1. HuggingFace API safetensors.total (most accurate)
         2. config.json num_parameters (explicit)
         3. Calculated from architecture
+
+    For MoE models, active parameters are always calculated precisely from
+    architecture (not estimated), as estimation methods have large errors.
 
     Returns:
         Tuple of (total_parameters, active_parameters)
     """
     is_moe = extract_is_moe(ctx)
 
-    # Priority 1: API metadata (most accurate)
+    # For MoE: always calculate active precisely from architecture
+    # The old estimation method (70% MoE assumption) had 3-10x errors
+    if is_moe:
+        _, calculated_active = _calc_moe_params(ctx)
+    else:
+        calculated_active = None
+
+    # Priority 1: API metadata (most accurate for total)
     if "totalParameters" in ctx.metadata:
         total = ctx.metadata["totalParameters"]
         if not is_moe:
             return total, total
-        active = _estimate_moe_active_from_total(ctx, total)
-        return total, active
+        # Use API total, but precise calculation for active
+        return total, calculated_active
 
     # Priority 2: Explicit in config
     if "num_parameters" in ctx.config:
         total = ctx.config["num_parameters"]
         if not is_moe:
             return total, total
-        active = _estimate_moe_active_from_total(ctx, total)
-        return total, active
+        return total, calculated_active
 
     # Priority 3: Calculate from architecture
     if is_moe:
@@ -167,3 +156,37 @@ def extract_active_parameters(ctx: ConfigContext) -> Optional[int]:
     """
     _, active = _calc_parameters(ctx)
     return active
+
+
+def extract_embedding_parameters(ctx: ConfigContext) -> Optional[int]:
+    """Extract embedding layer parameter count.
+
+    Source: Calculated from config.json
+    Formula: vocab_size * hidden_size
+
+    Note: This represents the size of the token embedding matrix.
+          Does not include position embeddings or other embedding types.
+    """
+    vocab_size = ctx.config.get("vocab_size")
+    hidden_size = extract_hidden_size(ctx)
+
+    if vocab_size and hidden_size:
+        return vocab_size * hidden_size
+    return None
+
+
+def extract_non_embedding_parameters(ctx: ConfigContext) -> Optional[int]:
+    """Extract non-embedding parameter count.
+
+    Source: Calculated from config.json
+    Formula: total_parameters - embedding_parameters
+
+    Note: This represents parameters in Transformer layers (attention + FFN).
+          Typically accounts for 85-95% of total parameters.
+    """
+    total = extract_total_parameters(ctx)
+    embedding = extract_embedding_parameters(ctx)
+
+    if total and embedding:
+        return total - embedding
+    return None

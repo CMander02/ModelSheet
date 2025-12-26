@@ -49,29 +49,75 @@ def extract_huggingface_url(ctx: ConfigContext) -> str:
     return f"https://huggingface.co/{ctx.model_id}"
 
 
-def extract_arxiv_url(ctx: ConfigContext) -> Optional[str]:
-    """Extract arXiv URL from metadata tags.
+def _extract_arxiv_id_from_readme(readme: str) -> Optional[str]:
+    """Extract arxiv ID from README content.
 
-    Source: API tags array
-    Logic: Find tag matching 'arxiv:XXXX.XXXXX' pattern, convert to URL
+    Searches for:
+    1. arxiv.org URLs: https://arxiv.org/[abs/pdf/html]/XXXX.XXXXX[vN]
+    2. HuggingFace paper URLs: https://huggingface.co/papers/XXXX.XXXXX
+
+    Args:
+        readme: README.md content
+
+    Returns:
+        arxiv ID without version suffix (e.g., "2401.04088")
+    """
+    # Pattern for arxiv.org URLs (abs, pdf, or html)
+    # Matches: https://arxiv.org/abs/2401.04088, https://arxiv.org/pdf/2401.04088v1
+    arxiv_url_pattern = re.compile(
+        r"https?://arxiv\.org/(?:abs|pdf|html)/(\d{4}\.\d{4,5})(?:v\d+)?"
+    )
+
+    # Pattern for HuggingFace paper URLs
+    # Matches: https://huggingface.co/papers/2401.04088
+    hf_paper_pattern = re.compile(
+        r"https?://huggingface\.co/papers/(\d{4}\.\d{4,5})(?:v\d+)?"
+    )
+
+    # Try arxiv.org URLs first
+    match = arxiv_url_pattern.search(readme)
+    if match:
+        return match.group(1)
+
+    # Try HuggingFace paper URLs
+    match = hf_paper_pattern.search(readme)
+    if match:
+        return match.group(1)
+
+    return None
+
+
+def extract_arxiv_url(ctx: ConfigContext) -> Optional[str]:
+    """Extract arXiv URL from metadata tags or README.
+
+    Priority:
+        1. API tags array (arxiv:XXXX.XXXXX format)
+        2. README.md content (arxiv.org URLs or HuggingFace paper URLs)
 
     Examples:
         - arxiv:2401.04088 -> https://arxiv.org/abs/2401.04088
-        - arxiv:2312.11805 -> https://arxiv.org/abs/2312.11805
+        - https://arxiv.org/pdf/2312.11805v1 -> https://arxiv.org/abs/2312.11805
+        - https://huggingface.co/papers/2401.04088 -> https://arxiv.org/abs/2401.04088
     """
+    # Priority 1: Check tags
     tags = ctx.metadata.get("tags", [])
-    if not isinstance(tags, list):
-        return None
-    # TODO Sometimes the tech report is not in arxiv, should find the correct website.
-    # Pattern: arxiv:XXXX.XXXXX (year month . number)
-    arxiv_pattern = re.compile(r"^arxiv:(\d{4}\.\d{4,5}(?:v\d+)?)$")
+    if isinstance(tags, list):
+        # Pattern: arxiv:XXXX.XXXXX (year month . number), strip version if present
+        arxiv_tag_pattern = re.compile(r"^arxiv:(\d{4}\.\d{4,5})(?:v\d+)?$")
 
-    for tag in tags:
-        if isinstance(tag, str):
-            match = arxiv_pattern.match(tag)
-            if match:
-                arxiv_id = match.group(1)
-                return f"https://arxiv.org/abs/{arxiv_id}"
+        for tag in tags:
+            if isinstance(tag, str):
+                match = arxiv_tag_pattern.match(tag)
+                if match:
+                    arxiv_id = match.group(1)
+                    return f"https://arxiv.org/abs/{arxiv_id}"
+
+    # Priority 2: Check README content
+    readme = ctx.metadata.get("readme")
+    if readme:
+        arxiv_id = _extract_arxiv_id_from_readme(readme)
+        if arxiv_id:
+            return f"https://arxiv.org/abs/{arxiv_id}"
 
     return None
 

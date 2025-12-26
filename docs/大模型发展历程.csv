@@ -1,0 +1,33 @@
+年份,模型名称,核心贡献/关键词,归属机构,参数量,Layers,Hidden,Heads,Context,arXiv,备注
+2017,Transformer (Vanilla),自注意力机制，序列到序列模型，所有现代 LLM 的鼻祖,Google,100M,6,512,8,512,1706.03762,Encoder-Decoder
+2018.02,ELMo,上下文相关词嵌入 (虽然基于 LSTM 但开启了预训练时代),AI2,94M,2,4096,-,-,1802.05365,LSTM架构-暂不添加
+2018.06,GPT-1,生成式预训练模型的开端，证明了无监督预训练的有效性,OpenAI,117M,12,768,12,512,,Decoder-only
+2018.10,BERT,双向编码器表示，Masked LM，NLP 工业界的里程碑,Google,110M/340M,12/24,768/1024,12/16,512,1810.04805,Encoder-only
+2019.02,GPT-2,零样本学习 (Zero-shot)，证明了堆参数和数据能产生泛化能力,OpenAI,1.5B,48,1600,25,1024,,Decoder-only
+2019.06,XLNet,排列语言建模，解决 BERT [MASK] 标记的弊端,Google/CMU,340M,24,1024,16,512,1906.08237,
+2019.07,RoBERTa,BERT 的鲁棒性优化版本 (更多数据、更久训练、去除了 NSP 任务),Meta,355M,24,1024,16,512,1907.11692,Encoder-only
+2019.09,ALBERT,参数共享与矩阵分解，大幅减少参数量,Google/Toyota,223M,12,4096,64,512,1909.11942,参数共享
+2019.10,DistilBERT,模型蒸馏，保留 97% 性能但体积缩小 40%,Hugging Face,66M,6,768,12,512,1910.01108,蒸馏自BERT
+2019.10,BART,结合双向 (BERT) 和自回归 (GPT) 的 Seq2Seq 去噪自编码器,Meta,406M,12+12,1024,16,1024,1910.13461,Encoder-Decoder
+2019.10,T5,Text-to-Text Transfer Transformer，将所有 NLP 任务统一为文本生成格式,Google,11B,24,1024,16,512,1910.10683,Encoder-Decoder
+2020.03,ELECTRA,判别式预训练 (Replaced Token Detection)，计算效率极高,Google,110M,12,768,12,512,2003.10555,Encoder-only
+2020.04,Longformer,线性复杂度注意力机制，支持处理超长文档,AI2,149M,12,768,12,4096,2004.05150,长上下文
+2020.05,GPT-3,少样本学习 (Few-shot)，175B 参数，大模型涌现能力的开端,OpenAI,175B,96,12288,96,2048,2005.14165,Decoder-only
+2020.10,ViT (Vision Transformer),将 Transformer 应用于图像 Patch，计算机视觉的转折点,Google,86M,12,768,12,-,2010.11929,Vision
+2021.01,CLIP,图文对比学习，连接文本与图像语义，多模态生成的基石,OpenAI,428M,12+12,768,12,-,2103.00020,Multimodal
+2021.01,Switch Transformer,MoE (混合专家) 架构代表，参数量突破万亿 (1.6T),Google,1.6T,,,128,-,2101.03961,MoE-128专家
+2021.03,Swin Transformer,层级式 Transformer，引入滑窗机制，视觉领域的 SOTA,Microsoft,88M,12,768,24,-,2103.14030,Vision
+2021.10,Megatron-Turing NLG,530B 参数，展示了大规模 GPU 集群并行训练的工程能力,NVIDIA/Microsoft,530B,105,20480,128,2048,2201.11990,Decoder-only
+2021.12,Gopher,280B 参数，深入研究了模型规模与长文本性能的关系,DeepMind,280B,80,16384,128,2048,2112.11446,Decoder-only
+2022.01,InstructGPT,引入 RLHF (人类反馈强化学习)，ChatGPT 的直系前身,OpenAI,175B,96,12288,96,2048,2203.02155,RLHF微调GPT-3
+2022.01,LaMDA,专门针对对话优化的模型，Google Bard 的早期基础,Google,137B,64,,,-,2201.08239,对话优化
+2022.03,Chinchilla,提出 Scaling Laws (计算最优定律)，证明数据量比单纯堆参数更重要,DeepMind,70B,80,8192,64,2048,2203.15556,Compute-Optimal
+2022.04,PaLM,540B 参数，展示了思维链 (CoT) 推理能力和多语言能力,Google,540B,118,18432,48,2048,2204.02311,Decoder-only
+2022.07,BLOOM,176B 参数，全球最大的开放科学/开源多语言大模型,BigScience,176B,70,14336,112,2048,2211.05100,开源多语言
+2022.09,Claude,Anthropic 推出的安全对话模型，强调 AI 伦理与安全,Anthropic,52B,,,,,,闭源-Constitutional AI
+2022.11,ChatGPT,GPT-3.5 系列，基于 InstructGPT 和 RLHF，推动了大规模应用普及,OpenAI,175B,96,12288,96,4096,,闭源-基于GPT-3
+2023.03,GPT-4,多模态能力，显著提升的推理与理解能力，支持图像输入,OpenAI,1.8T,120,,,8192,,闭源-MoE-16专家
+2023.12,Gemini 1.0,DeepMind 推出的多模态大模型，结合语言与视觉理解,Google DeepMind,Nano:1.8B/3.25B,,,,,2312.11805,闭源-MoE-32K context
+2024.02,Gemini 1.5,DeepMind 的改进版大模型，1M tokens超长上下文,Google DeepMind,,,,,1000000,2403.05530,闭源-MoE-1M context
+2024.07,LLaMA 3.1,Meta 推出的高效大模型，最大开源模型,Meta,405B,126,16384,128,128000,2407.21783,开源-Decoder-only
+2024.04,GPT-4 Turbo,OpenAI 推出的高效版本 GPT-4，成本更低，响应更快,OpenAI,1.8T,120,,,128000,,闭源-MoE-优化版GPT-4

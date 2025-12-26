@@ -360,6 +360,33 @@ export function ModelTable({
                         {/* Special handling for modality columns */}
                         {(column.key === "inputModalities" || column.key === "outputModalities") ? (
                           <ModalityIcons modalities={model[column.key] || []} />
+                        ) : column.key === "name" && model.huggingfaceUrl ? (
+                          <a
+                            href={model.huggingfaceUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-primary hover:underline transition-colors"
+                          >
+                            {formatValue(model[column.key], column.type)}
+                          </a>
+                        ) : column.key === "huggingfaceUrl" && model.huggingfaceUrl ? (
+                          <a
+                            href={model.huggingfaceUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-primary hover:underline transition-colors"
+                          >
+                            {model.huggingfaceUrl.replace(/^https?:\/\/huggingface\.co\//, '')}
+                          </a>
+                        ) : column.key === "arxivUrl" && model.arxivUrl ? (
+                          <a
+                            href={model.arxivUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-primary hover:underline transition-colors"
+                          >
+                            {model.arxivUrl.match(/(\d{4}\.\d{4,5})/)?.[1] || model.arxivUrl}
+                          </a>
                         ) : (
                           formatValue(model[column.key], column.type)
                         )}

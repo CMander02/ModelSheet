@@ -4,6 +4,7 @@ export interface ModelInfo {
   name: string
   provider: string
   huggingfaceUrl?: string
+  arxivUrl?: string        // arXiv paper URL
   techReport?: string      // Technical report URL
 
   // Basic specs

@@ -42,6 +42,7 @@ const COLUMN_CONFIGS: Omit<ColumnConfig, "label">[] = [
 
   // Other Information
   { key: "huggingfaceUrl", visible: false, sortable: false, type: "string" },
+  { key: "arxivUrl", visible: false, sortable: false, type: "string" },
   { key: "techReport", visible: false, sortable: false, type: "string" },
   { key: "createdAt", visible: false, sortable: true, type: "date" },
 ]
@@ -62,8 +63,8 @@ export const DEFAULT_COLUMNS: ColumnConfig[] = getColumnConfigs("zh")
 export const COMPLEXITY_PRESETS: Record<string, ComplexityPreset> = {
   simple: {
     level: "simple",
-    columns: ["name", "provider", "totalParameters", "contextLength", "createdAt"],
-    description: "基础信息：名称、提供商、参数量、上下文长度、创建时间",
+    columns: ["name", "provider", "totalParameters", "contextLength", "arxivUrl", "createdAt"],
+    description: "基础信息：名称、提供商、参数量、上下文长度、ArXiv链接、创建时间",
   },
   enthusiast: {
     level: "enthusiast",

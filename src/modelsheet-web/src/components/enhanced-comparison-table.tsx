@@ -225,7 +225,27 @@ function DetailsSection({ title, fields, model, models, isExpanded, onToggle }: 
               <div key={col.key} className="flex justify-between items-center text-sm">
                 <span className="text-muted-foreground font-medium">{col.label}</span>
                 <span className={`font-semibold ${highlightClass} px-2 py-0.5 rounded transition-colors`}>
-                  {formatValue(value, col.type, col.key)}
+                  {col.key === "huggingfaceUrl" && value ? (
+                    <a
+                      href={value as string}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-primary hover:underline transition-colors"
+                    >
+                      {(value as string).replace(/^https?:\/\/huggingface\.co\//, '')}
+                    </a>
+                  ) : col.key === "arxivUrl" && value ? (
+                    <a
+                      href={value as string}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-primary hover:underline transition-colors"
+                    >
+                      {(value as string).match(/(\d{4}\.\d{4,5})/)?.[1] || value}
+                    </a>
+                  ) : (
+                    formatValue(value, col.type, col.key)
+                  )}
                 </span>
               </div>
             )

@@ -21,3 +21,39 @@ mistralai/Mixtral-8x7B-Instruct-v0.1
 # Jina Series
 jinaai/jina-embeddings-v3
 jinaai/jina-embeddings-v4
+
+# olmo
+# falcon
+# stepfun
+---
+#United States
+#Early Transformer Models
+Vanilla Transformer
+GPT1
+GPT2
+GPT3
+BERT
+BART
+RoBERTa
+T5
+BLOOM
+XLNet
+ALBERT
+DistilBERT
+ELECTRA
+
+#Scaling Laws and Larger Models
+PaLM
+Chinchilla
+Gopher
+Megatron-Turing NLG
+
+# MLLM
+ViT
+CLIP
+Swin Transformer
+
+# Specialized Architectures
+Longformer
+Switch Transformer
+

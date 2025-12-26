@@ -27,6 +27,9 @@ env/
 # Data and cache
 data/temp/
 
+# Environment variables (contains secrets)
+.env
+
 # IDE
 .vscode/
 .idea/

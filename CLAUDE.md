@@ -123,6 +123,8 @@ The CLI extracts the following fields from HuggingFace model configs:
 |-------------|-----------|--------|-------------|
 | `total_parameters` | `totalParameters` | API safetensors.total / calculated | Total parameter count |
 | `active_parameters` | `activeParameters` | Calculated | Active parameters per token (MoE) |
+| `embedding_parameters` | `embeddingParameters` | Calculated: vocab_size * hidden_size | Embedding layer parameter count |
+| `non_embedding_parameters` | `nonEmbeddingParameters` | Calculated: total_parameters - embedding_parameters | Non-embedding layer parameters (Transformer layers) |
 | `context_length` | `contextLength` | config.json max_position_embeddings | Max context length |
 | `embedding_dim` | `embeddingDim` | config.json hidden_size | Embedding dimension |
 | `vocab_size` | `vocabSize` | config.json vocab_size | Vocabulary size |
@@ -143,6 +145,7 @@ The CLI extracts the following fields from HuggingFace model configs:
 | `attention_dropout` | `attentionDropout` | config.json attention_dropout | Attention dropout rate |
 | `mlp_factor` | `mlpFactor` | Calculated: intermediate_size/hidden_size | MLP expansion factor |
 | `gqa_ratio` | `gqaRatio` | Calculated: num_heads/num_kv_heads | GQA ratio |
+| `torch_dtype` | `torchDtype` | config.json torch_dtype | Model data type (float16, bfloat16, float32, etc.) |
 
 #### MoE Fields
 | Python Name | JSON Name | Source | Description |

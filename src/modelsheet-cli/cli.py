@@ -233,12 +233,19 @@ def add(
     console.print(f"Total models in database: {len(merged_models)}")
     console.print(f"Database: {OUTPUT_FILE} ({file_size:.1f} KB)")
 
-    # Clean up cache
-    console.print("\n[white]Cleaning up temporary cache...[/white]")
+    # Clean up remaining empty directories (models are cleaned incrementally during parsing)
     if TEMP_DIR.exists():
-        shutil.rmtree(TEMP_DIR)
-        TEMP_DIR.mkdir(exist_ok=True)
-        console.print("[green]Cache cleaned successfully.[/green]")
+        try:
+            # Remove empty org directories
+            for org_dir in TEMP_DIR.iterdir():
+                if org_dir.is_dir() and not any(org_dir.iterdir()):
+                    org_dir.rmdir()
+            # Remove temp dir if empty
+            if not any(TEMP_DIR.iterdir()):
+                TEMP_DIR.rmdir()
+        except Exception:
+            # Ignore cleanup errors
+            pass
 
 
 @app.command()

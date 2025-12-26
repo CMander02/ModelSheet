@@ -1,11 +1,14 @@
 """Parse model configuration files to extract structured data."""
 
+import shutil
 from dataclasses import dataclass, asdict
+from pathlib import Path
 from typing import Optional
 
 from rich.console import Console
 from tqdm import tqdm
 
+from .config import TEMP_DIR
 from .extractors import (
     ConfigContext,
     # Metadata
@@ -35,6 +38,7 @@ from .extractors import (
     extract_attention_dropout,
     extract_mlp_factor,
     extract_gqa_ratio,
+    extract_torch_dtype,
     # MoE
     extract_is_moe,
     extract_num_experts,
@@ -45,6 +49,8 @@ from .extractors import (
     # Parameters
     extract_total_parameters,
     extract_active_parameters,
+    extract_embedding_parameters,
+    extract_non_embedding_parameters,
 )
 
 console = Console()
@@ -67,6 +73,8 @@ class ParsedModel:
     # Basic specs
     total_parameters: Optional[int] = None
     active_parameters: Optional[int] = None
+    embedding_parameters: Optional[int] = None
+    non_embedding_parameters: Optional[int] = None
     context_length: Optional[int] = None
     embedding_dim: Optional[int] = None
     vocab_size: Optional[int] = None
@@ -85,6 +93,7 @@ class ParsedModel:
     attention_dropout: Optional[float] = None
     mlp_factor: Optional[float] = None
     gqa_ratio: Optional[float] = None
+    torch_dtype: Optional[str] = None
 
     # MoE
     is_moe: bool = False
@@ -150,6 +159,8 @@ class ModelParser:
             # Basic specs
             total_parameters=extract_total_parameters(ctx),
             active_parameters=extract_active_parameters(ctx),
+            embedding_parameters=extract_embedding_parameters(ctx),
+            non_embedding_parameters=extract_non_embedding_parameters(ctx),
             context_length=extract_context_length(ctx),
             embedding_dim=extract_embedding_dim(ctx),
             vocab_size=extract_vocab_size(ctx),
@@ -167,6 +178,7 @@ class ModelParser:
             attention_dropout=extract_attention_dropout(ctx),
             mlp_factor=extract_mlp_factor(ctx),
             gqa_ratio=extract_gqa_ratio(ctx),
+            torch_dtype=extract_torch_dtype(ctx),
             # MoE
             is_moe=extract_is_moe(ctx),
             num_experts=extract_num_experts(ctx),
@@ -181,6 +193,36 @@ class ModelParser:
             created_at=extract_created_at(ctx),
         )
 
+    def _get_model_dir(self, model_id: str) -> Path:
+        """Get the temporary directory for a model.
+
+        Args:
+            model_id: Model ID in format "org/model"
+
+        Returns:
+            Path to model's temporary directory
+        """
+        parts = model_id.split("/")
+        if len(parts) != 2:
+            raise ValueError(f"Invalid model_id format: {model_id}")
+
+        org, model_name = parts
+        return TEMP_DIR / org / model_name
+
+    def _cleanup_model_cache(self, model_id: str) -> None:
+        """Delete temporary cache for a single model after parsing.
+
+        Args:
+            model_id: Model ID in format "org/model"
+        """
+        try:
+            model_dir = self._get_model_dir(model_id)
+            if model_dir.exists():
+                shutil.rmtree(model_dir)
+        except (ValueError, Exception):
+            # Silently ignore cleanup errors (including invalid model_id format)
+            pass
+
     def parse_models(self, models_configs: dict[str, dict]) -> list[ParsedModel]:
         """Parse multiple models.
 
@@ -189,15 +231,32 @@ class ModelParser:
 
         Returns:
             List of valid ParsedModel instances (invalid models are filtered out)
+
+        Note:
+            Automatically cleans up each model's temp cache after parsing.
         """
         results = []
         failed = []
         invalid = []
+        gated = []  # Models requiring HF authentication (401)
+        forbidden = []  # Models requiring access request (403)
 
         print()  # Add newline before progress bar
         with tqdm(total=len(models_configs), desc="Parsing models", unit="model") as pbar:
             for model_id, configs in models_configs.items():
                 try:
+                    # Check if model is gated or forbidden
+                    config_json = configs.get("config.json", {})
+                    error_type = config_json.get("_error")
+                    if error_type == "gated":
+                        gated.append(model_id)
+                        pbar.update(1)
+                        continue
+                    if error_type == "forbidden":
+                        forbidden.append(model_id)
+                        pbar.update(1)
+                        continue
+
                     parsed = self.parse(model_id, configs)
                     if parsed.is_valid():
                         results.append(parsed)
@@ -205,10 +264,27 @@ class ModelParser:
                         invalid.append(model_id)
                 except Exception as e:
                     failed.append((model_id, str(e)))
+                    # Don't clean up failed models - keep cache for debugging
+                    pbar.update(1)
+                    continue
 
+                # Clean up temp cache for successfully parsed or skipped models
+                self._cleanup_model_cache(model_id)
                 pbar.update(1)
 
         console.print(f"\n[bold green]Done![/bold green] {len(results)} models parsed successfully.")
+
+        if gated:
+            console.print(f"\n[yellow]Skipped {len(gated)} gated model(s) (requires HF_TOKEN):[/yellow]")
+            for model_id in gated:
+                console.print(f"  - {model_id}")
+            console.print("[dim]  Set HF_TOKEN environment variable to access gated models[/dim]")
+
+        if forbidden:
+            console.print(f"\n[yellow]Skipped {len(forbidden)} model(s) (requires access request):[/yellow]")
+            for model_id in forbidden:
+                console.print(f"  - {model_id}")
+            console.print("[dim]  Visit the model page on HuggingFace and request access[/dim]")
 
         if invalid:
             console.print(f"\n[yellow]Skipped {len(invalid)} model(s) with incomplete data:[/yellow]")

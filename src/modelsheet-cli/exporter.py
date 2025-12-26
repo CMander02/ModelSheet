@@ -66,6 +66,8 @@ class ModelExporter:
             # Basic specs
             "totalParameters": model.total_parameters,
             "activeParameters": model.active_parameters,
+            "embeddingParameters": model.embedding_parameters,
+            "nonEmbeddingParameters": model.non_embedding_parameters,
             "contextLength": model.context_length,
             "embeddingDim": model.embedding_dim,
             "vocabSize": model.vocab_size,
@@ -83,6 +85,7 @@ class ModelExporter:
             "attentionDropout": model.attention_dropout,
             "mlpFactor": model.mlp_factor,
             "gqaRatio": model.gqa_ratio,
+            "torchDtype": model.torch_dtype,
             # MoE fields
             "numExperts": model.num_experts,
             "numSharedExperts": model.num_shared_experts,

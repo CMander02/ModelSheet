@@ -117,6 +117,7 @@ The CLI extracts the following fields from HuggingFace model configs:
 | `tech_report` | `techReport` | (TODO) | Technical report URL |
 | `arxiv_url` | `arxivUrl` | API tags (arxiv:XXXX.XXXXX) | arXiv paper URL |
 | `created_at` | `createdAt` | API metadata | Model creation timestamp |
+| `architecture_family` | `architectureFamily` | Post-processed from `architecture` via `scripts/add_architecture_family.py` | High-level family grouping (e.g. `Qwen2` covers `qwen2`/`qwen2_moe`/`qwen2_vl`/`qwen2_5_vl`/`qwen2_5_omni`) |
 
 #### Parameter Fields
 | Python Name | JSON Name | Source | Description |
@@ -156,6 +157,23 @@ The CLI extracts the following fields from HuggingFace model configs:
 | `num_experts_per_token` | `numExpertsPerToken` | config.json num_experts_per_tok | Activated experts per token |
 | `num_activated_experts` | `numActivatedExperts` | Calculated: routed + shared | Total activated experts |
 | `moe_intermediate_size` | `moeIntermediateSize` | config.json moe_intermediate_size | Expert FFN size |
+
+#### Parameter Provenance Fields (optional — for closed / rumored models)
+
+Applied manually via `scripts/backfill_param_confidence.py` to placeholder entries
+whose parameter counts are not observable from a real `config.json`.
+
+| Python Name | JSON Name | Values | Description |
+|-------------|-----------|--------|-------------|
+| `parameter_confidence` | `parameterConfidence` | `"official"` / `"reported"` / `"rumored"` | Trustworthiness of `totalParameters` / `activeParameters`. Omitted ⇒ treated as `"official"`. |
+| `parameter_source` | `parameterSource` | free-form string | Short human-readable attribution (e.g. `"SemiAnalysis (2023)"`, `"Brown et al. 2020"`) |
+| `parameter_source_url` | `parameterSourceUrl` | URL | Optional link to the source |
+
+Semantics:
+- **official** — derived from the model's own `config.json`, safetensors index, or an official paper/spec sheet. All parser-produced entries are implicitly official; no explicit field needed.
+- **reported** — acknowledged third-party disclosure that the model provider has not officially confirmed, but is treated as reliable by the community.
+- **rumored** — unverified community estimate. Frontend renders with a `~` prefix and help icon, in muted style.
+- When `totalParameters` is `null`, the frontend renders an em-dash and still shows `parameterSource` as a hover tooltip if present.
 
 ### Extractor Modules
 

@@ -214,7 +214,7 @@
             ],
             "i18n": {
                 "en": "Allen AI",
-                "zh": "艾伦人工智能研究所"
+                "zh": "艾伦人工智能研究院"
             }
         },
         "Cohere": {
@@ -262,33 +262,6 @@
                 "zh": "xAI"
             }
         },
-        "openai": {
-            "orgs": [
-                "openai"
-            ],
-            "i18n": {
-                "en": "Openai",
-                "zh": "OpenAI"
-            }
-        },
-        "moonshotai": {
-            "orgs": [
-                "moonshotai"
-            ],
-            "i18n": {
-                "en": "Moonshot AI",
-                "zh": "月之暗面"
-            }
-        },
-        "tencent": {
-            "orgs": [
-                "tencent"
-            ],
-            "i18n": {
-                "en": "Tencent",
-                "zh": "腾讯"
-            }
-        },
         "ByteDance": {
             "orgs": [
                 "ByteDance"
@@ -298,13 +271,380 @@
                 "zh": "字节跳动"
             }
         },
-        "ByteDance-Seed": {
+        "OpenAI": {
             "orgs": [
-                "ByteDance-Seed"
+                "openai-community",
+                "openai"
+            ],
+            "i18n": {
+                "en": "OpenAI",
+                "zh": "OpenAI"
+            }
+        },
+        "Moonshot AI": {
+            "orgs": [
+                "moonshotai"
+            ],
+            "i18n": {
+                "en": "Moonshot AI",
+                "zh": "月之暗面"
+            }
+        },
+        "Tencent": {
+            "orgs": [
+                "tencent"
+            ],
+            "i18n": {
+                "en": "Tencent",
+                "zh": "腾讯"
+            }
+        },
+        "IBM": {
+            "orgs": [
+                "ibm-granite",
+                "ibm"
+            ],
+            "i18n": {
+                "en": "IBM",
+                "zh": "IBM"
+            }
+        },
+        "Skywork": {
+            "orgs": [
+                "Skywork"
+            ],
+            "i18n": {
+                "en": "Skywork",
+                "zh": "昆仑万维"
+            }
+        },
+        "Xiaomi": {
+            "orgs": [
+                "XiaomiMiMo"
+            ],
+            "i18n": {
+                "en": "Xiaomi",
+                "zh": "小米"
+            }
+        },
+        "Stepfun": {
+            "orgs": [
+                "stepfun-ai"
+            ],
+            "i18n": {
+                "en": "Stepfun",
+                "zh": "阶跃星辰"
+            }
+        },
+        "MiniMax": {
+            "orgs": [
+                "MiniMaxAI"
+            ],
+            "i18n": {
+                "en": "MiniMax",
+                "zh": "MiniMax"
+            }
+        },
+        "Cursor": {
+            "orgs": [
+                "cursor"
+            ],
+            "i18n": {
+                "en": "Cursor",
+                "zh": "Cursor"
+            }
+        },
+        "Liquid AI": {
+            "orgs": [
+                "LiquidAI"
+            ],
+            "i18n": {
+                "en": "Liquid AI",
+                "zh": "Liquid AI"
+            }
+        },
+        "Reka AI": {
+            "orgs": [
+                "RekaAI"
+            ],
+            "i18n": {
+                "en": "Reka AI",
+                "zh": "Reka"
+            }
+        },
+        "Aleph Alpha": {
+            "orgs": [
+                "Aleph-Alpha"
+            ],
+            "i18n": {
+                "en": "Aleph Alpha",
+                "zh": "Aleph Alpha"
+            }
+        },
+        "Yandex": {
+            "orgs": [
+                "yandex"
+            ],
+            "i18n": {
+                "en": "Yandex",
+                "zh": "Yandex"
+            }
+        },
+        "Snowflake": {
+            "orgs": [
+                "Snowflake"
+            ],
+            "i18n": {
+                "en": "Snowflake",
+                "zh": "Snowflake"
+            }
+        },
+        "Upstage": {
+            "orgs": [
+                "upstage"
+            ],
+            "i18n": {
+                "en": "Upstage",
+                "zh": "Upstage"
+            }
+        },
+        "LG AI": {
+            "orgs": [
+                "LGAI-EXAONE"
+            ],
+            "i18n": {
+                "en": "LG AI",
+                "zh": "LG AI 研究院"
+            }
+        },
+        "Perplexity": {
+            "orgs": [
+                "perplexity-ai"
+            ],
+            "i18n": {
+                "en": "Perplexity",
+                "zh": "Perplexity"
+            }
+        },
+        "Deep Cogito": {
+            "orgs": [
+                "deepcogito"
+            ],
+            "i18n": {
+                "en": "Deep Cogito",
+                "zh": "Deep Cogito"
+            }
+        },
+        "Arcee AI": {
+            "orgs": [
+                "arcee-ai"
+            ],
+            "i18n": {
+                "en": "Arcee AI",
+                "zh": "Arcee"
+            }
+        },
+        "Meituan": {
+            "orgs": [
+                "meituan-longcat"
+            ],
+            "i18n": {
+                "en": "Meituan",
+                "zh": "美团"
+            }
+        },
+        "Infinigence": {
+            "orgs": [
+                "Infinigence"
+            ],
+            "i18n": {
+                "en": "Infinigence",
+                "zh": "无问芯穹"
+            }
+        },
+        "XVERSE": {
+            "orgs": [
+                "xverse"
+            ],
+            "i18n": {
+                "en": "XVERSE",
+                "zh": "元象"
+            }
+        },
+        "Bilibili": {
+            "orgs": [
+                "IndexTeam"
+            ],
+            "i18n": {
+                "en": "Bilibili",
+                "zh": "哔哩哔哩"
+            }
+        },
+        "RedNote Hi-Lab": {
+            "orgs": [
+                "rednote-hilab"
+            ],
+            "i18n": {
+                "en": "RedNote Hi-Lab",
+                "zh": "小红书 Hi-Lab"
+            }
+        },
+        "AIDC-AI": {
+            "orgs": [
+                "AIDC-AI"
+            ],
+            "i18n": {
+                "en": "AIDC-AI",
+                "zh": "AIDC-AI"
+            }
+        },
+        "OpenBMB": {
+            "orgs": [
+                "openbmb"
+            ],
+            "i18n": {
+                "en": "OpenBMB",
+                "zh": "OpenBMB"
+            }
+        },
+        "AntGroup": {
+            "orgs": [
+                "inclusionAI"
+            ],
+            "i18n": {
+                "en": "Ant Group",
+                "zh": "蚂蚁集团"
+            }
+        },
+        "Qihoo 360": {
+            "orgs": [
+                "qihoo360"
+            ],
+            "i18n": {
+                "en": "Qihoo 360",
+                "zh": "360"
+            }
+        },
+        "Orion Star": {
+            "orgs": [
+                "OrionStarAI",
+                "orionstarai"
+            ],
+            "i18n": {
+                "en": "Orion Star",
+                "zh": "猎户星空"
+            }
+        },
+        "RWKV": {
+            "orgs": [
+                "RWKV",
+                "BlinkDL"
+            ],
+            "i18n": {
+                "en": "RWKV",
+                "zh": "RWKV"
+            }
+        },
+        "State Spaces": {
+            "orgs": [
+                "state-spaces"
+            ],
+            "i18n": {
+                "en": "State Spaces",
+                "zh": "State Spaces"
+            }
+        },
+        "GSAI": {
+            "orgs": [
+                "GSAI-ML"
+            ],
+            "i18n": {
+                "en": "GSAI",
+                "zh": "GSAI"
+            }
+        },
+        "OpenChat": {
+            "orgs": [
+                "openchat"
+            ],
+            "i18n": {
+                "en": "OpenChat",
+                "zh": "OpenChat"
+            }
+        },
+        "Cognitive Computations": {
+            "orgs": [
+                "cognitivecomputations"
+            ],
+            "i18n": {
+                "en": "Cognitive Computations",
+                "zh": "Cognitive Computations"
+            }
+        },
+        "Open Thoughts": {
+            "orgs": [
+                "open-thoughts"
+            ],
+            "i18n": {
+                "en": "Open Thoughts",
+                "zh": "Open Thoughts"
+            }
+        },
+        "AI21 Labs": {
+            "orgs": [
+                "ai21labs"
+            ],
+            "i18n": {
+                "en": "AI21 Labs",
+                "zh": "AI21 Labs"
+            }
+        },
+        "BAAI": {
+            "orgs": [
+                "BAAI"
+            ],
+            "i18n": {
+                "en": "BAAI",
+                "zh": "智源研究院"
+            }
+        },
+        "Inception Labs": {
+            "orgs": [
+                "inceptionlabs",
+                "InceptionLabs"
+            ],
+            "i18n": {
+                "en": "Inception Labs",
+                "zh": "Inception Labs"
+            }
+        },
+        "Essential AI": {
+            "orgs": [
+                "essential-ai",
+                "EssentialAI"
+            ],
+            "i18n": {
+                "en": "Essential AI",
+                "zh": "Essential AI"
+            }
+        },
+        "Anthropic": {
+            "orgs": [
+                "anthropic"
+            ],
+            "i18n": {
+                "en": "Anthropic",
+                "zh": "Anthropic"
+            }
+        },
+        "ByteDance Seed": {
+            "orgs": [
+                "ByteDance-Seed",
+                "bytedance-research"
             ],
             "i18n": {
                 "en": "ByteDance Seed",
-                "zh": "字节Seed"
+                "zh": "字节 Seed"
             }
         }
     }

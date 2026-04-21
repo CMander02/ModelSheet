@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button"
 import type { ModelInfo, ColumnConfig, ComplexityLevel } from "@/lib/types"
 import { COMPLEXITY_PRESETS } from "@/lib/model-data"
+import { ModelBrandIcon, ProviderBrandIcon } from "@/components/brand-icon"
 
 interface ComparisonTableProps {
   models: ModelInfo[]
@@ -87,9 +88,13 @@ export function ComparisonTable({
               <TableHead key={model.id} className="min-w-[200px]">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex-1 min-w-0">
-                    <div className="font-semibold truncate">{model.name}</div>
-                    <div className="text-xs text-muted-foreground truncate">
-                      {model.provider}
+                    <div className="inline-flex items-center gap-1.5 font-semibold truncate">
+                      <ModelBrandIcon model={model.id} size={16} />
+                      <span className="truncate">{model.name}</span>
+                    </div>
+                    <div className="inline-flex items-center gap-1 text-xs text-muted-foreground truncate mt-0.5">
+                      <ProviderBrandIcon provider={model.provider} size={12} />
+                      <span className="truncate">{model.provider}</span>
                     </div>
                   </div>
                   <Button

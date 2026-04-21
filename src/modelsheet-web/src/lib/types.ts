@@ -44,6 +44,14 @@ export interface ModelInfo {
   // Metadata
   createdAt?: string       // Model creation timestamp
 
+  // Parameter provenance (applies to totalParameters / activeParameters)
+  // "official" (default, can be omitted) — from config.json / paper / spec sheet
+  // "reported" — acknowledged third-party disclosure (reports, papers)
+  // "rumored"  — community speculation / unverified estimate
+  parameterConfidence?: "official" | "reported" | "rumored"
+  parameterSource?: string         // Short human-readable source
+  parameterSourceUrl?: string      // Optional URL to the source
+
   [key: string]: any
 }
 

@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { ModalityIcons } from "@/components/modality-icons"
+import { ModelBrandIcon, ProviderBrandIcon } from "@/components/brand-icon"
+import { ParamCell } from "@/components/param-cell"
 import type { ModelInfo, ColumnConfig, ComplexityLevel, SortConfig } from "@/lib/types"
 import { COMPLEXITY_PRESETS } from "@/lib/model-data"
 import type { Language } from "@/lib/i18n"
@@ -261,16 +263,19 @@ export function ModelTable({
         </div>
       </div>
 
-      {/* Table Container - 固定高度容器 */}
+      {/* Table Container - 外层 overflow-hidden 保证圆角裁剪，内层滚动 */}
       <div
-        className="rounded-md border"
+        className="rounded-md border overflow-hidden bg-card"
         style={{ height: 'calc(100vh - 13rem)' }}
       >
-        {/* 滚动容器 */}
-        <div className="h-full overflow-auto">
+        {/* 滚动容器：scrollbar-gutter stable 让滚动条常驻但不跳动；thin 让滚动条更细 */}
+        <div
+          className="h-full overflow-auto modelsheet-scroll"
+          style={{ scrollbarGutter: 'stable' }}
+        >
           <table className="w-full caption-bottom text-sm border-collapse">
-            {/* 表头 - 使用thead sticky */}
-            <thead className="sticky top-0 z-20 bg-card border-b">
+            {/* 表头：sticky 定在滚动容器顶部 */}
+            <thead className="sticky top-0 z-20 bg-card border-b shadow-[0_1px_0_0_var(--border)]">
               <tr>
                 {onModelSelect && (
                   <th
@@ -360,15 +365,28 @@ export function ModelTable({
                         {/* Special handling for modality columns */}
                         {(column.key === "inputModalities" || column.key === "outputModalities") ? (
                           <ModalityIcons modalities={model[column.key] || []} />
+                        ) : (column.key === "totalParameters" || column.key === "activeParameters") ? (
+                          <ParamCell value={model[column.key]} model={model} />
                         ) : column.key === "name" && model.huggingfaceUrl ? (
                           <a
                             href={model.huggingfaceUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="hover:text-primary hover:underline transition-colors"
+                            className="inline-flex items-center gap-2 hover:text-primary hover:underline transition-colors"
                           >
-                            {formatValue(model[column.key], column.type)}
+                            <ModelBrandIcon model={model.id} />
+                            <span>{formatValue(model[column.key], column.type)}</span>
                           </a>
+                        ) : column.key === "name" ? (
+                          <span className="inline-flex items-center gap-2">
+                            <ModelBrandIcon model={model.id} />
+                            <span>{formatValue(model[column.key], column.type)}</span>
+                          </span>
+                        ) : column.key === "provider" ? (
+                          <span className="inline-flex items-center gap-2">
+                            <ProviderBrandIcon provider={String(model[column.key] ?? "")} />
+                            <span>{formatValue(model[column.key], column.type)}</span>
+                          </span>
                         ) : column.key === "huggingfaceUrl" && model.huggingfaceUrl ? (
                           <a
                             href={model.huggingfaceUrl}

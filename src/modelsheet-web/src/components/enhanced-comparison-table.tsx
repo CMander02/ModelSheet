@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button"
 import type { ModelInfo, ColumnConfig, ComplexityLevel } from "@/lib/types"
 import { COMPLEXITY_PRESETS } from "@/lib/model-data"
 import { formatValue, getHighlightClass } from "@/lib/formatters"
+import { ModelBrandIcon, ProviderBrandIcon } from "@/components/brand-icon"
+import { ParamCell } from "@/components/param-cell"
 
 interface EnhancedComparisonTableProps {
   models: ModelInfo[]
@@ -64,14 +66,21 @@ export function EnhancedComparisonTable({
                   href={model.huggingfaceUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-bold text-xl truncate mb-1 hover:text-primary hover:underline transition-colors block"
+                  className="inline-flex items-center gap-2 font-bold text-xl truncate mb-1 hover:text-primary hover:underline transition-colors"
                 >
-                  {model.name}
+                  <ModelBrandIcon model={model.id} size={22} />
+                  <span className="truncate">{model.name}</span>
                 </a>
               ) : (
-                <h3 className="font-bold text-xl truncate mb-1">{model.name}</h3>
+                <h3 className="inline-flex items-center gap-2 font-bold text-xl truncate mb-1">
+                  <ModelBrandIcon model={model.id} size={22} />
+                  <span className="truncate">{model.name}</span>
+                </h3>
               )}
-              <p className="text-sm font-medium text-muted-foreground">{model.provider}</p>
+              <p className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground mt-1">
+                <ProviderBrandIcon provider={model.provider} size={14} />
+                <span>{model.provider}</span>
+              </p>
             </div>
             <Button
               variant="ghost"
@@ -88,14 +97,14 @@ export function EnhancedComparisonTable({
             <div className="flex justify-between items-center px-3 py-1.5">
               <span className="text-xs text-muted-foreground">参数量</span>
               <span className="font-bold text-sm">
-                {formatValue(model.totalParameters, "number", "totalParameters")}
+                <ParamCell value={model.totalParameters} model={model} />
               </span>
             </div>
             {model.activeParameters && (
               <div className="flex justify-between items-center px-3 py-1.5">
                 <span className="text-xs text-muted-foreground">激活参数</span>
                 <span className="font-bold text-sm">
-                  {formatValue(model.activeParameters, "number", "activeParameters")}
+                  <ParamCell value={model.activeParameters} model={model} />
                 </span>
               </div>
             )}

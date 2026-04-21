@@ -46,3 +46,11 @@ node_modules/
 .pnpm-store/
 pnpm-lock.yaml
 dist/
+agentspace/
+
+# Local agent config and personal reference notes (not for the repo)
+.claude/
+reference/
+
+# Stray timestamped logs
+*.log

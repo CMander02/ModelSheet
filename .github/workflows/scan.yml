@@ -1,0 +1,65 @@
+name: Daily Model Scan
+
+on:
+  schedule:
+    # 每天东八区午夜 00:00 = UTC 16:00
+    - cron: "0 16 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (scan only, do not commit changes)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # 需要推送权限，使用 PAT 或默认 GITHUB_TOKEN（已有 contents: write）
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -e .
+
+      - name: Scan and add new models
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            echo "=== DRY RUN ==="
+            modelsheet scan --commit
+          else
+            modelsheet scan --commit --add
+          fi
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet data/models.json data/scan_snapshot.json 2>/dev/null; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push updates
+        if: steps.changes.outputs.changed == 'true' && github.event.inputs.dry_run != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/models.json data/scan_snapshot.json
+          git commit -m "chore(data): auto-scan $(date -u '+%Y-%m-%d') — update model catalog"
+          git push

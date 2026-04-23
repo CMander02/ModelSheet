@@ -22,9 +22,8 @@ const translations = {
   zh: {
     // 导航
     nav: {
-      title: "开源模型参数对比",
+      title: "模型参数对比",
       compareModels: "对比模型",
-      version: "v1.0",
     },
     // Provider 名称翻译
     providers: providerTranslations.zh,
@@ -116,9 +115,8 @@ const translations = {
   en: {
     // Navigation
     nav: {
-      title: "Open Source Model Parameter Comparison",
+      title: "Model Parameter Comparison",
       compareModels: "Compare Models",
-      version: "v1.0",
     },
     // Provider name translations
     providers: providerTranslations.en,

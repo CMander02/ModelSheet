@@ -14,6 +14,9 @@ import { CustomFieldSelector } from "@/components/custom-field-selector"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { LanguageToggle } from "@/components/language-toggle"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import { Search } from "lucide-react"
 import { COMPLEXITY_PRESETS } from "@/lib/model-data"
 
 export function HomePage() {
@@ -28,6 +31,7 @@ export function HomePage() {
   const [selectedModels, setSelectedModels] = useState<Set<string>>(new Set())
   const [showFieldSelector, setShowFieldSelector] = useState(false)
   const [customFields, setCustomFields] = useState<string[]>([])
+  const [searchTerm, setSearchTerm] = useState("")
 
   useEffect(() => {
     // Load theme
@@ -176,17 +180,52 @@ export function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="h-screen flex flex-col overflow-hidden bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="shrink-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <h1 className="text-2xl font-bold">{t.nav.title}</h1>
-            <span className="text-sm text-muted-foreground">{t.nav.version}</span>
+            <span className="text-sm text-muted-foreground">
+              {language === "zh" ? `共 ${models.length} 个模型` : `${models.length} models`}
+            </span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3 flex-1 justify-center max-w-sm mx-8">
+            <div className="relative w-full">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
+              <Input
+                placeholder={language === "zh" ? "搜索模型..." : "Search models..."}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-9 h-9"
+              />
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <ToggleGroup
+              type="single"
+              value={complexityLevel}
+              onValueChange={(value) => { if (value) handleComplexityChange(value as ComplexityLevel) }}
+            >
+              <ToggleGroupItem value="simple" className="h-8 px-3 text-sm">
+                {language === "zh" ? "简单" : "Simple"}
+              </ToggleGroupItem>
+              <ToggleGroupItem value="enthusiast" className="h-8 px-3 text-sm">
+                {language === "zh" ? "爱好者" : "Enthusiast"}
+              </ToggleGroupItem>
+              <ToggleGroupItem value="developer" className="h-8 px-3 text-sm">
+                {language === "zh" ? "开发者" : "Developer"}
+              </ToggleGroupItem>
+              <ToggleGroupItem
+                value="custom"
+                className="h-8 px-3 text-sm"
+                onClick={() => { if (complexityLevel === "custom") setShowFieldSelector(true) }}
+              >
+                {language === "zh" ? "自定义" : "Custom"}
+              </ToggleGroupItem>
+            </ToggleGroup>
             <Link to="/compare">
-              <Button variant="outline">{t.nav.compareModels}</Button>
+              <Button variant="outline" size="sm">{t.nav.compareModels}</Button>
             </Link>
             <ThemeToggle theme={theme} onToggle={handleThemeToggle} />
             <LanguageToggle
@@ -198,7 +237,7 @@ export function HomePage() {
       </header>
 
       {/* Main Content */}
-      <main className="container pt-6 pb-2">
+      <main className="flex-1 overflow-hidden flex flex-col container pt-4 pb-4">
         <ModelTable
           models={models}
           columns={columns}
@@ -211,15 +250,9 @@ export function HomePage() {
           onModelSelect={handleModelSelect}
           onClearSelection={() => setSelectedModels(new Set())}
           onCompare={handleCompare}
+          searchTerm={searchTerm}
         />
       </main>
-
-      {/* Footer */}
-      <footer className="pt-3 pb-2">
-        <div className="container text-center text-sm text-muted-foreground">
-          {t.common.footer}
-        </div>
-      </footer>
 
       {/* Custom Field Selector Dialog */}
       <CustomFieldSelector

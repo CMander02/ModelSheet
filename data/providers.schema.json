@@ -45,6 +45,23 @@
               "type": "string",
               "description": "Display name in other languages"
             }
+          },
+          "scan": {
+            "type": "object",
+            "description": "Org slugs to scan per source. Overrides 'orgs' for scanning purposes.",
+            "properties": {
+              "hf": {
+                "type": "array",
+                "description": "HuggingFace org names to scan",
+                "items": { "type": "string" }
+              },
+              "ms": {
+                "type": "array",
+                "description": "ModelScope org names to scan",
+                "items": { "type": "string" }
+              }
+            },
+            "additionalProperties": false
           }
         },
         "required": ["orgs", "i18n"],

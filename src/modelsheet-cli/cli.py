@@ -3,7 +3,7 @@
 import json
 import shutil
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional
 
 import typer
 from rich.console import Console
@@ -13,6 +13,12 @@ from .config import OUTPUT_FILE, TEMP_DIR
 from .exporter import ModelExporter
 from .fetcher import ModelFetcher
 from .parser import ModelParser
+from .scanner import (
+    get_scan_orgs_from_providers,
+    load_snapshot,
+    save_snapshot,
+    scan_orgs,
+)
 from .utils import read_model_list, validate_model_id
 
 # Custom theme to make dim text white
@@ -525,6 +531,170 @@ def show(
             console.print(f"  MoE Intermediate Size: {model_data['moeIntermediateSize']}")
 
 
+
+
+@app.command()
+def scan(
+    source: Optional[str] = typer.Option(
+        None,
+        "--source",
+        "-s",
+        help="Source to scan: 'hf' (HuggingFace), 'ms' (ModelScope), or omit for both",
+    ),
+    org: Optional[List[str]] = typer.Option(
+        None,
+        "--org",
+        "-o",
+        help="Specific org(s) to scan. Repeatable: --org Qwen --org deepseek-ai. "
+             "If omitted, scans all orgs in providers.json.",
+    ),
+    show_skipped: bool = typer.Option(
+        False,
+        "--show-skipped",
+        help="Show filtered-out models (quant, ASR, TTS, embedding, etc.)",
+    ),
+    commit: bool = typer.Option(
+        False,
+        "--commit",
+        "-c",
+        help="Commit (save) the snapshot after scanning, so next run diffs from here",
+    ),
+    add_new: bool = typer.Option(
+        False,
+        "--add",
+        "-a",
+        help="Automatically run 'modelsheet add' on all discovered new models",
+    ),
+    timeout: int = typer.Option(
+        60,
+        "--timeout",
+        "-t",
+        help="Request timeout in seconds",
+    ),
+):
+    """
+    Scan HuggingFace / ModelScope orgs for new models.
+
+    \b
+    Fetches the current model list for all tracked orgs (from providers.json),
+    diffs against the last saved snapshot and the local database, and reports
+    new model candidates.
+
+    \b
+    Examples:
+        # Scan all tracked orgs (HF + ModelScope)
+        modelsheet scan
+
+        # Scan HuggingFace only
+        modelsheet scan --source hf
+
+        # Scan a specific org on HuggingFace
+        modelsheet scan --source hf --org Qwen
+
+        # Scan and show what was filtered out
+        modelsheet scan --show-skipped
+
+        # Scan, print new models, then save snapshot
+        modelsheet scan --commit
+
+        # Scan and immediately add all new models
+        modelsheet scan --commit --add
+
+    \b
+    Snapshot:
+        The snapshot is stored in data/scan_snapshot.json.
+        Only models absent from both the snapshot AND the local database
+        are reported as "new".
+        Use --commit to update the snapshot after reviewing.
+
+    \b
+    ModelScope support:
+        Add a "scan" key to a provider in providers.json:
+            "scan": { "hf": ["Qwen"], "ms": ["qwen-bot"] }
+        Set MS_TOKEN env var for authenticated requests.
+    """
+    # Build orgs list
+    if org:
+        src = source or "hf"
+        orgs_to_scan = [(src, o) for o in org]
+    else:
+        orgs_to_scan = get_scan_orgs_from_providers(source_filter=source)
+
+    if not orgs_to_scan:
+        console.print("[yellow]No orgs to scan. Check providers.json or --org flag.[/yellow]")
+        raise typer.Exit(1)
+
+    console.print(f"[bold]Scanning {len(orgs_to_scan)} org(s)...[/bold]\n")
+
+    result = scan_orgs(
+        orgs=orgs_to_scan,
+        apply_filters=True,
+        show_skipped=show_skipped,
+    )
+
+    new_models = result["new_models"]
+    all_models = result["all_models"]
+    skipped = result["skipped"]
+
+    console.print(f"\n[bold]Scan summary:[/bold]")
+    console.print(f"  Total fetched (after filter): {len(all_models)}")
+    console.print(f"  Filtered out: {len(skipped)}")
+
+    if new_models:
+        console.print(f"\n[bold green]{len(new_models)} new model(s) found:[/bold green]")
+        for m in new_models:
+            src_label = f"[dim][{m.get('source', '?')}][/dim]"
+            pt = f" [dim]({m['pipeline_tag']})[/dim]" if m.get("pipeline_tag") else ""
+            console.print(f"  {src_label} {m['id']}{pt}")
+    else:
+        console.print("\n[green]No new models found.[/green]")
+
+    if commit:
+        save_snapshot(result["snapshot_updated"])
+        console.print(f"\n[bold cyan]Snapshot saved.[/bold cyan]")
+
+    if add_new and new_models:
+        new_hf_ids = [m["id"] for m in new_models if m.get("source") == "hf"]
+        if new_hf_ids:
+            console.print(f"\n[bold cyan]Adding {len(new_hf_ids)} new HF model(s)...[/bold cyan]\n")
+            with ModelFetcher(timeout=timeout) as fetcher:
+                models_configs = fetcher.fetch_models(new_hf_ids)
+
+            parser = ModelParser()
+            new_parsed = parser.parse_models(models_configs)
+
+            existing_models = []
+            if OUTPUT_FILE.exists():
+                try:
+                    with open(OUTPUT_FILE, 'r', encoding='utf-8') as f:
+                        existing_models = json.load(f)
+                except Exception as e:
+                    console.print(f"[yellow]Warning: Could not load existing data: {e}[/yellow]")
+
+            existing_ids = {m['id'] for m in existing_models}
+            merged = existing_models.copy()
+            added = 0
+            exporter = ModelExporter()
+            for pm in new_parsed:
+                data = exporter._to_frontend_format(pm)
+                if pm.id not in existing_ids:
+                    merged.append(data)
+                    added += 1
+
+            OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
+            with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
+                json.dump(merged, f, indent=2, ensure_ascii=False)
+
+            console.print(f"\n[bold green]Added {added} new model(s) to database.[/bold green]")
+
+        ms_only = [m["id"] for m in new_models if m.get("source") == "ms"]
+        if ms_only:
+            console.print(
+                f"\n[yellow]{len(ms_only)} ModelScope-only model(s) — "
+                "find their HuggingFace IDs and add manually:[/yellow]"
+            )
+            for mid in ms_only:
+                console.print(f"  {mid}")
 
 
 if __name__ == "__main__":

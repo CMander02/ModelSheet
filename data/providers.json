@@ -11,6 +11,10 @@
             "i18n": {
                 "en": "Qwen Team",
                 "zh": "通义千问团队"
+            },
+            "scan": {
+                "hf": ["Qwen"],
+                "ms": ["qwen-bot"]
             }
         },
         "Damo Academy": {
@@ -20,6 +24,10 @@
             "i18n": {
                 "en": "Damo Academy",
                 "zh": "达摩院"
+            },
+            "scan": {
+                "hf": ["Alibaba-DAMO-Academy"],
+                "ms": ["damo"]
             }
         },
         "Meta": {
@@ -75,6 +83,10 @@
             "i18n": {
                 "en": "DeepSeek",
                 "zh": "深度求索"
+            },
+            "scan": {
+                "hf": ["deepseek-ai"],
+                "ms": ["deepseek-ai"]
             }
         },
         "01.AI": {
@@ -84,6 +96,10 @@
             "i18n": {
                 "en": "01.AI",
                 "zh": "零一万物"
+            },
+            "scan": {
+                "hf": ["01-ai"],
+                "ms": ["01ai"]
             }
         },
         "Zhipu AI": {
@@ -94,6 +110,10 @@
             "i18n": {
                 "en": "Zhipu AI",
                 "zh": "智谱AI"
+            },
+            "scan": {
+                "hf": ["THUDM", "zai-org"],
+                "ms": ["ZhipuAI"]
             }
         },
         "Shanghai AI Lab": {
@@ -105,6 +125,10 @@
             "i18n": {
                 "en": "Shanghai AI Lab",
                 "zh": "上海人工智能实验室"
+            },
+            "scan": {
+                "hf": ["internlm"],
+                "ms": ["Shanghai_AI_Laboratory"]
             }
         },
         "Baichuan": {
@@ -114,6 +138,10 @@
             "i18n": {
                 "en": "Baichuan",
                 "zh": "百川智能"
+            },
+            "scan": {
+                "hf": ["baichuan-inc"],
+                "ms": ["baichuan-inc"]
             }
         },
         "BigScience": {
@@ -288,6 +316,10 @@
             "i18n": {
                 "en": "Moonshot AI",
                 "zh": "月之暗面"
+            },
+            "scan": {
+                "hf": ["moonshotai"],
+                "ms": ["moonshot-ai"]
             }
         },
         "Tencent": {
@@ -297,6 +329,10 @@
             "i18n": {
                 "en": "Tencent",
                 "zh": "腾讯"
+            },
+            "scan": {
+                "hf": ["tencent"],
+                "ms": ["Tencent"]
             }
         },
         "IBM": {
@@ -316,6 +352,10 @@
             "i18n": {
                 "en": "Skywork",
                 "zh": "昆仑万维"
+            },
+            "scan": {
+                "hf": ["Skywork"],
+                "ms": ["Skywork"]
             }
         },
         "Xiaomi": {
@@ -325,6 +365,10 @@
             "i18n": {
                 "en": "Xiaomi",
                 "zh": "小米"
+            },
+            "scan": {
+                "hf": ["XiaomiMiMo"],
+                "ms": ["XiaomiMiMo"]
             }
         },
         "Stepfun": {
@@ -334,6 +378,10 @@
             "i18n": {
                 "en": "Stepfun",
                 "zh": "阶跃星辰"
+            },
+            "scan": {
+                "hf": ["stepfun-ai"],
+                "ms": ["stepfun-ai"]
             }
         },
         "MiniMax": {
@@ -343,6 +391,10 @@
             "i18n": {
                 "en": "MiniMax",
                 "zh": "MiniMax"
+            },
+            "scan": {
+                "hf": ["MiniMaxAI"],
+                "ms": ["MiniMaxAI"]
             }
         },
         "Cursor": {
@@ -451,6 +503,10 @@
             "i18n": {
                 "en": "Meituan",
                 "zh": "美团"
+            },
+            "scan": {
+                "hf": ["meituan-longcat"],
+                "ms": ["meituan-longcat"]
             }
         },
         "Infinigence": {
@@ -487,6 +543,10 @@
             "i18n": {
                 "en": "RedNote Hi-Lab",
                 "zh": "小红书 Hi-Lab"
+            },
+            "scan": {
+                "hf": ["rednote-hilab"],
+                "ms": ["rednote-hilab"]
             }
         },
         "AIDC-AI": {
@@ -496,6 +556,10 @@
             "i18n": {
                 "en": "AIDC-AI",
                 "zh": "AIDC-AI"
+            },
+            "scan": {
+                "hf": ["AIDC-AI"],
+                "ms": ["AIDC-AI"]
             }
         },
         "OpenBMB": {
@@ -505,6 +569,10 @@
             "i18n": {
                 "en": "OpenBMB",
                 "zh": "OpenBMB"
+            },
+            "scan": {
+                "hf": ["openbmb"],
+                "ms": ["OpenBMB"]
             }
         },
         "AntGroup": {
@@ -514,6 +582,10 @@
             "i18n": {
                 "en": "Ant Group",
                 "zh": "蚂蚁集团"
+            },
+            "scan": {
+                "hf": ["inclusionAI"],
+                "ms": ["inclusionAI"]
             }
         },
         "Qihoo 360": {
@@ -523,6 +595,10 @@
             "i18n": {
                 "en": "Qihoo 360",
                 "zh": "360"
+            },
+            "scan": {
+                "hf": ["qihoo360"],
+                "ms": ["qihoo360"]
             }
         },
         "Orion Star": {
@@ -606,6 +682,10 @@
             "i18n": {
                 "en": "BAAI",
                 "zh": "智源研究院"
+            },
+            "scan": {
+                "hf": ["BAAI"],
+                "ms": ["BAAI"]
             }
         },
         "Inception Labs": {

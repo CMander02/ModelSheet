@@ -9,6 +9,7 @@ from rich.console import Console
 from tqdm import tqdm
 
 from .config import TEMP_DIR
+from .filters import skip_reason
 from .extractors import (
     ConfigContext,
     # Metadata
@@ -254,6 +255,20 @@ class ModelParser:
                         continue
                     if error_type == "forbidden":
                         forbidden.append(model_id)
+                        pbar.update(1)
+                        continue
+
+                    # Apply model type filters (quant, ASR, TTS, embedding, etc.)
+                    metadata = configs.get("_metadata", {})
+                    reason = skip_reason(
+                        model_id=model_id,
+                        pipeline_tag=metadata.get("pipelineTag"),
+                        tags=metadata.get("tags"),
+                        model_type=config_json.get("model_type"),
+                    )
+                    if reason:
+                        invalid.append(f"{model_id} (skipped: {reason})")
+                        self._cleanup_model_cache(model_id)
                         pbar.update(1)
                         continue
 

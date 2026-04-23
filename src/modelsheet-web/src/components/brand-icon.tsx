@@ -52,6 +52,55 @@ const CUSTOM_LOGO_MAP: Record<string, string> = {
   "达摩院": "/icons/providers/qwen.svg",
   "alibaba-PAI": "/icons/providers/qwen.svg",
   "Alibaba-NLP": "/icons/providers/qwen.svg",
+
+  // Moonshot AI / Kimi (HF org avatar)
+  "moonshotai": "/icons/providers/moonshot.png",
+  "Moonshot AI": "/icons/providers/moonshot.png",
+  "月之暗面": "/icons/providers/moonshot.png",
+
+  // Xiaomi (HF org avatar)
+  "XiaomiMiMo": "/icons/providers/xiaomi.png",
+  "Xiaomi": "/icons/providers/xiaomi.png",
+  "小米": "/icons/providers/xiaomi.png",
+
+  // Cursor (official icon)
+  "cursor": "/icons/providers/cursor.png",
+  "Cursor": "/icons/providers/cursor.png",
+
+  // Unsloth (HF org avatar)
+  "unsloth": "/icons/providers/unsloth.png",
+
+  // Liquid AI (HF org avatar)
+  "LiquidAI": "/icons/providers/liquid-ai.png",
+  "Liquid AI": "/icons/providers/liquid-ai.png",
+
+  // Skywork / 昆仑万维 (HF org avatar)
+  "Skywork": "/icons/providers/skywork.png",
+  "昆仑万维": "/icons/providers/skywork.png",
+
+  // Reka AI (HF org avatar)
+  "RekaAI": "/icons/providers/reka-ai.png",
+  "Reka AI": "/icons/providers/reka-ai.png",
+  "Reka": "/icons/providers/reka-ai.png",
+
+  // Deep Cogito (HF org avatar)
+  "deepcogito": "/icons/providers/deep-cogito.png",
+  "Deep Cogito": "/icons/providers/deep-cogito.png",
+
+  // Qihoo 360 (HF org avatar)
+  "qihoo360": "/icons/providers/qihoo360.png",
+  "Qihoo 360": "/icons/providers/qihoo360.png",
+  "360": "/icons/providers/qihoo360.png",
+
+  // Allen AI / AI2 (HF org avatar)
+  "allenai": "/icons/providers/allen-ai.png",
+  "Allen AI": "/icons/providers/allen-ai.png",
+  "艾伦人工智能研究院": "/icons/providers/allen-ai.png",
+
+  // Ant Group / inclusionAI — logo from Ling model README
+  "inclusionAI": "/icons/providers/ant-group.png",
+  "Ant Group": "/icons/providers/ant-group.png",
+  "蚂蚁集团": "/icons/providers/ant-group.png",
 }
 
 // Map our display-name/provider-name to lobehub provider keys.

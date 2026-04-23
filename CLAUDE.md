@@ -45,6 +45,14 @@ modelsheet list
 # Remove models
 modelsheet remove --model Qwen/Qwen2.5-0.5B
 modelsheet remove --file models_to_remove.txt
+
+# Scan for new models (diff against snapshot + database)
+modelsheet scan                          # scan all tracked orgs (HF + MS)
+modelsheet scan --source hf              # HuggingFace only
+modelsheet scan --source hf --org Qwen  # specific org
+modelsheet scan --show-skipped           # show filtered-out models
+modelsheet scan --commit                 # save snapshot after review
+modelsheet scan --commit --add           # scan + immediately add new models
 ```
 
 ### Running CLI directly with uv
@@ -57,6 +65,22 @@ uv run modelsheet add Qwen/Qwen2.5-7B
 ### CLI Tool Structure
 
 The CLI is located in `src/modelsheet-cli/` with the following modules:
+
+**Model Filtering** (`filters.py`):
+- Applied during `add` and `scan` to exclude models that should not be recorded
+- Skipped: quantized variants (AWQ, GPTQ, GGUF, Q4_K, Q8, INT4, FP8, etc.)
+- Skipped: ASR / TTS models (pipeline_tag or model_type)
+- Skipped: embedding, rerank, sentence-similarity models
+- Skipped: ORM / PRM / reward models
+- Skipped: diffusion image models (text-to-image, unconditional-image-generation)
+- **Kept**: diffusion LMs (model with text-generation pipeline_tag), Mamba, RWKV, Jamba
+
+**Org Scanner** (`scanner.py`):
+- `modelsheet scan` fetches model lists from HuggingFace and/or ModelScope
+- Diffs against `data/scan_snapshot.json` and the local database
+- Reports new model candidates, with filter breakdown
+- `--commit` saves the new snapshot; `--add` immediately ingests new HF models
+- ModelScope org slugs configured per-provider via `"scan": {"ms": [...]}` in providers.json
 
 **Data Pipeline (3-stage)**:
 1. **Fetcher** (`fetcher.py`): Downloads config files from HuggingFace

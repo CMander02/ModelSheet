@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react"
-import { ArrowUpDown, Search, ArrowUp, ArrowDown } from "lucide-react"
+import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -23,6 +23,8 @@ interface ModelTableProps {
   onModelSelect?: (modelId: string) => void
   onClearSelection?: () => void
   onCompare?: () => void
+  searchTerm?: string
+  onSearchChange?: (value: string) => void
 }
 
 export function ModelTable({
@@ -36,15 +38,15 @@ export function ModelTable({
   onClearSelection,
   onCompare,
   language,
+  searchTerm = "",
 }: ModelTableProps) {
-  const [searchTerm, setSearchTerm] = useState("")
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("")
   const [sortConfig, setSortConfig] = useState<SortConfig>({
-    key: null,
-    direction: "asc",
+    key: "createdAt",
+    direction: "desc",
   })
 
-  // Debounce search - 立即生效模式 (300ms延迟)
+  // Debounce search
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm)
@@ -139,7 +141,7 @@ export function ModelTable({
         }
         return value.toLocaleString()
       case "boolean":
-        return value ? "✓" : "✗"
+        return value ? "✅" : "❌"
       case "array":
         return Array.isArray(value) ? value.join(", ") : value
       case "date":
@@ -180,94 +182,35 @@ export function ModelTable({
   }, [language])
 
   return (
-    <div className="space-y-4">
-      {/* Search and Controls */}
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-        {/* Left: Search box */}
-        <div className="relative flex-1 sm:flex-none sm:w-80">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-          <Input
-            placeholder={t.searchModels}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-
-        {/* Center: Model count and selection info */}
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-muted-foreground whitespace-nowrap">
-            {t.modelsTotal(sortedModels.length)}
+    <div className="flex flex-col h-full gap-2">
+      {/* Selection bar — only visible when rows are selected */}
+      {selectedModels.size > 0 && (
+        <div className="shrink-0 flex items-center gap-3 h-9">
+          <span className="text-sm font-medium whitespace-nowrap">
+            {t.selectedCount(selectedModels.size)}
           </span>
-          {selectedModels.size > 0 && (
-            <>
-              <span className="text-sm text-muted-foreground">|</span>
-              <span className="text-sm font-medium whitespace-nowrap">
-                {t.selectedCount(selectedModels.size)}
-              </span>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-7 px-2 text-muted-foreground hover:text-foreground"
-                onClick={onClearSelection}
-              >
-                {t.clearSelection}
-              </Button>
-              <Button
-                variant="default"
-                size="sm"
-                className="h-7"
-                onClick={onCompare}
-                disabled={selectedModels.size < 2}
-              >
-                {t.compareSelected}
-              </Button>
-            </>
-          )}
-        </div>
-
-        {/* Right: Complexity toggle */}
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">{t.complexityLabel}</span>
-          <ToggleGroup
-            type="single"
-            value={currentComplexity}
-            onValueChange={(value) => {
-              if (value && onComplexityChange) {
-                onComplexityChange(value as ComplexityLevel)
-              }
-            }}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-7 px-2 text-muted-foreground hover:text-foreground"
+            onClick={onClearSelection}
           >
-            <ToggleGroupItem value="simple" aria-label={t.simple}>
-              {t.simple}
-            </ToggleGroupItem>
-            <ToggleGroupItem value="enthusiast" aria-label={t.enthusiast}>
-              {t.enthusiast}
-            </ToggleGroupItem>
-            <ToggleGroupItem value="developer" aria-label={t.developer}>
-              {t.developer}
-            </ToggleGroupItem>
-            <ToggleGroupItem
-              value="custom"
-              aria-label={t.custom}
-              onClick={() => {
-                // 当已经是 custom 模式时，点击仍然打开选择器
-                if (currentComplexity === "custom" && onCustomFieldsClick) {
-                  onCustomFieldsClick()
-                }
-              }}
-            >
-              {t.custom}
-            </ToggleGroupItem>
-          </ToggleGroup>
+            {t.clearSelection}
+          </Button>
+          <Button
+            variant="default"
+            size="sm"
+            className="h-7"
+            onClick={onCompare}
+            disabled={selectedModels.size < 2}
+          >
+            {t.compareSelected}
+          </Button>
         </div>
-      </div>
+      )}
 
       {/* Table Container - 外层 overflow-hidden 保证圆角裁剪，内层滚动 */}
-      <div
-        className="rounded-md border overflow-hidden bg-card"
-        style={{ height: 'calc(100vh - 13rem)' }}
-      >
+      <div className="flex-1 rounded-md border overflow-hidden bg-card min-h-0">
         {/* 滚动容器：scrollbar-gutter stable 让滚动条常驻但不跳动；thin 让滚动条更细 */}
         <div
           className="h-full overflow-auto modelsheet-scroll"

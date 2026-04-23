@@ -32,28 +32,41 @@ custom_theme = Theme({
 app = typer.Typer(
     name="modelsheet",
     help="""
-    ModelSheet CLI - LLM Model Configuration Tool
+    [bold]ModelSheet CLI[/bold] — LLM model configuration reference tool.
 
-    Manage and query model configurations from HuggingFace.
-
-    \b
-    Quick Start:
-        1. Add a single model: modelsheet add Qwen/Qwen2.5-7B
-        2. Or add from file: modelsheet add --file models.txt
-        3. Check: modelsheet list
+    Fetches configs from HuggingFace and closed-model card pages, parses them
+    into a structured local database ([cyan]data/models.json[/cyan]), and lets
+    you query, compare, and maintain model metadata.
 
     \b
-    Common Commands:
-        modelsheet add Qwen/Qwen2.5-7B       # Add single model
-        modelsheet add --file models.txt      # Add models from file
-        modelsheet show Qwen/Qwen2.5-7B      # View model details
-        modelsheet list                       # List all models
-        modelsheet remove --model <id>        # Remove a model
+    Quick start (open-source models):
+        modelsheet add Qwen/Qwen2.5-7B
+        modelsheet add --file models.txt
+        modelsheet list
+        modelsheet show Qwen/Qwen2.5-7B
 
     \b
-    Documentation:
-        GitHub: https://github.com/your-username/ModelSheet
-        Docs: See docs/ directory for detailed guides
+    Quick start (closed frontier models):
+        modelsheet fetch openai                  # scrape all OpenAI model cards
+        modelsheet fetch anthropic               # scrape Anthropic system cards
+        modelsheet fetch google                  # scrape Google DeepMind cards
+        modelsheet fetch openai gpt-4o o3        # specific slugs only
+        modelsheet fetch openai --add            # write new entries to DB
+
+    \b
+    Discovery:
+        modelsheet scan                          # diff HuggingFace orgs vs DB
+        modelsheet scan --source hf --org Qwen
+        modelsheet scan --commit --add           # auto-add new HF models
+
+    \b
+    Subcommand groups:
+        add, remove, list, show, scan            # HuggingFace open models
+        fetch openai / anthropic / google        # closed model card scraping
+
+    \b
+    Note:
+        fetch requires [cyan]playwright[/cyan] (pip install playwright && playwright install chromium).
     """,
     no_args_is_help=True,
     rich_markup_mode="rich",
@@ -78,7 +91,7 @@ console = Console(theme=custom_theme)
 
 @app.command()
 def add(
-    model_ids: Optional[list[str]] = typer.Argument(
+    model_ids: Optional[List[str]] = typer.Argument(
         None,
         help="Model ID(s) to add (format: org/model, e.g., Qwen/Qwen3-8B). Can specify multiple models separated by space.",
     ),
@@ -695,6 +708,305 @@ def scan(
             )
             for mid in ms_only:
                 console.print(f"  {mid}")
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# fetch subcommand group
+# ──────────────────────────────────────────────────────────────────────────────
+
+fetch_app = typer.Typer(
+    name="fetch",
+    help="""
+    [bold]Scrape closed-model card pages[/bold] from OpenAI, Anthropic, and Google DeepMind.
+
+    Uses a headless Chromium browser (via Playwright) to render JS pages and
+    extract specs (context length, modalities, knowledge cutoff, etc.).
+
+    \b
+    Subcommands:
+        fetch openai      — developers.openai.com model cards
+        fetch anthropic   — anthropic.com system cards
+        fetch google      — deepmind.google model cards
+
+    \b
+    Common flags (all subcommands):
+        --add             Write new entries to data/models.json
+        --dry-run         Print scraped JSON only; do not write anything
+        --no-headless     Show the browser window (useful for debugging)
+
+    \b
+    Prerequisites:
+        pip install playwright
+        playwright install chromium
+    """,
+    no_args_is_help=True,
+    rich_markup_mode="rich",
+    pretty_exceptions_show_locals=False,
+)
+
+app.add_typer(fetch_app, name="fetch")
+
+
+def _fetch_report(fetched: List[dict], added: List[str], skipped: List[str], dry_run: bool) -> None:
+    """Print a compact summary after a fetch run."""
+    if dry_run:
+        console.print(json.dumps(fetched, indent=2, ensure_ascii=False))
+        return
+    if added:
+        console.print(f"\n[bold green]Added {len(added)} new entries:[/bold green]")
+        for mid in added:
+            console.print(f"  + {mid}")
+    if skipped:
+        console.print(f"[dim]Skipped {len(skipped)} (already in DB)[/dim]")
+    if not added and not skipped:
+        console.print("[yellow]No entries to report.[/yellow]")
+
+
+@fetch_app.command("openai")
+def fetch_openai_cmd(
+    slugs: Optional[List[str]] = typer.Argument(
+        None,
+        help=(
+            "One or more OpenAI model slugs to fetch (e.g. gpt-4o o3-mini). "
+            "Omit to scrape all language/reasoning models from the /all listing."
+        ),
+    ),
+    add: bool = typer.Option(
+        False,
+        "--add",
+        "-a",
+        help="Write newly discovered entries to data/models.json.",
+    ),
+    dry_run: bool = typer.Option(
+        False,
+        "--dry-run",
+        "-n",
+        help="Print scraped JSON to stdout; do not modify the database.",
+    ),
+    headless: bool = typer.Option(
+        True,
+        "--headless/--no-headless",
+        help="Run browser headlessly (default) or with a visible window.",
+    ),
+):
+    """
+    Scrape OpenAI model card pages on developers.openai.com.
+
+    \b
+    Source:
+        https://developers.openai.com/api/docs/models/all
+        Individual cards: https://developers.openai.com/api/docs/models/<slug>
+
+    \b
+    What is extracted:
+        - Context window and max output tokens
+        - Knowledge cutoff date
+        - Input/output modalities (text, image, audio, …)
+        - Snapshot dates (earliest used as createdAt)
+        - Architecture family (GPT / o-series) inferred from slug
+
+    \b
+    Examples:
+        # Dry-run a single model
+        modelsheet fetch openai gpt-4o --dry-run
+
+        # Scrape all and show diff (no write)
+        modelsheet fetch openai
+
+        # Scrape all and add new ones to DB
+        modelsheet fetch openai --add
+
+        # Debug with visible browser
+        modelsheet fetch openai o3 --no-headless --dry-run
+
+    \b
+    Non-language models (image, audio, TTS, embedding, etc.) are automatically
+    skipped when fetching the full list.
+    """
+    from .oag_fetcher import fetch_openai, _merge_into_db, _load_existing_ids
+
+    fetched = fetch_openai(slugs=slugs or None, headless=headless, verbose=not dry_run)
+
+    if dry_run:
+        console.print(json.dumps(fetched, indent=2, ensure_ascii=False))
+        return
+
+    existing = _load_existing_ids()
+    new_entries = [m for m in fetched if m["id"] not in existing]
+    console.print(f"\nFetched: {len(fetched)}  New: {len(new_entries)}  Already in DB: {len(fetched) - len(new_entries)}")
+
+    if add:
+        added, skipped = _merge_into_db(fetched, dry_run=False)
+        _fetch_report(fetched, added, skipped, dry_run=False)
+    else:
+        if new_entries:
+            console.print(f"\n[bold]New entries (use --add to write):[/bold]")
+            for m in new_entries:
+                console.print(f"  {m['id']}")
+
+
+@fetch_app.command("anthropic")
+def fetch_anthropic_cmd(
+    slugs: Optional[List[str]] = typer.Argument(
+        None,
+        help=(
+            "One or more Anthropic system-card URL suffixes "
+            "(e.g. claude-sonnet-4-6-system-card). "
+            "Omit to discover all cards from the index page."
+        ),
+    ),
+    add: bool = typer.Option(
+        False,
+        "--add",
+        "-a",
+        help="Write newly discovered entries to data/models.json.",
+    ),
+    dry_run: bool = typer.Option(
+        False,
+        "--dry-run",
+        "-n",
+        help="Print scraped JSON to stdout; do not modify the database.",
+    ),
+    headless: bool = typer.Option(
+        True,
+        "--headless/--no-headless",
+        help="Run browser headlessly (default) or with a visible window.",
+    ),
+):
+    """
+    Scrape Anthropic model system card pages on anthropic.com.
+
+    \b
+    Source:
+        Index: https://www.anthropic.com/system-cards
+        Individual cards: https://www.anthropic.com/<slug>
+
+    \b
+    What is extracted:
+        - Model name and published date
+        - Context window (when stated in the card body)
+        - Architecture family inferred from model name (Claude 3 / 4 / etc.)
+        - Modalities default: text + image input, text output
+
+    \b
+    Examples:
+        # Dry-run, discover all cards from index
+        modelsheet fetch anthropic --dry-run
+
+        # Scrape specific card
+        modelsheet fetch anthropic claude-sonnet-4-6-system-card --dry-run
+
+        # Discover and add new ones to DB
+        modelsheet fetch anthropic --add
+
+    \b
+    Notes:
+        Some older cards are PDF links — these are skipped automatically.
+        The heuristic that infers model IDs from URLs may need manual
+        correction for unusual naming patterns.
+    """
+    from .oag_fetcher import fetch_anthropic, _merge_into_db, _load_existing_ids
+
+    fetched = fetch_anthropic(slugs=slugs or None, headless=headless, verbose=not dry_run)
+
+    if dry_run:
+        console.print(json.dumps(fetched, indent=2, ensure_ascii=False))
+        return
+
+    existing = _load_existing_ids()
+    new_entries = [m for m in fetched if m["id"] not in existing]
+    console.print(f"\nFetched: {len(fetched)}  New: {len(new_entries)}  Already in DB: {len(fetched) - len(new_entries)}")
+
+    if add:
+        added, skipped = _merge_into_db(fetched, dry_run=False)
+        _fetch_report(fetched, added, skipped, dry_run=False)
+    else:
+        if new_entries:
+            console.print(f"\n[bold]New entries (use --add to write):[/bold]")
+            for m in new_entries:
+                console.print(f"  {m['id']}")
+
+
+@fetch_app.command("google")
+def fetch_google_cmd(
+    slugs: Optional[List[str]] = typer.Argument(
+        None,
+        help=(
+            "One or more Google DeepMind model card URL suffixes "
+            "(e.g. gemini-2-5-pro gemini-3-flash). "
+            "Omit to discover all Gemini language cards from the index."
+        ),
+    ),
+    add: bool = typer.Option(
+        False,
+        "--add",
+        "-a",
+        help="Write newly discovered entries to data/models.json.",
+    ),
+    dry_run: bool = typer.Option(
+        False,
+        "--dry-run",
+        "-n",
+        help="Print scraped JSON to stdout; do not modify the database.",
+    ),
+    headless: bool = typer.Option(
+        True,
+        "--headless/--no-headless",
+        help="Run browser headlessly (default) or with a visible window.",
+    ),
+):
+    """
+    Scrape Google DeepMind model card pages on deepmind.google.
+
+    \b
+    Source:
+        Index: https://deepmind.google/models/model-cards/
+        Individual cards: https://deepmind.google/models/model-cards/<slug>/
+
+    \b
+    What is extracted:
+        - Model name, context window, knowledge cutoff
+        - Published/release date
+        - Input modalities (text/image/audio/video detected from card body)
+        - Architecture family (Gemini 1/2/3) inferred from slug
+
+    \b
+    Examples:
+        # Dry-run, auto-discover all Gemini language cards
+        modelsheet fetch google --dry-run
+
+        # Fetch specific models
+        modelsheet fetch google gemini-2-5-pro gemini-3-flash --dry-run
+
+        # Add new entries to DB
+        modelsheet fetch google --add
+
+    \b
+    Notes:
+        Veo, Lyria, Imagen, Gemma, and robotics cards are filtered out when
+        scanning the index.  Gemma open-weight models are tracked via the
+        standard HuggingFace pipeline (modelsheet add google/gemma-…).
+    """
+    from .oag_fetcher import fetch_google, _merge_into_db, _load_existing_ids
+
+    fetched = fetch_google(slugs=slugs or None, headless=headless, verbose=not dry_run)
+
+    if dry_run:
+        console.print(json.dumps(fetched, indent=2, ensure_ascii=False))
+        return
+
+    existing = _load_existing_ids()
+    new_entries = [m for m in fetched if m["id"] not in existing]
+    console.print(f"\nFetched: {len(fetched)}  New: {len(new_entries)}  Already in DB: {len(fetched) - len(new_entries)}")
+
+    if add:
+        added, skipped = _merge_into_db(fetched, dry_run=False)
+        _fetch_report(fetched, added, skipped, dry_run=False)
+    else:
+        if new_entries:
+            console.print(f"\n[bold]New entries (use --add to write):[/bold]")
+            for m in new_entries:
+                console.print(f"  {m['id']}")
 
 
 if __name__ == "__main__":

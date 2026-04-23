@@ -1,210 +1,180 @@
 # ModelSheet
 
-开源 LLM 模型参数速查与对比工具。
+**Open-source LLM model parameter reference and comparison tool.**
 
-## 项目简介
+A browsable catalog of language models — parameters, architecture, context length, modalities — sourced directly from HuggingFace config files and kept up to date automatically.
 
-ModelSheet 通过获取 HuggingFace 上模型的配置文件，自动解析并展示模型的核心参数，帮助用户快速了解和比较不同的大语言模型。
+→ **[Live site](https://modelsheet.pages.dev)**
 
-## 特性
+---
 
-- ✅ 自动从 HuggingFace 下载模型配置文件
-- ✅ 解析提取丰富的模型参数：
-  - 基本信息：参数量、上下文长度、架构类型
-  - 详细配置：层数、注意力头、隐藏层大小
-  - 高级特性：位置编码、激活函数、归一化类型
-  - 计算指标：MLP 扩展倍数、GQA 比例
-  - MoE 支持：专家数量、每 token 激活数
-- ✅ 支持 `.txt` 和 `.yaml` 格式的模型列表配置
-- ✅ 导出为 JSON 格式供前端使用
-- ✅ 自动清理临时缓存
-- ✅ 识别 MoE 架构和 LoRA Adapter
-- ✅ 彩色终端输出，界面友好
+## What it does
 
-## 项目结构
+ModelSheet parses model configs from HuggingFace and structures them into a unified JSON catalog. A static React frontend lets you search, filter, and compare models side-by-side.
 
-```
-ModelSheet/
-├── docs/                          # 设计文档
-│   ├── architecture.md            # 架构设计
-│   ├── frontend.md                # 前端设计
-│   ├── cli.md                     # CLI 设计
-│   ├── schema.md                  # 字段定义
-│   └── deployment.md              # 部署方案
-├── src/
-│   └── modelsheet-cli/            # Python CLI 工具
-├── data/                          # 数据目录
-│   ├── temp/                      # 下载的配置文件缓存
-│   └── models.json                # 导出的模型数据
-├── models.txt                     # 模型列表 (txt 格式)
-├── models.yaml                    # 模型列表 (yaml 格式)
-└── pyproject.toml
-```
+- **900+ models** cataloged, growing daily via automated scans
+- Covers open-weight models across Qwen, Llama, Mistral, DeepSeek, Gemma, and more
+- Closed frontier models (GPT-4o, Claude, Gemini) included as lean reference entries
+- All data generated locally and committed to the repo — no runtime LLM calls, no hallucinations
 
-## 快速开始
+---
 
-### 安装
+## CLI
 
-使用 `uv` (推荐):
+The `modelsheet` CLI fetches configs from HuggingFace, parses them, and writes to `data/models.json`.
+
+### Install
+
 ```bash
-# 安装依赖
+# Recommended: uv
 uv sync
-
-# 可编辑模式安装（安装后可直接使用 modelsheet 命令）
 uv pip install -e .
-```
 
-或使用 `pip`:
-```bash
+# Or pip
 pip install -e .
 ```
 
-### 使用 CLI
+### Add models
 
-#### 1. 准备模型列表
-
-创建 `models.txt`:
-```txt
-Qwen/Qwen2.5-7B-Instruct
-mistralai/Mistral-7B-Instruct-v0.3
-deepseek-ai/DeepSeek-V3
-```
-
-或 `models.yaml`:
-```yaml
-models:
-  - Qwen/Qwen2.5-7B-Instruct
-  - mistralai/Mistral-7B-Instruct-v0.3
-```
-
-#### 2. 运行命令
-
-**添加单个模型**（推荐）
 ```bash
-# 添加单个模型（最简洁的方式）
-modelsheet add Qwen/Qwen2.5-7B-Instruct
+# Single model
+modelsheet add Qwen/Qwen2.5-7B
 
-# 查看模型详情
-modelsheet show Qwen/Qwen2.5-7B-Instruct
+# Multiple at once
+modelsheet add Qwen/Qwen2.5-7B mistralai/Mistral-7B-v0.3 deepseek-ai/DeepSeek-V3
 
-# 列出所有已添加的模型
-modelsheet list
-```
-
-**从文件批量添加**
-```bash
-# 从 txt 或 yaml 文件批量添加
+# From file (.txt or .yaml)
 modelsheet add --file models.txt
-modelsheet add -f models.yaml
 
-# 自定义超时时间（默认 60 秒）
-modelsheet add Qwen/Qwen3-8B --timeout 120
+# Re-fetch and update all existing entries
+modelsheet add --update-all
 ```
 
-**管理模型**
+### Scan for new models
+
+`scan` diffs the current HuggingFace org listings against your local snapshot and database, reporting new models without touching anything:
+
 ```bash
-# 移除单个模型
-modelsheet remove --model Qwen/Qwen2.5-0.5B
+# Scan all tracked orgs (HuggingFace + ModelScope)
+modelsheet scan
 
-# 从文件批量移除
-modelsheet remove --file models_to_remove.txt
+# HuggingFace only, specific org
+modelsheet scan --source hf --org Qwen
 
-# 列出所有模型
-modelsheet list
+# Show what was filtered out (quant variants, TTS, embeddings, …)
+modelsheet scan --show-skipped
 
-# 查看模型详细信息
-modelsheet show Qwen/Qwen2.5-7B-Instruct
+# Save the snapshot so next run diffs from here
+modelsheet scan --commit
+
+# Scan + immediately add new models to the DB
+modelsheet scan --commit --add
 ```
 
-**查看帮助**
+### Other commands
+
 ```bash
-# 主帮助
+modelsheet show Qwen/Qwen2.5-7B     # detailed view of one model
+modelsheet list                      # list all model IDs in DB
+modelsheet remove --model <id>       # remove a model
+modelsheet list | grep deepseek      # pipe-friendly output
+```
+
+Every command has a `--help` with examples:
+
+```bash
 modelsheet --help
-
-# 命令帮助
+modelsheet scan --help
 modelsheet add --help
-modelsheet show --help
 ```
 
-## 数据格式
+---
 
-生成的 `data/models.json` 示例：
+## Data format
+
+`data/models.json` — one object per model:
 
 ```json
-[
-  {
-    "id": "Qwen/Qwen2.5-7B-Instruct",
-    "name": "Qwen2.5-7B-Instruct",
-    "provider": "Alibaba",
-    "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-7B-Instruct",
-    "totalParameters": 5785780224,
-    "contextLength": 32768,
-    "embeddingDim": 3584,
-    "vocabSize": 152064,
-    "architecture": "qwen2",
-    "numLayers": 28,
-    "numHeads": 28,
-    "numKvHeads": 4,
-    "hiddenSize": 3584,
-    "intermediateSize": 18944,
-    "positionEncoding": "RoPE",
-    "activation": "silu",
-    "normType": "RMSNorm",
-    "normEps": 1e-06,
-    "attentionDropout": 0.0,
-    "mlpFactor": 5.29,
-    "gqaRatio": 7.0,
-    "eosToken": "<|im_end|>",
-    "isMoe": false,
-    "hasChatTemplate": true,
-    "isAdapter": false,
-    "updatedAt": "2025-12-07T05:41:45.173166Z"
-  }
-]
+{
+  "id": "Qwen/Qwen2.5-7B",
+  "name": "Qwen2.5-7B",
+  "provider": "Qwen Team",
+  "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-7B",
+  "totalParameters": 7615616000,
+  "contextLength": 131072,
+  "architecture": "qwen2",
+  "architectureFamily": "Qwen2",
+  "numLayers": 28,
+  "numHeads": 28,
+  "numKvHeads": 4,
+  "hiddenSize": 3584,
+  "intermediateSize": 18944,
+  "positionEncoding": "RoPE",
+  "activation": "silu",
+  "normType": "RMSNorm",
+  "mlpFactor": 5.29,
+  "gqaRatio": 7.0,
+  "isMoe": false,
+  "createdAt": "2024-09-18T09:53:43.000Z"
+}
 ```
 
-### 字段说明
+MoE models carry additional fields (`numExperts`, `numExpertsPerToken`, `activeParameters`, …). Closed models omit architecture internals and carry `techReport` instead of `huggingfaceUrl`.
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `id` | string | 模型 ID（格式：org/model） |
-| `name` | string | 模型名称 |
-| `provider` | string | 提供商（如 Alibaba, Meta, Mistral AI） |
-| `totalParameters` | number | 总参数量 |
-| `contextLength` | number | 上下文长度 |
-| `architecture` | string | 架构类型（如 qwen2, llama, mixtral） |
-| `numLayers` | number | 层数 |
-| `numHeads` | number | 注意力头数量 |
-| `numKvHeads` | number | KV 注意力头数量（GQA） |
-| `hiddenSize` | number | 隐藏层大小 |
-| `intermediateSize` | number | 中间层大小 |
-| `positionEncoding` | string | 位置编码类型（RoPE, ALiBi） |
-| `activation` | string | 激活函数（如 silu, gelu） |
-| `normType` | string | 归一化类型（RMSNorm, LayerNorm） |
-| `normEps` | number | 归一化 epsilon 值 |
-| `attentionDropout` | number | 注意力 dropout 率 |
-| `mlpFactor` | number | MLP 扩展倍数 |
-| `gqaRatio` | number | GQA 比例（num_heads / num_kv_heads） |
-| `isMoe` | boolean | 是否为 MoE 架构 |
-| `numExperts` | number | 专家数量（MoE） |
-| `hasChatTemplate` | boolean | 是否包含对话模板 |
-| `isAdapter` | boolean | 是否为 Adapter（如 LoRA） |
+---
 
-## 技术栈
+## Automated updates
 
-- **CLI**: Python 3.13+ + typer + httpx + rich
-- **前端** (计划中): React + Vite + shadcn/ui
-- **部署** (计划中): GitHub Pages
+A GitHub Actions workflow ([`.github/workflows/scan.yml`](.github/workflows/scan.yml)) runs `modelsheet scan --commit --add` every night at **00:00 CST** (UTC 16:00). New models discovered on HuggingFace are automatically added and committed, which triggers a Cloudflare Pages redeploy.
 
-## 文档
+To self-host this workflow, add a `HF_TOKEN` secret in your repo settings (Settings → Secrets → Actions). A read-only HuggingFace token is sufficient.
 
-详细设计和实现请参考 [docs/](docs/) 目录：
+---
 
-- [架构设计](docs/architecture.md)
-- [CLI 设计](docs/cli.md)
-- [字段定义](docs/schema.md)
-- [前端设计](docs/frontend.md)
-- [部署方案](docs/deployment.md)
+## Project structure
+
+```
+ModelSheet/
+├── .github/workflows/
+│   └── scan.yml              # nightly HuggingFace scan
+├── src/
+│   ├── modelsheet-cli/       # Python CLI (fetcher, parser, exporter, scanner)
+│   └── modelsheet-web/       # React + Vite frontend
+├── data/
+│   ├── models.json           # model catalog (source of truth)
+│   ├── providers.json        # org → provider name mapping
+│   └── scan_snapshot.json    # snapshot for incremental diff
+└── scripts/                  # one-shot data maintenance scripts
+```
+
+---
+
+## Tech stack
+
+| Layer | Tech |
+|-------|------|
+| CLI | Python 3.13, typer, httpx, rich |
+| Frontend | React 19, Vite, TypeScript, shadcn/ui, Tailwind |
+| Data | Static JSON, generated by CLI |
+| Hosting | Cloudflare Pages |
+| CI | GitHub Actions |
+
+---
+
+## Contributing
+
+The easiest contribution is adding missing models:
+
+```bash
+modelsheet add org/model-name
+# verify data/models.json looks right
+git add data/models.json
+git commit -m "data: add org/model-name"
+```
+
+For CLI or frontend changes, open an issue first to discuss scope.
+
+---
 
 ## License
 

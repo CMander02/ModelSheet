@@ -1,9 +1,7 @@
 import { useState, useEffect, useMemo } from "react"
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { ModalityIcons } from "@/components/modality-icons"
 import { ModelBrandIcon, ProviderBrandIcon } from "@/components/brand-icon"
 import { ParamCell } from "@/components/param-cell"
@@ -31,8 +29,8 @@ export function ModelTable({
   models,
   columns,
   currentComplexity,
-  onComplexityChange,
-  onCustomFieldsClick,
+  onComplexityChange: _onComplexityChange,
+  onCustomFieldsClick: _onCustomFieldsClick,
   selectedModels = new Set(),
   onModelSelect,
   onClearSelection,

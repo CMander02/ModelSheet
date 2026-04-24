@@ -226,6 +226,9 @@ export function HomePage() {
                 {language === "zh" ? "自定义" : "Custom"}
               </ToggleGroupItem>
             </ToggleGroup>
+            <Link to="/arch">
+              <Button variant="outline" size="sm">{language === "zh" ? "架构图鉴" : "Arch Gallery"}</Button>
+            </Link>
             <Link to="/compare">
               <Button variant="outline" size="sm">{t.nav.compareModels}</Button>
             </Link>
@@ -249,6 +252,9 @@ export function HomePage() {
               className="pl-9 h-9 text-sm"
             />
           </div>
+          <Link to="/arch">
+            <Button variant="outline" size="sm" className="text-xs px-2">{language === "zh" ? "架构" : "Arch"}</Button>
+          </Link>
           <ThemeToggle theme={theme} onToggle={handleThemeToggle} />
           <LanguageToggle currentLanguage={language} onLanguageChange={handleLanguageChange} />
         </div>

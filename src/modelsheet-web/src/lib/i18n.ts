@@ -104,6 +104,22 @@ const translations = {
       outputModalities: "输出模态",
       createdAt: "创建时间",
     },
+    // Architecture gallery
+    arch: {
+      title: "架构图鉴",
+      subtitle: "基于 HuggingFace transformers 源码生成的架构示意图，每个方块对应实际的模块层级。",
+      backToHome: "返回",
+      architectures: (n: number) => `${n} 个架构`,
+      filterAll: "全部",
+      filterEncoder: "编码器",
+      filterDecoder: "解码器",
+      filterEncDec: "编解码器",
+      normPre: "Pre-Norm",
+      normPost: "Post-Norm",
+      paper: "论文",
+      comingSoon: "更多架构即将推出：LLaMA、Mistral、Qwen2、DeepSeek、Mamba…",
+      noMatch: "没有匹配的架构。",
+    },
     // Modality names
     modalities: {
       text: "文本",
@@ -196,6 +212,22 @@ const translations = {
       inputModalities: "Input Modalities",
       outputModalities: "Output Modalities",
       createdAt: "Created At",
+    },
+    // Architecture gallery
+    arch: {
+      title: "Architecture Gallery",
+      subtitle: "Programmatically generated diagrams from HuggingFace transformers source code. Each block corresponds to an actual module.",
+      backToHome: "Back",
+      architectures: (n: number) => `${n} architecture${n !== 1 ? "s" : ""}`,
+      filterAll: "All",
+      filterEncoder: "Encoder",
+      filterDecoder: "Decoder",
+      filterEncDec: "Enc-Dec",
+      normPre: "Pre-Norm",
+      normPost: "Post-Norm",
+      paper: "Paper",
+      comingSoon: "More coming soon: LLaMA, Mistral, Qwen2, DeepSeek, Mamba…",
+      noMatch: "No architectures match this filter.",
     },
     // Modality names
     modalities: {

@@ -223,7 +223,10 @@ export function ModelCardPage() {
                   style={{ background: "rgba(99,102,241,0.15)", color: "#818cf8" }}>MoE</span>
               )}
               {model.architecture && (
-                <span className="rounded-md border px-2 py-0.5 text-xs text-muted-foreground">{model.architecture}</span>
+                <Link to={`/arch?family=${encodeURIComponent(model.architecture)}`}
+                  className="rounded-md border px-2 py-0.5 text-xs text-muted-foreground hover:border-foreground/50 hover:text-foreground transition-colors cursor-pointer">
+                  {model.architecture}
+                </Link>
               )}
               {model.torchDtype && (
                 <span className="rounded-md border px-2 py-0.5 text-xs text-muted-foreground">{model.torchDtype}</span>

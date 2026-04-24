@@ -7,9 +7,11 @@ import {
   loadColumnConfigFromStorage,
   saveColumnConfigToStorage,
   getColumnConfigs,
+  COMPLEXITY_PRESETS,
 } from "@/lib/model-data"
 import { getTranslations } from "@/lib/i18n"
 import { ModelTable } from "@/components/model-table"
+import { MobileModelList } from "@/components/mobile-model-list"
 import { CustomFieldSelector } from "@/components/custom-field-selector"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { LanguageToggle } from "@/components/language-toggle"
@@ -17,7 +19,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { Search } from "lucide-react"
-import { COMPLEXITY_PRESETS } from "@/lib/model-data"
 
 export function HomePage() {
   const navigate = useNavigate()
@@ -183,7 +184,8 @@ export function HomePage() {
     <div className="h-screen flex flex-col overflow-hidden bg-background">
       {/* Header */}
       <header className="shrink-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between">
+        {/* Desktop header row */}
+        <div className="container hidden md:flex h-16 items-center justify-between">
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-bold">{t.nav.title}</h1>
             <span className="text-sm text-muted-foreground">
@@ -234,10 +236,27 @@ export function HomePage() {
             />
           </div>
         </div>
+
+        {/* Mobile header row */}
+        <div className="container flex md:hidden h-14 items-center gap-2">
+          <h1 className="text-lg font-bold shrink-0">{t.nav.title}</h1>
+          <div className="relative flex-1 min-w-0 mx-2">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Input
+              placeholder={language === "zh" ? "搜索..." : "Search..."}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-9 h-9 text-sm"
+            />
+          </div>
+          <ThemeToggle theme={theme} onToggle={handleThemeToggle} />
+          <LanguageToggle currentLanguage={language} onLanguageChange={handleLanguageChange} />
+        </div>
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-hidden flex flex-col container pt-4 pb-4">
+      {/* Desktop: scrollable data table */}
+      <main className="hidden md:flex flex-1 overflow-hidden flex-col container pt-4 pb-4">
         <ModelTable
           models={models}
           columns={columns}
@@ -251,6 +270,17 @@ export function HomePage() {
           onClearSelection={() => setSelectedModels(new Set())}
           onCompare={handleCompare}
           searchTerm={searchTerm}
+        />
+      </main>
+
+      {/* Mobile: card list */}
+      <main className="flex md:hidden flex-1 overflow-hidden container pt-3 min-w-0">
+        <MobileModelList
+          models={models}
+          searchTerm={searchTerm}
+          language={language}
+          complexityLevel={complexityLevel}
+          onComplexityChange={(level) => setComplexityLevel(level as ComplexityLevel)}
         />
       </main>
 

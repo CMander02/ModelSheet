@@ -20775,8 +20775,7 @@
       "text"
     ],
     "createdAt": "2025-04-27T03:40:08.000Z",
-    "isMoe": false,
-    "architectureFamily": "Qwen3"
+    "isMoe": false
   },
   {
     "id": "Qwen/Qwen3-1.7B",
@@ -29346,5 +29345,86 @@
     "createdAt": "2026-04-15T05:59:19.000Z",
     "isMoe": true,
     "architectureFamily": "Qwen3.5"
+  },
+  {
+    "id": "deepseek-ai/DeepSeek-V4-Pro",
+    "name": "DeepSeek-V4-Pro",
+    "provider": "DeepSeek",
+    "huggingfaceUrl": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro",
+    "techReport": "",
+    "totalParameters": 1600000000000,
+    "activeParameters": 49000000000,
+    "embeddingParameters": 926679040,
+    "nonEmbeddingParameters": 1562964701184,
+    "contextLength": 1048576,
+    "embeddingDim": 7168,
+    "vocabSize": 129280,
+    "architecture": "deepseek_v4",
+    "numLayers": 61,
+    "numHeads": 128,
+    "numKvHeads": 1,
+    "hiddenSize": 7168,
+    "positionEncoding": "RoPE",
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-06,
+    "attentionDropout": 0.0,
+    "gqaRatio": 128.0,
+    "torchDtype": "bfloat16",
+    "numExperts": 384,
+    "numSharedExperts": 1,
+    "numExpertsPerToken": 6,
+    "numActivatedExperts": 7,
+    "moeIntermediateSize": 3072,
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "isMoe": true,
+    "parameterConfidence": "official",
+    "parameterSource": "DeepSeek official release (2026-04-24)",
+    "parameterSourceUrl": "https://api-docs.deepseek.com/news/news260424",
+    "createdAt": "2026-04-24T00:00:00.000Z"
+  },
+  {
+    "id": "deepseek-ai/DeepSeek-V4-Flash",
+    "name": "DeepSeek-V4-Flash",
+    "provider": "DeepSeek",
+    "huggingfaceUrl": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash",
+    "techReport": "",
+    "totalParameters": 281164824576,
+    "activeParameters": 10631512064,
+    "embeddingParameters": 529530880,
+    "nonEmbeddingParameters": 280635293696,
+    "contextLength": 1048576,
+    "embeddingDim": 4096,
+    "vocabSize": 129280,
+    "architecture": "deepseek_v4",
+    "numLayers": 43,
+    "numHeads": 64,
+    "numKvHeads": 1,
+    "hiddenSize": 4096,
+    "positionEncoding": "RoPE",
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-06,
+    "attentionDropout": 0.0,
+    "gqaRatio": 64.0,
+    "torchDtype": "bfloat16",
+    "numExperts": 256,
+    "numSharedExperts": 1,
+    "numExpertsPerToken": 6,
+    "numActivatedExperts": 7,
+    "moeIntermediateSize": 2048,
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "createdAt": "2026-04-22T06:04:20.000Z",
+    "isMoe": true
   }
 ]

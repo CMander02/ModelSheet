@@ -1,4 +1,9 @@
-"""Parameter calculation extractors."""
+"""Parameter calculation extractors.
+
+Architecture-specific parameter calculators live in extractors/arch_params/.
+The dispatch is handled by get_arch_calculator() which returns a class instance.
+Generic dense/MoE fallback formulas are defined here.
+"""
 
 from typing import Optional, Tuple
 
@@ -11,6 +16,7 @@ from .moe import (
     extract_num_experts_per_token,
     extract_moe_intermediate_size,
 )
+from .arch_params import get_arch_calculator
 
 
 def _calc_dense_params(ctx: ConfigContext) -> Tuple[Optional[int], Optional[int]]:
@@ -96,46 +102,41 @@ def _calc_moe_params(ctx: ConfigContext) -> Tuple[Optional[int], Optional[int]]:
 def _calc_parameters(ctx: ConfigContext) -> Tuple[Optional[int], Optional[int]]:
     """Calculate total and active parameters.
 
-    Priority for total:
-        1. HuggingFace API safetensors.total (most accurate)
-        2. config.json num_parameters (explicit)
-        3. Calculated from architecture
-
-    For MoE models, active parameters are always calculated precisely from
-    architecture (not estimated), as estimation methods have large errors.
+    Priority:
+        1. Arch-specific calculator from arch_params/ (most accurate)
+        2. HuggingFace API safetensors.total for total (with generic active)
+        3. config.json num_parameters for total (with generic active)
+        4. Generic dense / MoE formula fallback
 
     Returns:
         Tuple of (total_parameters, active_parameters)
     """
+    model_type = ctx.config.get("model_type", "")
     is_moe = extract_is_moe(ctx)
 
-    # For MoE: always calculate active precisely from architecture
-    # The old estimation method (70% MoE assumption) had 3-10x errors
+    # ── Priority 1: arch-specific class-based calculator ──────────────────
+    arch_calc = get_arch_calculator(model_type, ctx.config, ctx.metadata)
+    if arch_calc:
+        return arch_calc.calc()
+
+    # ── Priority 2/3: external source for total, generic formula for active
     if is_moe:
         _, calculated_active = _calc_moe_params(ctx)
     else:
         calculated_active = None
 
-    # Priority 1: API metadata (most accurate for total)
     if "totalParameters" in ctx.metadata:
         total = ctx.metadata["totalParameters"]
-        if not is_moe:
-            return total, total
-        # Use API total, but precise calculation for active
-        return total, calculated_active
+        return total, (total if not is_moe else calculated_active)
 
-    # Priority 2: Explicit in config
     if "num_parameters" in ctx.config:
         total = ctx.config["num_parameters"]
-        if not is_moe:
-            return total, total
-        return total, calculated_active
+        return total, (total if not is_moe else calculated_active)
 
-    # Priority 3: Calculate from architecture
+    # ── Priority 4: generic formula ───────────────────────────────────────
     if is_moe:
         return _calc_moe_params(ctx)
-    else:
-        return _calc_dense_params(ctx)
+    return _calc_dense_params(ctx)
 
 
 def extract_total_parameters(ctx: ConfigContext) -> Optional[int]:

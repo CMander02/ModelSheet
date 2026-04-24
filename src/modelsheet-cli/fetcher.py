@@ -1,4 +1,16 @@
-"""Fetch model configuration files from HuggingFace."""
+"""Fetch model configuration files.
+
+Strategy:
+  - CN providers (region=cn in providers.json):
+      1. Config files   → ModelScope API
+      2. Metadata       → HuggingFace API (createdAt, safetensors total)
+      3. HF URL         → always constructed as https://huggingface.co/{org}/{model}
+      4. Fallback       → HF Mirror if MS fails
+
+  - Global providers:
+      1. Config files   → HF Mirror (hf-mirror.com)
+      2. Metadata       → HuggingFace API
+"""
 
 import json
 import os
@@ -11,407 +23,393 @@ from dotenv import load_dotenv
 from rich.console import Console
 from tqdm import tqdm
 
-from .config import CONFIG_FILES, HF_BASE_URL, TEMP_DIR, PROJECT_ROOT
+from .config import (
+    CONFIG_FILES, TEMP_DIR, PROJECT_ROOT,
+    HF_BASE_URL, HF_MIRROR_URL, HF_API_URL,
+    MS_BASE_URL, MS_API_URL,
+    build_org_region_map, build_hf_org_to_ms_org_map,
+)
 
 console = Console()
 
-# Load .env file from project root
 load_dotenv(PROJECT_ROOT / ".env")
 
-# HuggingFace Model API endpoint
-HF_API_URL = "https://huggingface.co/api/models"
-
-# Concurrent settings
 MAX_WORKERS = 4
 MAX_RETRIES = 3
 
+# ModelScope uses different filenames for the same configs
+MS_FILENAME_MAP = {
+    "config.json": "config.json",
+    "tokenizer_config.json": "tokenizer_config.json",
+    "generation_config.json": "generation_config.json",
+    "adapter_config.json": "adapter_config.json",
+    "model.safetensors.index.json": "model.safetensors.index.json",
+}
+
 
 def get_hf_token() -> Optional[str]:
-    """Get HuggingFace token from environment or .env file.
-
-    Checks in order:
-        1. HF_TOKEN (official HuggingFace env var)
-        2. HUGGING_FACE_HUB_TOKEN (legacy env var)
-
-    The .env file in project root is automatically loaded.
-
-    Returns:
-        Token string or None if not set
-    """
     return os.environ.get("HF_TOKEN") or os.environ.get("HUGGING_FACE_HUB_TOKEN")
 
 
 def is_valid_model_id(model_id: str) -> bool:
-    """Check if model_id is in valid format (org/model).
-
-    Args:
-        model_id: Model ID to validate
-
-    Returns:
-        True if valid, False otherwise
-    """
     if not model_id or not isinstance(model_id, str):
         return False
     parts = model_id.strip().split("/")
     return len(parts) == 2 and all(part.strip() for part in parts)
 
 
+def _org_from_id(model_id: str) -> str:
+    return model_id.split("/")[0] if "/" in model_id else ""
+
+
 class ModelFetcher:
-    """Fetches model configuration files from HuggingFace."""
+    """Fetches model configuration files from HuggingFace Mirror or ModelScope."""
 
     def __init__(self, timeout: int = 30, token: Optional[str] = None):
         self.timeout = timeout
         self.token = token or get_hf_token()
 
-        # Build headers with auth if token is available
-        headers = {}
+        hf_headers = {}
         if self.token:
-            headers["Authorization"] = f"Bearer {self.token}"
+            hf_headers["Authorization"] = f"Bearer {self.token}"
             console.print("[dim]Using HuggingFace token for authentication[/dim]")
 
-        self.client = httpx.Client(
-            timeout=timeout,
-            follow_redirects=True,
-            headers=headers
+        self.hf_client = httpx.Client(
+            timeout=timeout, follow_redirects=True, headers=hf_headers
         )
+        self.ms_client = httpx.Client(
+            timeout=timeout, follow_redirects=True,
+            headers={"User-Agent": "modelsheet-cli/1.0"}
+        )
+
+        # Build lookup tables once
+        self._org_region = build_org_region_map()
+        self._hf_to_ms   = build_hf_org_to_ms_org_map()
 
     def __enter__(self):
         return self
 
     def __exit__(self, *args):
-        self.client.close()
+        self.hf_client.close()
+        self.ms_client.close()
+
+    # ── helpers ────────────────────────────────────────────────────────────
+
+    def _is_cn(self, model_id: str) -> bool:
+        return self._org_region.get(_org_from_id(model_id), "global") == "cn"
+
+    def _ms_org(self, hf_org: str) -> Optional[str]:
+        """Return the primary ModelScope org for a HF org, or None."""
+        orgs = self._hf_to_ms.get(hf_org, [])
+        return orgs[0] if orgs else None
 
     def get_model_dir(self, model_id: str) -> Path:
-        """Get the local directory for a model.
-
-        Format: data/temp/[org]/[model_name]/
-        Example: Qwen/Qwen3-8B -> data/temp/Qwen/Qwen3-8B/
-        """
         parts = model_id.split("/")
         if len(parts) != 2:
-            raise ValueError(f"Invalid model_id format: {model_id}. Expected: org/model")
-
-        org, model_name = parts
-        model_dir = TEMP_DIR / org / model_name
+            raise ValueError(f"Invalid model_id: {model_id}")
+        model_dir = TEMP_DIR / parts[0] / parts[1]
         model_dir.mkdir(parents=True, exist_ok=True)
         return model_dir
 
-    def fetch_model_metadata(self, model_id: str) -> Optional[dict]:
-        """Fetch model metadata from HuggingFace API.
+    # ── HuggingFace ────────────────────────────────────────────────────────
 
-        Args:
-            model_id: Model ID in format "org/model"
-
-        Returns:
-            Metadata dict with createdAt, lastModified, downloads, likes, etc.
-        """
+    def fetch_hf_metadata(self, model_id: str) -> Optional[dict]:
+        """Fetch model metadata from HuggingFace API (createdAt, safetensors, tags)."""
         url = f"{HF_API_URL}/{model_id}"
-
         try:
-            resp = self.client.get(url)
+            resp = self.hf_client.get(url)
             resp.raise_for_status()
             return resp.json()
         except httpx.HTTPStatusError as e:
-            if e.response.status_code == 404:
-                console.print(f"[yellow]  WARN metadata: Model not found[/yellow]")
-                return None
-            console.print(f"[yellow]  WARN metadata: HTTP {e.response.status_code}[/yellow]")
+            if e.response.status_code != 404:
+                console.print(f"[yellow]  WARN HF metadata: HTTP {e.response.status_code}[/yellow]")
             return None
         except Exception as e:
-            console.print(f"[yellow]  WARN metadata: {str(e)}[/yellow]")
+            console.print(f"[yellow]  WARN HF metadata: {e}[/yellow]")
             return None
 
-    def fetch_file(self, model_id: str, filename: str) -> Optional[dict]:
-        """Fetch a single configuration file from HuggingFace.
-
-        Args:
-            model_id: Model ID in format "org/model"
-            filename: Name of the config file
-
-        Returns:
-            JSON content if successful, None if 404 or error
-            For gated models (401), returns {"_error": "gated"} to distinguish from missing files
-        """
-        url = f"{HF_BASE_URL}/{model_id}/resolve/main/{filename}"
-
+    def _fetch_hf_file(self, model_id: str, filename: str,
+                       use_mirror: bool = True) -> Optional[dict]:
+        """Fetch a single config file from HF or HF Mirror."""
+        base = HF_MIRROR_URL if use_mirror else HF_BASE_URL
+        url = f"{base}/{model_id}/resolve/main/{filename}"
         try:
-            resp = self.client.get(url)
+            resp = self.hf_client.get(url)
             resp.raise_for_status()
             return resp.json()
         except httpx.HTTPStatusError as e:
             if e.response.status_code == 404:
                 return None
-            if e.response.status_code == 401:
-                # Gated model - requires authentication (no token)
+            if e.response.status_code in (401, 403):
                 return {"_error": "gated"}
-            if e.response.status_code == 403:
-                # Forbidden - token provided but no access permission
-                return {"_error": "forbidden"}
-            console.print(f"[yellow]  WARN {filename}: HTTP {e.response.status_code}[/yellow]")
+            console.print(f"[yellow]  WARN HF {filename}: HTTP {e.response.status_code}[/yellow]")
             return None
         except json.JSONDecodeError:
-            console.print(f"[yellow]  WARN {filename}: Invalid JSON[/yellow]")
             return None
         except Exception as e:
-            console.print(f"[yellow]  WARN {filename}: {str(e)}[/yellow]")
+            console.print(f"[yellow]  WARN HF {filename}: {e}[/yellow]")
             return None
 
-    def fetch_readme(self, model_id: str) -> Optional[str]:
-        """Fetch README.md content from HuggingFace.
-
-        Args:
-            model_id: Model ID in format "org/model"
-
-        Returns:
-            README content as string if successful, None if 404 or error
-        """
-        url = f"{HF_BASE_URL}/{model_id}/resolve/main/README.md"
-
+    def _fetch_hf_readme(self, model_id: str, use_mirror: bool = True) -> Optional[str]:
+        base = HF_MIRROR_URL if use_mirror else HF_BASE_URL
+        url = f"{base}/{model_id}/resolve/main/README.md"
         try:
-            resp = self.client.get(url)
+            resp = self.hf_client.get(url)
             resp.raise_for_status()
             return resp.text
+        except Exception:
+            return None
+
+    # ── ModelScope ─────────────────────────────────────────────────────────
+
+    def _ms_model_id(self, hf_model_id: str) -> Optional[str]:
+        """Convert HF model ID to ModelScope model ID.
+
+        Tries same model name under the MS org.
+        E.g. Qwen/Qwen3-8B → qwen-bot/Qwen3-8B
+        """
+        hf_org, model_name = hf_model_id.split("/", 1)
+        ms_org = self._ms_org(hf_org)
+        if not ms_org:
+            return None
+        return f"{ms_org}/{model_name}"
+
+    def fetch_ms_metadata(self, ms_model_id: str) -> Optional[dict]:
+        """Fetch model metadata from ModelScope API."""
+        url = f"{MS_API_URL}/{ms_model_id}"
+        try:
+            resp = self.ms_client.get(url)
+            resp.raise_for_status()
+            data = resp.json()
+            return data.get("Data", data)
+        except Exception:
+            return None
+
+    def _fetch_ms_file(self, ms_model_id: str, filename: str) -> Optional[dict]:
+        """Fetch a single config file from ModelScope."""
+        url = f"{MS_BASE_URL}/models/{ms_model_id}/resolve/master/{filename}"
+        try:
+            resp = self.ms_client.get(url)
+            resp.raise_for_status()
+            return resp.json()
         except httpx.HTTPStatusError as e:
             if e.response.status_code == 404:
                 return None
-            console.print(f"[yellow]  WARN README.md: HTTP {e.response.status_code}[/yellow]")
+            console.print(f"[yellow]  WARN MS {filename}: HTTP {e.response.status_code}[/yellow]")
+            return None
+        except json.JSONDecodeError:
             return None
         except Exception as e:
-            console.print(f"[yellow]  WARN README.md: {str(e)}[/yellow]")
+            console.print(f"[yellow]  WARN MS {filename}: {e}[/yellow]")
             return None
 
-    def save_config(self, model_dir: Path, filename: str, content: dict):
-        """Save configuration to local file."""
-        filepath = model_dir / filename
-        filepath.write_text(
-            json.dumps(content, indent=2, ensure_ascii=False),
-            encoding="utf-8"
-        )
+    def _fetch_ms_readme(self, ms_model_id: str) -> Optional[str]:
+        url = f"{MS_BASE_URL}/models/{ms_model_id}/resolve/master/README.md"
+        try:
+            resp = self.ms_client.get(url)
+            resp.raise_for_status()
+            return resp.text
+        except Exception:
+            return None
 
-    def fetch_model(self, model_id: str, show_details: bool = False, use_cache: bool = True) -> dict:
+    # ── metadata extraction ────────────────────────────────────────────────
+
+    def _extract_hf_metadata(self, raw: dict) -> dict:
+        meta: dict = {}
+        if created_at := raw.get("createdAt"):
+            meta["createdAt"] = created_at
+        if sf := raw.get("safetensors", {}):
+            if total := sf.get("total"):
+                meta["totalParameters"] = total
+        if tag := raw.get("pipeline_tag"):
+            meta["pipelineTag"] = tag
+        if tags := raw.get("tags", []):
+            meta["tags"] = tags
+        return meta
+
+    # ── main fetch logic ───────────────────────────────────────────────────
+
+    def fetch_model(self, model_id: str, use_cache: bool = True) -> dict:
         """Fetch all configuration files for a model.
 
-        Args:
-            model_id: Model ID in format "org/model"
-            show_details: Whether to show detailed output (for error reporting)
-            use_cache: If True, use cached files when available instead of fetching
-
-        Returns:
-            Dictionary of fetched configs: {filename: content, '_metadata': {createdAt: ...}}
+        Returns dict of {filename: content, '_metadata': {...}}.
         """
         model_dir = self.get_model_dir(model_id)
-        result = {}
+        result: dict = {}
+        is_cn = self._is_cn(model_id)
 
-        # Check cache first if use_cache is enabled
+        # Cache hit
         if use_cache:
-            cached = self.load_cached_configs(model_id)
+            cached = self._load_cached(model_id)
             if cached:
-                # Cache hit - still need to fetch metadata (not cached)
-                metadata_response = self.fetch_model_metadata(model_id)
-                if metadata_response:
-                    metadata = {}
-                    if created_at := metadata_response.get('createdAt'):
-                        metadata['createdAt'] = created_at
-                    if safetensors := metadata_response.get('safetensors', {}):
-                        if total_params := safetensors.get('total'):
-                            metadata['totalParameters'] = total_params
-                    if pipeline_tag := metadata_response.get('pipeline_tag'):
-                        metadata['pipelineTag'] = pipeline_tag
-                    if tags := metadata_response.get('tags', []):
-                        metadata['tags'] = tags
-                    if metadata:
-                        cached["_metadata"] = metadata
-
-                # Fetch README for arxiv URL (not cached)
-                readme_content = self.fetch_readme(model_id)
-                if readme_content:
-                    if "_metadata" not in cached:
-                        cached["_metadata"] = {}
-                    cached["_metadata"]["readme"] = readme_content
-
-                return cached
-
-        # Fetch metadata from HuggingFace API (extract createdAt, params, pipeline_tag)
-        metadata_response = self.fetch_model_metadata(model_id)
-        if metadata_response:
-            metadata = {}
-
-            # Extract creation time
-            created_at = metadata_response.get('createdAt')
-            if created_at:
-                metadata['createdAt'] = created_at
-
-            # Extract accurate parameter count from safetensors
-            safetensors = metadata_response.get('safetensors', {})
-            total_params = safetensors.get('total')
-            if total_params:
-                metadata['totalParameters'] = total_params
-
-            # Extract pipeline_tag for modality detection
-            pipeline_tag = metadata_response.get('pipeline_tag')
-            if pipeline_tag:
-                metadata['pipelineTag'] = pipeline_tag
-
-            # Extract tags for additional info
-            tags = metadata_response.get('tags', [])
-            if tags:
-                metadata['tags'] = tags
-
-            if metadata:
-                result["_metadata"] = metadata
-
-        # Fetch README for arxiv URL extraction
-        readme_content = self.fetch_readme(model_id)
-        if readme_content:
-            if "_metadata" not in result:
-                result["_metadata"] = {}
-            result["_metadata"]["readme"] = readme_content
+                result = cached
+                result["_metadata"] = self._build_metadata(model_id, is_cn, result)
+                return result
 
         # Fetch config files
-        for filename in CONFIG_FILES:
-            content = self.fetch_file(model_id, filename)
+        if is_cn:
+            result = self._fetch_cn_model(model_id, model_dir)
+        else:
+            result = self._fetch_global_model(model_id, model_dir)
 
-            if content:
-                self.save_config(model_dir, filename, content)
+        # Always attach metadata (HF API is more reliable for params/dates)
+        result["_metadata"] = self._build_metadata(model_id, is_cn, result)
+
+        return result
+
+    def _build_metadata(self, model_id: str, is_cn: bool, configs: dict) -> dict:
+        """Build _metadata dict: try HF API first, MS as fallback for CN."""
+        meta: dict = {}
+
+        # HF API (primary source for createdAt, totalParameters)
+        hf_raw = self.fetch_hf_metadata(model_id)
+        if hf_raw:
+            meta.update(self._extract_hf_metadata(hf_raw))
+
+        # Fallback to MS metadata for createdAt if HF didn't have it
+        if is_cn and not meta.get("createdAt"):
+            ms_id = self._ms_model_id(model_id)
+            if ms_id:
+                ms_raw = self.fetch_ms_metadata(ms_id)
+                if ms_raw and (created := ms_raw.get("CreatedAt") or ms_raw.get("created_at")):
+                    meta["createdAt"] = created
+
+        # README from whichever source has configs
+        readme = None
+        if is_cn:
+            ms_id = self._ms_model_id(model_id)
+            if ms_id:
+                readme = self._fetch_ms_readme(ms_id)
+            if not readme:
+                readme = self._fetch_hf_readme(model_id)
+        else:
+            readme = self._fetch_hf_readme(model_id)
+
+        if readme:
+            meta["readme"] = readme
+
+        return meta
+
+    def _fetch_cn_model(self, model_id: str, model_dir: Path) -> dict:
+        """Fetch config files for a CN model: MS primary, HF Mirror fallback."""
+        result: dict = {}
+        ms_id = self._ms_model_id(model_id)
+
+        if ms_id:
+            for filename in CONFIG_FILES:
+                content = self._fetch_ms_file(ms_id, filename)
+                if content and "_error" not in content:
+                    self._save(model_dir, filename, content)
+                    result[filename] = content
+
+        # Fallback: fetch any missing files from HF Mirror
+        missing = [f for f in CONFIG_FILES if f not in result]
+        for filename in missing:
+            content = self._fetch_hf_file(model_id, filename, use_mirror=True)
+            if content and "_error" not in content:
+                self._save(model_dir, filename, content)
                 result[filename] = content
 
         return result
 
+    def _fetch_global_model(self, model_id: str, model_dir: Path) -> dict:
+        """Fetch config files for a global model from HF Mirror."""
+        result: dict = {}
+        for filename in CONFIG_FILES:
+            content = self._fetch_hf_file(model_id, filename, use_mirror=True)
+            if content and "_error" not in content:
+                self._save(model_dir, filename, content)
+                result[filename] = content
+        return result
+
+    # ── cache ──────────────────────────────────────────────────────────────
+
+    def _save(self, model_dir: Path, filename: str, content: dict):
+        (model_dir / filename).write_text(
+            json.dumps(content, indent=2, ensure_ascii=False), encoding="utf-8"
+        )
+
+    def _load_cached(self, model_id: str) -> dict:
+        model_dir = self.get_model_dir(model_id)
+        result: dict = {}
+        for filename in CONFIG_FILES:
+            fp = model_dir / filename
+            if fp.exists():
+                try:
+                    result[filename] = json.loads(fp.read_text(encoding="utf-8"))
+                except Exception:
+                    pass
+        return result
+
+    # ── batch fetch ────────────────────────────────────────────────────────
+
     def fetch_models(self, model_ids: list[str]) -> dict[str, dict]:
-        """Fetch configurations for multiple models with concurrent execution and retry.
+        results: dict = {}
+        failed: list = []
 
-        Args:
-            model_ids: List of model IDs
+        valid_ids = [m for m in model_ids if is_valid_model_id(m)]
+        invalid_ids = [m for m in model_ids if not is_valid_model_id(m)]
 
-        Returns:
-            Dictionary: {model_id: {filename: content}}
-        """
-        results = {}
-        failed_models = []
-
-        # Filter out invalid model IDs first
-        valid_ids = []
-        invalid_ids = []
-        for model_id in model_ids:
-            if is_valid_model_id(model_id):
-                valid_ids.append(model_id)
-            else:
-                invalid_ids.append(model_id)
-
-        # Report invalid model IDs
         if invalid_ids:
             console.print(f"\n[yellow]Skipping {len(invalid_ids)} invalid model ID(s):[/yellow]")
             for mid in invalid_ids:
-                console.print(f"  [dim]- {mid} (expected format: org/model)[/dim]")
+                console.print(f"  [dim]- {mid}[/dim]")
 
         if not valid_ids:
             console.print("[red]No valid model IDs to fetch.[/red]")
             return results
 
-        # Phase 1: Concurrent fetching with progress bar
-        print()  # Add newline before progress bar
+        print()
         with tqdm(total=len(valid_ids), desc="Fetching models", unit="model") as pbar:
             with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-                # Submit all tasks
                 future_to_model = {
-                    executor.submit(self._fetch_with_error_handling, model_id): model_id
-                    for model_id in valid_ids
+                    executor.submit(self._fetch_with_error_handling, mid): mid
+                    for mid in valid_ids
                 }
-
-                # Collect results as they complete
                 for future in as_completed(future_to_model):
-                    model_id = future_to_model[future]
+                    mid = future_to_model[future]
                     configs, error = future.result()
-
                     if configs:
-                        results[model_id] = configs
+                        results[mid] = configs
                     else:
-                        failed_models.append((model_id, error))
-
+                        failed.append((mid, error))
                     pbar.update(1)
 
-        # Phase 2: Retry failed models (up to MAX_RETRIES times)
         retry_count = 0
-        while failed_models and retry_count < MAX_RETRIES:
+        while failed and retry_count < MAX_RETRIES:
             retry_count += 1
-            console.print(f"\n[yellow]Retrying {len(failed_models)} failed model(s) (attempt {retry_count}/{MAX_RETRIES})...[/yellow]")
-
-            current_failures = failed_models
-            failed_models = []
-
-            with tqdm(total=len(current_failures), desc=f"Retry {retry_count}", unit="model") as pbar:
+            console.print(f"\n[yellow]Retrying {len(failed)} failed model(s) (attempt {retry_count}/{MAX_RETRIES})...[/yellow]")
+            current = failed
+            failed = []
+            with tqdm(total=len(current), desc=f"Retry {retry_count}", unit="model") as pbar:
                 with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
                     future_to_model = {
-                        executor.submit(self._fetch_with_error_handling, model_id): model_id
-                        for model_id, _ in current_failures
+                        executor.submit(self._fetch_with_error_handling, mid): mid
+                        for mid, _ in current
                     }
-
                     for future in as_completed(future_to_model):
-                        model_id = future_to_model[future]
+                        mid = future_to_model[future]
                         configs, error = future.result()
-
                         if configs:
-                            results[model_id] = configs
+                            results[mid] = configs
                         else:
-                            failed_models.append((model_id, error))
-
+                            failed.append((mid, error))
                         pbar.update(1)
 
-        # Summary
-        success_count = sum(1 for configs in results.values() if configs)
-        total_input = len(model_ids)
-        skipped_count = len(invalid_ids)
-        summary_parts = [f"{success_count}/{len(valid_ids)} models fetched successfully"]
-        if skipped_count:
-            summary_parts.append(f"{skipped_count} skipped (invalid format)")
-        console.print(f"\n[bold green]Done![/bold green] {', '.join(summary_parts)}.")
+        success = sum(1 for c in results.values() if c)
+        console.print(f"\n[bold green]Done![/bold green] {success}/{len(valid_ids)} models fetched successfully.")
 
-        # Report final failures
-        if failed_models:
-            console.print(f"\n[red]Failed to fetch {len(failed_models)} model(s) after {MAX_RETRIES} retries:[/red]")
-            for model_id, error in failed_models:
-                console.print(f"  - {model_id}: {error}")
-                results[model_id] = {}  # Add empty entry for failed models
+        if failed:
+            console.print(f"\n[red]Failed to fetch {len(failed)} model(s) after {MAX_RETRIES} retries:[/red]")
+            for mid, err in failed:
+                console.print(f"  - {mid}: {err}")
+                results[mid] = {}
 
         return results
 
     def _fetch_with_error_handling(self, model_id: str) -> tuple[dict, Optional[str]]:
-        """Fetch a model with error handling.
-
-        Args:
-            model_id: Model ID to fetch
-
-        Returns:
-            Tuple of (configs dict, error message or None)
-        """
         try:
             configs = self.fetch_model(model_id)
-            if not configs:
-                return {}, "No configs found"
-            return configs, None
+            return (configs, None) if configs else ({}, "No configs found")
         except Exception as e:
             return {}, str(e)
-
-    def load_cached_configs(self, model_id: str) -> dict:
-        """Load cached configuration files for a model.
-
-        Args:
-            model_id: Model ID in format "org/model"
-
-        Returns:
-            Dictionary of cached configs: {filename: content}
-            Note: _metadata is NOT cached, must fetch fresh from API
-        """
-        model_dir = self.get_model_dir(model_id)
-        result = {}
-
-        # Load config files (no metadata caching)
-        for filename in CONFIG_FILES:
-            filepath = model_dir / filename
-            if filepath.exists():
-                try:
-                    result[filename] = json.loads(filepath.read_text())
-                except Exception as e:
-                    console.print(f"[yellow]Warning: Failed to load {filepath}: {e}[/yellow]")
-
-        return result

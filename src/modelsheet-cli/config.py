@@ -3,10 +3,16 @@
 import json
 from pathlib import Path
 
-# HuggingFace API
+# HuggingFace
 HF_BASE_URL = "https://huggingface.co"
+HF_MIRROR_URL = "https://hf-mirror.com"   # used for config file downloads
+HF_API_URL = "https://huggingface.co/api/models"
 
-# Files to fetch from HuggingFace
+# ModelScope
+MS_BASE_URL = "https://modelscope.cn"
+MS_API_URL = "https://modelscope.cn/api/v1/models"
+
+# Files to fetch from HuggingFace / ModelScope
 CONFIG_FILES = [
     "config.json",
     "tokenizer_config.json",
@@ -25,6 +31,43 @@ PROVIDERS_FILE = DATA_DIR / "providers.json"
 # Ensure directories exist
 DATA_DIR.mkdir(exist_ok=True)
 TEMP_DIR.mkdir(exist_ok=True)
+
+
+def load_providers_data() -> dict:
+    """Load the full providers.json dict."""
+    if not PROVIDERS_FILE.exists():
+        return {}
+    with open(PROVIDERS_FILE, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def build_org_region_map() -> dict[str, str]:
+    """Return {hf_org: region} map, e.g. {"Qwen": "cn", "meta-llama": "global"}."""
+    data = load_providers_data()
+    result = {}
+    for cfg in data.get("providers", {}).values():
+        region = cfg.get("region", "global")
+        for org in cfg.get("orgs", []):
+            result[org] = region
+        # also map scan.hf orgs
+        for org in cfg.get("scan", {}).get("hf", []):
+            result[org] = region
+    return result
+
+
+def build_hf_org_to_ms_org_map() -> dict[str, list[str]]:
+    """Return {hf_org: [ms_org, ...]} map for CN providers that have ModelScope."""
+    data = load_providers_data()
+    result: dict[str, list[str]] = {}
+    for cfg in data.get("providers", {}).values():
+        if cfg.get("region") != "cn":
+            continue
+        ms_orgs = cfg.get("scan", {}).get("ms", [])
+        if not ms_orgs:
+            continue
+        for hf_org in cfg.get("orgs", []) + cfg.get("scan", {}).get("hf", []):
+            result[hf_org] = ms_orgs
+    return result
 
 
 def load_provider_map() -> dict[str, str]:

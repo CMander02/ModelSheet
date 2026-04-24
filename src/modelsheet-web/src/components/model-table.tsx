@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react"
+import { useNavigate, Link } from "react-router-dom"
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
@@ -38,6 +39,7 @@ export function ModelTable({
   language,
   searchTerm = "",
 }: ModelTableProps) {
+  const navigate = useNavigate()
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("")
   const [sortConfig, setSortConfig] = useState<SortConfig>({
     key: "createdAt",
@@ -235,7 +237,9 @@ export function ModelTable({
                         : ''
                     }`}
                     style={index === 0 ? {
-                      left: onModelSelect ? '48px' : '0px'
+                      left: onModelSelect ? '48px' : '0px',
+                      minWidth: '140px',
+                      maxWidth: '200px',
                     } : { minWidth: '120px' }}
                   >
                     {column.sortable ? (
@@ -277,7 +281,16 @@ export function ModelTable({
                 sortedModels.map((model) => (
                   <tr
                     key={model.id}
-                    className="group border-b transition-colors"
+                    className="group border-b transition-colors cursor-pointer"
+                    onClick={(e) => {
+                      // don't navigate if clicking a link/button/checkbox inside the row
+                      const target = e.target as HTMLElement
+                      if (target.closest('a, button, input, [role="checkbox"]')) return
+                      if (model.id?.includes("/")) {
+                        const [org, name] = model.id.split("/")
+                        navigate(`/${org}/${name}`)
+                      }
+                    }}
                   >
                     {onModelSelect && (
                       <td
@@ -296,11 +309,13 @@ export function ModelTable({
                         key={column.key}
                         className={`p-4 align-middle bg-card group-hover:bg-muted transition-colors ${
                           colIndex === 0
-                            ? `sticky z-10 whitespace-nowrap`
+                            ? `sticky z-10`
                             : ''
                         }`}
                         style={colIndex === 0 ? {
-                          left: onModelSelect ? '48px' : '0px'
+                          left: onModelSelect ? '48px' : '0px',
+                          minWidth: '140px',
+                          maxWidth: '200px',
                         } : undefined}
                       >
                         {/* Special handling for modality columns */}
@@ -308,21 +323,15 @@ export function ModelTable({
                           <ModalityIcons modalities={model[column.key] || []} />
                         ) : (column.key === "totalParameters" || column.key === "activeParameters") ? (
                           <ParamCell value={model[column.key]} model={model} />
-                        ) : column.key === "name" && model.huggingfaceUrl ? (
-                          <a
-                            href={model.huggingfaceUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 hover:text-primary hover:underline transition-colors"
-                          >
-                            <ModelBrandIcon model={model.id} />
-                            <span>{formatValue(model[column.key], column.type)}</span>
-                          </a>
                         ) : column.key === "name" ? (
-                          <span className="inline-flex items-center gap-2">
-                            <ModelBrandIcon model={model.id} />
-                            <span>{formatValue(model[column.key], column.type)}</span>
-                          </span>
+                          <Link
+                            to={model.id?.includes("/") ? `/${model.id.split("/")[0]}/${model.id.split("/")[1]}` : "#"}
+                            className="flex items-center gap-2 hover:text-primary hover:underline transition-colors min-w-0"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <ModelBrandIcon model={model.id} className="shrink-0" />
+                            <span className="truncate">{formatValue(model[column.key], column.type)}</span>
+                          </Link>
                         ) : column.key === "provider" ? (
                           <span className="inline-flex items-center gap-2">
                             <ProviderBrandIcon provider={String(model[column.key] ?? "")} />

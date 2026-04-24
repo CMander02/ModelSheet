@@ -9,7 +9,8 @@ ModelSheet 是一个开源 LLM 模型参数速查与对比工具。通过获取 
 **核心特点**：
 - CLI 工具从 HuggingFace 抓取模型配置并解析为结构化 JSON
 - 数据本地生成，人工校验后推送（不在 CI 中调用 LLM，避免幻觉）
-- 前端（计划中）为纯静态 SPA，部署在 GitHub Pages
+- 前端为纯静态 SPA，部署在 Cloudflare Pages
+- Architecture Gallery（`/arch`）：基于 Mermaid 渲染的架构图，结构来自 HuggingFace transformers 源码
 
 ## Development Commands
 
@@ -359,15 +360,52 @@ modelsheet add Qwen/Qwen2.5-0.5B  # Small model for testing
 ### Actual Structure (as of now)
 ```
 ModelSheet/
-├── src/                   # source code
-│   ├── modelsheet-cli/             # CLI tool (实际实现)
-│   └── modelsheet-web/       # Web Frontend
-├── data/                  # Generated data
-│   ├── temp/             # Downloaded configs cache
-│   └── models.json       # Exported model data
-├── docs/                  # Design docs
+├── src/
+│   ├── modelsheet-cli/             # Python CLI (fetcher, parser, exporter, scanner)
+│   └── modelsheet-web/             # React + Vite frontend
+│       └── src/
+│           ├── pages/
+│           │   ├── HomePage.tsx        # model table + search + filters
+│           │   ├── ModelCardPage.tsx   # single model detail
+│           │   ├── ComparePage.tsx     # side-by-side comparison
+│           │   └── ArchPage.tsx        # Architecture Gallery (/arch)
+│           ├── components/
+│           │   ├── arch-diagram.tsx    # Mermaid diagram definitions + ARCH_REGISTRY
+│           │   ├── mermaid-diagram.tsx # Mermaid render wrapper component
+│           │   └── ...                 # UI primitives (shadcn/ui)
+│           └── lib/
+│               ├── types.ts            # ModelInfo and other shared types
+│               ├── model-data.ts       # data loading + column configs
+│               ├── i18n.ts             # zh/en translations (incl. arch.* keys)
+│               └── formatters.ts       # number/date formatting
+├── data/
+│   ├── models.json           # model catalog (source of truth)
+│   ├── providers.json        # org → provider name + i18n
+│   ├── scan_snapshot.json    # snapshot for incremental diff
+│   └── temp/                 # downloaded HF config cache
 └── pyproject.toml
 ```
+
+### Architecture Gallery (`/arch`)
+
+- **Route**: `/arch` — grid of arch cards; `/arch?family=qwen2` auto-opens detail modal
+- **`ARCH_REGISTRY`** in `arch-diagram.tsx`: array of `ArchSpec` objects, each with:
+  - `id`, `family`, `era`, `type`, `normPlacement`
+  - `descriptionZh` / `descriptionEn`
+  - `defaultParams: DiagramParams` — fed into the diagram component
+  - `diagram`: React component that calls `<MermaidDiagram definition={...} />`
+- **Adding a new architecture**: add a new `*Def()` function returning a Mermaid `flowchart TD` string, export a wrapper component, append to `ARCH_REGISTRY`
+- **Mermaid conventions used**:
+  - `:::norm` / `:::attn` / `:::ffn` / `:::emb` / `:::out` / `:::moe` / `:::resid` — classDef applied via `BASE_STYLES`
+  - `(("+"))` — circle residual add node
+  - `-. ->|residual|` — dashed residual bypass arrow
+  - `subgraph` — outer model region and repeated block region
+- **ModelCardPage** arch badge links to `/arch?family=<architecture>` (e.g. `qwen2`, `bert`)
+- **i18n keys** for the arch page live under `translations.*.arch` in `i18n.ts`
+
+### Reference sites
+- **LLM Architecture Gallery**: https://sebastianraschka.com/llm-architecture-gallery/ — visual inspiration, card layout
+- **Transformers Timeline**: https://huggingface.co/spaces/yonigozlan/Transformers-Timeline — era/release-date reference data
 
 
 ### Package Configuration

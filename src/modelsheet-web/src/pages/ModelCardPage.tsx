@@ -3,15 +3,28 @@ import { useParams, useNavigate, Link } from "react-router-dom"
 import type { ModelInfo } from "@/lib/types"
 import type { Language } from "@/lib/i18n"
 import { loadModelsFromFile } from "@/lib/model-data"
+import { providerSlug } from "@/lib/utils"
 import { formatParameters, formatContextLength, formatNumber, formatDecimal, formatDate } from "@/lib/formatters"
 import { ModelBrandIcon, ProviderBrandIcon } from "@/components/brand-icon"
 import { ModalityIcons } from "@/components/modality-icons"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { LanguageToggle } from "@/components/language-toggle"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, HelpCircle, Info } from "lucide-react"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { ArrowLeft, HelpCircle, Info, Lock } from "lucide-react"
 import HuggingFaceIcon from "@lobehub/icons/es/HuggingFace"
 import ModelScopeIcon from "@lobehub/icons/es/ModelScope"
+import { ARCH_REGISTRY, type ArchSpec } from "@/components/arch-diagram"
+
+function findArchEntry(architecture?: string | null): ArchSpec | undefined {
+  if (!architecture) return undefined
+  const q = architecture.toLowerCase()
+  return ARCH_REGISTRY.find(a =>
+    a.id === q ||
+    a.family.toLowerCase() === q ||
+    (a.modelTypeAliases?.includes(architecture) ?? false)
+  )
+}
 
 // ─── Param confidence ───────────────────────────────────────────────────────
 
@@ -209,10 +222,13 @@ export function ModelCardPage() {
               <ModelBrandIcon model={model.id} provider={model.provider} size={52} />
               <div className="min-w-0">
                 <h1 className="text-xl font-bold leading-tight">{model.name}</h1>
-                <div className="flex items-center gap-1.5 mt-1">
+                <Link
+                  to={`/${providerSlug(model.provider ?? "")}`}
+                  className="flex items-center gap-1.5 mt-1 hover:text-foreground transition-colors group w-fit"
+                >
                   <ProviderBrandIcon provider={model.provider} size={14} />
-                  <span className="text-sm text-muted-foreground">{model.provider}</span>
-                </div>
+                  <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">{model.provider}</span>
+                </Link>
               </div>
             </div>
 
@@ -222,12 +238,53 @@ export function ModelCardPage() {
                 <span className="rounded-md px-2 py-0.5 text-xs font-semibold"
                   style={{ background: "rgba(99,102,241,0.15)", color: "#818cf8" }}>MoE</span>
               )}
-              {model.architecture && (
-                <Link to={`/arch?family=${encodeURIComponent(model.architecture)}`}
-                  className="rounded-md border px-2 py-0.5 text-xs text-muted-foreground hover:border-foreground/50 hover:text-foreground transition-colors cursor-pointer">
-                  {model.architecture}
-                </Link>
-              )}
+              {model.architecture && (() => {
+                const archEntry = findArchEntry(model.architecture)
+                const isClosed = !archEntry
+                const isPlaceholder = archEntry?.placeholder
+
+                const badge = (
+                  <span className="inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs text-muted-foreground">
+                    {model.architecture}
+                    {isClosed && <Lock className="h-3 w-3 opacity-50" />}
+                  </span>
+                )
+
+                if (isClosed) {
+                  return (
+                    <TooltipProvider delayDuration={200}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>{badge}</TooltipTrigger>
+                        <TooltipContent side="top" className="text-xs">
+                          {isZh ? "闭源架构，无公开图" : "Closed-source architecture"}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )
+                }
+
+                if (isPlaceholder) {
+                  return (
+                    <TooltipProvider delayDuration={200}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Link to={`/arch/${archEntry!.id}`}>{badge}</Link>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" className="text-xs">
+                          {isZh ? "架构图即将推出" : "Diagram coming soon"}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )
+                }
+
+                return (
+                  <Link to={`/arch/${archEntry!.id}`}
+                    className="rounded-md border px-2 py-0.5 text-xs text-muted-foreground hover:border-foreground/50 hover:text-foreground transition-colors cursor-pointer">
+                    {model.architecture}
+                  </Link>
+                )
+              })()}
               {model.torchDtype && (
                 <span className="rounded-md border px-2 py-0.5 text-xs text-muted-foreground">{model.torchDtype}</span>
               )}

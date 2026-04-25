@@ -1,5 +1,6 @@
 import { useMemo, useState, useCallback } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
+import { providerSlug } from "@/lib/utils"
 import { ArrowUpDown, Check, ChevronDown } from "lucide-react"
 import type { ModelInfo } from "@/lib/types"
 import type { Language } from "@/lib/i18n"
@@ -172,10 +173,14 @@ function ModelCard({ model, language, selected, onSelect, onNavigate, cardFields
         </div>
 
         {/* Provider */}
-        <div className="flex items-center gap-1.5 mt-0.5">
+        <Link
+          to={`/${providerSlug(model.provider ?? "")}`}
+          className="flex items-center gap-1.5 mt-0.5 w-fit"
+          onClick={e => e.stopPropagation()}
+        >
           <ProviderBrandIcon provider={model.provider} size={13} />
-          <span className="text-xs text-muted-foreground">{model.provider}</span>
-        </div>
+          <span className="text-xs text-muted-foreground hover:text-foreground transition-colors">{model.provider}</span>
+        </Link>
 
         {/* Metrics row */}
         {metricFields.length > 0 && (

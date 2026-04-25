@@ -23,6 +23,14 @@ mermaid.initialize({
 
 let idCounter = 0
 
+function cleanupOrphan(id: string) {
+  // Mermaid leaves a temporary div in <body> on render failure; remove it.
+  const orphan = document.getElementById(id)
+  if (orphan && orphan.parentElement === document.body) {
+    orphan.parentElement.removeChild(orphan)
+  }
+}
+
 export function MermaidDiagram({ definition }: { definition: string }) {
   const ref = useRef<HTMLDivElement>(null)
   const [svg, setSvg] = useState<string>("")
@@ -32,14 +40,19 @@ export function MermaidDiagram({ definition }: { definition: string }) {
   useEffect(() => {
     let cancelled = false
     setError("")
+    setSvg("")
     mermaid.render(id.current, definition)
       .then(({ svg: rendered }) => {
         if (!cancelled) setSvg(rendered)
       })
       .catch((e) => {
+        cleanupOrphan(id.current)
         if (!cancelled) setError(String(e))
       })
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+      cleanupOrphan(id.current)
+    }
   }, [definition])
 
   if (error) return (

@@ -3,6 +3,8 @@ import { HomePage } from "@/pages/HomePage"
 import { ComparePage } from "@/pages/ComparePage"
 import { ModelCardPage } from "@/pages/ModelCardPage"
 import { ArchPage } from "@/pages/ArchPage"
+import { ArchDetailPage } from "@/pages/ArchDetailPage"
+import { ProviderPage } from "@/pages/ProviderPage"
 
 function App() {
   return (
@@ -11,6 +13,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/compare" element={<ComparePage />} />
         <Route path="/arch" element={<ArchPage />} />
+        <Route path="/arch/:archId" element={<ArchDetailPage />} />
+        <Route path="/:providerSlug" element={<ProviderPage />} />
         <Route path="/:org/:modelName" element={<ModelCardPage />} />
       </Routes>
     </BrowserRouter>

@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react"
 import { useNavigate, Link } from "react-router-dom"
+import { providerSlug } from "@/lib/utils"
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
@@ -333,10 +334,14 @@ export function ModelTable({
                             <span className="truncate">{formatValue(model[column.key], column.type)}</span>
                           </Link>
                         ) : column.key === "provider" ? (
-                          <span className="inline-flex items-center gap-2">
+                          <Link
+                            to={`/${providerSlug(String(model[column.key] ?? ""))}`}
+                            className="inline-flex items-center gap-2 hover:text-primary hover:underline transition-colors"
+                            onClick={e => e.stopPropagation()}
+                          >
                             <ProviderBrandIcon provider={String(model[column.key] ?? "")} />
                             <span>{formatValue(model[column.key], column.type)}</span>
-                          </span>
+                          </Link>
                         ) : column.key === "huggingfaceUrl" && model.huggingfaceUrl ? (
                           <a
                             href={model.huggingfaceUrl}

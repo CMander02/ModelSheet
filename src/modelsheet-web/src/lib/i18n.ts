@@ -117,7 +117,7 @@ const translations = {
       normPre: "Pre-Norm",
       normPost: "Post-Norm",
       paper: "论文",
-      comingSoon: "更多架构即将推出：LLaMA、Mistral、Qwen2、DeepSeek、Mamba…",
+      comingSoon: "更多架构图即将推出，欢迎贡献 PR。",
       noMatch: "没有匹配的架构。",
     },
     // Modality names
@@ -226,7 +226,7 @@ const translations = {
       normPre: "Pre-Norm",
       normPost: "Post-Norm",
       paper: "Paper",
-      comingSoon: "More coming soon: LLaMA, Mistral, Qwen2, DeepSeek, Mamba…",
+      comingSoon: "More diagrams coming soon. Contributions welcome via PR.",
       noMatch: "No architectures match this filter.",
     },
     // Modality names

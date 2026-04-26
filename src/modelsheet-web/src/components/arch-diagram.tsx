@@ -1,525 +1,44 @@
 /**
- * Architecture diagrams using Mermaid flowchart syntax.
- * Structures derived from HuggingFace transformers source code.
+ * Architecture diagram registry.
+ * Each diagram component is lazily loaded as a separate Vite chunk.
  */
 
-import { MermaidDiagram } from "./mermaid-diagram"
-
-export interface DiagramParams {
-  numLayers?:        number
-  numHeads?:         number
-  numKvHeads?:       number
-  hiddenSize?:       number
-  contextLength?:    number
-  vocabSize?:        number
-  intermediateSize?: number
-  numExperts?:       number
-  numSharedExperts?: number
-  numExpertsPerToken?: number
-}
-
-// ─── Shared style block appended to every diagram ────────────────────────────
-
-const BASE_STYLES = `
-    classDef norm    fill:#fef9c3,stroke:#facc15,color:#713f12
-    classDef attn    fill:#1e293b,stroke:#334155,color:#f1f5f9
-    classDef ffn     fill:#dcfce7,stroke:#4ade80,color:#14532d
-    classDef emb     fill:#dbeafe,stroke:#60a5fa,color:#1e3a8a
-    classDef out     fill:#fee2e2,stroke:#f87171,color:#7f1d1d
-    classDef pool    fill:#fce7f3,stroke:#f0abfc,color:#701a75
-    classDef moe     fill:#ede9fe,stroke:#a78bfa,color:#4c1d95
-    classDef resid   fill:#fff,stroke:#94a3b8,color:#475569
-    classDef input   fill:#f8fafc,stroke:#cbd5e1,color:#64748b`
-
-// ─── GPT-2 ────────────────────────────────────────────────────────────────────
-
-function gpt2Def({ numLayers = 12, numHeads, hiddenSize, vocabSize }: DiagramParams) {
-  return `flowchart TD
-    input(["Input tokens"]):::input
-
-    subgraph outer["GPT-2"]
-      tok["Token Embedding"]:::emb
-      pos["Positional Embedding (learned)"]:::emb
-      drop0["Dropout"]:::resid
-
-      subgraph block["Transformer Block ×${numLayers}"]
-        ln1["LayerNorm 1  pre-norm"]:::norm
-        attn["Causal Self-Attention  fused QKV"]:::attn
-        drop1["Dropout"]:::resid
-        plus1(("+")):::resid
-        ln2["LayerNorm 2  pre-norm"]:::norm
-        ffn["Feed Forward  4× → GELU → proj"]:::ffn
-        drop2["Dropout"]:::resid
-        plus2(("+")):::resid
-      end
-
-      lnf["Final LayerNorm"]:::norm
-      lmh["LM Head  tied to token emb${vocabSize ? `  vocab: ${vocabSize.toLocaleString()}` : ""}"]:::out
-    end
-
-    input --> tok --> pos --> drop0 --> ln1
-    ln1 --> attn --> drop1 --> plus1 --> ln2 --> ffn --> drop2 --> plus2
-    drop0 -.->|residual| plus1
-    plus1 -.->|residual| plus2
-    plus2 --> lnf --> lmh
-    ${numHeads   ? `\n    note_h["Heads: ${numHeads}${hiddenSize ? `  ·  hidden: ${hiddenSize.toLocaleString()}` : ""}"]:::resid` : ""}
-${BASE_STYLES}`
-}
-
-export function Gpt2Diagram(p: DiagramParams) { return <MermaidDiagram definition={gpt2Def(p)} /> }
-
-// ─── BERT ─────────────────────────────────────────────────────────────────────
-
-function bertDef({ numLayers = 12, numHeads, hiddenSize }: DiagramParams) {
-  return `flowchart TD
-    input(["Input tokens"]):::input
-
-    subgraph outer["BERT"]
-      emb["Token + Position + Type Embedding"]:::emb
-      drop0["Dropout"]:::resid
-
-      subgraph block["Encoder Block ×${numLayers}"]
-        attn["Multi-Head Self-Attention  bidirectional"]:::attn
-        plus1(("+")):::resid
-        ln1["LayerNorm  post-norm"]:::norm
-        ffn["Feed Forward  Linear → GELU → Linear"]:::ffn
-        plus2(("+")):::resid
-        ln2["LayerNorm  post-norm"]:::norm
-      end
-
-      pool["[CLS] Pooler  Linear → Tanh"]:::pool
-    end
-
-    input --> emb --> drop0 --> attn --> plus1 --> ln1 --> ffn --> plus2 --> ln2 --> pool
-    drop0 -.->|residual| plus1
-    ln1 -.->|residual| plus2
-    ${numHeads ? `\n    note_h["Heads: ${numHeads}${hiddenSize ? `  ·  hidden: ${hiddenSize.toLocaleString()}` : ""}"]:::resid` : ""}
-${BASE_STYLES}`
-}
-
-export function BertDiagram(p: DiagramParams) { return <MermaidDiagram definition={bertDef(p)} /> }
-
-// ─── Qwen1 ───────────────────────────────────────────────────────────────────
-// MHA (no GQA), SwiGLU, RMSNorm pre-norm, RoPE + optional LogN/NTK, QKV bias
-
-function qwen1Def({ numLayers = 32, numHeads, hiddenSize }: DiagramParams) {
-  return `flowchart TD
-    input(["Input tokens"]):::input
-
-    subgraph outer["Qwen1"]
-      emb["Token Embedding"]:::emb
-
-      subgraph block["Decoder Block ×${numLayers}"]
-        ln1["RMSNorm  pre-norm"]:::norm
-        attn["MHA  RoPE + LogN scaling  QKV with bias"]:::attn
-        plus1(("+")):::resid
-        ln2["RMSNorm  pre-norm"]:::norm
-        ffn["SwiGLU FFN  gate · up → SiLU → down"]:::ffn
-        plus2(("+")):::resid
-      end
-
-      lnf["Final RMSNorm"]:::norm
-      lmh["LM Head  tied to token emb"]:::out
-    end
-
-    input --> emb --> ln1 --> attn --> plus1 --> ln2 --> ffn --> plus2 --> lnf --> lmh
-    emb -.->|residual| plus1
-    plus1 -.->|residual| plus2
-    ${numHeads ? `\n    note_h["Heads: ${numHeads}${hiddenSize ? `  ·  hidden: ${hiddenSize.toLocaleString()}` : ""}"]:::resid` : ""}
-${BASE_STYLES}`
-}
-
-export function Qwen1Diagram(p: DiagramParams) { return <MermaidDiagram definition={qwen1Def(p)} /> }
-
-// ─── Qwen2 / Qwen2.5 ─────────────────────────────────────────────────────────
-// GQA (fewer KV heads), SwiGLU, RMSNorm pre-norm, clean RoPE, optional sliding window
-
-function qwen2Def({ numLayers = 28, numHeads, numKvHeads, hiddenSize }: DiagramParams) {
-  const gqaNote = numHeads && numKvHeads ? `  Q:${numHeads} KV:${numKvHeads}` : ""
-  return `flowchart TD
-    input(["Input tokens"]):::input
-
-    subgraph outer["Qwen2 / Qwen2.5"]
-      emb["Token Embedding"]:::emb
-
-      subgraph block["Decoder Block ×${numLayers}"]
-        ln1["RMSNorm  pre-norm"]:::norm
-        attn["GQA${gqaNote}  RoPE  QKV with bias  optional sliding window"]:::attn
-        plus1(("+")):::resid
-        ln2["RMSNorm  pre-norm"]:::norm
-        ffn["SwiGLU FFN  gate · up → SiLU → down"]:::ffn
-        plus2(("+")):::resid
-      end
-
-      lnf["Final RMSNorm"]:::norm
-      lmh["LM Head  tied to token emb"]:::out
-    end
-
-    input --> emb --> ln1 --> attn --> plus1 --> ln2 --> ffn --> plus2 --> lnf --> lmh
-    emb -.->|residual| plus1
-    plus1 -.->|residual| plus2
-    ${hiddenSize ? `\n    note_h["hidden: ${hiddenSize.toLocaleString()}"]:::resid` : ""}
-${BASE_STYLES}`
-}
-
-export function Qwen2Diagram(p: DiagramParams) { return <MermaidDiagram definition={qwen2Def(p)} /> }
-
-// ─── Qwen3 ────────────────────────────────────────────────────────────────────
-// Like Qwen2 but adds per-head QK-RMSNorm before RoPE
-
-function qwen3Def({ numLayers = 28, numHeads, numKvHeads, hiddenSize }: DiagramParams) {
-  const gqaNote = numHeads && numKvHeads ? `  Q:${numHeads} KV:${numKvHeads}` : ""
-  return `flowchart TD
-    input(["Input tokens"]):::input
-
-    subgraph outer["Qwen3"]
-      emb["Token Embedding"]:::emb
-
-      subgraph block["Decoder Block ×${numLayers}"]
-        ln1["RMSNorm  pre-norm"]:::norm
-        qproj["Q proj  K proj  V proj  bias=True"]:::attn
-        qknorm["QK-RMSNorm  per-head  before RoPE"]:::norm
-        attn["GQA${gqaNote}  RoPE  Scaled Dot-Product"]:::attn
-        plus1(("+")):::resid
-        ln2["RMSNorm  pre-norm"]:::norm
-        ffn["SwiGLU FFN  gate · up → SiLU → down"]:::ffn
-        plus2(("+")):::resid
-      end
-
-      lnf["Final RMSNorm"]:::norm
-      lmh["LM Head  tied to token emb"]:::out
-    end
-
-    input --> emb --> ln1 --> qproj --> qknorm --> attn --> plus1 --> ln2 --> ffn --> plus2 --> lnf --> lmh
-    emb -.->|residual| plus1
-    plus1 -.->|residual| plus2
-    ${hiddenSize ? `\n    note_h["hidden: ${hiddenSize.toLocaleString()}"]:::resid` : ""}
-${BASE_STYLES}`
-}
-
-export function Qwen3Diagram(p: DiagramParams) { return <MermaidDiagram definition={qwen3Def(p)} /> }
-
-// ─── DeepSeek-V2 ──────────────────────────────────────────────────────────────
-// MLA attention + DeepSeekMoE (softmax routing, shared experts)
-
-function deepseekV2Def({ numLayers = 60, numExperts = 160, numSharedExperts = 2, numExpertsPerToken = 6 }: DiagramParams) {
-  return `flowchart TD
-    input(["Input tokens"]):::input
-
-    subgraph outer["DeepSeek-V2"]
-      emb["Token Embedding"]:::emb
-      dense_note["First 1 layer: Dense FFN"]:::resid
-
-      subgraph block["MoE Decoder Block ×${numLayers - 1}"]
-        ln1["RMSNorm  pre-norm"]:::norm
-
-        subgraph mla["MLA — Multi-head Latent Attention"]
-          q_path["Q: proj → RMSNorm → proj → split nope/rope"]:::attn
-          kv_path["KV: proj → split  →  RMSNorm → proj  k/v nope"]:::attn
-          rope["Decoupled RoPE  on rope dims only"]:::norm
-          sdpa["Scaled Dot-Product Attention"]:::attn
-          oproj["o_proj"]:::attn
-        end
-
-        plus1(("+")):::resid
-        ln2["RMSNorm  pre-norm"]:::norm
-
-        subgraph moe["DeepSeekMoE  softmax routing"]
-          router["Router  top-${numExpertsPerToken} of ${numExperts}  group-limited"]:::moe
-          experts["Routed Experts  ×${numExpertsPerToken}  SwiGLU"]:::moe
-          shared["Shared Experts  ×${numSharedExperts}  always active"]:::moe
-          moe_add(("+")):::resid
-        end
-
-        plus2(("+")):::resid
-      end
-
-      lnf["Final RMSNorm"]:::norm
-      lmh["LM Head"]:::out
-    end
-
-    input --> emb --> ln1
-    ln1 --> q_path & kv_path
-    q_path & kv_path --> rope --> sdpa --> oproj --> plus1
-    emb -.->|residual| plus1
-    plus1 --> ln2 --> router
-    router --> experts --> moe_add
-    ln2 --> shared --> moe_add
-    moe_add --> plus2
-    plus1 -.->|residual| plus2
-    plus2 --> lnf --> lmh
-${BASE_STYLES}`
-}
-
-export function DeepseekV2Diagram(p: DiagramParams) { return <MermaidDiagram definition={deepseekV2Def(p)} /> }
-
-// ─── DeepSeek-V3 ──────────────────────────────────────────────────────────────
-// Same MLA + upgraded MoE routing (sigmoid + aux-loss-free bias)
-
-function deepseekV3Def({ numLayers = 61, numExperts = 256, numSharedExperts = 1, numExpertsPerToken = 8 }: DiagramParams) {
-  return `flowchart TD
-    input(["Input tokens"]):::input
-
-    subgraph outer["DeepSeek-V3"]
-      emb["Token Embedding"]:::emb
-      dense_note["First 3 layers: Dense FFN"]:::resid
-
-      subgraph block["MoE Decoder Block ×${numLayers - 3}"]
-        ln1["RMSNorm  pre-norm"]:::norm
-
-        subgraph mla["MLA — Multi-head Latent Attention"]
-          q_path["Q: proj → RMSNorm → proj → split nope/rope"]:::attn
-          kv_path["KV: proj → split  →  RMSNorm → proj  k/v nope"]:::attn
-          rope["Decoupled RoPE + YaRN scaling"]:::norm
-          sdpa["Scaled Dot-Product Attention"]:::attn
-          oproj["o_proj"]:::attn
-        end
-
-        plus1(("+")):::resid
-        ln2["RMSNorm  pre-norm"]:::norm
-
-        subgraph moe["DeepSeekMoE  aux-loss-free routing"]
-          router["Router  sigmoid + e_score_bias  top-${numExpertsPerToken} of ${numExperts}"]:::moe
-          experts["Routed Experts  ×${numExpertsPerToken}  SwiGLU"]:::moe
-          shared["Shared Expert  ×${numSharedExperts}  always active"]:::moe
-          moe_add(("+")):::resid
-        end
-
-        plus2(("+")):::resid
-      end
-
-      lnf["Final RMSNorm"]:::norm
-      lmh["LM Head"]:::out
-    end
-
-    input --> emb --> ln1
-    ln1 --> q_path & kv_path
-    q_path & kv_path --> rope --> sdpa --> oproj --> plus1
-    emb -.->|residual| plus1
-    plus1 --> ln2 --> router
-    router --> experts --> moe_add
-    ln2 --> shared --> moe_add
-    moe_add --> plus2
-    plus1 -.->|residual| plus2
-    plus2 --> lnf --> lmh
-${BASE_STYLES}`
-}
-
-export function DeepseekV3Diagram(p: DiagramParams) { return <MermaidDiagram definition={deepseekV3Def(p)} /> }
-
-// ─── LLaMA ────────────────────────────────────────────────────────────────────
-// Pre-Norm RMSNorm, GQA, SwiGLU, RoPE, no bias. Backbone of LLaMA 2/3/3.x.
-// Source: transformers/models/llama/modeling_llama.py
-
-function llamaDef({ numLayers = 32, numHeads = 32, numKvHeads = 8, hiddenSize = 4096 }: DiagramParams) {
-  const gqaNote = numHeads && numKvHeads ? `  Q:${numHeads} KV:${numKvHeads}` : ""
-  return `flowchart TD
-    input(["Input tokens"]):::input
-
-    subgraph outer["LLaMA 2 / 3"]
-      emb["Token Embedding  no learned pos emb  RoPE in attn"]:::emb
-
-      subgraph block["Decoder Block ×${numLayers}"]
-        ln1["RMSNorm  pre-norm  input_layernorm"]:::norm
-        attn["GQA${gqaNote}  RoPE  no bias"]:::attn
-        plus1(("+")):::resid
-        ln2["RMSNorm  pre-norm  post_attention_layernorm"]:::norm
-        ffn["SwiGLU FFN  gate_proj · up_proj → SiLU → down_proj"]:::ffn
-        plus2(("+")):::resid
-      end
-
-      lnf["Final RMSNorm"]:::norm
-      lmh["LM Head  no weight tying in LLaMA 3"]:::out
-    end
-
-    input --> emb --> ln1 --> attn --> plus1 --> ln2 --> ffn --> plus2 --> lnf --> lmh
-    emb -.->|residual| plus1
-    plus1 -.->|residual| plus2
-    note_h["hidden: ${hiddenSize.toLocaleString()}  ·  rope_theta: 500000  Llama-3"]:::resid
-${BASE_STYLES}`
-}
-
-export function LlamaDiagram(p: DiagramParams) { return <MermaidDiagram definition={llamaDef(p)} /> }
-
-// ─── LLaMA 4 ─────────────────────────────────────────────────────────────────
-// Interleaved attention (full NoPE + sliding iRoPE), MoE with no shared experts
-// Source: transformers/models/llama4/modeling_llama4.py
-
-function llama4Def({ numLayers = 48, numExperts = 128, numExpertsPerToken = 1 }: DiagramParams) {
-  return `flowchart TD
-    input(["Input tokens"]):::input
-
-    subgraph outer["LLaMA 4"]
-      emb["Token Embedding"]:::emb
-      note_layers["Layers alternate: full-attn every 4th, chunk-attn others"]:::resid
-
-      subgraph block["Decoder Block ×${numLayers}"]
-        ln1["RMSNorm  pre-norm"]:::norm
-        attn["Attention  NoPE or iRoPE  interleaved per layer"]:::attn
-        plus1(("+")):::resid
-        ln2["RMSNorm  pre-norm"]:::norm
-
-        subgraph moe["MoE  top-${numExpertsPerToken} of ${numExperts}  no shared expert"]
-          router2["Router  sigmoid  no aux loss"]:::moe
-          experts2["Expert FFN  SwiGLU  ×${numExpertsPerToken}"]:::moe
-        end
-
-        plus2(("+")):::resid
-      end
-
-      lnf["Final RMSNorm"]:::norm
-      lmh["LM Head"]:::out
-    end
-
-    input --> emb --> ln1 --> attn --> plus1 --> ln2 --> router2 --> experts2 --> plus2 --> lnf --> lmh
-    emb -.->|residual| plus1
-    plus1 -.->|residual| plus2
-${BASE_STYLES}`
-}
-
-export function Llama4Diagram(p: DiagramParams) { return <MermaidDiagram definition={llama4Def(p)} /> }
-
-// ─── DeepSeek (dense / v1) ────────────────────────────────────────────────────
-// Standard decoder with MHA, SwiGLU, RMSNorm pre-norm, RoPE, no bias.
-// Source: transformers/models/deepseek/modeling_deepseek.py
-
-function deepseekDenseDef({ numLayers = 30, numHeads = 32, numKvHeads = 32, hiddenSize = 4096 }: DiagramParams) {
-  const gqaNote = numKvHeads && numKvHeads !== numHeads ? `  GQA Q:${numHeads} KV:${numKvHeads}` : `  MHA heads:${numHeads}`
-  return `flowchart TD
-    input(["Input tokens"]):::input
-
-    subgraph outer["DeepSeek (dense)"]
-      emb["Token Embedding"]:::emb
-
-      subgraph block["Decoder Block ×${numLayers}"]
-        ln1["RMSNorm  pre-norm  input_layernorm"]:::norm
-        attn["Attention${gqaNote}  RoPE  no bias"]:::attn
-        plus1(("+")):::resid
-        ln2["RMSNorm  pre-norm  post_attention_layernorm"]:::norm
-        ffn["SwiGLU FFN  gate_proj · up_proj → SiLU → down_proj"]:::ffn
-        plus2(("+")):::resid
-      end
-
-      lnf["Final RMSNorm"]:::norm
-      lmh["LM Head"]:::out
-    end
-
-    input --> emb --> ln1 --> attn --> plus1 --> ln2 --> ffn --> plus2 --> lnf --> lmh
-    emb -.->|residual| plus1
-    plus1 -.->|residual| plus2
-    note_h["hidden: ${hiddenSize.toLocaleString()}"]:::resid
-${BASE_STYLES}`
-}
-
-export function DeepseekDenseDiagram(p: DiagramParams) { return <MermaidDiagram definition={deepseekDenseDef(p)} /> }
-
-// ─── GLM / ChatGLM ────────────────────────────────────────────────────────────
-// Bidirectional prefix + causal attention, 2D RoPE, Post-Norm (GLM1/2).
-// GLM4 uses Pre-Norm RMSNorm + GQA. Source: transformers/models/glm/modeling_glm.py
-
-function glm4Def({ numLayers = 40, numHeads = 32, numKvHeads = 2, hiddenSize = 4096 }: DiagramParams) {
-  const gqaNote = numHeads && numKvHeads ? `  Q:${numHeads} KV:${numKvHeads}` : ""
-  return `flowchart TD
-    input(["Input tokens"]):::input
-
-    subgraph outer["GLM4 / ChatGLM4"]
-      emb["Token Embedding  no learned pos emb"]:::emb
-
-      subgraph block["Decoder Block ×${numLayers}"]
-        ln1["RMSNorm  pre-norm  input_layernorm"]:::norm
-        attn["GQA${gqaNote}  RoPE-2D  QKV fused"]:::attn
-        plus1(("+")):::resid
-        ln2["RMSNorm  pre-norm  post_attention_layernorm"]:::norm
-        ffn["SwiGLU FFN  gate · up → SiLU → down"]:::ffn
-        plus2(("+")):::resid
-      end
-
-      lnf["Final RMSNorm  encoder.final_layernorm"]:::norm
-      lmh["LM Head  tied to token emb"]:::out
-    end
-
-    input --> emb --> ln1 --> attn --> plus1 --> ln2 --> ffn --> plus2 --> lnf --> lmh
-    emb -.->|residual| plus1
-    plus1 -.->|residual| plus2
-    note_h["hidden: ${hiddenSize.toLocaleString()}  ·  rope_ratio: 500"]:::resid
-${BASE_STYLES}`
-}
-
-export function Glm4Diagram(p: DiagramParams) { return <MermaidDiagram definition={glm4Def(p)} /> }
-
-// ─── Kimi (Moonshot) ─────────────────────────────────────────────────────────
-// MoE variant (kimi_k2): MLA-like KV compression + MoE routing (sigmoid, no aux loss).
-// Dense variant (kimi_linear): standard GQA decoder with linear attention hybrid.
-// Source: transformers/models/kimi_k2 / config.json from moonshotai/Kimi-K2-Instruct
-
-function kimiK2Def({ numLayers = 61, numExperts = 384, numSharedExperts = 1, numExpertsPerToken = 8 }: DiagramParams) {
-  return `flowchart TD
-    input(["Input tokens"]):::input
-
-    subgraph outer["Kimi K2"]
-      emb["Token Embedding"]:::emb
-      note_dense["First 3 layers: Dense FFN"]:::resid
-
-      subgraph block["MoE Decoder Block ×${numLayers - 3}"]
-        ln1["RMSNorm  pre-norm"]:::norm
-
-        subgraph mla["MLA-style Attention  (latent KV compression)"]
-          q_lora["Q: down_proj → RMSNorm → up_proj"]:::attn
-          kv_lora["KV: kv_a_proj → RMSNorm → kv_b_proj"]:::attn
-          rope_k["Decoupled RoPE  q_rope / k_rope only"]:::norm
-          sdpa["Scaled Dot-Product Attention"]:::attn
-          oproj["o_proj"]:::attn
-        end
-
-        plus1(("+")):::resid
-        ln2["RMSNorm  pre-norm"]:::norm
-
-        subgraph moe_blk["MoE  sigmoid routing  top-${numExpertsPerToken} of ${numExperts}"]
-          router["Router  sigmoid + correction_bias  no aux loss"]:::moe
-          experts["Routed FFN Experts  ×${numExpertsPerToken}  SwiGLU"]:::moe
-          shared["Shared Expert  ×${numSharedExperts}  always active"]:::moe
-          moe_sum(("+")):::resid
-        end
-
-        plus2(("+")):::resid
-      end
-
-      lnf["Final RMSNorm"]:::norm
-      lmh["LM Head"]:::out
-    end
-
-    input --> emb --> ln1
-    ln1 --> q_lora & kv_lora
-    q_lora & kv_lora --> rope_k --> sdpa --> oproj --> plus1
-    emb -.->|residual| plus1
-    plus1 --> ln2 --> router
-    router --> experts --> moe_sum
-    ln2 --> shared --> moe_sum
-    moe_sum --> plus2
-    plus1 -.->|residual| plus2
-    plus2 --> lnf --> lmh
-${BASE_STYLES}`
-}
-
-export function KimiK2Diagram(p: DiagramParams) { return <MermaidDiagram definition={kimiK2Def(p)} /> }
-
-// ─── Placeholder ─────────────────────────────────────────────────────────────
-
-export function PlaceholderDiagram(_p: DiagramParams) {
-  return (
-    <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground h-full min-h-[200px]">
-      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="opacity-30">
-        <rect x="3" y="3" width="7" height="7" rx="1" />
-        <rect x="14" y="3" width="7" height="7" rx="1" />
-        <rect x="3" y="14" width="7" height="7" rx="1" />
-        <path d="M14 17.5h7M17.5 14v7" />
-      </svg>
-      <span className="text-xs font-medium opacity-50">Coming Soon</span>
-    </div>
-  )
-}
-
-// ─── Registry ─────────────────────────────────────────────────────────────────
+import React from "react"
+
+export type { DiagramParams } from "./arch-diagrams/shared"
+export { BASE_STYLES } from "./arch-diagrams/shared"
+
+// ─── Lazy-loaded diagram components — each is a separate Vite chunk ───────────
+
+const BertDiagram        = React.lazy(() => import("./arch-diagrams/bert"))
+const Gpt2Diagram        = React.lazy(() => import("./arch-diagrams/gpt2"))
+const LlamaDiagram       = React.lazy(() => import("./arch-diagrams/llama"))
+const Llama4Diagram      = React.lazy(() => import("./arch-diagrams/llama4"))
+const DeepseekDenseDiagram = React.lazy(() => import("./arch-diagrams/deepseek-dense"))
+const DeepseekV2Diagram  = React.lazy(() => import("./arch-diagrams/deepseek-v2"))
+const DeepseekV3Diagram  = React.lazy(() => import("./arch-diagrams/deepseek-v3"))
+const Glm4Diagram        = React.lazy(() => import("./arch-diagrams/glm4"))
+const KimiK2Diagram      = React.lazy(() => import("./arch-diagrams/kimi-k2"))
+const Qwen1Diagram       = React.lazy(() => import("./arch-diagrams/qwen1"))
+const Qwen2Diagram       = React.lazy(() => import("./arch-diagrams/qwen2"))
+const Qwen3Diagram       = React.lazy(() => import("./arch-diagrams/qwen3"))
+const MistralDiagram     = React.lazy(() => import("./arch-diagrams/mistral"))
+const GemmaDiagram       = React.lazy(() => import("./arch-diagrams/gemma"))
+const InternlmDiagram    = React.lazy(() => import("./arch-diagrams/internlm"))
+const PhiDiagram         = React.lazy(() => import("./arch-diagrams/phi"))
+const FalconDiagram      = React.lazy(() => import("./arch-diagrams/falcon"))
+const MambaDiagram       = React.lazy(() => import("./arch-diagrams/mamba"))
+const OlmoDiagram        = React.lazy(() => import("./arch-diagrams/olmo"))
+const BloomDiagram       = React.lazy(() => import("./arch-diagrams/bloom"))
+const T5Diagram          = React.lazy(() => import("./arch-diagrams/t5"))
+const BaichuanDiagram    = React.lazy(() => import("./arch-diagrams/baichuan"))
+const ExaoneDiagram      = React.lazy(() => import("./arch-diagrams/exaone"))
+const GraniteDiagram     = React.lazy(() => import("./arch-diagrams/granite"))
+const PlaceholderDiagram = React.lazy(() => import("./arch-diagrams/placeholder"))
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+import type { DiagramParams } from "./arch-diagrams/shared"
 
 export interface ArchSpec {
   id: string
@@ -532,12 +51,14 @@ export interface ArchSpec {
   paperUrl?: string
   hfOrg?: string
   defaultParams: DiagramParams
-  diagram: React.ComponentType<DiagramParams>
+  diagram: React.LazyExoticComponent<React.ComponentType<DiagramParams>>
   /** HuggingFace model_type values that map to this arch entry */
   modelTypeAliases?: string[]
   /** If true, renders a placeholder card (no diagram) */
   placeholder?: boolean
 }
+
+// ─── Registry ─────────────────────────────────────────────────────────────────
 
 export const ARCH_REGISTRY: ArchSpec[] = [
   // ── Implemented ────────────────────────────────────────────────────────────
@@ -722,9 +243,8 @@ export const ARCH_REGISTRY: ArchSpec[] = [
     paperUrl: "https://arxiv.org/abs/2310.06825",
     hfOrg: "mistralai/Mistral-7B-v0.3",
     defaultParams: { numLayers: 32, numHeads: 32, numKvHeads: 8, hiddenSize: 4096 },
-    diagram: PlaceholderDiagram,
+    diagram: MistralDiagram,
     modelTypeAliases: ["mistral", "mistral3", "mixtral"],
-    placeholder: true,
   },
   {
     id: "gemma",
@@ -737,9 +257,8 @@ export const ARCH_REGISTRY: ArchSpec[] = [
     paperUrl: "https://arxiv.org/abs/2408.00118",
     hfOrg: "google/gemma-2-9b",
     defaultParams: { numLayers: 42, numHeads: 16, numKvHeads: 8, hiddenSize: 3584 },
-    diagram: PlaceholderDiagram,
+    diagram: GemmaDiagram,
     modelTypeAliases: ["gemma", "gemma2", "gemma3", "gemma3_text", "gemma3n"],
-    placeholder: true,
   },
   {
     id: "internlm",
@@ -752,9 +271,8 @@ export const ARCH_REGISTRY: ArchSpec[] = [
     paperUrl: "https://arxiv.org/abs/2403.17297",
     hfOrg: "internlm/internlm2-7b",
     defaultParams: { numLayers: 32, numHeads: 32, numKvHeads: 8, hiddenSize: 4096 },
-    diagram: PlaceholderDiagram,
+    diagram: InternlmDiagram,
     modelTypeAliases: ["internlm", "internlm2", "internlm3"],
-    placeholder: true,
   },
   {
     id: "phi",
@@ -767,9 +285,8 @@ export const ARCH_REGISTRY: ArchSpec[] = [
     paperUrl: "https://arxiv.org/abs/2404.14219",
     hfOrg: "microsoft/Phi-3-mini-4k-instruct",
     defaultParams: { numLayers: 32, numHeads: 32, numKvHeads: 8, hiddenSize: 3072 },
-    diagram: PlaceholderDiagram,
+    diagram: PhiDiagram,
     modelTypeAliases: ["phi", "phi3", "phi3_v", "phi3small", "phi4mm", "phimoe"],
-    placeholder: true,
   },
   {
     id: "falcon",
@@ -782,9 +299,8 @@ export const ARCH_REGISTRY: ArchSpec[] = [
     paperUrl: "https://arxiv.org/abs/2311.16867",
     hfOrg: "tiiuae/falcon-7b",
     defaultParams: { numLayers: 32, numHeads: 71, numKvHeads: 1, hiddenSize: 4544 },
-    diagram: PlaceholderDiagram,
+    diagram: FalconDiagram,
     modelTypeAliases: ["falcon", "falcon_h1", "falcon_mamba"],
-    placeholder: true,
   },
   {
     id: "mamba",
@@ -797,9 +313,8 @@ export const ARCH_REGISTRY: ArchSpec[] = [
     paperUrl: "https://arxiv.org/abs/2312.00752",
     hfOrg: "state-spaces/mamba-2.8b",
     defaultParams: { numLayers: 64, hiddenSize: 2560 },
-    diagram: PlaceholderDiagram,
+    diagram: MambaDiagram,
     modelTypeAliases: ["mamba", "mamba2", "falcon_mamba"],
-    placeholder: true,
   },
   {
     id: "olmo",
@@ -812,9 +327,8 @@ export const ARCH_REGISTRY: ArchSpec[] = [
     paperUrl: "https://arxiv.org/abs/2402.00838",
     hfOrg: "allenai/OLMo-2-1124-7B",
     defaultParams: { numLayers: 32, numHeads: 32, numKvHeads: 8, hiddenSize: 4096 },
-    diagram: PlaceholderDiagram,
+    diagram: OlmoDiagram,
     modelTypeAliases: ["olmo", "olmo2", "olmo3", "olmoe"],
-    placeholder: true,
   },
   {
     id: "bloom",
@@ -827,9 +341,8 @@ export const ARCH_REGISTRY: ArchSpec[] = [
     paperUrl: "https://arxiv.org/abs/2211.05100",
     hfOrg: "bigscience/bloom",
     defaultParams: { numLayers: 70, numHeads: 112, hiddenSize: 14336 },
-    diagram: PlaceholderDiagram,
+    diagram: BloomDiagram,
     modelTypeAliases: ["bloom"],
-    placeholder: true,
   },
   {
     id: "t5",
@@ -842,9 +355,8 @@ export const ARCH_REGISTRY: ArchSpec[] = [
     paperUrl: "https://arxiv.org/abs/1910.10683",
     hfOrg: "google/flan-t5-xl",
     defaultParams: { numLayers: 24, numHeads: 32, hiddenSize: 2048 },
-    diagram: PlaceholderDiagram,
+    diagram: T5Diagram,
     modelTypeAliases: ["t5", "longt5"],
-    placeholder: true,
   },
   {
     id: "baichuan",
@@ -857,9 +369,8 @@ export const ARCH_REGISTRY: ArchSpec[] = [
     paperUrl: "https://arxiv.org/abs/2309.10305",
     hfOrg: "baichuan-inc/Baichuan2-7B-Base",
     defaultParams: { numLayers: 32, numHeads: 32, hiddenSize: 4096 },
-    diagram: PlaceholderDiagram,
+    diagram: BaichuanDiagram,
     modelTypeAliases: ["baichuan", "baichuan_m1"],
-    placeholder: true,
   },
   {
     id: "exaone",
@@ -872,9 +383,8 @@ export const ARCH_REGISTRY: ArchSpec[] = [
     paperUrl: "https://arxiv.org/abs/2408.03541",
     hfOrg: "LGAI-EXAONE/EXAONE-3.5-7.8B-Instruct",
     defaultParams: { numLayers: 32, numHeads: 32, numKvHeads: 8, hiddenSize: 4096 },
-    diagram: PlaceholderDiagram,
+    diagram: ExaoneDiagram,
     modelTypeAliases: ["exaone", "exaone4"],
-    placeholder: true,
   },
   {
     id: "granite",
@@ -887,9 +397,8 @@ export const ARCH_REGISTRY: ArchSpec[] = [
     paperUrl: "https://arxiv.org/abs/2405.04324",
     hfOrg: "ibm-granite/granite-3.3-8b-instruct",
     defaultParams: { numLayers: 40, numHeads: 32, numKvHeads: 8, hiddenSize: 4096 },
-    diagram: PlaceholderDiagram,
+    diagram: GraniteDiagram,
     modelTypeAliases: ["granite", "granitemoe", "granitemoehybrid"],
-    placeholder: true,
   },
 ]
 
@@ -898,3 +407,6 @@ export const TYPE_COLORS: Record<string, string> = {
   decoder:           "bg-violet-100 text-violet-800 dark:bg-violet-900 dark:text-violet-200",
   "encoder-decoder": "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200",
 }
+
+// Re-export PlaceholderDiagram for backward compatibility (if needed)
+export { PlaceholderDiagram }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { Link, useSearchParams, useNavigate } from "react-router-dom"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { LanguageToggle } from "@/components/language-toggle"
@@ -73,19 +73,21 @@ function ArchCard({
     }`}>
       {/* Diagram area */}
       <div className="bg-muted/30 px-6 pt-4 pb-6 flex items-center justify-center min-h-[220px]">
-        {isPlaceholder ? (
-          <div className="flex flex-col items-center gap-2 text-muted-foreground">
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="opacity-25">
-              <rect x="3" y="3" width="7" height="7" rx="1" />
-              <rect x="14" y="3" width="7" height="7" rx="1" />
-              <rect x="3" y="14" width="7" height="7" rx="1" />
-              <path d="M14 17.5h7M17.5 14v7" />
-            </svg>
-            <span className="text-xs font-medium opacity-40">Coming Soon</span>
-          </div>
-        ) : (
-          <Diagram {...arch.defaultParams} />
-        )}
+        <Suspense fallback={<div className="text-xs text-muted-foreground">Rendering…</div>}>
+          {isPlaceholder ? (
+            <div className="flex flex-col items-center gap-2 text-muted-foreground">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="opacity-25">
+                <rect x="3" y="3" width="7" height="7" rx="1" />
+                <rect x="14" y="3" width="7" height="7" rx="1" />
+                <rect x="3" y="14" width="7" height="7" rx="1" />
+                <path d="M14 17.5h7M17.5 14v7" />
+              </svg>
+              <span className="text-xs font-medium opacity-40">Coming Soon</span>
+            </div>
+          ) : (
+            <Diagram {...arch.defaultParams} />
+          )}
+        </Suspense>
       </div>
 
       {/* Meta */}

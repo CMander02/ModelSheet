@@ -1,6 +1,6 @@
 /**
- * Enhanced comparison table with e-commerce style layout
- * 电商比价风格的模型对比表格
+ * Enhanced comparison table — sticky-header table style.
+ * Fields are rows; each model is a column. Rows are always aligned.
  */
 
 import { X, ChevronDown, ChevronUp } from "lucide-react"
@@ -19,248 +19,177 @@ interface EnhancedComparisonTableProps {
   complexity: ComplexityLevel
 }
 
+// ── Field groupings ──────────────────────────────────────────────────────────
+
+const BASIC_KEYS    = ["totalParameters", "activeParameters", "contextLength", "embeddingDim", "vocabSize"]
+const ARCH_KEYS     = ["architecture", "numLayers", "numHeads", "numKvHeads", "hiddenSize", "intermediateSize", "positionEncoding", "activation", "normType", "mlpFactor", "gqaRatio", "torchDtype"]
+const MOE_KEYS      = ["isMoe", "numExperts", "numSharedExperts", "numExpertsPerToken", "numActivatedExperts", "moeIntermediateSize"]
+const TOKEN_KEYS    = ["hasChatTemplate", "bosToken", "eosToken"]
+const TYPE_KEYS     = ["isAdapter", "baseModel"]
+
+const SECTION_LABELS: Record<string, string> = {
+  basic:        "基础参数",
+  architecture: "架构参数",
+  moe:          "MoE 配置",
+  tokenizer:    "Tokenizer",
+  type:         "类型标记",
+}
+
 export function EnhancedComparisonTable({
   models,
   columns,
   onRemoveModel,
   complexity,
 }: EnhancedComparisonTableProps) {
-  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
-    basic: true,
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({
+    basic: false,
     architecture: false,
     moe: false,
-    tokenizer: false,
+    tokenizer: true,
+    type: true,
   })
 
   const preset = COMPLEXITY_PRESETS[complexity]
-  const visibleColumns = columns.filter((col) => preset.columns.includes(col.key))
+  const visible = columns.filter(c => preset.columns.includes(c.key))
 
-  // Group columns by category
-  const basicFields = ["name", "provider", "totalParameters", "activeParameters", "contextLength", "embeddingDim", "vocabSize"]
-  const architectureFields = ["architecture", "numLayers", "numHeads", "numKvHeads", "hiddenSize", "intermediateSize", "positionEncoding", "activation", "normType", "mlpFactor", "gqaRatio"]
-  const moeFields = ["isMoe", "numExperts", "numExpertsPerToken"]
-  const tokenizerFields = ["hasChatTemplate", "bosToken", "eosToken"]
-  const typeFields = ["isAdapter", "baseModel"]
+  const sections: { id: string; cols: ColumnConfig[] }[] = [
+    { id: "basic",        cols: visible.filter(c => BASIC_KEYS.includes(c.key)) },
+    { id: "architecture", cols: visible.filter(c => ARCH_KEYS.includes(c.key)) },
+    { id: "moe",          cols: visible.filter(c => MOE_KEYS.includes(c.key) && models.some(m => m.isMoe)) },
+    { id: "tokenizer",    cols: visible.filter(c => TOKEN_KEYS.includes(c.key)) },
+    { id: "type",         cols: visible.filter(c => TYPE_KEYS.includes(c.key)) },
+  ].filter(s => s.cols.length > 0)
 
-  const groupedColumns = {
-    basic: visibleColumns.filter(col => basicFields.includes(col.key)),
-    architecture: visibleColumns.filter(col => architectureFields.includes(col.key)),
-    moe: visibleColumns.filter(col => moeFields.includes(col.key)),
-    tokenizer: visibleColumns.filter(col => tokenizerFields.includes(col.key)),
-    type: visibleColumns.filter(col => typeFields.includes(col.key)),
-  }
+  const toggle = (id: string) => setCollapsed(p => ({ ...p, [id]: !p[id] }))
 
-  const toggleSection = (section: string) => {
-    setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }))
-  }
+  // Column width: equal split, min 200px
+  const colW = `minmax(200px, 1fr)`
+  const gridCols = `200px repeat(${models.length}, ${colW})`
 
-  const renderModelCard = (model: ModelInfo) => (
-    <div key={model.id} className="flex-1 min-w-[280px] max-w-[400px]">
-      <div className="rounded-lg border bg-card h-full shadow-sm hover:shadow-md transition-shadow">
-        {/* Model Header - 增强视觉层级 */}
-        <div className="p-6 border-b bg-gradient-to-br from-primary/5 to-accent/5">
-          <div className="flex items-start justify-between gap-2 mb-3">
-            <div className="flex-1 min-w-0">
-              {model.huggingfaceUrl ? (
-                <a
-                  href={model.huggingfaceUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 font-bold text-xl truncate mb-1 hover:text-primary hover:underline transition-colors"
-                >
-                  <ModelBrandIcon model={model.id} size={22} />
-                  <span className="truncate">{model.name}</span>
-                </a>
-              ) : (
-                <h3 className="inline-flex items-center gap-2 font-bold text-xl truncate mb-1">
-                  <ModelBrandIcon model={model.id} size={22} />
-                  <span className="truncate">{model.name}</span>
-                </h3>
-              )}
-              <p className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground mt-1">
-                <ProviderBrandIcon provider={model.provider} size={14} />
-                <span>{model.provider}</span>
-              </p>
+  return (
+    <div className="w-full overflow-x-auto rounded-xl border bg-card shadow-sm">
+      <div style={{ display: "grid", gridTemplateColumns: gridCols, minWidth: `${200 + models.length * 200}px` }}>
+
+        {/* ── Sticky model header row ── */}
+        {/* Label column header — empty */}
+        <div className="sticky top-0 z-20 bg-card/95 backdrop-blur border-b border-r px-4 py-4" />
+
+        {/* Model header cells */}
+        {models.map(model => (
+          <div key={model.id} className="sticky top-0 z-20 bg-card/95 backdrop-blur border-b px-4 py-4 border-r last:border-r-0">
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex-1 min-w-0">
+                {model.huggingfaceUrl ? (
+                  <a
+                    href={model.huggingfaceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 font-bold text-base hover:text-primary hover:underline transition-colors truncate"
+                  >
+                    <ModelBrandIcon model={model.id} size={18} />
+                    <span className="truncate">{model.name}</span>
+                  </a>
+                ) : (
+                  <span className="inline-flex items-center gap-2 font-bold text-base truncate">
+                    <ModelBrandIcon model={model.id} size={18} />
+                    <span className="truncate">{model.name}</span>
+                  </span>
+                )}
+                <p className="inline-flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5">
+                  <ProviderBrandIcon provider={model.provider} size={12} />
+                  <span>{model.provider}</span>
+                </p>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7 shrink-0 hover:bg-destructive/10 hover:text-destructive"
+                onClick={() => onRemoveModel(model.id)}
+              >
+                <X className="h-3.5 w-3.5" />
+              </Button>
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 shrink-0 hover:bg-destructive/10 hover:text-destructive"
-              onClick={() => onRemoveModel(model.id)}
+          </div>
+        ))}
+
+        {/* ── Sections ── */}
+        {sections.map(section => (
+          <>
+            {/* Section header — spans all columns */}
+            <div
+              key={`hdr-${section.id}`}
+              className="col-span-full"
+              style={{ gridColumn: `1 / -1` }}
             >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-
-          {/* Key Specs */}
-          <div className="grid grid-cols-1 gap-1 mt-4">
-            <div className="flex justify-between items-center px-3 py-1.5">
-              <span className="text-xs text-muted-foreground">参数量</span>
-              <span className="font-bold text-sm">
-                <ParamCell value={model.totalParameters} model={model} />
-              </span>
-            </div>
-            {model.activeParameters && (
-              <div className="flex justify-between items-center px-3 py-1.5">
-                <span className="text-xs text-muted-foreground">激活参数</span>
-                <span className="font-bold text-sm">
-                  <ParamCell value={model.activeParameters} model={model} />
+              <button
+                onClick={() => toggle(section.id)}
+                className="w-full flex items-center justify-between px-4 py-2.5 bg-muted/40 hover:bg-muted/60 transition-colors border-b"
+              >
+                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  {SECTION_LABELS[section.id]}
                 </span>
-              </div>
-            )}
-            <div className="flex justify-between items-center px-3 py-1.5">
-              <span className="text-xs text-muted-foreground">上下文</span>
-              <span className="font-bold text-sm">
-                {formatValue(model.contextLength, "number", "contextLength")}
-              </span>
+                {collapsed[section.id]
+                  ? <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+                  : <ChevronUp className="h-3.5 w-3.5 text-muted-foreground" />
+                }
+              </button>
             </div>
-          </div>
-        </div>
 
-        {/* Model Details */}
-        <div className="divide-y">
-          {/* Basic Info */}
-          {groupedColumns.basic.length > 0 && (
-            <DetailsSection
-              title="基础信息"
-              fields={groupedColumns.basic.filter(c => !["name", "provider", "totalParameters", "activeParameters", "contextLength"].includes(c.key))}
-              model={model}
-              models={models}
-              isExpanded={expandedSections.basic}
-              onToggle={() => toggleSection("basic")}
-            />
-          )}
+            {/* Field rows */}
+            {!collapsed[section.id] && section.cols.map((col, rowIdx) => {
+              const allVals = col.type === "number"
+                ? models.map(m => m[col.key as keyof ModelInfo] as number | undefined)
+                : []
+              const isLast = rowIdx === section.cols.length - 1
 
-          {/* Architecture */}
-          {groupedColumns.architecture.length > 0 && (
-            <DetailsSection
-              title="架构参数"
-              fields={groupedColumns.architecture}
-              model={model}
-              models={models}
-              isExpanded={expandedSections.architecture}
-              onToggle={() => toggleSection("architecture")}
-            />
-          )}
+              return (
+                <>
+                  {/* Label cell */}
+                  <div
+                    key={`label-${section.id}-${col.key}`}
+                    className={`px-4 py-2.5 flex items-center border-r bg-muted/10 ${isLast ? "border-b" : "border-b"}`}
+                  >
+                    <span className="text-xs font-medium text-muted-foreground">{col.label}</span>
+                  </div>
 
-          {/* MoE */}
-          {groupedColumns.moe.length > 0 && model.isMoe && (
-            <DetailsSection
-              title="MoE配置"
-              fields={groupedColumns.moe}
-              model={model}
-              models={models}
-              isExpanded={expandedSections.moe}
-              onToggle={() => toggleSection("moe")}
-            />
-          )}
+                  {/* Value cells — one per model */}
+                  {models.map((model, mIdx) => {
+                    const raw = model[col.key as keyof ModelInfo]
+                    const highlight = col.type === "number"
+                      ? getHighlightClass(raw as number, allVals)
+                      : ""
 
-          {/* Tokenizer */}
-          {groupedColumns.tokenizer.length > 0 && (
-            <DetailsSection
-              title="Tokenizer"
-              fields={groupedColumns.tokenizer}
-              model={model}
-              models={models}
-              isExpanded={expandedSections.tokenizer}
-              onToggle={() => toggleSection("tokenizer")}
-            />
-          )}
-
-          {/* Type Flags */}
-          {groupedColumns.type.length > 0 && (
-            <DetailsSection
-              title="类型标记"
-              fields={groupedColumns.type}
-              model={model}
-              models={models}
-              isExpanded={expandedSections.type}
-              onToggle={() => toggleSection("type")}
-            />
-          )}
-        </div>
+                    return (
+                      <div
+                        key={`val-${section.id}-${col.key}-${model.id}`}
+                        className={`px-4 py-2.5 flex items-center justify-end border-b ${mIdx < models.length - 1 ? "border-r" : ""} ${rowIdx % 2 === 0 ? "" : "bg-muted/5"}`}
+                      >
+                        <span className={`text-sm font-semibold tabular-nums ${highlight} ${highlight ? "px-1.5 py-0.5 rounded" : ""}`}>
+                          {col.key === "totalParameters" || col.key === "activeParameters" ? (
+                            <ParamCell value={raw as number} model={model} />
+                          ) : col.key === "huggingfaceUrl" && raw ? (
+                            <a href={raw as string} target="_blank" rel="noopener noreferrer"
+                              className="hover:text-primary hover:underline text-xs">
+                              HuggingFace ↗
+                            </a>
+                          ) : col.key === "arxivUrl" && raw ? (
+                            <a href={raw as string} target="_blank" rel="noopener noreferrer"
+                              className="hover:text-primary hover:underline text-xs">
+                              {(raw as string).match(/(\d{4}\.\d{4,5})/)?.[1] || "Paper ↗"}
+                            </a>
+                          ) : (
+                            formatValue(raw, col.type, col.key)
+                          )}
+                        </span>
+                      </div>
+                    )
+                  })}
+                </>
+              )
+            })}
+          </>
+        ))}
       </div>
-    </div>
-  )
-
-  return (
-    <div className="space-y-4">
-      {/* Comparison Grid */}
-      <div className="flex gap-4 overflow-x-auto pb-4">
-        {models.map(renderModelCard)}
-      </div>
-    </div>
-  )
-}
-
-interface DetailsSectionProps {
-  title: string
-  fields: ColumnConfig[]
-  model: ModelInfo
-  models: ModelInfo[]
-  isExpanded: boolean
-  onToggle: () => void
-}
-
-function DetailsSection({ title, fields, model, models, isExpanded, onToggle }: DetailsSectionProps) {
-  if (fields.length === 0) return null
-
-  return (
-    <div>
-      <button
-        onClick={onToggle}
-        className="w-full px-4 py-3 flex items-center justify-between hover:bg-muted/30 transition-colors group"
-      >
-        <span className="font-semibold text-sm group-hover:text-primary transition-colors">{title}</span>
-        {isExpanded ? (
-          <ChevronUp className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-        ) : (
-          <ChevronDown className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-        )}
-      </button>
-
-      {isExpanded && (
-        <div className="px-4 py-3 space-y-2.5 bg-muted/10 animate-in fade-in-50 duration-200">
-          {fields.map((col) => {
-            const value = model[col.key]
-            const allValues = col.type === "number"
-              ? models.map(m => m[col.key] as number | undefined)
-              : []
-            const highlightClass = col.type === "number"
-              ? getHighlightClass(value as number, allValues)
-              : ""
-
-            return (
-              <div key={col.key} className="flex justify-between items-center text-sm">
-                <span className="text-muted-foreground font-medium">{col.label}</span>
-                <span className={`font-semibold ${highlightClass} px-2 py-0.5 rounded transition-colors`}>
-                  {col.key === "huggingfaceUrl" && value ? (
-                    <a
-                      href={value as string}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-primary hover:underline transition-colors"
-                    >
-                      {(value as string).replace(/^https?:\/\/huggingface\.co\//, '')}
-                    </a>
-                  ) : col.key === "arxivUrl" && value ? (
-                    <a
-                      href={value as string}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-primary hover:underline transition-colors"
-                    >
-                      {(value as string).match(/(\d{4}\.\d{4,5})/)?.[1] || value}
-                    </a>
-                  ) : (
-                    formatValue(value, col.type, col.key)
-                  )}
-                </span>
-              </div>
-            )
-          })}
-        </div>
-      )}
     </div>
   )
 }

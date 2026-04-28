@@ -51,7 +51,7 @@ function ModelCard({ model, language }: { model: ModelInfo; language: Language }
           </span>
         )}
         {model.isMoe && model.activeParameters != null && (
-          <span>/ {formatParameters(model.activeParameters)} {isZh ? "激活" : "active"}</span>
+          <span>/ {isZh ? "激活 " : ""}{formatParameters(model.activeParameters)}{isZh ? "" : " active"}</span>
         )}
         {model.contextLength != null && (
           <span>{formatContextLength(model.contextLength)}</span>

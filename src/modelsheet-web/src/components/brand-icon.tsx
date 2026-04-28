@@ -6,6 +6,7 @@ import BaichuanIcon    from "@lobehub/icons/es/Baichuan"
 import ByteDanceIcon   from "@lobehub/icons/es/ByteDance"
 import DeepCogitoIcon  from "@lobehub/icons/es/DeepCogito"
 import InfinigenceIcon from "@lobehub/icons/es/Infinigence"
+import HunyuanIcon     from "@lobehub/icons/es/Hunyuan"
 import KimiIcon        from "@lobehub/icons/es/Kimi"
 import LiquidIcon      from "@lobehub/icons/es/Liquid"
 import MoonshotIcon    from "@lobehub/icons/es/Moonshot"
@@ -67,9 +68,14 @@ const LOBEHUB_AVATAR_MAP: Record<string, AvatarIconComponent> = {
   "Liquid AI":     LiquidIcon.Avatar,
   "LiquidAI":      LiquidIcon.Avatar,
 
+  // Tencent Hunyuan
+  "腾讯混元":       HunyuanIcon.Avatar,
+  "Tencent Hunyuan": HunyuanIcon.Avatar,
+  "tencent":       HunyuanIcon.Avatar,
+
   // Xiaomi
-  "Xiaomi":        XiaomiMiMoIcon.Avatar,
-  "小米":           XiaomiMiMoIcon.Avatar,
+  "Xiaomi MiMo":   XiaomiMiMoIcon.Avatar,
+  "小米 MiMo":      XiaomiMiMoIcon.Avatar,
   "XiaomiMiMo":    XiaomiMiMoIcon.Avatar,
 
   // TII
@@ -133,8 +139,7 @@ const CUSTOM_LOGO_MAP: Record<string, string> = {
 
   // Qwen (Alibaba) — custom color SVG
   "Qwen":           "/icons/providers/qwen.svg",
-  "Qwen Team":      "/icons/providers/qwen.svg",
-  "通义千问团队":    "/icons/providers/qwen.svg",
+  "通义千问":        "/icons/providers/qwen.svg",
   "Damo Academy":   "/icons/providers/qwen.svg",
   "达摩院":          "/icons/providers/qwen.svg",
   "alibaba-PAI":    "/icons/providers/qwen.svg",
@@ -173,8 +178,8 @@ const CUSTOM_LOGO_MAP: Record<string, string> = {
 
 const PROVIDER_KEY_MAP: Record<string, string> = {
   // Chinese labs
-  "Qwen Team": "qwen",
-  "通义千问团队": "qwen",
+  "Qwen": "qwen",
+  "通义千问": "qwen",
   "Damo Academy": "qwen",
   "达摩院": "qwen",
   "DeepSeek": "deepseek",
@@ -194,10 +199,10 @@ const PROVIDER_KEY_MAP: Record<string, string> = {
   "Step": "stepfun",
   "Stepfun": "stepfun",
   "阶跃星辰": "stepfun",
-  "Tencent": "tencent",
-  "腾讯": "tencent",
-  "Xiaomi": "xiaomi",
-  "小米": "xiaomi",
+  "腾讯混元": "tencent",
+  "Tencent Hunyuan": "tencent",
+  "Xiaomi MiMo": "xiaomi",
+  "小米 MiMo": "xiaomi",
   "360": "ai360",
   "ByteDance": "doubao",
   "字节跳动": "doubao",

@@ -2,7 +2,7 @@
   {
     "id": "Qwen/Qwen2.5-14B-Instruct-1M",
     "name": "Qwen2.5-14B-Instruct-1M",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-14B-Instruct-1M",
     "techReport": "",
     "totalParameters": 16003891200,
@@ -39,7 +39,7 @@
   {
     "id": "XiaomiMiMo/MiMo-Audio-7B-Base",
     "name": "MiMo-Audio-7B-Base",
-    "provider": "Xiaomi",
+    "provider": "Xiaomi MiMo",
     "huggingfaceUrl": "https://huggingface.co/XiaomiMiMo/MiMo-Audio-7B-Base",
     "techReport": "",
     "totalParameters": 7906787328,
@@ -77,7 +77,7 @@
   {
     "id": "XiaomiMiMo/MiMo-VL-7B-RL",
     "name": "MiMo-VL-7B-RL",
-    "provider": "Xiaomi",
+    "provider": "Xiaomi MiMo",
     "huggingfaceUrl": "https://huggingface.co/XiaomiMiMo/MiMo-VL-7B-RL",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2506.03569",
@@ -2009,7 +2009,7 @@
   {
     "id": "Qwen/Qwen-7B",
     "name": "Qwen-7B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen-7B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -2044,7 +2044,7 @@
   {
     "id": "Qwen/Qwen-7B-Chat",
     "name": "Qwen-7B-Chat",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen-7B-Chat",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -2149,7 +2149,7 @@
   {
     "id": "Qwen/Qwen-VL-Chat",
     "name": "Qwen-VL-Chat",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen-VL-Chat",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2308.12966",
@@ -2538,7 +2538,7 @@
   {
     "id": "Qwen/Qwen-14B-Chat",
     "name": "Qwen-14B-Chat",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen-14B-Chat",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -2573,7 +2573,7 @@
   {
     "id": "Qwen/Qwen-14B",
     "name": "Qwen-14B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen-14B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -3597,7 +3597,7 @@
   {
     "id": "Qwen/Qwen-72B",
     "name": "Qwen-72B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen-72B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -3780,7 +3780,7 @@
   {
     "id": "Qwen/Qwen-72B-Chat",
     "name": "Qwen-72B-Chat",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen-72B-Chat",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -3849,7 +3849,7 @@
   {
     "id": "Qwen/Qwen-1_8B",
     "name": "Qwen-1_8B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen-1_8B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -3884,7 +3884,7 @@
   {
     "id": "Qwen/Qwen-1_8B-Chat",
     "name": "Qwen-1_8B-Chat",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen-1_8B-Chat",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -5085,7 +5085,7 @@
   {
     "id": "Qwen/Qwen1.5-0.5B",
     "name": "Qwen1.5-0.5B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen1.5-0.5B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -5124,7 +5124,7 @@
   {
     "id": "Qwen/Qwen1.5-1.8B",
     "name": "Qwen1.5-1.8B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen1.5-1.8B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -5163,7 +5163,7 @@
   {
     "id": "Qwen/Qwen1.5-4B",
     "name": "Qwen1.5-4B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen1.5-4B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -5202,7 +5202,7 @@
   {
     "id": "Qwen/Qwen1.5-7B",
     "name": "Qwen1.5-7B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen1.5-7B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -5241,7 +5241,7 @@
   {
     "id": "Qwen/Qwen1.5-14B",
     "name": "Qwen1.5-14B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen1.5-14B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -5280,7 +5280,7 @@
   {
     "id": "Qwen/Qwen1.5-72B",
     "name": "Qwen1.5-72B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen1.5-72B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -5598,7 +5598,7 @@
   {
     "id": "Qwen/Qwen1.5-1.8B-Chat",
     "name": "Qwen1.5-1.8B-Chat",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen1.5-1.8B-Chat",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -5637,7 +5637,7 @@
   {
     "id": "Qwen/Qwen1.5-4B-Chat",
     "name": "Qwen1.5-4B-Chat",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen1.5-4B-Chat",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -5676,7 +5676,7 @@
   {
     "id": "Qwen/Qwen1.5-7B-Chat",
     "name": "Qwen1.5-7B-Chat",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen1.5-7B-Chat",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -5715,7 +5715,7 @@
   {
     "id": "Qwen/Qwen1.5-14B-Chat",
     "name": "Qwen1.5-14B-Chat",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen1.5-14B-Chat",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -5754,7 +5754,7 @@
   {
     "id": "Qwen/Qwen1.5-72B-Chat",
     "name": "Qwen1.5-72B-Chat",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen1.5-72B-Chat",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -5793,7 +5793,7 @@
   {
     "id": "Qwen/Qwen1.5-0.5B-Chat",
     "name": "Qwen1.5-0.5B-Chat",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen1.5-0.5B-Chat",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -6270,7 +6270,7 @@
   {
     "id": "Qwen/Qwen1.5-MoE-A2.7B",
     "name": "Qwen1.5-MoE-A2.7B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen1.5-MoE-A2.7B",
     "techReport": "",
     "totalParameters": 14315784192,
@@ -6597,7 +6597,7 @@
   {
     "id": "Qwen/Qwen1.5-MoE-A2.7B-Chat",
     "name": "Qwen1.5-MoE-A2.7B-Chat",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen1.5-MoE-A2.7B-Chat",
     "techReport": "",
     "totalParameters": 14315784192,
@@ -6718,7 +6718,7 @@
   {
     "id": "Qwen/Qwen1.5-32B",
     "name": "Qwen1.5-32B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen1.5-32B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -6794,7 +6794,7 @@
   {
     "id": "Qwen/Qwen1.5-32B-Chat",
     "name": "Qwen1.5-32B-Chat",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen1.5-32B-Chat",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -7047,7 +7047,7 @@
   {
     "id": "Qwen/CodeQwen1.5-7B",
     "name": "CodeQwen1.5-7B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/CodeQwen1.5-7B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -7086,7 +7086,7 @@
   {
     "id": "Qwen/CodeQwen1.5-7B-Chat",
     "name": "CodeQwen1.5-7B-Chat",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/CodeQwen1.5-7B-Chat",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -7549,7 +7549,7 @@
   {
     "id": "Qwen/Qwen1.5-110B",
     "name": "Qwen1.5-110B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen1.5-110B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -7588,7 +7588,7 @@
   {
     "id": "Qwen/Qwen1.5-110B-Chat",
     "name": "Qwen1.5-110B-Chat",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen1.5-110B-Chat",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.16609",
@@ -8473,7 +8473,7 @@
   {
     "id": "Qwen/Qwen2-72B",
     "name": "Qwen2-72B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2-72B",
     "techReport": "",
     "totalParameters": 72706203648,
@@ -8511,7 +8511,7 @@
   {
     "id": "Qwen/Qwen2-57B-A14B",
     "name": "Qwen2-57B-A14B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2-57B-A14B",
     "techReport": "",
     "totalParameters": 57408658944,
@@ -8704,7 +8704,7 @@
   {
     "id": "Qwen/Qwen2-72B-Instruct",
     "name": "Qwen2-72B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2-72B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.00071",
@@ -8780,7 +8780,7 @@
   {
     "id": "Qwen/Qwen2-0.5B",
     "name": "Qwen2-0.5B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2-0.5B",
     "techReport": "",
     "totalParameters": 494032768,
@@ -8818,7 +8818,7 @@
   {
     "id": "Qwen/Qwen2-1.5B",
     "name": "Qwen2-1.5B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2-1.5B",
     "techReport": "",
     "totalParameters": 1543714304,
@@ -8856,7 +8856,7 @@
   {
     "id": "Qwen/Qwen2-0.5B-Instruct",
     "name": "Qwen2-0.5B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2-0.5B-Instruct",
     "techReport": "",
     "totalParameters": 494032768,
@@ -8894,7 +8894,7 @@
   {
     "id": "Qwen/Qwen2-1.5B-Instruct",
     "name": "Qwen2-1.5B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2-1.5B-Instruct",
     "techReport": "",
     "totalParameters": 1543714304,
@@ -8932,7 +8932,7 @@
   {
     "id": "Qwen/Qwen2-57B-A14B-Instruct",
     "name": "Qwen2-57B-A14B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2-57B-A14B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.00071",
@@ -9091,7 +9091,7 @@
   {
     "id": "Qwen/Qwen2-7B-Instruct",
     "name": "Qwen2-7B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2-7B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.00071",
@@ -9130,7 +9130,7 @@
   {
     "id": "Qwen/Qwen2-7B",
     "name": "Qwen2-7B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2-7B",
     "techReport": "",
     "totalParameters": 7615616512,
@@ -10943,7 +10943,7 @@
   {
     "id": "Qwen/Qwen2-Math-7B-Instruct",
     "name": "Qwen2-Math-7B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2-Math-7B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2407.10671",
@@ -10982,7 +10982,7 @@
   {
     "id": "Qwen/Qwen2-Math-7B",
     "name": "Qwen2-Math-7B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2-Math-7B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2407.10671",
@@ -11371,7 +11371,7 @@
   {
     "id": "Qwen/Qwen2-VL-2B-Instruct",
     "name": "Qwen2-VL-2B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2-VL-2B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2409.12191",
@@ -11411,7 +11411,7 @@
   {
     "id": "Qwen/Qwen2-VL-7B-Instruct",
     "name": "Qwen2-VL-7B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2-VL-7B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2409.12191",
@@ -11695,7 +11695,7 @@
   {
     "id": "Qwen/Qwen2.5-0.5B",
     "name": "Qwen2.5-0.5B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-0.5B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2407.10671",
@@ -11734,7 +11734,7 @@
   {
     "id": "Qwen/Qwen2.5-1.5B",
     "name": "Qwen2.5-1.5B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-1.5B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2407.10671",
@@ -11773,7 +11773,7 @@
   {
     "id": "Qwen/Qwen2.5-3B",
     "name": "Qwen2.5-3B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-3B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2407.10671",
@@ -11812,7 +11812,7 @@
   {
     "id": "Qwen/Qwen2.5-7B",
     "name": "Qwen2.5-7B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-7B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2407.10671",
@@ -11851,7 +11851,7 @@
   {
     "id": "Qwen/Qwen2.5-14B",
     "name": "Qwen2.5-14B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-14B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2407.10671",
@@ -11890,7 +11890,7 @@
   {
     "id": "Qwen/Qwen2.5-32B",
     "name": "Qwen2.5-32B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-32B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2407.10671",
@@ -11929,7 +11929,7 @@
   {
     "id": "Qwen/Qwen2.5-72B",
     "name": "Qwen2.5-72B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-72B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2407.10671",
@@ -11968,7 +11968,7 @@
   {
     "id": "Qwen/Qwen2.5-0.5B-Instruct",
     "name": "Qwen2.5-0.5B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2407.10671",
@@ -12007,7 +12007,7 @@
   {
     "id": "Qwen/Qwen2.5-7B-Instruct",
     "name": "Qwen2.5-7B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-7B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.00071",
@@ -12046,7 +12046,7 @@
   {
     "id": "Qwen/Qwen2.5-14B-Instruct",
     "name": "Qwen2.5-14B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-14B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.00071",
@@ -12085,7 +12085,7 @@
   {
     "id": "Qwen/Qwen2.5-72B-Instruct",
     "name": "Qwen2.5-72B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-72B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.00071",
@@ -12124,7 +12124,7 @@
   {
     "id": "Qwen/Qwen2.5-Coder-7B",
     "name": "Qwen2.5-Coder-7B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-Coder-7B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2409.12186",
@@ -12163,7 +12163,7 @@
   {
     "id": "Qwen/Qwen2.5-Math-1.5B",
     "name": "Qwen2.5-Math-1.5B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-Math-1.5B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2409.12122",
@@ -12202,7 +12202,7 @@
   {
     "id": "Qwen/Qwen2.5-Math-1.5B-Instruct",
     "name": "Qwen2.5-Math-1.5B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-Math-1.5B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2409.12122",
@@ -12241,7 +12241,7 @@
   {
     "id": "Qwen/Qwen2.5-Math-7B",
     "name": "Qwen2.5-Math-7B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-Math-7B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2409.12122",
@@ -12280,7 +12280,7 @@
   {
     "id": "Qwen/Qwen2.5-Math-72B",
     "name": "Qwen2.5-Math-72B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-Math-72B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2409.12122",
@@ -12319,7 +12319,7 @@
   {
     "id": "Qwen/Qwen2.5-Math-72B-Instruct",
     "name": "Qwen2.5-Math-72B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-Math-72B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2409.12122",
@@ -12358,7 +12358,7 @@
   {
     "id": "Qwen/Qwen2.5-32B-Instruct",
     "name": "Qwen2.5-32B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-32B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.00071",
@@ -12397,7 +12397,7 @@
   {
     "id": "Qwen/Qwen2-VL-72B-Instruct",
     "name": "Qwen2-VL-72B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2-VL-72B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2409.12191",
@@ -12437,7 +12437,7 @@
   {
     "id": "Qwen/Qwen2.5-Math-RM-72B",
     "name": "Qwen2.5-Math-RM-72B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-Math-RM-72B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2409.12122",
@@ -12513,7 +12513,7 @@
   {
     "id": "Qwen/Qwen2.5-Coder-7B-Instruct",
     "name": "Qwen2.5-Coder-7B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2409.12186",
@@ -12552,7 +12552,7 @@
   {
     "id": "Qwen/Qwen2.5-3B-Instruct",
     "name": "Qwen2.5-3B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-3B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2407.10671",
@@ -12591,7 +12591,7 @@
   {
     "id": "Qwen/Qwen2.5-1.5B-Instruct",
     "name": "Qwen2.5-1.5B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2407.10671",
@@ -12630,7 +12630,7 @@
   {
     "id": "Qwen/Qwen2.5-Coder-1.5B",
     "name": "Qwen2.5-Coder-1.5B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2409.12186",
@@ -12669,7 +12669,7 @@
   {
     "id": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
     "name": "Qwen2.5-Coder-1.5B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2409.12186",
@@ -12708,7 +12708,7 @@
   {
     "id": "Qwen/Qwen2.5-Math-7B-Instruct",
     "name": "Qwen2.5-Math-7B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-Math-7B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2409.12122",
@@ -13904,7 +13904,7 @@
   {
     "id": "Qwen/Qwen2.5-Coder-32B-Instruct",
     "name": "Qwen2.5-Coder-32B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-Coder-32B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2409.12186",
@@ -13981,7 +13981,7 @@
   {
     "id": "Qwen/Qwen2.5-Coder-32B",
     "name": "Qwen2.5-Coder-32B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-Coder-32B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2409.12186",
@@ -14634,7 +14634,7 @@
   {
     "id": "Qwen/QwQ-32B-Preview",
     "name": "QwQ-32B-Preview",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/QwQ-32B-Preview",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2407.10671",
@@ -15837,7 +15837,7 @@
   {
     "id": "Qwen/QVQ-72B-Preview",
     "name": "QVQ-72B-Preview",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/QVQ-72B-Preview",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2409.12191",
@@ -16792,7 +16792,7 @@
   {
     "id": "Qwen/Qwen2.5-7B-Instruct-1M",
     "name": "Qwen2.5-7B-Instruct-1M",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-7B-Instruct-1M",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2501.15383",
@@ -16945,7 +16945,7 @@
   {
     "id": "Qwen/Qwen2.5-VL-3B-Instruct",
     "name": "Qwen2.5-VL-3B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-VL-3B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.00071",
@@ -16985,7 +16985,7 @@
   {
     "id": "Qwen/Qwen2.5-VL-7B-Instruct",
     "name": "Qwen2.5-VL-7B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-VL-7B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.00071",
@@ -17025,7 +17025,7 @@
   {
     "id": "Qwen/Qwen2.5-VL-72B-Instruct",
     "name": "Qwen2.5-VL-72B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-VL-72B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.00071",
@@ -18446,7 +18446,7 @@
   {
     "id": "Qwen/QwQ-32B",
     "name": "QwQ-32B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/QwQ-32B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.00071",
@@ -19129,7 +19129,7 @@
   {
     "id": "Qwen/Qwen2.5-VL-32B-Instruct",
     "name": "Qwen2.5-VL-32B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-VL-32B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.00071",
@@ -19169,7 +19169,7 @@
   {
     "id": "Qwen/Qwen2.5-Omni-7B",
     "name": "Qwen2.5-Omni-7B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-Omni-7B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2503.20215",
@@ -21021,7 +21021,7 @@
   {
     "id": "Qwen/Qwen3-0.6B",
     "name": "Qwen3-0.6B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-0.6B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -21059,7 +21059,7 @@
   {
     "id": "Qwen/Qwen3-1.7B",
     "name": "Qwen3-1.7B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-1.7B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -21098,7 +21098,7 @@
   {
     "id": "Qwen/Qwen3-4B",
     "name": "Qwen3-4B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-4B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.00071",
@@ -21137,7 +21137,7 @@
   {
     "id": "Qwen/Qwen3-8B",
     "name": "Qwen3-8B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-8B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.00071",
@@ -21176,7 +21176,7 @@
   {
     "id": "Qwen/Qwen3-14B",
     "name": "Qwen3-14B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-14B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.00071",
@@ -21215,7 +21215,7 @@
   {
     "id": "Qwen/Qwen3-30B-A3B",
     "name": "Qwen3-30B-A3B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-30B-A3B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.00071",
@@ -21258,7 +21258,7 @@
   {
     "id": "Qwen/Qwen3-32B",
     "name": "Qwen3-32B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-32B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.00071",
@@ -21336,7 +21336,7 @@
   {
     "id": "Qwen/Qwen3-235B-A22B",
     "name": "Qwen3-235B-A22B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-235B-A22B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.00071",
@@ -21457,7 +21457,7 @@
   {
     "id": "Qwen/Qwen3-30B-A3B-Base",
     "name": "Qwen3-30B-A3B-Base",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-30B-A3B-Base",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -21500,7 +21500,7 @@
   {
     "id": "Qwen/Qwen3-8B-Base",
     "name": "Qwen3-8B-Base",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-8B-Base",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -21539,7 +21539,7 @@
   {
     "id": "Qwen/Qwen3-4B-Base",
     "name": "Qwen3-4B-Base",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-4B-Base",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -21578,7 +21578,7 @@
   {
     "id": "Qwen/Qwen3-1.7B-Base",
     "name": "Qwen3-1.7B-Base",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-1.7B-Base",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -21617,7 +21617,7 @@
   {
     "id": "Qwen/Qwen3-14B-Base",
     "name": "Qwen3-14B-Base",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-14B-Base",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -21656,7 +21656,7 @@
   {
     "id": "Qwen/Qwen3-0.6B-Base",
     "name": "Qwen3-0.6B-Base",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-0.6B-Base",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -21695,7 +21695,7 @@
   {
     "id": "Qwen/Qwen3-0.6B-FP8",
     "name": "Qwen3-0.6B-FP8",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-0.6B-FP8",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -21734,7 +21734,7 @@
   {
     "id": "Qwen/Qwen3-1.7B-FP8",
     "name": "Qwen3-1.7B-FP8",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-1.7B-FP8",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -21773,7 +21773,7 @@
   {
     "id": "Qwen/Qwen3-4B-FP8",
     "name": "Qwen3-4B-FP8",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-4B-FP8",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.00071",
@@ -21812,7 +21812,7 @@
   {
     "id": "Qwen/Qwen3-8B-FP8",
     "name": "Qwen3-8B-FP8",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-8B-FP8",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.00071",
@@ -21851,7 +21851,7 @@
   {
     "id": "Qwen/Qwen3-14B-FP8",
     "name": "Qwen3-14B-FP8",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-14B-FP8",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.00071",
@@ -21890,7 +21890,7 @@
   {
     "id": "Qwen/Qwen3-32B-FP8",
     "name": "Qwen3-32B-FP8",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-32B-FP8",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.00071",
@@ -21967,7 +21967,7 @@
   {
     "id": "XiaomiMiMo/MiMo-7B-SFT",
     "name": "MiMo-7B-SFT",
-    "provider": "Xiaomi",
+    "provider": "Xiaomi MiMo",
     "huggingfaceUrl": "https://huggingface.co/XiaomiMiMo/MiMo-7B-SFT",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.07608",
@@ -22006,7 +22006,7 @@
   {
     "id": "XiaomiMiMo/MiMo-7B-Base",
     "name": "MiMo-7B-Base",
-    "provider": "Xiaomi",
+    "provider": "Xiaomi MiMo",
     "huggingfaceUrl": "https://huggingface.co/XiaomiMiMo/MiMo-7B-Base",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.07608",
@@ -22045,7 +22045,7 @@
   {
     "id": "XiaomiMiMo/MiMo-7B-RL",
     "name": "MiMo-7B-RL",
-    "provider": "Xiaomi",
+    "provider": "Xiaomi MiMo",
     "huggingfaceUrl": "https://huggingface.co/XiaomiMiMo/MiMo-7B-RL",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.07608",
@@ -22084,7 +22084,7 @@
   {
     "id": "XiaomiMiMo/MiMo-7B-RL-Zero",
     "name": "MiMo-7B-RL-Zero",
-    "provider": "Xiaomi",
+    "provider": "Xiaomi MiMo",
     "huggingfaceUrl": "https://huggingface.co/XiaomiMiMo/MiMo-7B-RL-Zero",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.07608",
@@ -22142,7 +22142,7 @@
   {
     "id": "Qwen/Qwen2.5-Omni-3B",
     "name": "Qwen2.5-Omni-3B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen2.5-Omni-3B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2503.20215",
@@ -22765,7 +22765,7 @@
   {
     "id": "Qwen/WorldPM-72B",
     "name": "WorldPM-72B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/WorldPM-72B",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.10527",
@@ -22804,7 +22804,7 @@
   {
     "id": "Qwen/WorldPM-72B-UltraFeedback",
     "name": "WorldPM-72B-UltraFeedback",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/WorldPM-72B-UltraFeedback",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.10527",
@@ -22843,7 +22843,7 @@
   {
     "id": "Qwen/WorldPM-72B-RLHFLow",
     "name": "WorldPM-72B-RLHFLow",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/WorldPM-72B-RLHFLow",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.10527",
@@ -23318,7 +23318,7 @@
   {
     "id": "XiaomiMiMo/MiMo-VL-7B-SFT",
     "name": "MiMo-VL-7B-SFT",
-    "provider": "Xiaomi",
+    "provider": "Xiaomi MiMo",
     "huggingfaceUrl": "https://huggingface.co/XiaomiMiMo/MiMo-VL-7B-SFT",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2506.03569",
@@ -24902,7 +24902,7 @@
   {
     "id": "Qwen/Qwen3-235B-A22B-Instruct-2507",
     "name": "Qwen3-235B-A22B-Instruct-2507",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-235B-A22B-Instruct-2507",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2402.17463",
@@ -24945,7 +24945,7 @@
   {
     "id": "Qwen/Qwen3-235B-A22B-Instruct-2507-FP8",
     "name": "Qwen3-235B-A22B-Instruct-2507-FP8",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-235B-A22B-Instruct-2507-FP8",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -24988,7 +24988,7 @@
   {
     "id": "Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8",
     "name": "Qwen3-Coder-480B-A35B-Instruct-FP8",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-Coder-480B-A35B-Instruct-FP8",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -25031,7 +25031,7 @@
   {
     "id": "Qwen/Qwen3-235B-A22B-Thinking-2507",
     "name": "Qwen3-235B-A22B-Thinking-2507",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-235B-A22B-Thinking-2507",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2402.17463",
@@ -25074,7 +25074,7 @@
   {
     "id": "Qwen/Qwen3-235B-A22B-Thinking-2507-FP8",
     "name": "Qwen3-235B-A22B-Thinking-2507-FP8",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-235B-A22B-Thinking-2507-FP8",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -25237,7 +25237,7 @@
   {
     "id": "tencent/Hunyuan-7B-Pretrain",
     "name": "Hunyuan-7B-Pretrain",
-    "provider": "Tencent",
+    "provider": "腾讯混元",
     "huggingfaceUrl": "https://huggingface.co/tencent/Hunyuan-7B-Pretrain",
     "techReport": "",
     "totalParameters": 7504564224,
@@ -25275,7 +25275,7 @@
   {
     "id": "Qwen/Qwen3-30B-A3B-Instruct-2507",
     "name": "Qwen3-30B-A3B-Instruct-2507",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-30B-A3B-Instruct-2507",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2402.17463",
@@ -25353,7 +25353,7 @@
   {
     "id": "Qwen/Qwen3-30B-A3B-Thinking-2507",
     "name": "Qwen3-30B-A3B-Thinking-2507",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-30B-A3B-Thinking-2507",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2402.17463",
@@ -25434,7 +25434,7 @@
   {
     "id": "tencent/Hunyuan-0.5B-Instruct",
     "name": "Hunyuan-0.5B-Instruct",
-    "provider": "Tencent",
+    "provider": "腾讯混元",
     "huggingfaceUrl": "https://huggingface.co/tencent/Hunyuan-0.5B-Instruct",
     "techReport": "",
     "totalParameters": 539010048,
@@ -25472,7 +25472,7 @@
   {
     "id": "tencent/Hunyuan-1.8B-Instruct",
     "name": "Hunyuan-1.8B-Instruct",
-    "provider": "Tencent",
+    "provider": "腾讯混元",
     "huggingfaceUrl": "https://huggingface.co/tencent/Hunyuan-1.8B-Instruct",
     "techReport": "",
     "totalParameters": 1992265728,
@@ -25510,7 +25510,7 @@
   {
     "id": "tencent/Hunyuan-4B-Instruct",
     "name": "Hunyuan-4B-Instruct",
-    "provider": "Tencent",
+    "provider": "腾讯混元",
     "huggingfaceUrl": "https://huggingface.co/tencent/Hunyuan-4B-Instruct",
     "techReport": "",
     "totalParameters": 4221757440,
@@ -25548,7 +25548,7 @@
   {
     "id": "tencent/Hunyuan-7B-Instruct",
     "name": "Hunyuan-7B-Instruct",
-    "provider": "Tencent",
+    "provider": "腾讯混元",
     "huggingfaceUrl": "https://huggingface.co/tencent/Hunyuan-7B-Instruct",
     "techReport": "",
     "totalParameters": 8309600256,
@@ -25625,7 +25625,7 @@
   {
     "id": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
     "name": "Qwen3-Coder-30B-A3B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-Coder-30B-A3B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -25843,7 +25843,7 @@
   {
     "id": "Qwen/Qwen3-4B-Instruct-2507",
     "name": "Qwen3-4B-Instruct-2507",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-4B-Instruct-2507",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -25882,7 +25882,7 @@
   {
     "id": "Qwen/Qwen3-4B-Thinking-2507",
     "name": "Qwen3-4B-Thinking-2507",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-4B-Thinking-2507",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -26155,7 +26155,7 @@
   {
     "id": "XiaomiMiMo/MiMo-VL-7B-RL-2508",
     "name": "MiMo-VL-7B-RL-2508",
-    "provider": "Xiaomi",
+    "provider": "Xiaomi MiMo",
     "huggingfaceUrl": "https://huggingface.co/XiaomiMiMo/MiMo-VL-7B-RL-2508",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2506.03569",
@@ -26668,7 +26668,7 @@
   {
     "id": "tencent/Hunyuan-MT-7B",
     "name": "Hunyuan-MT-7B",
-    "provider": "Tencent",
+    "provider": "腾讯混元",
     "huggingfaceUrl": "https://huggingface.co/tencent/Hunyuan-MT-7B",
     "techReport": "",
     "totalParameters": 8030269440,
@@ -26918,7 +26918,7 @@
   {
     "id": "Qwen/Qwen3-Next-80B-A3B-Instruct",
     "name": "Qwen3-Next-80B-A3B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-Next-80B-A3B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.00071",
@@ -26961,7 +26961,7 @@
   {
     "id": "Qwen/Qwen3-Next-80B-A3B-Thinking",
     "name": "Qwen3-Next-80B-A3B-Thinking",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-Next-80B-A3B-Thinking",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2309.00071",
@@ -27040,7 +27040,7 @@
   {
     "id": "Qwen/Qwen3-Omni-30B-A3B-Thinking",
     "name": "Qwen3-Omni-30B-A3B-Thinking",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-Omni-30B-A3B-Thinking",
     "techReport": "",
     "totalParameters": 31719205488,
@@ -27081,7 +27081,7 @@
   {
     "id": "Alibaba-NLP/Tongyi-DeepResearch-30B-A3B",
     "name": "Tongyi-DeepResearch-30B-A3B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Alibaba-NLP/Tongyi-DeepResearch-30B-A3B",
     "techReport": "",
     "totalParameters": 30532122624,
@@ -27245,7 +27245,7 @@
   {
     "id": "XiaomiMiMo/MiMo-Audio-7B-Instruct",
     "name": "MiMo-Audio-7B-Instruct",
-    "provider": "Xiaomi",
+    "provider": "Xiaomi MiMo",
     "huggingfaceUrl": "https://huggingface.co/XiaomiMiMo/MiMo-Audio-7B-Instruct",
     "techReport": "",
     "totalParameters": 8018587648,
@@ -27283,7 +27283,7 @@
   {
     "id": "Qwen/Qwen3-Omni-30B-A3B-Instruct",
     "name": "Qwen3-Omni-30B-A3B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-Omni-30B-A3B-Instruct",
     "techReport": "",
     "totalParameters": 35259818545,
@@ -27356,7 +27356,7 @@
   {
     "id": "Qwen/Qwen3-VL-235B-A22B-Instruct",
     "name": "Qwen3-VL-235B-A22B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-VL-235B-A22B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -27399,7 +27399,7 @@
   {
     "id": "Qwen/Qwen3-VL-235B-A22B-Thinking",
     "name": "Qwen3-VL-235B-A22B-Thinking",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-VL-235B-A22B-Thinking",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -27530,7 +27530,7 @@
   {
     "id": "Qwen/Qwen3-VL-30B-A3B-Instruct",
     "name": "Qwen3-VL-30B-A3B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-VL-30B-A3B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -27573,7 +27573,7 @@
   {
     "id": "Qwen/Qwen3-VL-30B-A3B-Thinking",
     "name": "Qwen3-VL-30B-A3B-Thinking",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-VL-30B-A3B-Thinking",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -27773,7 +27773,7 @@
   {
     "id": "Qwen/Qwen3-VL-4B-Instruct",
     "name": "Qwen3-VL-4B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-VL-4B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -27812,7 +27812,7 @@
   {
     "id": "Qwen/Qwen3-VL-8B-Instruct",
     "name": "Qwen3-VL-8B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -27851,7 +27851,7 @@
   {
     "id": "Qwen/Qwen3-VL-4B-Thinking",
     "name": "Qwen3-VL-4B-Thinking",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-VL-4B-Thinking",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -27890,7 +27890,7 @@
   {
     "id": "Qwen/Qwen3-VL-8B-Thinking",
     "name": "Qwen3-VL-8B-Thinking",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-VL-8B-Thinking",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -27958,7 +27958,7 @@
   {
     "id": "Qwen/Qwen3-VL-32B-Instruct",
     "name": "Qwen3-VL-32B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-VL-32B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -27997,7 +27997,7 @@
   {
     "id": "Qwen/Qwen3-VL-32B-Thinking",
     "name": "Qwen3-VL-32B-Thinking",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-VL-32B-Thinking",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -28036,7 +28036,7 @@
   {
     "id": "Qwen/Qwen3-VL-2B-Instruct",
     "name": "Qwen3-VL-2B-Instruct",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -28075,7 +28075,7 @@
   {
     "id": "Qwen/Qwen3-VL-2B-Thinking",
     "name": "Qwen3-VL-2B-Thinking",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-VL-2B-Thinking",
     "techReport": "",
     "arxivUrl": "https://arxiv.org/abs/2505.09388",
@@ -28770,7 +28770,7 @@
   {
     "id": "XiaomiMiMo/MiMo-V2-Flash",
     "name": "MiMo-V2-Flash",
-    "provider": "Xiaomi",
+    "provider": "Xiaomi MiMo",
     "huggingfaceUrl": "https://huggingface.co/XiaomiMiMo/MiMo-V2-Flash",
     "techReport": "",
     "totalParameters": 309785318400,
@@ -28992,7 +28992,7 @@
   {
     "id": "Qwen/Qwen3.5-397B-A17B",
     "name": "Qwen3.5-397B-A17B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-397B-A17B",
     "techReport": "",
     "totalParameters": 403397928944,
@@ -29051,7 +29051,7 @@
   {
     "id": "Qwen/Qwen3.5-35B-A3B",
     "name": "Qwen3.5-35B-A3B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-35B-A3B",
     "techReport": "",
     "totalParameters": 35951822704,
@@ -29090,7 +29090,7 @@
   {
     "id": "Qwen/Qwen3.5-27B",
     "name": "Qwen3.5-27B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-27B",
     "techReport": "",
     "totalParameters": 27781427952,
@@ -29127,7 +29127,7 @@
   {
     "id": "Qwen/Qwen3.5-35B-A3B-Base",
     "name": "Qwen3.5-35B-A3B-Base",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-35B-A3B-Base",
     "techReport": "",
     "totalParameters": 35951822704,
@@ -29166,7 +29166,7 @@
   {
     "id": "Qwen/Qwen3.5-122B-A10B",
     "name": "Qwen3.5-122B-A10B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-122B-A10B",
     "techReport": "",
     "totalParameters": 125086497008,
@@ -29205,7 +29205,7 @@
   {
     "id": "Qwen/Qwen3.5-9B-Base",
     "name": "Qwen3.5-9B-Base",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-9B-Base",
     "techReport": "",
     "totalParameters": 9653104368,
@@ -29242,7 +29242,7 @@
   {
     "id": "Qwen/Qwen3.5-9B",
     "name": "Qwen3.5-9B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-9B",
     "techReport": "",
     "totalParameters": 9653104368,
@@ -29279,7 +29279,7 @@
   {
     "id": "Qwen/Qwen3.5-4B-Base",
     "name": "Qwen3.5-4B-Base",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-4B-Base",
     "techReport": "",
     "totalParameters": 4659865088,
@@ -29316,7 +29316,7 @@
   {
     "id": "Qwen/Qwen3.5-4B",
     "name": "Qwen3.5-4B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-4B",
     "techReport": "",
     "totalParameters": 4659865088,
@@ -29353,7 +29353,7 @@
   {
     "id": "Qwen/Qwen3.5-2B",
     "name": "Qwen3.5-2B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-2B",
     "techReport": "",
     "totalParameters": 2274069824,
@@ -29390,7 +29390,7 @@
   {
     "id": "Qwen/Qwen3.5-0.8B",
     "name": "Qwen3.5-0.8B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-0.8B",
     "techReport": "",
     "totalParameters": 873438784,
@@ -29427,7 +29427,7 @@
   {
     "id": "Qwen/Qwen3.5-2B-Base",
     "name": "Qwen3.5-2B-Base",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-2B-Base",
     "techReport": "",
     "totalParameters": 2274069824,
@@ -29464,7 +29464,7 @@
   {
     "id": "Qwen/Qwen3.5-0.8B-Base",
     "name": "Qwen3.5-0.8B-Base",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-0.8B-Base",
     "techReport": "",
     "totalParameters": 873438784,
@@ -29739,7 +29739,7 @@
   {
     "id": "Qwen/Qwen3.6-35B-A3B",
     "name": "Qwen3.6-35B-A3B",
-    "provider": "Qwen Team",
+    "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B",
     "techReport": "",
     "totalParameters": 35951822704,
@@ -29923,7 +29923,7 @@
   {
     "id": "XiaomiMiMo/MiMo-V2.5-Base",
     "name": "MiMo-V2.5-Base",
-    "provider": "Xiaomi",
+    "provider": "Xiaomi MiMo",
     "huggingfaceUrl": "https://huggingface.co/XiaomiMiMo/MiMo-V2.5-Base",
     "techReport": "",
     "totalParameters": 310775040000,
@@ -29961,7 +29961,7 @@
   {
     "id": "XiaomiMiMo/MiMo-V2.5",
     "name": "MiMo-V2.5",
-    "provider": "Xiaomi",
+    "provider": "Xiaomi MiMo",
     "huggingfaceUrl": "https://huggingface.co/XiaomiMiMo/MiMo-V2.5",
     "techReport": "",
     "totalParameters": 310775040000,
@@ -29999,7 +29999,7 @@
   {
     "id": "XiaomiMiMo/MiMo-V2.5-Pro",
     "name": "MiMo-V2.5-Pro",
-    "provider": "Xiaomi",
+    "provider": "Xiaomi MiMo",
     "huggingfaceUrl": "https://huggingface.co/XiaomiMiMo/MiMo-V2.5-Pro",
     "techReport": "",
     "totalParameters": 1023244718976,
@@ -30038,7 +30038,7 @@
   {
     "id": "XiaomiMiMo/MiMo-V2.5-Pro-Base",
     "name": "MiMo-V2.5-Pro-Base",
-    "provider": "Xiaomi",
+    "provider": "Xiaomi MiMo",
     "huggingfaceUrl": "https://huggingface.co/XiaomiMiMo/MiMo-V2.5-Pro-Base",
     "techReport": "",
     "totalParameters": 1023244718976,
@@ -30117,7 +30117,7 @@
   {
     "id": "tencent/Hy3-preview-Base",
     "name": "Hy3-preview-Base",
-    "provider": "Tencent",
+    "provider": "腾讯混元",
     "huggingfaceUrl": "https://huggingface.co/tencent/Hy3-preview-Base",
     "techReport": "",
     "modelscopeUrl": "https://modelscope.cn/models/Tencent/Hy3-preview-Base",
@@ -30155,7 +30155,7 @@
   {
     "id": "tencent/Hy3-preview",
     "name": "Hy3-preview",
-    "provider": "Tencent",
+    "provider": "腾讯混元",
     "huggingfaceUrl": "https://huggingface.co/tencent/Hy3-preview",
     "techReport": "",
     "modelscopeUrl": "https://modelscope.cn/models/Tencent/Hy3-preview",
@@ -30189,5 +30189,48 @@
     ],
     "createdAt": "2026-04-13T06:07:57.000Z",
     "isMoe": true
+  },
+  {
+    "id": "cursor/composer-2",
+    "name": "Composer 2",
+    "provider": "Cursor",
+    "techReport": "https://cursor.com/resources/Composer2.pdf",
+    "totalParameters": 1058589420528,
+    "activeParameters": 37889245184,
+    "embeddingParameters": 1174405120,
+    "nonEmbeddingParameters": 1057415015408,
+    "contextLength": 262144,
+    "embeddingDim": 7168,
+    "vocabSize": 163840,
+    "architecture": "kimi_k25",
+    "numLayers": 61,
+    "numHeads": 64,
+    "numKvHeads": 64,
+    "hiddenSize": 7168,
+    "intermediateSize": 18432,
+    "positionEncoding": "RoPE",
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-05,
+    "attentionDropout": 0.0,
+    "mlpFactor": 2.57,
+    "gqaRatio": 1.0,
+    "numExperts": 384,
+    "numSharedExperts": 1,
+    "numExpertsPerToken": 8,
+    "numActivatedExperts": 9,
+    "moeIntermediateSize": 2048,
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "createdAt": "2026-03-19T00:00:00.000Z",
+    "isMoe": true,
+    "architectureFamily": "Moonshot-Kimi",
+    "parameterConfidence": "official",
+    "parameterSource": "Based on moonshotai/Kimi-K2.5 (anysphere/kimi-k2p5-rl-0317-s515-fast)",
+    "nameNote": "anysphere/kimi-k2p5-rl-0317-s515-fast"
   }
 ]

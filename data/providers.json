@@ -2,15 +2,15 @@
     "$schema": "./providers.schema.json",
     "$comment": "Provider mapping configuration. CLI and frontend both read from this file.",
     "providers": {
-        "Qwen Team": {
+        "Qwen": {
             "orgs": [
                 "Qwen",
                 "alibaba-PAI",
                 "Alibaba-NLP"
             ],
             "i18n": {
-                "en": "Qwen Team",
-                "zh": "通义千问团队"
+                "en": "Qwen",
+                "zh": "通义千问"
             },
             "scan": {
                 "hf": [
@@ -391,13 +391,13 @@
             },
             "region": "cn"
         },
-        "Tencent": {
+        "腾讯混元": {
             "orgs": [
                 "tencent"
             ],
             "i18n": {
-                "en": "Tencent",
-                "zh": "腾讯"
+                "en": "Tencent Hunyuan",
+                "zh": "腾讯混元"
             },
             "scan": {
                 "hf": [
@@ -438,13 +438,13 @@
             },
             "region": "cn"
         },
-        "Xiaomi": {
+        "Xiaomi MiMo": {
             "orgs": [
                 "XiaomiMiMo"
             ],
             "i18n": {
-                "en": "Xiaomi",
-                "zh": "小米"
+                "en": "Xiaomi MiMo",
+                "zh": "小米 MiMo"
             },
             "scan": {
                 "hf": [

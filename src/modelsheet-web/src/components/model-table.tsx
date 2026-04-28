@@ -1,12 +1,18 @@
 import { useState, useEffect, useMemo } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { providerSlug, isNewThisWeek } from "@/lib/utils"
-import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react"
+import { ArrowUpDown, ArrowUp, ArrowDown, Info } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { ModalityIcons } from "@/components/modality-icons"
 import { ModelBrandIcon, ProviderBrandIcon } from "@/components/brand-icon"
 import { ParamCell } from "@/components/param-cell"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import type { ModelInfo, ColumnConfig, ComplexityLevel, SortConfig } from "@/lib/types"
 import { COMPLEXITY_PRESETS } from "@/lib/model-data"
 import type { Language } from "@/lib/i18n"
@@ -338,6 +344,18 @@ export function ModelTable({
                             >
                               <ModelBrandIcon model={model.id} className="shrink-0" />
                               <span className="truncate">{formatValue(model[column.key], column.type)}</span>
+                              {model.nameNote && (
+                                <TooltipProvider delayDuration={200}>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Info className="shrink-0 h-3.5 w-3.5 text-muted-foreground hover:text-foreground transition-colors cursor-help" onClick={e => e.preventDefault()} />
+                                    </TooltipTrigger>
+                                    <TooltipContent side="top" className="max-w-xs text-xs font-mono">
+                                      {model.nameNote}
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              )}
                             </Link>
                           </>
                         ) : column.key === "provider" ? (

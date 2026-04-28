@@ -53,6 +53,8 @@ export interface ModelInfo {
   parameterSource?: string         // Short human-readable source
   parameterSourceUrl?: string      // Optional URL to the source
 
+  nameNote?: string                // Short note shown as tooltip on the model name
+
   [key: string]: any
 }
 

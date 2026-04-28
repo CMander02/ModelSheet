@@ -1,7 +1,6 @@
 import { useMemo, useState, useCallback } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { providerSlug, isNewThisWeek } from "@/lib/utils"
-import { Badge } from "@/components/ui/badge"
 import { ArrowUpDown, Check, ChevronDown } from "lucide-react"
 import type { ModelInfo } from "@/lib/types"
 import type { Language } from "@/lib/i18n"
@@ -154,8 +153,15 @@ function ModelCard({ model, language, selected, onSelect, onNavigate, cardFields
   return (
     <div className={`flex gap-3 items-start py-3 ${selected ? "opacity-100" : ""}`}>
       {/* Icon */}
-      <div className="shrink-0 cursor-pointer mt-0.5" onClick={() => onNavigate(model)}>
+      <div className="relative shrink-0 cursor-pointer mt-0.5" onClick={() => onNavigate(model)}>
         <ModelBrandIcon model={model.id} provider={model.provider} size={40} />
+        {isNewThisWeek(model.createdAt) && (
+          <span className="absolute -top-1 -left-1 w-9 h-9 overflow-hidden pointer-events-none">
+            <span className="absolute top-[11px] -left-[10px] w-[52px] text-center text-[7px] font-black leading-none text-white py-[2.5px] rotate-[-45deg] origin-center bg-gradient-to-r from-violet-500 to-pink-500 select-none">
+              NEW
+            </span>
+          </span>
+        )}
       </div>
 
       {/* Content */}
@@ -163,11 +169,6 @@ function ModelCard({ model, language, selected, onSelect, onNavigate, cardFields
         {/* Name + MoE badge */}
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-[15px] font-bold leading-tight">{model.name}</span>
-          {isNewThisWeek(model.createdAt) && (
-            <Badge className="shrink-0 rounded-sm border-transparent bg-gradient-to-r from-violet-500 to-pink-500 [background-size:105%] bg-center text-white text-[10px] px-1.5 py-0 leading-4 font-bold">
-              NEW
-            </Badge>
-          )}
           {model.isMoe && (
             <span
               className="rounded-md px-1.5 py-0.5 text-[11px] font-semibold leading-none"

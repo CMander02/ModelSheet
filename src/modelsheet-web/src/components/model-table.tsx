@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { providerSlug, isNewThisWeek } from "@/lib/utils"
-import { Badge } from "@/components/ui/badge"
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
@@ -310,10 +309,8 @@ export function ModelTable({
                       <td
                         key={column.key}
                         className={`p-4 align-middle bg-card group-hover:bg-muted transition-colors ${
-                          colIndex === 0
-                            ? `sticky z-10`
-                            : ''
-                        }`}
+                          colIndex === 0 ? `sticky z-10` : ''
+                        } ${column.key === "name" ? 'relative overflow-hidden' : ''}`}
                         style={colIndex === 0 ? {
                           left: onModelSelect ? '48px' : '0px',
                           minWidth: '140px',
@@ -326,19 +323,23 @@ export function ModelTable({
                         ) : (column.key === "totalParameters" || column.key === "activeParameters") ? (
                           <ParamCell value={model[column.key]} model={model} />
                         ) : column.key === "name" ? (
-                          <Link
-                            to={model.id?.includes("/") ? `/${model.id.split("/")[0]}/${model.id.split("/")[1]}` : "#"}
-                            className="flex items-center gap-2 hover:text-primary hover:underline transition-colors min-w-0"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <ModelBrandIcon model={model.id} className="shrink-0" />
-                            <span className="truncate">{formatValue(model[column.key], column.type)}</span>
+                          <>
                             {isNewThisWeek(model.createdAt) && (
-                              <Badge className="shrink-0 rounded-sm border-transparent bg-gradient-to-r from-violet-500 to-pink-500 [background-size:105%] bg-center text-white text-[10px] px-1.5 py-0 leading-4 font-bold">
-                                NEW
-                              </Badge>
+                              <span className="absolute top-0 left-0 w-[38px] h-[38px] overflow-hidden pointer-events-none z-10">
+                                <span className="absolute top-[9px] -left-[13px] w-[52px] text-center text-[8px] font-black leading-none text-white py-[3px] rotate-[-45deg] bg-gradient-to-r from-violet-500 to-pink-500 select-none">
+                                  NEW
+                                </span>
+                              </span>
                             )}
-                          </Link>
+                            <Link
+                              to={model.id?.includes("/") ? `/${model.id.split("/")[0]}/${model.id.split("/")[1]}` : "#"}
+                              className="flex items-center gap-2 hover:text-primary hover:underline transition-colors min-w-0"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <ModelBrandIcon model={model.id} className="shrink-0" />
+                              <span className="truncate">{formatValue(model[column.key], column.type)}</span>
+                            </Link>
+                          </>
                         ) : column.key === "provider" ? (
                           <Link
                             to={`/${providerSlug(String(model[column.key] ?? ""))}`}

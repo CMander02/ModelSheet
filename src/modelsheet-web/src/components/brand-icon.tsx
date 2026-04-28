@@ -162,6 +162,10 @@ const CUSTOM_LOGO_MAP: Record<string, string> = {
   "allenai":        "/icons/providers/allen-ai.png",
   "Allen AI":       "/icons/providers/allen-ai.png",
   "艾伦人工智能研究院": "/icons/providers/allen-ai.png",
+
+  // Poolside
+  "poolside":       "/icons/providers/poolside.webp",
+  "Poolside":       "/icons/providers/poolside.webp",
 }
 
 // ─── Provider key map (for ProviderIcon fallback) ──────────────────────────

@@ -887,6 +887,21 @@
                     "ByteDance-Seed"
                 ]
             }
+        },
+        "Poolside": {
+            "orgs": [
+                "poolside"
+            ],
+            "i18n": {
+                "en": "Poolside",
+                "zh": "Poolside"
+            },
+            "scan": {
+                "hf": [
+                    "poolside"
+                ]
+            },
+            "region": "global"
         }
     }
 }

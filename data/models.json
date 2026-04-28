@@ -29446,5 +29446,67 @@
     ],
     "createdAt": "2026-04-22T06:04:20.000Z",
     "isMoe": true
+  },
+  {
+    "id": "poolside/Laguna-XS.2",
+    "name": "Laguna-XS.2",
+    "provider": "Poolside",
+    "huggingfaceUrl": "https://huggingface.co/poolside/Laguna-XS.2",
+    "techReport": "",
+    "totalParameters": 33442617088,
+    "activeParameters": 1883242496,
+    "embeddingParameters": 205520896,
+    "nonEmbeddingParameters": 33237096192,
+    "contextLength": 131072,
+    "embeddingDim": 2048,
+    "vocabSize": 100352,
+    "architecture": "laguna",
+    "numLayers": 40,
+    "numHeads": 48,
+    "numKvHeads": 8,
+    "hiddenSize": 2048,
+    "intermediateSize": 8192,
+    "normType": "RMSNorm",
+    "normEps": 1e-06,
+    "attentionDropout": 0.0,
+    "mlpFactor": 4.0,
+    "gqaRatio": 6.0,
+    "torchDtype": "bfloat16",
+    "numExperts": 256,
+    "numExpertsPerToken": 8,
+    "numActivatedExperts": 8,
+    "moeIntermediateSize": 512,
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "createdAt": "2026-04-23T20:50:45.000Z",
+    "isMoe": true
+  },
+  {
+    "id": "poolside/Laguna-M.1",
+    "name": "Laguna-M.1",
+    "provider": "Poolside",
+    "huggingfaceUrl": null,
+    "techReport": "",
+    "arxivUrl": null,
+    "totalParameters": 225000000000,
+    "activeParameters": 23000000000,
+    "contextLength": null,
+    "architecture": "laguna",
+    "isMoe": true,
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "createdAt": null,
+    "updatedAt": "2026-04-28T17:29:06.405369+00:00",
+    "parameterConfidence": "official",
+    "parameterSource": "Poolside blog (2025)",
+    "parameterSourceUrl": "https://poolside.ai/blog/laguna-a-deeper-dive"
   }
 ]

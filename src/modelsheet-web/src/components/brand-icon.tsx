@@ -24,7 +24,8 @@ const ICON_SIZE = 18
 // Keys: HF org slugs + provider display names (EN + ZH)
 // Values: lobehub icon component with .Avatar variant (self-contained background)
 
-type AvatarIconComponent = React.ComponentType<{ size?: number }>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AvatarIconComponent = React.ComponentType<any>
 
 const LOBEHUB_AVATAR_MAP: Record<string, AvatarIconComponent> = {
   // Kimi — model-level (HF org) uses Kimi product icon

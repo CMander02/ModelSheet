@@ -4,12 +4,13 @@ import re
 from typing import Optional
 
 from .base import ConfigContext
-from ..config import load_provider_map
+from ..config import load_provider_map, build_hf_org_to_ms_org_map, MS_BASE_URL
 
 # Load provider mapping from data/providers.json
 # Maps HuggingFace org name -> normalized display name
 # Frontend i18n will translate these display names to localized versions
 PROVIDER_MAP = load_provider_map()
+HF_ORG_TO_MS_ORG_MAP = build_hf_org_to_ms_org_map()
 
 
 def extract_id(ctx: ConfigContext) -> str:
@@ -120,6 +121,21 @@ def extract_arxiv_url(ctx: ConfigContext) -> Optional[str]:
             return f"https://arxiv.org/abs/{arxiv_id}"
 
     return None
+
+
+def extract_modelscope_url(ctx: ConfigContext) -> Optional[str]:
+    """Generate ModelScope URL for CN-region models.
+
+    Uses hf_org → ms_org mapping from providers.json.
+    ModelScope URL format: https://modelscope.cn/models/<ms_org>/<model_name>
+    """
+    hf_org = ctx.model_id.split("/")[0]
+    model_name = ctx.model_id.split("/")[-1]
+    ms_orgs = HF_ORG_TO_MS_ORG_MAP.get(hf_org)
+    if not ms_orgs:
+        return None
+    ms_org = ms_orgs[0]
+    return f"{MS_BASE_URL}/models/{ms_org}/{model_name}"
 
 
 def extract_tech_report(ctx: ConfigContext) -> str:

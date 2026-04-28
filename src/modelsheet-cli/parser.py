@@ -17,6 +17,7 @@ from .extractors import (
     extract_name,
     extract_provider,
     extract_huggingface_url,
+    extract_modelscope_url,
     extract_tech_report,
     extract_arxiv_url,
     extract_created_at,
@@ -68,6 +69,7 @@ class ParsedModel:
 
     # URLs
     huggingface_url: Optional[str] = None
+    modelscope_url: Optional[str] = None
     tech_report: str = ""
     arxiv_url: Optional[str] = None
 
@@ -155,6 +157,7 @@ class ModelParser:
             provider=extract_provider(ctx),
             # URLs
             huggingface_url=extract_huggingface_url(ctx),
+            modelscope_url=extract_modelscope_url(ctx),
             tech_report=extract_tech_report(ctx),
             arxiv_url=extract_arxiv_url(ctx),
             # Basic specs

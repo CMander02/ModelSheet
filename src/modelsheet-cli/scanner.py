@@ -289,17 +289,27 @@ def get_scan_orgs_from_providers(source_filter: Optional[str] = None) -> list[tu
     except Exception:
         return []
 
-    result = []
+    hf_entries = []
+    ms_entries = []
     for _display_name, info in data.get("providers", {}).items():
         scan = info.get("scan", {})
         hf_orgs = scan.get("hf", info.get("orgs", []))
         ms_orgs = scan.get("ms", [])
+        is_cn = info.get("region") == "cn"
 
         if source_filter != "ms":
             for org in hf_orgs:
-                result.append(("hf", org))
+                hf_entries.append(("hf", org, is_cn))
         if source_filter != "hf":
             for org in ms_orgs:
-                result.append(("ms", org))
+                ms_entries.append(("ms", org, is_cn))
+
+    # CN providers: ms first, then hf. Global providers: hf only (no ms entries).
+    # Within each source, cn orgs appear before global orgs.
+    result = []
+    for source, org, _ in sorted(ms_entries, key=lambda x: (not x[2],)):
+        result.append((source, org))
+    for source, org, is_cn in sorted(hf_entries, key=lambda x: (not x[2],)):
+        result.append((source, org))
 
     return result

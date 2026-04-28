@@ -62,6 +62,7 @@ class ModelExporter:
         # Add optional fields only if they have values
         optional_fields = {
             # URLs
+            "modelscopeUrl": model.modelscope_url,
             "arxivUrl": model.arxiv_url,
             # Basic specs
             "totalParameters": model.total_parameters,

@@ -628,6 +628,10 @@
                 "en": "Infinigence",
                 "zh": "无问芯穹"
             },
+            "scan": {
+                "hf": ["Infinigence"],
+                "ms": ["Infinigence"]
+            },
             "region": "cn"
         },
         "XVERSE": {
@@ -638,6 +642,10 @@
                 "en": "XVERSE",
                 "zh": "元象"
             },
+            "scan": {
+                "hf": ["xverse"],
+                "ms": ["xverse"]
+            },
             "region": "cn"
         },
         "Bilibili": {
@@ -647,6 +655,10 @@
             "i18n": {
                 "en": "Bilibili",
                 "zh": "哔哩哔哩"
+            },
+            "scan": {
+                "hf": ["IndexTeam"],
+                "ms": ["IndexTeam"]
             },
             "region": "cn"
         },
@@ -748,6 +760,10 @@
             "i18n": {
                 "en": "Orion Star",
                 "zh": "猎户星空"
+            },
+            "scan": {
+                "hf": ["OrionStarAI"],
+                "ms": ["OrionStarAI"]
             },
             "region": "cn"
         },

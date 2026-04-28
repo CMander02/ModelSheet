@@ -29658,5 +29658,44 @@
     ],
     "createdAt": "2026-04-27T11:32:54.000Z",
     "isMoe": true
+  },
+  {
+    "id": "nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16",
+    "name": "Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16",
+    "provider": "NVIDIA",
+    "huggingfaceUrl": "https://huggingface.co/nvidia/Nemotron-3-Nano-Omni-30B-A3B-Reasoning-BF16",
+    "techReport": "",
+    "totalParameters": 102252380160,
+    "activeParameters": 7303102464,
+    "embeddingParameters": 352321536,
+    "nonEmbeddingParameters": 101900058624,
+    "contextLength": 262144,
+    "embeddingDim": 2688,
+    "vocabSize": 131072,
+    "architecture": "NemotronH_Nano_Omni_Reasoning_V3",
+    "numLayers": 52,
+    "numHeads": 32,
+    "numKvHeads": 2,
+    "hiddenSize": 2688,
+    "intermediateSize": 1856,
+    "positionEncoding": "RoPE",
+    "normType": "LayerNorm",
+    "normEps": 1e-05,
+    "attentionDropout": 0.0,
+    "mlpFactor": 0.69,
+    "gqaRatio": 16.0,
+    "torchDtype": "bfloat16",
+    "numExperts": 128,
+    "numSharedExperts": 1,
+    "numExpertsPerToken": 6,
+    "numActivatedExperts": 7,
+    "moeIntermediateSize": 1856,
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "isMoe": true
   }
 ]

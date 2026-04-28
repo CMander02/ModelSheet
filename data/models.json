@@ -71,7 +71,8 @@
     ],
     "isMoe": false,
     "architectureFamily": "Qwen2",
-    "modelscopeUrl": "https://modelscope.cn/models/XiaomiMiMo/MiMo-Audio-7B-Base"
+    "modelscopeUrl": "https://modelscope.cn/models/XiaomiMiMo/MiMo-Audio-7B-Base",
+    "createdAt": "2025-09-18T00:00:00.000Z"
   },
   {
     "id": "XiaomiMiMo/MiMo-VL-7B-RL",
@@ -109,7 +110,8 @@
     ],
     "isMoe": false,
     "architectureFamily": "Qwen2",
-    "modelscopeUrl": "https://modelscope.cn/models/XiaomiMiMo/MiMo-VL-7B-RL"
+    "modelscopeUrl": "https://modelscope.cn/models/XiaomiMiMo/MiMo-VL-7B-RL",
+    "createdAt": "2025-05-30T00:00:00.000Z"
   },
   {
     "id": "arcee-ai/SuperNova-Medius",
@@ -145,7 +147,8 @@
       "text"
     ],
     "isMoe": false,
-    "architectureFamily": "Qwen2"
+    "architectureFamily": "Qwen2",
+    "createdAt": "2024-10-02T00:00:00.000Z"
   },
   {
     "id": "openai/gpt-4-turbo-preview",
@@ -162,7 +165,8 @@
     ],
     "isMoe": false,
     "contextLength": 128000,
-    "knowledgeCutoff": "2023-12-01"
+    "knowledgeCutoff": "2023-12-01",
+    "createdAt": "2023-11-06T00:00:00.000Z"
   },
   {
     "id": "openai/o4-mini",
@@ -180,7 +184,8 @@
     ],
     "isMoe": false,
     "contextLength": 200000,
-    "knowledgeCutoff": "2024-06-01"
+    "knowledgeCutoff": "2024-06-01",
+    "createdAt": "2026-04-16T00:00:00.000Z"
   },
   {
     "id": "tiiuae/Falcon-H1-34B-Base",
@@ -217,7 +222,8 @@
       "text"
     ],
     "isMoe": false,
-    "architectureFamily": "Falcon"
+    "architectureFamily": "Falcon",
+    "createdAt": "2025-05-01T05:10:32.000Z"
   },
   {
     "id": "paper/transformer",
@@ -29908,7 +29914,7 @@
     "outputModalities": [
       "text"
     ],
-    "createdAt": null,
+    "createdAt": "2026-04-23T00:00:00.000Z",
     "updatedAt": "2026-04-28T17:29:06.405369+00:00",
     "parameterConfidence": "official",
     "parameterSource": "Poolside blog (2025)",
@@ -30105,6 +30111,83 @@
     "outputModalities": [
       "text"
     ],
+    "isMoe": true,
+    "createdAt": "2026-04-20T04:40:42.000Z"
+  },
+  {
+    "id": "tencent/Hy3-preview-Base",
+    "name": "Hy3-preview-Base",
+    "provider": "Tencent",
+    "huggingfaceUrl": "https://huggingface.co/tencent/Hy3-preview-Base",
+    "techReport": "",
+    "modelscopeUrl": "https://modelscope.cn/models/Tencent/Hy3-preview-Base",
+    "totalParameters": 298786155776,
+    "activeParameters": 17943232512,
+    "embeddingParameters": 494927872,
+    "nonEmbeddingParameters": 298291227904,
+    "contextLength": 262144,
+    "embeddingDim": 4096,
+    "vocabSize": 120832,
+    "architecture": "hy_v3",
+    "numLayers": 80,
+    "numHeads": 64,
+    "numKvHeads": 8,
+    "hiddenSize": 4096,
+    "intermediateSize": 13312,
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-05,
+    "mlpFactor": 3.25,
+    "gqaRatio": 8.0,
+    "numExperts": 192,
+    "numExpertsPerToken": 8,
+    "numActivatedExperts": 8,
+    "moeIntermediateSize": 1536,
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "createdAt": "2026-04-13T06:07:47.000Z",
+    "isMoe": true
+  },
+  {
+    "id": "tencent/Hy3-preview",
+    "name": "Hy3-preview",
+    "provider": "Tencent",
+    "huggingfaceUrl": "https://huggingface.co/tencent/Hy3-preview",
+    "techReport": "",
+    "modelscopeUrl": "https://modelscope.cn/models/Tencent/Hy3-preview",
+    "totalParameters": 298786155776,
+    "activeParameters": 17943232512,
+    "embeddingParameters": 494927872,
+    "nonEmbeddingParameters": 298291227904,
+    "contextLength": 262144,
+    "embeddingDim": 4096,
+    "vocabSize": 120832,
+    "architecture": "hy_v3",
+    "numLayers": 80,
+    "numHeads": 64,
+    "numKvHeads": 8,
+    "hiddenSize": 4096,
+    "intermediateSize": 13312,
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-05,
+    "mlpFactor": 3.25,
+    "gqaRatio": 8.0,
+    "numExperts": 192,
+    "numExpertsPerToken": 8,
+    "numActivatedExperts": 8,
+    "moeIntermediateSize": 1536,
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "createdAt": "2026-04-13T06:07:57.000Z",
     "isMoe": true
   }
 ]

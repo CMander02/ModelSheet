@@ -21,3 +21,16 @@ export function findProviderBySlug(models: { provider?: string | null }[], slug:
   }
   return undefined
 }
+
+/** Returns true if the createdAt ISO string falls within the current week (week starts Sunday). */
+export function isNewThisWeek(createdAt: string | null | undefined): boolean {
+  if (!createdAt) return false
+  const created = new Date(createdAt)
+  if (isNaN(created.getTime())) return false
+  const now = new Date()
+  // Start of current week: last Sunday 00:00:00 local time
+  const weekStart = new Date(now)
+  weekStart.setDate(now.getDate() - now.getDay())
+  weekStart.setHours(0, 0, 0, 0)
+  return created >= weekStart
+}

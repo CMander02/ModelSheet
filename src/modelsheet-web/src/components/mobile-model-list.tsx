@@ -1,6 +1,7 @@
 import { useMemo, useState, useCallback } from "react"
 import { useNavigate, Link } from "react-router-dom"
-import { providerSlug } from "@/lib/utils"
+import { providerSlug, isNewThisWeek } from "@/lib/utils"
+import { Badge } from "@/components/ui/badge"
 import { ArrowUpDown, Check, ChevronDown } from "lucide-react"
 import type { ModelInfo } from "@/lib/types"
 import type { Language } from "@/lib/i18n"
@@ -162,6 +163,11 @@ function ModelCard({ model, language, selected, onSelect, onNavigate, cardFields
         {/* Name + MoE badge */}
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-[15px] font-bold leading-tight">{model.name}</span>
+          {isNewThisWeek(model.createdAt) && (
+            <Badge className="shrink-0 rounded-sm border-transparent bg-gradient-to-r from-violet-500 to-pink-500 [background-size:105%] bg-center text-white text-[10px] px-1.5 py-0 leading-4 font-bold">
+              NEW
+            </Badge>
+          )}
           {model.isMoe && (
             <span
               className="rounded-md px-1.5 py-0.5 text-[11px] font-semibold leading-none"

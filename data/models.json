@@ -34,7 +34,8 @@
     ],
     "isMoe": false,
     "architectureFamily": "Qwen2",
-    "modelscopeUrl": "https://modelscope.cn/models/Qwen/Qwen2.5-14B-Instruct-1M"
+    "modelscopeUrl": "https://modelscope.cn/models/Qwen/Qwen2.5-14B-Instruct-1M",
+    "arxivUrl": "https://arxiv.org/abs/2501.15383"
   },
   {
     "id": "XiaomiMiMo/MiMo-Audio-7B-Base",
@@ -6280,7 +6281,7 @@
     "name": "Qwen1.5-MoE-A2.7B",
     "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen1.5-MoE-A2.7B",
-    "techReport": "",
+    "techReport": "https://qwenlm.github.io/blog/qwen-moe/",
     "totalParameters": 14315784192,
     "activeParameters": 1544290304,
     "embeddingParameters": 311164928,
@@ -6607,7 +6608,7 @@
     "name": "Qwen1.5-MoE-A2.7B-Chat",
     "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen1.5-MoE-A2.7B-Chat",
-    "techReport": "",
+    "techReport": "https://qwenlm.github.io/blog/qwen-moe/",
     "totalParameters": 14315784192,
     "activeParameters": 1544290304,
     "embeddingParameters": 311164928,
@@ -8514,7 +8515,8 @@
     "createdAt": "2024-05-22T15:28:10.000Z",
     "isMoe": false,
     "architectureFamily": "Qwen2",
-    "modelscopeUrl": "https://modelscope.cn/models/Qwen/Qwen2-72B"
+    "modelscopeUrl": "https://modelscope.cn/models/Qwen/Qwen2-72B",
+    "arxivUrl": "https://arxiv.org/abs/2407.10671"
   },
   {
     "id": "Qwen/Qwen2-57B-A14B",
@@ -8556,7 +8558,8 @@
     "createdAt": "2024-05-22T18:08:21.000Z",
     "isMoe": true,
     "architectureFamily": "Qwen2",
-    "modelscopeUrl": "https://modelscope.cn/models/Qwen/Qwen2-57B-A14B"
+    "modelscopeUrl": "https://modelscope.cn/models/Qwen/Qwen2-57B-A14B",
+    "arxivUrl": "https://arxiv.org/abs/2407.10671"
   },
   {
     "id": "internlm/internlm2-math-plus-1_8b",
@@ -8821,7 +8824,8 @@
     "createdAt": "2024-05-31T08:38:11.000Z",
     "isMoe": false,
     "architectureFamily": "Qwen2",
-    "modelscopeUrl": "https://modelscope.cn/models/Qwen/Qwen2-0.5B"
+    "modelscopeUrl": "https://modelscope.cn/models/Qwen/Qwen2-0.5B",
+    "arxivUrl": "https://arxiv.org/abs/2407.10671"
   },
   {
     "id": "Qwen/Qwen2-1.5B",
@@ -8859,7 +8863,8 @@
     "createdAt": "2024-05-31T08:41:32.000Z",
     "isMoe": false,
     "architectureFamily": "Qwen2",
-    "modelscopeUrl": "https://modelscope.cn/models/Qwen/Qwen2-1.5B"
+    "modelscopeUrl": "https://modelscope.cn/models/Qwen/Qwen2-1.5B",
+    "arxivUrl": "https://arxiv.org/abs/2407.10671"
   },
   {
     "id": "Qwen/Qwen2-0.5B-Instruct",
@@ -8897,7 +8902,8 @@
     "createdAt": "2024-06-03T09:06:06.000Z",
     "isMoe": false,
     "architectureFamily": "Qwen2",
-    "modelscopeUrl": "https://modelscope.cn/models/Qwen/Qwen2-0.5B-Instruct"
+    "modelscopeUrl": "https://modelscope.cn/models/Qwen/Qwen2-0.5B-Instruct",
+    "arxivUrl": "https://arxiv.org/abs/2407.10671"
   },
   {
     "id": "Qwen/Qwen2-1.5B-Instruct",
@@ -8935,7 +8941,8 @@
     "createdAt": "2024-06-03T09:08:12.000Z",
     "isMoe": false,
     "architectureFamily": "Qwen2",
-    "modelscopeUrl": "https://modelscope.cn/models/Qwen/Qwen2-1.5B-Instruct"
+    "modelscopeUrl": "https://modelscope.cn/models/Qwen/Qwen2-1.5B-Instruct",
+    "arxivUrl": "https://arxiv.org/abs/2407.10671"
   },
   {
     "id": "Qwen/Qwen2-57B-A14B-Instruct",
@@ -9171,7 +9178,8 @@
     "createdAt": "2024-06-04T13:35:27.000Z",
     "isMoe": false,
     "architectureFamily": "Qwen2",
-    "modelscopeUrl": "https://modelscope.cn/models/Qwen/Qwen2-7B"
+    "modelscopeUrl": "https://modelscope.cn/models/Qwen/Qwen2-7B",
+    "arxivUrl": "https://arxiv.org/abs/2407.10671"
   },
   {
     "id": "IndexTeam/Index-1.9B",
@@ -27050,7 +27058,7 @@
     "name": "Qwen3-Omni-30B-A3B-Thinking",
     "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-Omni-30B-A3B-Thinking",
-    "techReport": "",
+    "techReport": "https://github.com/QwenLM/Qwen3-Omni/blob/main/assets/Qwen3_Omni.pdf",
     "totalParameters": 31719205488,
     "activeParameters": 2928672768,
     "embeddingParameters": 311427072,
@@ -27091,7 +27099,7 @@
     "name": "Tongyi-DeepResearch-30B-A3B",
     "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Alibaba-NLP/Tongyi-DeepResearch-30B-A3B",
-    "techReport": "",
+    "techReport": "https://tongyi-agent.github.io/blog/introducing-tongyi-deep-research",
     "totalParameters": 30532122624,
     "activeParameters": 2928410624,
     "embeddingParameters": 311164928,
@@ -27293,7 +27301,7 @@
     "name": "Qwen3-Omni-30B-A3B-Instruct",
     "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3-Omni-30B-A3B-Instruct",
-    "techReport": "",
+    "techReport": "https://github.com/QwenLM/Qwen3-Omni/blob/main/assets/Qwen3_Omni.pdf",
     "totalParameters": 35259818545,
     "activeParameters": 2928672768,
     "embeddingParameters": 311427072,
@@ -29002,7 +29010,7 @@
     "name": "Qwen3.5-397B-A17B",
     "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-397B-A17B",
-    "techReport": "",
+    "techReport": "https://qwen.ai/blog?id=qwen3.5",
     "totalParameters": 403397928944,
     "activeParameters": 12593397760,
     "embeddingParameters": 1017118720,
@@ -29061,7 +29069,7 @@
     "name": "Qwen3.5-35B-A3B",
     "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-35B-A3B",
-    "techReport": "",
+    "techReport": "https://qwen.ai/blog?id=qwen3.5",
     "totalParameters": 35951822704,
     "activeParameters": 2186280960,
     "embeddingParameters": 508559360,
@@ -29100,7 +29108,7 @@
     "name": "Qwen3.5-27B",
     "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-27B",
-    "techReport": "",
+    "techReport": "https://qwen.ai/blog?id=qwen3.5",
     "totalParameters": 27781427952,
     "activeParameters": 27781427952,
     "embeddingParameters": 1271398400,
@@ -29137,7 +29145,7 @@
     "name": "Qwen3.5-35B-A3B-Base",
     "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-35B-A3B-Base",
-    "techReport": "",
+    "techReport": "https://qwen.ai/blog?id=qwen3.5",
     "totalParameters": 35951822704,
     "activeParameters": 2186280960,
     "embeddingParameters": 508559360,
@@ -29176,7 +29184,7 @@
     "name": "Qwen3.5-122B-A10B",
     "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-122B-A10B",
-    "techReport": "",
+    "techReport": "https://qwen.ai/blog?id=qwen3.5",
     "totalParameters": 125086497008,
     "activeParameters": 6198657024,
     "embeddingParameters": 762839040,
@@ -29215,7 +29223,7 @@
     "name": "Qwen3.5-9B-Base",
     "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-9B-Base",
-    "techReport": "",
+    "techReport": "https://qwen.ai/blog?id=qwen3.5",
     "totalParameters": 9653104368,
     "activeParameters": 9653104368,
     "embeddingParameters": 1017118720,
@@ -29252,7 +29260,7 @@
     "name": "Qwen3.5-9B",
     "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-9B",
-    "techReport": "",
+    "techReport": "https://qwen.ai/blog?id=qwen3.5",
     "totalParameters": 9653104368,
     "activeParameters": 9653104368,
     "embeddingParameters": 1017118720,
@@ -29289,7 +29297,7 @@
     "name": "Qwen3.5-4B-Base",
     "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-4B-Base",
-    "techReport": "",
+    "techReport": "https://qwen.ai/blog?id=qwen3.5",
     "totalParameters": 4659865088,
     "activeParameters": 4659865088,
     "embeddingParameters": 635699200,
@@ -29326,7 +29334,7 @@
     "name": "Qwen3.5-4B",
     "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-4B",
-    "techReport": "",
+    "techReport": "https://qwen.ai/blog?id=qwen3.5",
     "totalParameters": 4659865088,
     "activeParameters": 4659865088,
     "embeddingParameters": 635699200,
@@ -29363,7 +29371,7 @@
     "name": "Qwen3.5-2B",
     "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-2B",
-    "techReport": "",
+    "techReport": "https://qwen.ai/blog?id=qwen3.5",
     "totalParameters": 2274069824,
     "activeParameters": 2274069824,
     "embeddingParameters": 508559360,
@@ -29400,7 +29408,7 @@
     "name": "Qwen3.5-0.8B",
     "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-0.8B",
-    "techReport": "",
+    "techReport": "https://qwen.ai/blog?id=qwen3.5",
     "totalParameters": 873438784,
     "activeParameters": 873438784,
     "embeddingParameters": 254279680,
@@ -29437,7 +29445,7 @@
     "name": "Qwen3.5-2B-Base",
     "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-2B-Base",
-    "techReport": "",
+    "techReport": "https://qwen.ai/blog?id=qwen3.5",
     "totalParameters": 2274069824,
     "activeParameters": 2274069824,
     "embeddingParameters": 508559360,
@@ -29474,7 +29482,7 @@
     "name": "Qwen3.5-0.8B-Base",
     "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.5-0.8B-Base",
-    "techReport": "",
+    "techReport": "https://qwen.ai/blog?id=qwen3.5",
     "totalParameters": 873438784,
     "activeParameters": 873438784,
     "embeddingParameters": 254279680,
@@ -29749,7 +29757,7 @@
     "name": "Qwen3.6-35B-A3B",
     "provider": "Qwen",
     "huggingfaceUrl": "https://huggingface.co/Qwen/Qwen3.6-35B-A3B",
-    "techReport": "",
+    "techReport": "https://qwen.ai/blog?id=qwen3.6-35b-a3b",
     "totalParameters": 35951822704,
     "activeParameters": 2186280960,
     "embeddingParameters": 508559360,

@@ -918,6 +918,21 @@
                 ]
             },
             "region": "global"
+        },
+        "iFlyTek": {
+            "orgs": [
+                "iFlytek"
+            ],
+            "i18n": {
+                "en": "iFlyTek",
+                "zh": "科大讯飞"
+            },
+            "scan": {
+                "ms": [
+                    "iFlytek"
+                ]
+            },
+            "region": "cn"
         }
     }
 }

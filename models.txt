@@ -16,6 +16,12 @@ meta-llama/Llama-3.1-8B-Instruct
 mistralai/Mistral-7B-Instruct-v0.3
 mistralai/Mixtral-8x7B-Instruct-v0.1
 
+# iFlyTek Series
+iFlytek/Spark-X2-Flash
+
+# AntGroup / inclusionAI Series
+inclusionAI/Ling-2.6-flash
+
 # DeepSeek Series
 
 # Jina Series

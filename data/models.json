@@ -3144,7 +3144,8 @@
     "createdAt": "2023-10-28T07:42:03.000Z",
     "isMoe": false,
     "architectureFamily": "LLaMA",
-    "modelscopeUrl": "https://modelscope.cn/models/deepseek-ai/deepseek-coder-1.3b-base"
+    "modelscopeUrl": "https://modelscope.cn/models/deepseek-ai/deepseek-coder-1.3b-base",
+    "arxivUrl": "https://arxiv.org/abs/2401.14196"
   },
   {
     "id": "deepseek-ai/deepseek-coder-6.7b-instruct",
@@ -3181,7 +3182,8 @@
     "createdAt": "2023-10-29T11:01:36.000Z",
     "isMoe": false,
     "architectureFamily": "LLaMA",
-    "modelscopeUrl": "https://modelscope.cn/models/deepseek-ai/deepseek-coder-6.7b-instruct"
+    "modelscopeUrl": "https://modelscope.cn/models/deepseek-ai/deepseek-coder-6.7b-instruct",
+    "arxivUrl": "https://arxiv.org/abs/2401.14196"
   },
   {
     "id": "deepseek-ai/deepseek-coder-1.3b-instruct",
@@ -3218,7 +3220,8 @@
     "createdAt": "2023-10-29T12:43:40.000Z",
     "isMoe": false,
     "architectureFamily": "LLaMA",
-    "modelscopeUrl": "https://modelscope.cn/models/deepseek-ai/deepseek-coder-1.3b-instruct"
+    "modelscopeUrl": "https://modelscope.cn/models/deepseek-ai/deepseek-coder-1.3b-instruct",
+    "arxivUrl": "https://arxiv.org/abs/2401.14196"
   },
   {
     "id": "openchat/openchat_3.5",
@@ -3664,7 +3667,8 @@
     "createdAt": "2023-11-29T03:08:22.000Z",
     "isMoe": false,
     "architectureFamily": "LLaMA",
-    "modelscopeUrl": "https://modelscope.cn/models/deepseek-ai/deepseek-llm-7b-base"
+    "modelscopeUrl": "https://modelscope.cn/models/deepseek-ai/deepseek-llm-7b-base",
+    "arxivUrl": "https://arxiv.org/abs/2401.02954"
   },
   {
     "id": "deepseek-ai/deepseek-llm-7b-chat",
@@ -3701,7 +3705,8 @@
     "createdAt": "2023-11-29T03:19:32.000Z",
     "isMoe": false,
     "architectureFamily": "LLaMA",
-    "modelscopeUrl": "https://modelscope.cn/models/deepseek-ai/deepseek-llm-7b-chat"
+    "modelscopeUrl": "https://modelscope.cn/models/deepseek-ai/deepseek-llm-7b-chat",
+    "arxivUrl": "https://arxiv.org/abs/2401.02954"
   },
   {
     "id": "deepseek-ai/deepseek-llm-67b-base",
@@ -3738,7 +3743,8 @@
     "createdAt": "2023-11-29T03:23:47.000Z",
     "isMoe": false,
     "architectureFamily": "LLaMA",
-    "modelscopeUrl": "https://modelscope.cn/models/deepseek-ai/deepseek-llm-67b-base"
+    "modelscopeUrl": "https://modelscope.cn/models/deepseek-ai/deepseek-llm-67b-base",
+    "arxivUrl": "https://arxiv.org/abs/2401.02954"
   },
   {
     "id": "deepseek-ai/deepseek-llm-67b-chat",
@@ -3775,7 +3781,8 @@
     "createdAt": "2023-11-29T03:30:00.000Z",
     "isMoe": false,
     "architectureFamily": "LLaMA",
-    "modelscopeUrl": "https://modelscope.cn/models/deepseek-ai/deepseek-llm-67b-chat"
+    "modelscopeUrl": "https://modelscope.cn/models/deepseek-ai/deepseek-llm-67b-chat",
+    "arxivUrl": "https://arxiv.org/abs/2401.02954"
   },
   {
     "id": "Qwen/Qwen-72B-Chat",
@@ -5390,7 +5397,8 @@
     "createdAt": "2024-01-25T15:51:02.000Z",
     "isMoe": false,
     "architectureFamily": "LLaMA",
-    "modelscopeUrl": "https://modelscope.cn/models/deepseek-ai/deepseek-coder-7b-instruct-v1.5"
+    "modelscopeUrl": "https://modelscope.cn/models/deepseek-ai/deepseek-coder-7b-instruct-v1.5",
+    "arxivUrl": "https://arxiv.org/abs/2401.02954"
   },
   {
     "id": "RWKV/rwkv-5-world-7b",
@@ -28537,7 +28545,7 @@
     "name": "DeepSeek-V3.2-Speciale",
     "provider": "DeepSeek",
     "huggingfaceUrl": "https://huggingface.co/deepseek-ai/DeepSeek-V3.2-Speciale",
-    "techReport": "",
+    "techReport": "https://huggingface.co/deepseek-ai/DeepSeek-V3.2/blob/main/assets/paper.pdf",
     "totalParameters": 685396921376,
     "activeParameters": 37641519104,
     "embeddingParameters": 926679040,
@@ -28657,7 +28665,7 @@
     "name": "DeepSeek-V3.2",
     "provider": "DeepSeek",
     "huggingfaceUrl": "https://huggingface.co/deepseek-ai/DeepSeek-V3.2",
-    "techReport": "",
+    "techReport": "https://huggingface.co/deepseek-ai/DeepSeek-V3.2/blob/main/assets/paper.pdf",
     "totalParameters": 685396921376,
     "activeParameters": 37641519104,
     "embeddingParameters": 926679040,

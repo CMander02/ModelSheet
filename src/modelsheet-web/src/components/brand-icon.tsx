@@ -164,6 +164,11 @@ const CUSTOM_LOGO_MAP: Record<string, string> = {
   "Qihoo 360":      "/icons/providers/qihoo360.png",
   "360":            "/icons/providers/qihoo360.png",
 
+  // Stepfun / 阶跃星辰
+  "stepfun-ai":     "/icons/providers/stepfun.png",
+  "Stepfun":        "/icons/providers/stepfun.png",
+  "阶跃星辰":        "/icons/providers/stepfun.png",
+
   // Allen AI / AI2
   "allenai":        "/icons/providers/allen-ai.png",
   "Allen AI":       "/icons/providers/allen-ai.png",

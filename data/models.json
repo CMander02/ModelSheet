@@ -172,7 +172,7 @@
     "contextLength": 128000,
     "knowledgeCutoff": "2023-12-01",
     "createdAt": "2023-11-06T00:00:00.000Z",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "openai/o4-mini",
@@ -192,7 +192,7 @@
     "contextLength": 200000,
     "knowledgeCutoff": "2024-06-01",
     "createdAt": "2026-04-16T00:00:00.000Z",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "tiiuae/Falcon-H1-34B-Base",
@@ -323,7 +323,7 @@
     "parameterConfidence": "official",
     "parameterSource": "Brown et al. 2020",
     "parameterSourceUrl": "https://arxiv.org/abs/2005.14165",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "openai/clip-vit-large-patch14",
@@ -1312,7 +1312,7 @@
     "architectureFamily": "Claude",
     "parameterConfidence": "rumored",
     "parameterSource": "Leaked deck estimate ~52B; Anthropic has never confirmed",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "openai/whisper-tiny",
@@ -1529,7 +1529,7 @@
     "createdAt": "2022-11-30T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2021-09-01",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "openai/whisper-large-v2",
@@ -1613,7 +1613,7 @@
     "parameterSource": "SemiAnalysis (2023): ~1.8T MoE, 16 experts",
     "parameterSourceUrl": "https://www.semianalysis.com/p/gpt-4-architecture-infrastructure",
     "knowledgeCutoff": "2023-12-01",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "huggyllama/llama-7b",
@@ -2001,7 +2001,7 @@
     "createdAt": "2023-07-11T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Claude",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "lmsys/vicuna-7b-v1.5",
@@ -3637,7 +3637,7 @@
     "createdAt": "2023-11-21T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Claude",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "01-ai/Yi-34B-Chat",
@@ -4113,7 +4113,7 @@
     "isMoe": true,
     "architectureFamily": "Gemini",
     "parameterSource": "Google has not disclosed parameter counts for Gemini 1.x",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
@@ -6317,7 +6317,7 @@
     "isMoe": true,
     "architectureFamily": "Gemini",
     "parameterSource": "Google has not disclosed parameter counts for Gemini 1.x",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "amazon/chronos-t5-mini",
@@ -6574,7 +6574,7 @@
     "createdAt": "2024-03-04T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Claude",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "anthropic/claude-3-sonnet",
@@ -6593,7 +6593,7 @@
     "createdAt": "2024-03-04T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Claude",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "state-spaces/mamba-2.8b-hf",
@@ -6815,7 +6815,7 @@
     "createdAt": "2024-03-13T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Claude",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "Qwen/Qwen1.5-MoE-A2.7B-Chat",
@@ -7082,7 +7082,7 @@
     "parameterConfidence": "rumored",
     "parameterSource": "Assumed same backbone as GPT-4 (~1.8T MoE); not confirmed by OpenAI",
     "knowledgeCutoff": "2023-12-01",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "qihoo360/360Zhinao-7B-Base",
@@ -8461,7 +8461,7 @@
     "isMoe": false,
     "architectureFamily": "GPT",
     "knowledgeCutoff": "2023-10-01",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "deepseek-ai/DeepSeek-V2-Lite",
@@ -9810,7 +9810,7 @@
     "createdAt": "2024-06-20T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Claude",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "arcee-ai/Arcee-Spark",
@@ -10714,7 +10714,7 @@
     "isMoe": false,
     "architectureFamily": "GPT",
     "knowledgeCutoff": "2023-10-01",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "deepseek-ai/DeepSeek-V2-Chat-0628",
@@ -11995,7 +11995,7 @@
     "isMoe": false,
     "architectureFamily": "o-series",
     "knowledgeCutoff": "2023-10-01",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "openai/o1-mini",
@@ -12013,7 +12013,7 @@
     "isMoe": false,
     "architectureFamily": "o-series",
     "knowledgeCutoff": "2023-10-01",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "openai/o1-preview",
@@ -12032,7 +12032,7 @@
     "createdAt": "2024-09-12T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2023-10-01",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "KbsdJames/Omni-Judge",
@@ -14219,7 +14219,7 @@
     "createdAt": "2024-10-22T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Claude",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "zai-org/glm-4-voice-tokenizer",
@@ -14339,7 +14339,7 @@
     "createdAt": "2024-11-04T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Claude",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "Qwen/Qwen2.5-Coder-32B-Instruct",
@@ -15556,7 +15556,7 @@
     "isMoe": false,
     "architectureFamily": "o-series",
     "knowledgeCutoff": "2023-10-01",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "ibm-granite/granite-3.1-8b-base",
@@ -17718,7 +17718,7 @@
     "createdAt": "2025-01-31T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2023-10-01",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "google/gemini-2.0-flash",
@@ -17741,7 +17741,7 @@
     "createdAt": "2025-02-05T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Gemini",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "google/gemini-2.0-flash-lite",
@@ -17762,7 +17762,7 @@
     "createdAt": "2025-02-05T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Gemini",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "GAIR/LIMO",
@@ -18678,7 +18678,7 @@
     "createdAt": "2025-02-24T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Claude",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "baichuan-inc/Baichuan-Audio-Instruct",
@@ -18775,7 +18775,7 @@
     "createdAt": "2025-02-27T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2023-10-01",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "inclusionAI/Ling-lite",
@@ -19891,7 +19891,7 @@
     "createdAt": "2025-03-25T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Gemini",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "agentrl/ReSearch-Qwen-7B",
@@ -21317,7 +21317,7 @@
     "isMoe": false,
     "architectureFamily": "GPT",
     "knowledgeCutoff": "2024-06-01",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "openai/gpt-4.1-mini",
@@ -21336,7 +21336,7 @@
     "isMoe": false,
     "architectureFamily": "GPT",
     "knowledgeCutoff": "2024-06-01",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "openai/gpt-4.1-nano",
@@ -21355,7 +21355,7 @@
     "isMoe": false,
     "architectureFamily": "GPT",
     "knowledgeCutoff": "2024-06-01",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "openai/o3",
@@ -21374,7 +21374,7 @@
     "isMoe": false,
     "architectureFamily": "o-series",
     "knowledgeCutoff": "2024-06-01",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "ByteDance-Seed/UI-TARS-1.5-7B",
@@ -22979,7 +22979,7 @@
     "createdAt": "2025-05-01T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2024-09-30",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "tiiuae/Falcon-H1-0.5B-Base",
@@ -23440,7 +23440,7 @@
     "createdAt": "2025-05-16T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2024-06-01",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "Qwen/WorldPM-72B",
@@ -23697,7 +23697,7 @@
     "createdAt": "2025-05-20T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Gemini",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "hkust-nlp/Laser-L8192-1.5B",
@@ -23868,7 +23868,7 @@
     "createdAt": "2025-05-22T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Claude",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "anthropic/claude-sonnet-4",
@@ -23887,7 +23887,7 @@
     "createdAt": "2025-05-22T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Claude",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "deepseek-ai/DeepSeek-R1-0528",
@@ -24071,7 +24071,7 @@
     "createdAt": "2025-06-01T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Gemini",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "RUC-AIBOX/Qwen-Math-7B-CIR",
@@ -24285,7 +24285,7 @@
     "isMoe": false,
     "architectureFamily": "o-series",
     "knowledgeCutoff": "2024-06-01",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "google/gemma-3n-E2B-it",
@@ -26439,7 +26439,7 @@
     "createdAt": "2025-08-01T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Claude",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "Skywork/MindLink-32B-0801",
@@ -26862,7 +26862,7 @@
     "createdAt": "2025-08-07T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2024-09-30",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "openai/gpt-5-mini",
@@ -26882,7 +26882,7 @@
     "createdAt": "2025-08-07T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2024-05-31",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "openai/gpt-5-nano",
@@ -26902,7 +26902,7 @@
     "createdAt": "2025-08-07T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2024-05-31",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "openai/gpt-5-pro",
@@ -26922,7 +26922,7 @@
     "createdAt": "2025-08-07T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2024-09-30",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "XiaomiMiMo/MiMo-VL-7B-RL-2508",
@@ -27580,7 +27580,7 @@
     "createdAt": "2025-09-01T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Claude",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "moonshotai/Kimi-K2-Instruct-0905",
@@ -28440,7 +28440,7 @@
     "createdAt": "2025-10-01T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2024-09-30",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "openai/gpt-5.1-codex",
@@ -28460,7 +28460,7 @@
     "createdAt": "2025-10-01T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2024-09-30",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "openai/gpt-5.1-codex-max",
@@ -28480,7 +28480,7 @@
     "createdAt": "2025-10-01T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2024-09-30",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "openai/gpt-5.1-codex-mini",
@@ -28500,7 +28500,7 @@
     "createdAt": "2025-10-01T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2024-09-30",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "inclusionAI/Ling-1T",
@@ -28953,7 +28953,7 @@
     "createdAt": "2025-10-22T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Claude",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "MiniMaxAI/MiniMax-M2",
@@ -29134,7 +29134,7 @@
     "createdAt": "2025-11-01T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Claude",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "moonshotai/Kimi-K2-Thinking",
@@ -29436,7 +29436,7 @@
     "createdAt": "2025-12-01T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Gemini",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "openai/gpt-5.2",
@@ -29456,7 +29456,7 @@
     "createdAt": "2025-12-01T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2025-08-31",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "openai/gpt-5.2-codex",
@@ -29476,7 +29476,7 @@
     "createdAt": "2025-12-01T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2025-08-31",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "openai/gpt-5.2-pro",
@@ -29496,7 +29496,7 @@
     "createdAt": "2025-12-01T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2025-08-31",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "deepseek-ai/DeepSeek-V3.2",
@@ -29678,7 +29678,7 @@
     "createdAt": "2025-12-17T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Gemini",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "openai/gpt-5.3-codex",
@@ -29698,7 +29698,7 @@
     "createdAt": "2026-01-01T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2025-08-31",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "moonshotai/Kimi-K2.5",
@@ -29762,7 +29762,7 @@
     "createdAt": "2026-02-01T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Claude",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "anthropic/claude-sonnet-4.6",
@@ -29781,7 +29781,7 @@
     "createdAt": "2026-02-01T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Claude",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "google/gemini-3.1-flash",
@@ -29803,7 +29803,7 @@
     "createdAt": "2026-02-01T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Gemini",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "zai-org/GLM-5",
@@ -29907,7 +29907,7 @@
     "createdAt": "2026-02-19T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Gemini",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "Qwen/Qwen3.5-35B-A3B",
@@ -30390,7 +30390,7 @@
     "createdAt": "2026-03-01T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Gemini",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "openai/gpt-5.4",
@@ -30410,7 +30410,7 @@
     "createdAt": "2026-03-05T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2025-08-31",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "openai/gpt-5.4-mini",
@@ -30430,7 +30430,7 @@
     "createdAt": "2026-03-05T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2025-08-31",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "openai/gpt-5.4-nano",
@@ -30450,7 +30450,7 @@
     "createdAt": "2026-03-05T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2025-08-31",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "openai/gpt-5.4-pro",
@@ -30470,7 +30470,7 @@
     "createdAt": "2026-03-05T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2025-08-31",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "openai/gpt-5.5",
@@ -30491,7 +30491,7 @@
     "isMoe": false,
     "knowledgeCutoff": "2025-08-31",
     "updatedAt": "2026-04-25T03:16:49.201910Z",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "anthropic/claude-mythos-preview",
@@ -30510,7 +30510,7 @@
     "createdAt": "2026-04-01T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Claude",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "anthropic/claude-opus-4.7",
@@ -30529,7 +30529,7 @@
     "createdAt": "2026-04-01T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Claude",
-    "openness": "open-weight"
+    "openness": "closed"
   },
   {
     "id": "zai-org/GLM-5.1",

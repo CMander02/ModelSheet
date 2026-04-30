@@ -19,8 +19,9 @@ mistralai/Mixtral-8x7B-Instruct-v0.1
 # iFlyTek Series
 iFlytek/Spark-X2-Flash
 
-# AntGroup / inclusionAI Series
+# inclusionAI / AntGroup Series
 inclusionAI/Ling-2.6-flash
+inclusionAI/Ling-2.6-1T
 
 # DeepSeek Series
 

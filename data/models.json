@@ -30480,5 +30480,46 @@
     ],
     "createdAt": "2026-04-06T13:18:12.000Z",
     "isMoe": false
+  },
+  {
+    "id": "inclusionAI/Ling-2.6-1T",
+    "name": "Ling-2.6-1T",
+    "provider": "AntGroup",
+    "huggingfaceUrl": "https://huggingface.co/inclusionAI/Ling-2.6-1T",
+    "techReport": "",
+    "modelscopeUrl": "https://modelscope.cn/models/inclusionAI/Ling-2.6-1T",
+    "totalParameters": 1025657871744,
+    "activeParameters": 54974742528,
+    "embeddingParameters": 1287651328,
+    "nonEmbeddingParameters": 1024370220416,
+    "contextLength": 262144,
+    "embeddingDim": 8192,
+    "vocabSize": 157184,
+    "architecture": "bailing_hybrid",
+    "numLayers": 80,
+    "numHeads": 64,
+    "numKvHeads": 64,
+    "hiddenSize": 8192,
+    "intermediateSize": 18432,
+    "positionEncoding": "RoPE",
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-06,
+    "attentionDropout": 0.0,
+    "mlpFactor": 2.25,
+    "gqaRatio": 1.0,
+    "torchDtype": "bfloat16",
+    "numExperts": 256,
+    "numExpertsPerToken": 8,
+    "numActivatedExperts": 8,
+    "moeIntermediateSize": 2048,
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "createdAt": "2026-04-29T03:19:36.000Z",
+    "isMoe": true
   }
 ]

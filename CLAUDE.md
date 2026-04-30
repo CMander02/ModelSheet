@@ -430,6 +430,34 @@ This unusual mapping means imports use `modelsheet_cli` but files are in `src/mo
 2. **纯静态部署**: 前端为纯静态 SPA，无后端依赖
 3. **简单可维护**: Python CLI + React 前端，主流技术栈
 
+## Provider Icon System
+
+Provider icons are rendered via `src/modelsheet-web/src/components/brand-icon.tsx` with a 3-tier fallback chain:
+
+1. **@lobehub/icons React component** (best quality, npm package) — e.g. `KimiIcon.Avatar`, `MoonshotIcon.Avatar`. Mapped in `LOBEHUB_AVATAR_MAP` (keyed by HF org slug + provider display name + Chinese name).
+
+2. **Local static PNG/SVG** (for providers not in @lobehub/icons) — stored in `src/modelsheet-web/public/icons/providers/`. Mapped in `CUSTOM_LOGO_MAP` (keyed by org slug + provider name).
+
+3. **ProviderIcon component** (flat, `@lobehub/icons` fallback) — uses `PROVIDER_KEY_MAP` to translate display names to lobehub keys.
+
+### Adding a New Provider Icon
+
+1. Check if `@lobehub/icons` has a component for that provider (npm package `@lobehub/icons`). If yes, add to `LOBEHUB_AVATAR_MAP` in `brand-icon.tsx`.
+
+2. If not in lobehub, download via the fallback script:
+   ```
+   ./scripts/update-provider-icons.sh <provider-name>
+   ```
+   Uses this priority chain:
+   - **① LobeIcons static PNG**: `raw.githubusercontent.com/lobehub/lobe-icons/.../static-png/light/{name}-color.png`
+   - **② HF org avatar**: scrape `huggingface.co/{org}` for avatar URL
+   - **③ HF model avatar**: query `huggingface.co/api/models?author={org}&sort=downloads&direction=-1&limit=1`
+
+3. Register the saved file in `CUSTOM_LOGO_MAP` (and optionally `PROVIDER_KEY_MAP`) in `brand-icon.tsx`.
+
+Icon file naming: lowercase, hyphens for spaces/slashes → `{file_name}.png`.
+Saved to: `src/modelsheet-web/public/icons/providers/`.
+
 ## Git Policy
 
 **重要**: Git 操作（commit、checkout、reset、push 等）只能在用户明确要求时执行。Claude 不得在未经用户要求的情况下自行执行 Git 命令。

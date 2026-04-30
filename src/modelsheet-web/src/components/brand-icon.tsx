@@ -177,6 +177,11 @@ const CUSTOM_LOGO_MAP: Record<string, string> = {
   // Poolside
   "poolside":       "/icons/providers/poolside.webp",
   "Poolside":       "/icons/providers/poolside.webp",
+
+  // Cognitive Computations / dphn / Dolphin
+  "Cognitive Computations": "/icons/providers/cognitive-computations.png",
+  "dphn":                   "/icons/providers/cognitive-computations.png",
+  "cognitive-computations": "/icons/providers/cognitive-computations.png",
 }
 
 // ─── Provider key map (for ProviderIcon fallback) ──────────────────────────

@@ -86,7 +86,7 @@ hf_org() {
     "AI21")                                                 echo "ai21labs" ;;
     "Allen AI")                                             echo "allenai" ;;
     "Stepfun"|"Step")                                       echo "stepfun-ai" ;;
-    "腾讯混元"|"Tencent Hunyun")                            echo "tencent" ;;
+    "腾讯"|"腾讯混元"|"Tencent"|"Tencent Hunyun")              echo "tencent" ;;
     "Skywork")                                              echo "Skywork" ;;
     "Deep Cogito")                                            echo "deepcogito" ;;
     "Cognitive Computations"|"dphn")                          echo "dolphin" ;;
@@ -129,7 +129,7 @@ lobe_key() {
     "Xiaomi MiMo")                                          echo "xiaomimimo" ;;
     "Ant Group")                                            echo "antgroup" ;;
     "Infinigence")                                          echo "infinigence" ;;
-    "Tencent Hunyun")                                       echo "hunyuan" ;;
+    "腾讯"|"腾讯混元"|"Tencent"|"Tencent Hunyun")              echo "tencent" ;;
     "Skywork")                                              echo "skywork" ;;
     "AliExpress")                                           echo "aliexpress" ;;
     "Snowflake")                                            echo "snowflake" ;;

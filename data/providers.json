@@ -391,24 +391,6 @@
             },
             "region": "cn"
         },
-        "腾讯混元": {
-            "orgs": [
-                "tencent"
-            ],
-            "i18n": {
-                "en": "Tencent Hunyuan",
-                "zh": "腾讯混元"
-            },
-            "scan": {
-                "hf": [
-                    "tencent"
-                ],
-                "ms": [
-                    "Tencent"
-                ]
-            },
-            "region": "cn"
-        },
         "IBM": {
             "orgs": [
                 "ibm-granite",
@@ -629,8 +611,12 @@
                 "zh": "无问芯穹"
             },
             "scan": {
-                "hf": ["Infinigence"],
-                "ms": ["Infinigence"]
+                "hf": [
+                    "Infinigence"
+                ],
+                "ms": [
+                    "Infinigence"
+                ]
             },
             "region": "cn"
         },
@@ -643,8 +629,12 @@
                 "zh": "元象"
             },
             "scan": {
-                "hf": ["xverse"],
-                "ms": ["xverse"]
+                "hf": [
+                    "xverse"
+                ],
+                "ms": [
+                    "xverse"
+                ]
             },
             "region": "cn"
         },
@@ -657,8 +647,12 @@
                 "zh": "哔哩哔哩"
             },
             "scan": {
-                "hf": ["IndexTeam"],
-                "ms": ["IndexTeam"]
+                "hf": [
+                    "IndexTeam"
+                ],
+                "ms": [
+                    "IndexTeam"
+                ]
             },
             "region": "cn"
         },
@@ -762,8 +756,12 @@
                 "zh": "猎户星空"
             },
             "scan": {
-                "hf": ["OrionStarAI"],
-                "ms": ["OrionStarAI"]
+                "hf": [
+                    "OrionStarAI"
+                ],
+                "ms": [
+                    "OrionStarAI"
+                ]
             },
             "region": "cn"
         },
@@ -930,6 +928,24 @@
             "scan": {
                 "ms": [
                     "iFlytek"
+                ]
+            },
+            "region": "cn"
+        },
+        "腾讯": {
+            "orgs": [
+                "tencent"
+            ],
+            "i18n": {
+                "en": "Tencent",
+                "zh": "腾讯"
+            },
+            "scan": {
+                "hf": [
+                    "tencent"
+                ],
+                "ms": [
+                    "Tencent"
                 ]
             },
             "region": "cn"

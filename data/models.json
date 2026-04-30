@@ -25983,7 +25983,7 @@
   {
     "id": "tencent/Hunyuan-7B-Pretrain",
     "name": "Hunyuan-7B-Pretrain",
-    "provider": "腾讯混元",
+    "provider": "腾讯",
     "huggingfaceUrl": "https://huggingface.co/tencent/Hunyuan-7B-Pretrain",
     "techReport": "https://hunyuan.tencent.com/",
     "totalParameters": 7504564224,
@@ -26184,7 +26184,7 @@
   {
     "id": "tencent/Hunyuan-0.5B-Instruct",
     "name": "Hunyuan-0.5B-Instruct",
-    "provider": "腾讯混元",
+    "provider": "腾讯",
     "huggingfaceUrl": "https://huggingface.co/tencent/Hunyuan-0.5B-Instruct",
     "techReport": "https://hunyuan.tencent.com/",
     "totalParameters": 539010048,
@@ -26223,7 +26223,7 @@
   {
     "id": "tencent/Hunyuan-1.8B-Instruct",
     "name": "Hunyuan-1.8B-Instruct",
-    "provider": "腾讯混元",
+    "provider": "腾讯",
     "huggingfaceUrl": "https://huggingface.co/tencent/Hunyuan-1.8B-Instruct",
     "techReport": "https://hunyuan.tencent.com/",
     "totalParameters": 1992265728,
@@ -26262,7 +26262,7 @@
   {
     "id": "tencent/Hunyuan-4B-Instruct",
     "name": "Hunyuan-4B-Instruct",
-    "provider": "腾讯混元",
+    "provider": "腾讯",
     "huggingfaceUrl": "https://huggingface.co/tencent/Hunyuan-4B-Instruct",
     "techReport": "https://hunyuan.tencent.com/",
     "totalParameters": 4221757440,
@@ -26301,7 +26301,7 @@
   {
     "id": "tencent/Hunyuan-7B-Instruct",
     "name": "Hunyuan-7B-Instruct",
-    "provider": "腾讯混元",
+    "provider": "腾讯",
     "huggingfaceUrl": "https://huggingface.co/tencent/Hunyuan-7B-Instruct",
     "techReport": "https://hunyuan.tencent.com/",
     "totalParameters": 8309600256,
@@ -27452,7 +27452,7 @@
   {
     "id": "tencent/Hunyuan-MT-7B",
     "name": "Hunyuan-MT-7B",
-    "provider": "腾讯混元",
+    "provider": "腾讯",
     "huggingfaceUrl": "https://huggingface.co/tencent/Hunyuan-MT-7B",
     "techReport": "https://hunyuan.tencent.com/",
     "totalParameters": 8030269440,
@@ -31010,7 +31010,7 @@
   {
     "id": "tencent/Hy3-preview-Base",
     "name": "Hy3-preview-Base",
-    "provider": "腾讯混元",
+    "provider": "腾讯",
     "huggingfaceUrl": "https://huggingface.co/tencent/Hy3-preview-Base",
     "techReport": "https://hunyuan.tencent.com/",
     "modelscopeUrl": "https://modelscope.cn/models/Tencent/Hy3-preview-Base",
@@ -31049,7 +31049,7 @@
   {
     "id": "tencent/Hy3-preview",
     "name": "Hy3-preview",
-    "provider": "腾讯混元",
+    "provider": "腾讯",
     "huggingfaceUrl": "https://huggingface.co/tencent/Hy3-preview",
     "techReport": "https://hunyuan.tencent.com/",
     "modelscopeUrl": "https://modelscope.cn/models/Tencent/Hy3-preview",

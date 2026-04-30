@@ -6,7 +6,6 @@ import BaichuanIcon    from "@lobehub/icons/es/Baichuan"
 import ByteDanceIcon   from "@lobehub/icons/es/ByteDance"
 import DeepCogitoIcon  from "@lobehub/icons/es/DeepCogito"
 import InfinigenceIcon from "@lobehub/icons/es/Infinigence"
-import HunyuanIcon     from "@lobehub/icons/es/Hunyuan"
 import KimiIcon        from "@lobehub/icons/es/Kimi"
 import LiquidIcon      from "@lobehub/icons/es/Liquid"
 import MoonshotIcon    from "@lobehub/icons/es/Moonshot"
@@ -67,11 +66,6 @@ const LOBEHUB_AVATAR_MAP: Record<string, AvatarIconComponent> = {
   // Liquid AI
   "Liquid AI":     LiquidIcon.Avatar,
   "LiquidAI":      LiquidIcon.Avatar,
-
-  // Tencent Hunyuan
-  "腾讯混元":       HunyuanIcon.Avatar,
-  "Tencent Hunyuan": HunyuanIcon.Avatar,
-  "tencent":       HunyuanIcon.Avatar,
 
   // Xiaomi
   "Xiaomi MiMo":   XiaomiMiMoIcon.Avatar,
@@ -182,6 +176,16 @@ const CUSTOM_LOGO_MAP: Record<string, string> = {
   "Cognitive Computations": "/icons/providers/cognitive-computations.png",
   "dphn":                   "/icons/providers/cognitive-computations.png",
   "cognitive-computations": "/icons/providers/cognitive-computations.png",
+
+  // Tencent
+  "腾讯":       "/icons/providers/tencent.png",
+  "Tencent":    "/icons/providers/tencent.png",
+  "tencent":    "/icons/providers/tencent.png",
+
+  // IBM Granite
+  "ibm-granite": "/icons/providers/ibm-granite.svg",
+  "ibm":          "/icons/providers/ibm-granite.svg",
+  "IBM":          "/icons/providers/ibm-granite.svg",
 }
 
 // ─── Provider key map (for ProviderIcon fallback) ──────────────────────────
@@ -209,7 +213,10 @@ const PROVIDER_KEY_MAP: Record<string, string> = {
   "Step": "stepfun",
   "Stepfun": "stepfun",
   "阶跃星辰": "stepfun",
-  "腾讯混元": "tencent",
+  // Tencent / Hunyuan
+  "腾讯":           "tencent",
+  "Tencent":        "tencent",
+  "腾讯混元":       "tencent",
   "Tencent Hunyuan": "tencent",
   "Xiaomi MiMo": "xiaomi",
   "小米 MiMo": "xiaomi",

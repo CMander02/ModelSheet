@@ -31828,5 +31828,40 @@
     "createdAt": "2025-08-13T08:10:19.000Z",
     "openness": "open-weight",
     "isMoe": false
+  },
+  {
+    "id": "mistralai/Mistral-Medium-3.5-128B",
+    "name": "Mistral-Medium-3.5-128B",
+    "provider": "Mistral AI",
+    "huggingfaceUrl": "https://huggingface.co/mistralai/Mistral-Medium-3.5-128B",
+    "techReport": "",
+    "totalParameters": 127704211408,
+    "activeParameters": 127704211408,
+    "embeddingParameters": 1610612736,
+    "nonEmbeddingParameters": 126093598672,
+    "contextLength": 262144,
+    "embeddingDim": 12288,
+    "vocabSize": 131072,
+    "architecture": "mistral3",
+    "numLayers": 88,
+    "numHeads": 96,
+    "numKvHeads": 8,
+    "hiddenSize": 12288,
+    "intermediateSize": 28672,
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-05,
+    "attentionDropout": 0.0,
+    "mlpFactor": 2.33,
+    "gqaRatio": 12.0,
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "createdAt": "2026-03-31T09:50:20.000Z",
+    "openness": "open-weight",
+    "isMoe": false
   }
 ]

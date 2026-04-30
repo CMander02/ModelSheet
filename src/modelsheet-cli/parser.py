@@ -112,6 +112,7 @@ class ParsedModel:
 
     # Metadata
     created_at: Optional[str] = None
+    openness: str = "open-weight"
 
     def to_dict(self) -> dict:
         """Convert to dictionary, excluding None values."""

@@ -49,6 +49,8 @@ def _merge_into_db(new_entries: list[dict], dry_run: bool) -> tuple[list[str], l
     added, skipped = [], []
 
     for entry in new_entries:
+        # Mark closed-model entries (from fetch) as closed
+        entry["openness"] = "closed"
         if entry["id"] in existing_ids:
             skipped.append(entry["id"])
         else:

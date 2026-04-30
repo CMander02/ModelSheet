@@ -103,6 +103,7 @@ const translations = {
       inputModalities: "输入模态",
       outputModalities: "输出模态",
       createdAt: "创建时间",
+      openness: "开源性",
     },
     // Architecture gallery
     arch: {
@@ -212,6 +213,7 @@ const translations = {
       inputModalities: "Input Modalities",
       outputModalities: "Output Modalities",
       createdAt: "Created At",
+      openness: "Openness",
     },
     // Architecture gallery
     arch: {

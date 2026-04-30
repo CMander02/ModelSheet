@@ -43,7 +43,10 @@ export interface ModelInfo {
   outputModalities?: string[]     // Output modalities
 
   // Metadata
-  createdAt?: string       // Model creation timestamp
+  createdAt?: string
+
+  // Openness: closed | open-weight | open-source
+  openness?: string
 
   // Parameter provenance (applies to totalParameters / activeParameters)
   // "official" (default, can be omitted) — from config.json / paper / spec sheet

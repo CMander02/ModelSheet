@@ -45,6 +45,9 @@ const COLUMN_CONFIGS: Omit<ColumnConfig, "label">[] = [
   { key: "arxivUrl", visible: false, sortable: false, type: "string" },
   { key: "techReport", visible: false, sortable: false, type: "string" },
   { key: "createdAt", visible: false, sortable: true, type: "date" },
+
+  // Openness (not in any preset — visible via custom field selector only)
+  { key: "openness", visible: false, sortable: true, type: "string" },
 ]
 
 // 根据语言生成列配置

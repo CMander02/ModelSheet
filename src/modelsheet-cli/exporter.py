@@ -98,6 +98,8 @@ class ModelExporter:
             "outputModalities": model.output_modalities,
             # Metadata
             "createdAt": model.created_at,
+            # Openness
+            "openness": model.openness,
         }
 
         for key, value in optional_fields.items():

@@ -53,6 +53,10 @@ export function ComparisonTable({
       case "date":
         return new Date(value).toLocaleDateString()
       default:
+        // Special formatting for openness field
+        if (value === "closed") return "🔒 Closed"
+        if (value === "open-weight") return "🔓 Open-weight"
+        if (value === "open-source") return "🌱 Open-source"
         return String(value)
     }
   }

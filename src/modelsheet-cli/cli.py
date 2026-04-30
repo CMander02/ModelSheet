@@ -958,6 +958,178 @@ paper_app = typer.Typer(
 app.add_typer(paper_app, name="paper")
 
 
+# ═════════════════════════════════════════════════════════════════════════════
+#  tag subcommand — manage model openness/metadata tags
+# ═════════════════════════════════════════════════════════════════════════════
+
+tag_app = typer.Typer(
+    name="tag",
+    help="""
+    [bold]Manage model metadata tags[/bold] — set openness status, override fields.
+
+    \\b
+    [bold]Subcommands:[/bold]
+        openness    — Set a model's openness status (closed / open-weight / open-source)
+        list        — List all models with a given openness status
+
+    \\b
+    [bold]Openness definitions:[/bold]
+        closed        — API only, no weights available (GPT-4o, Claude, Gemini API)
+        open-weight   — Weights released, no training data/code (Llama, Qwen, DeepSeek)
+        open-source   — Full OSAID 1.0: weights + code + data (OLMo, Pythia, BLOOM)
+
+    \\b
+    [bold]Examples:[/bold]
+        modelsheet tag openness open-weight meta-llama/Llama-3.1-8B
+        modelsheet tag openness closed openai/gpt-4o
+        modelsheet tag openness open-source allenai/OLMo-7B
+        modelsheet tag list open-source
+    """,
+    no_args_is_help=True,
+    rich_markup_mode="rich",
+    pretty_exceptions_show_locals=False,
+)
+
+app.add_typer(tag_app, name="tag")
+
+
+@tag_app.command("openness")
+def tag_openness(
+    status: str = typer.Argument(
+        ...,
+        help="Openness status: closed, open-weight, or open-source.",
+    ),
+    model_ids: List[str] = typer.Argument(
+        ...,
+        help="One or more model IDs to tag (format: org/model).",
+    ),
+    dry_run: bool = typer.Option(
+        False,
+        "--dry-run",
+        "-n",
+        help="Show what would change without writing.",
+    ),
+):
+    """
+    Set the openness status for one or more models.
+
+    Updates the [cyan]openness[/cyan] field in [cyan]data/models.json[/cyan]
+    to mark models as closed, open-weight, or fully open-source.
+
+    \\b
+    [bold]Examples:[/bold]
+        # Mark a model as closed (API-only)
+        modelsheet tag openness closed openai/gpt-4o
+
+        # Mark as open-weight (default for HF models)
+        modelsheet tag openness open-weight Qwen/Qwen3-8B
+
+        # Mark as fully open-source (OSAID 1.0 compliant)
+        modelsheet tag openness open-source allenai/OLMo-7B
+
+        # Dry-run: see what would change
+        modelsheet tag openness closed anthropic/claude-sonnet-4 --dry-run
+
+    \\b
+    [bold]Notes:[/bold]
+        - Default for HuggingFace-added models is "open-weight"
+        - Use [cyan]tag openness closed[/cyan] for API-only models
+        - Use [cyan]tag openness open-source[/cyan] sparingly (very few qualify)
+    """
+    valid_statuses = {"closed", "open-weight", "open-source"}
+    if status not in valid_statuses:
+        console.print(f"[red]Invalid openness status: {status}[/red]")
+        console.print(f"Valid: {', '.join(sorted(valid_statuses))}")
+        raise typer.Exit(1)
+
+    if not OUTPUT_FILE.exists():
+        console.print("[red]No database found. Add models first.[/red]")
+        raise typer.Exit(1)
+
+    try:
+        with open(OUTPUT_FILE, 'r', encoding='utf-8') as f:
+            models_data = json.load(f)
+    except Exception as e:
+        console.print(f"[red]Error reading database: {e}[/red]")
+        raise typer.Exit(1)
+
+    updated = 0
+    not_found = []
+
+    for mid in model_ids:
+        found = False
+        for m in models_data:
+            if m['id'] == mid:
+                old = m.get('openness', 'open-weight')
+                m['openness'] = status
+                if old != status:
+                    updated += 1
+                    console.print(f"  [dim]{old} →[/dim] [cyan]{status}[/cyan]  [bold]{mid}[/bold]")
+                else:
+                    console.print(f"  [dim](already {status})[/dim] {mid}")
+                found = True
+                break
+        if not found:
+            not_found.append(mid)
+
+    if dry_run:
+        console.print(f"\n[yellow]Dry-run: {updated} model(s) would be updated.[/yellow]")
+        return
+
+    if updated > 0:
+        with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
+            json.dump(models_data, f, indent=2, ensure_ascii=False)
+        console.print(f"\n[green]✓[/green] Updated {updated} model(s).")
+
+    if not_found:
+        console.print(f"\n[yellow]Not found ({len(not_found)}):[/yellow]")
+        for mid in not_found:
+            console.print(f"  - {mid}")
+
+
+@tag_app.command("list")
+def tag_list(
+    status: str = typer.Argument(
+        "open-source",
+        help="Openness filter: closed, open-weight, or open-source.",
+    ),
+):
+    """
+    List all models with a given openness status.
+
+    \\b
+    [bold]Examples:[/bold]
+        # List all fully open-source models
+        modelsheet tag list open-source
+
+        # List all closed models
+        modelsheet tag list closed
+
+        # Count open-weight models
+        modelsheet tag list open-weight | wc -l
+    """
+    if not OUTPUT_FILE.exists():
+        console.print("[yellow]No database found.[/yellow]")
+        return
+
+    try:
+        with open(OUTPUT_FILE, 'r', encoding='utf-8') as f:
+            models_data = json.load(f)
+    except Exception as e:
+        console.print(f"[red]Error reading database: {e}[/red]")
+        raise typer.Exit(1)
+
+    matched = [m for m in models_data if m.get('openness', 'open-weight') == status]
+
+    if not matched:
+        console.print(f"[yellow]No models with openness = '{status}'.[/yellow]")
+        return
+
+    console.print(f"[bold]{len(matched)} model(s) with openness = '{status}':[/bold]\n")
+    for m in matched:
+        console.print(f"  {m['id']}")
+
+
 @paper_app.command("arxiv")
 def paper_arxiv(
     query: str = typer.Argument(

@@ -28,6 +28,11 @@ inclusionAI/Ling-2.6-flash
 jinaai/jina-embeddings-v3
 jinaai/jina-embeddings-v4
 
+# IBM Granite 4.1 Series
+ibm-granite/granite-4.1-3b
+ibm-granite/granite-4.1-8b
+ibm-granite/granite-4.1-30b
+
 # olmo
 # falcon
 # stepfun

@@ -197,8 +197,11 @@ export function ModelCardPage() {
             >
               <ArrowLeft className="h-4 w-4" />
             </button>
-            <Link to="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors shrink-0">
-              ModelSheet
+            <Link
+              to={`/${providerSlug(model.provider ?? "")}`}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors shrink-0 max-w-[200px] truncate"
+            >
+              {model.id.split("/")[0]}
             </Link>
             <span className="text-muted-foreground shrink-0">/</span>
             <span className="text-sm font-semibold truncate">{model.name}</span>

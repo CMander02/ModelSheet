@@ -182,6 +182,11 @@ const CUSTOM_LOGO_MAP: Record<string, string> = {
   "Tencent":    "/icons/providers/tencent.png",
   "tencent":    "/icons/providers/tencent.png",
 
+  // Meituan
+  "Meituan":    "/icons/providers/meituan.png",
+  "meituan":    "/icons/providers/meituan.png",
+  "meituan-longcat": "/icons/providers/meituan.png",
+
   // IBM Granite
   "ibm-granite": "/icons/providers/ibm-granite.svg",
   "ibm":          "/icons/providers/ibm-granite.svg",
@@ -213,6 +218,7 @@ const PROVIDER_KEY_MAP: Record<string, string> = {
   "Step": "stepfun",
   "Stepfun": "stepfun",
   "阶跃星辰": "stepfun",
+  "Meituan": "meituan",
   // Tencent / Hunyuan
   "腾讯":           "tencent",
   "Tencent":        "tencent",

@@ -36,7 +36,8 @@
     "architectureFamily": "Qwen2",
     "modelscopeUrl": "https://modelscope.cn/models/Qwen/Qwen2.5-14B-Instruct-1M",
     "arxivUrl": "https://arxiv.org/abs/2501.15383",
-    "openness": "open-weight"
+    "openness": "open-weight",
+    "createdAt": "2025-01-23T13:23:24.000Z"
   },
   {
     "id": "XiaomiMiMo/MiMo-Audio-7B-Base",

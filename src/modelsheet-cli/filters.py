@@ -1,112 +1,198 @@
-"""Model filtering rules for deciding which models to record."""
+"""Model filtering rules for deciding which models to record.
+
+Filtering works in three layers:
+1. YAML-based name patterns  (data/filter-suffixes.yaml — editable via CLI)
+2. Hardcoded pipeline tags    (ASR, TTS, embedding, etc.)
+3. Hardcoded model types      (bert, whisper, vit, etc.)
+
+Layer 1 is loaded from YAML and merges with built-in defaults.
+Use `modelsheet filter` commands to manage the YAML file.
+"""
 
 import re
+from pathlib import Path
 from typing import Optional
 
+import yaml
 
-# Quantization keywords in model name (case-insensitive)
-# Matches: AWQ, GPTQ, GGUF, Q4_K, Q8_0, Q4K, Q6K, W4A16, W8A8, INT4, INT8, FP8, BNB, NF4, etc.
-_QUANTIZATION_PATTERNS = re.compile(
-    r"""
-    \b(
-        AWQ | GPTQ | GGUF | GGML |
-        Q\d+_K_[SM] | Q\d+_K | Q\d+[KM]? |   # Q4_K_M, Q4_K, Q8_0, Q4K, Q6K
-        W\d+A\d+ |                              # W4A16, W8A8
-        INT4 | INT8 | INT2 |
-        FP8 | FP4 |
-        NF4 |
-        BNB |                                   # bitsandbytes
-        SQ |                                    # SmoothQuant
-        AQLM | EXL2 |                           # other quant formats
-        (?:4|8)-?bit | (?:4|8)bits
-    )\b
-    """,
-    re.VERBOSE | re.IGNORECASE,
-)
+from .config import DATA_DIR
 
-# Pipeline tags that should be skipped
+# ── Built-in defaults (used when YAML file is missing or as fallback) ─────────
+
+_DEFAULT_RULES = [
+    # Quantization
+    {"pattern": r"\b(AWQ|GPTQ|GGUF|GGML)\b", "reason": "quantized (AWQ/GPTQ/GGUF/GGML)"},
+    {"pattern": r"\bQ\d+_K_[SM]\b", "reason": "quantized (Q level)"},
+    {"pattern": r"\bW\d+A\d+\b", "reason": "weight-only quantized"},
+    {"pattern": r"\bINT[248]\b", "reason": "INT quantized"},
+    {"pattern": r"\bFP[48]\b", "reason": "FP quantized"},
+    {"pattern": r"\bNF4\b", "reason": "NF4 quantized"},
+    {"pattern": r"\bBNB\b", "reason": "bitsandbytes quantized"},
+    {"pattern": r"\bAQLM\b", "reason": "AQLM quantized"},
+    {"pattern": r"\bEXL2\b", "reason": "EXL2 quantized"},
+    {"pattern": r"\b(?:4|8)-?bit(?:s)?\b", "reason": "X-bit quantized"},
+    {"pattern": r"\bSQ\b", "reason": "SmoothQuant quantized"},
+    # ASR / TTS
+    {"pattern": r"\b(whisper|asr|tts|speech|vocoder)\b", "reason": "ASR/TTS model"},
+    # Embedding / Rerank
+    {"pattern": r"\b(embed(?:ding)?s?|rerank(?:er)?|retriev(?:al|er))\b", "reason": "embedding/rerank model"},
+    {"pattern": r"\b(bge|e5|gte|nomic-embed|sentence-?transformers?)\b", "reason": "embedding model"},
+    # Reward / ORM / PRM
+    {"pattern": r"\b[op]rm\b", "reason": "reward/ORM/PRM model"},
+    {"pattern": r"\breward-?model\b", "reason": "reward model"},
+    # Translation
+    {"pattern": r"\b(nllb|m2m100|mbart|opus-mt)\b", "reason": "translation model"},
+    # Diffusion (image gen)
+    {"pattern": r"\b(stable-?diffusion|sdxl|sd-?v\d|sd\d|flux|kandinsky|dall-?e|midjourney|imagen|pixart|cogvideox)\b", "reason": "diffusion (image gen, not LM)"},
+    # Classifier
+    {"pattern": r"\b(classifier|discriminator)\b", "reason": "classifier/discriminator model"},
+]
+
+# Compiled cache
+_compiled_rules_cache: Optional[list[tuple[re.Pattern, str]]] = None
+
+
+# ── YAML loading ─────────────────────────────────────────────────────────────
+
+def get_rules_path() -> Path:
+    return DATA_DIR / "filter-suffixes.yaml"
+
+
+def load_rules_from_yaml() -> list[dict]:
+    """Load rules from YAML file, falling back to defaults if file missing.
+
+    Returns:
+        List of {"pattern": str, "reason": str} dicts.
+    """
+    path = get_rules_path()
+    if not path.exists():
+        return list(_DEFAULT_RULES)
+    try:
+        content = yaml.safe_load(path.read_text(encoding="utf-8"))
+        rules = content.get("rules", []) if isinstance(content, dict) else []
+        if rules:
+            return rules
+    except Exception:
+        pass
+    return list(_DEFAULT_RULES)
+
+
+def save_rules_to_yaml(rules: list[dict]) -> None:
+    """Save rules to YAML file."""
+    path = get_rules_path()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    # Format with clean YAML
+    lines = [
+        "# =============================================================================",
+        "# ModelSheet — Model Filter Rules (managed via `modelsheet filter`)",
+        "# =============================================================================",
+        "# Each rule has a `pattern` (case-insensitive regex matching model name)",
+        "# and a `reason` (human-readable description shown in --show-skipped).",
+        "# =============================================================================",
+        "",
+        "rules:",
+    ]
+    for rule in rules:
+        lines.append(f'  - pattern: "{rule["pattern"]}"')
+        lines.append(f'    reason: "{rule["reason"]}"')
+        lines.append("")
+    path.write_text("\n".join(lines), encoding="utf-8")
+
+
+def get_compiled_rules() -> list[tuple[re.Pattern, str]]:
+    """Return list of (compiled_regex, reason) tuples, cached."""
+    global _compiled_rules_cache
+    if _compiled_rules_cache is not None:
+        return _compiled_rules_cache
+    rules = load_rules_from_yaml()
+    compiled = []
+    for rule in rules:
+        try:
+            pat = re.compile(rule["pattern"], re.IGNORECASE)
+            compiled.append((pat, rule.get("reason", "unknown")))
+        except re.error as e:
+            from rich.console import Console
+            Console().print(f"[yellow]WARN: invalid filter pattern '{rule['pattern']}': {e}[/yellow]")
+    _compiled_rules_cache = compiled
+    return compiled
+
+
+def clear_rules_cache():
+    """Clear the compiled rules cache (call after modifying YAML)."""
+    global _compiled_rules_cache
+    _compiled_rules_cache = None
+
+
+# ── Name-based skip reason (YAML + built-in) ────────────────────────────────
+
+def skip_by_name(model_name: str) -> Optional[str]:
+    """Check model name against all filter patterns.
+
+    Args:
+        model_name: The model name (part after "/" in org/model).
+
+    Returns:
+        Human-readable reason string if model should be skipped, None to keep it.
+    """
+    for pat, reason in get_compiled_rules():
+        if pat.search(model_name):
+            return f"{reason} ({model_name})"
+    return None
+
+
+# ── Pipeline tag skip set ──────────────────────────────────────────────────
+# These don't change often — kept hardcoded.
+
 _SKIP_PIPELINE_TAGS = {
     "automatic-speech-recognition",
     "audio-classification",
     "text-to-speech",
     "text-to-audio",
     "audio-to-audio",
-    "feature-extraction",        # embedding models
-    "sentence-similarity",       # embedding/rerank models
-    "text-classification",       # often ORM/PRM/rerank
+    "feature-extraction",         # embedding models
+    "sentence-similarity",        # embedding/rerank models
+    "text-classification",        # often ORM/PRM/rerank
     "token-classification",
     "image-classification",
     "object-detection",
     "image-segmentation",
     "depth-estimation",
     "image-feature-extraction",
-    "text-to-image",             # diffusion image (not LM)
+    "text-to-image",              # diffusion image (not LM)
     "image-to-image",
     "unconditional-image-generation",
     "text-to-video",
     "video-classification",
     "image-to-video",
-    "audio-to-audio",
 }
 
-# Keywords in model name that indicate skip-worthy model types
-# These run AFTER quantization check as a secondary filter
-_SKIP_NAME_PATTERNS = re.compile(
-    r"""
-    \b(
-        # ASR / TTS
-        whisper | asr | tts | speech | voice | vocoder |
-        # Embedding / Rerank
-        embed(?:ding)?s? | rerank(?:er)? | retriev(?:al|er) |
-        bge | e5 | gte | nomic(?:-embed)? |
-        sentence-?transformers? |
-        # ORM / PRM (outcome/process reward model)
-        \b(?:o|p)rm\b |
-        reward-?model |
-        # Diffusion (image) — not LM
-        stable-?diffusion | sdxl | sd-?v\d | sd\d |
-        flux | kandinsky | dall-?e | midjourney |
-        imagen | pixart | cogvideox |
-        # Classifier / discriminator
-        classifier | discriminator
-    )\b
-    """,
-    re.VERBOSE | re.IGNORECASE,
-)
-
-# Model types in config.json that should be skipped
-# These are model_type values that are clearly not LMs
+# Model types in config.json that are clearly not LMs
 _SKIP_MODEL_TYPES = {
-    # ASR
     "whisper", "wav2vec2", "hubert", "speech_encoder_decoder",
     "sew", "sew-d", "unispeech", "unispeech-sat",
-    # TTS / Audio generation
     "speecht5", "bark", "musicgen", "audiogen",
-    # Embedding only
     "bert", "roberta", "deberta", "deberta-v2", "xlm-roberta", "xlm-roberta-xl",
     "albert", "electra", "camembert", "ernie",
-    # Vision encoder only (not VLM)
     "vit", "swin", "deit", "beit", "convnext", "clip",
-    # Diffusion (image, not LM)
     "unet2d", "unet2d-conditioned", "vae",
-    # Rerank / cross-encoder
     "cross-encoder",
 }
 
 # Model types that should always be included (override name heuristics)
-# mamba, rwkv, ssm variants are always LMs
 _ALWAYS_INCLUDE_MODEL_TYPES = {
     "mamba", "jamba", "zamba", "falcon_mamba",
     "rwkv", "rwkv4", "rwkv5", "rwkv6",
     "ssm",
 }
 
-# Pipeline tags for diffusion LMs (include these even if name looks like diffusion)
+# Pipeline tags for diffusion LMs (include even if name looks like diffusion)
 _DIFFUSION_LM_PIPELINE_TAGS = {
     "text-generation",
     "text2text-generation",
 }
 
+
+# ── Main skip function ──────────────────────────────────────────────────────
 
 def skip_reason(
     model_id: str,
@@ -132,9 +218,10 @@ def skip_reason(
     if model_type_lower in _ALWAYS_INCLUDE_MODEL_TYPES:
         return None
 
-    # 1. Quantization: check model name
-    if _QUANTIZATION_PATTERNS.search(name):
-        return f"quantized model ({name})"
+    # 1. YAML-based name patterns (user-editable suffix/pattern filter)
+    name_reason = skip_by_name(name)
+    if name_reason:
+        return name_reason
 
     # 2. Skip pipeline tags (ASR, TTS, embedding, image-gen, etc.)
     if pipeline_tag and pipeline_tag in _SKIP_PIPELINE_TAGS:
@@ -144,11 +231,9 @@ def skip_reason(
     if model_type_lower and model_type_lower in _SKIP_MODEL_TYPES:
         return f"model_type={model_type}"
 
-    # 4. Name-based heuristics (secondary filter — applied only when no config)
-    if _SKIP_NAME_PATTERNS.search(name):
-        # Don't skip if it's a text-generation pipeline (e.g. diffusion LM like MDLM)
-        if pipeline_tag and pipeline_tag in _DIFFUSION_LM_PIPELINE_TAGS:
-            return None
-        return f"name heuristic ({name})"
+    # 4. Name-based heuristics (applied only when we can't determine from config)
+    #    Now handled by YAML rules — only pipeline_tag override needed here
+    if pipeline_tag and pipeline_tag in _DIFFUSION_LM_PIPELINE_TAGS:
+        return None
 
     return None

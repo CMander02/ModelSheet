@@ -1,0 +1,70 @@
+# =============================================================================
+# ModelSheet — Model Filter Rules
+# =============================================================================
+#
+# This file controls which models are filtered out during `modelsheet scan`
+# and `modelsheet filter test`. Each rule matches against the model name
+# (the part after the "/" in "org/model").
+#
+# Rules are case-insensitive regex patterns.
+# Use `modelsheet filter` CLI commands to manage this file.
+#
+# Pipeline-tag and model-type filters are still hardcoded in filters.py
+# (they don't change often). This file covers name-based suffix/pattern rules.
+#
+# =============================================================================
+
+rules:
+  # ── Quantization formats ──
+  - pattern: "\\b(AWQ|GPTQ|GGUF|GGML)\\b"
+    reason: "quantized (AWQ/GPTQ/GGUF/GGML)"
+  - pattern: "\\bQ\\d+_K_[SM]\\b"
+    reason: "quantized (Q level)"
+  - pattern: "\\bW\\d+A\\d+\\b"
+    reason: "weight-only quantized"
+  - pattern: "\\bINT[248]\\b"
+    reason: "INT quantized"
+  - pattern: "\\bFP[48]\\b"
+    reason: "FP quantized"
+  - pattern: "\\bFP4\\b"
+    reason: "FP4 quantized"
+  - pattern: "\\bNF4\\b"
+    reason: "NF4 quantized"
+  - pattern: "\\bBNB\\b"
+    reason: "bitsandbytes quantized"
+  - pattern: "\\bAQLM\\b"
+    reason: "AQLM quantized"
+  - pattern: "\\bEXL2\\b"
+    reason: "EXL2 quantized"
+  - pattern: "\\b(?:4|8)-?bit(?:s)?\\b"
+    reason: "X-bit quantized"
+  - pattern: "\\bSQ\\b"
+    reason: "SmoothQuant quantized"
+
+  # ── ASR / TTS / Speech ──
+  - pattern: "\\b(whisper|asr|tts|speech|vocoder)\\b"
+    reason: "ASR/TTS model"
+
+  # ── Embedding / Rerank / Retrieval ──
+  - pattern: "\\b(embed(?:ding)?s?|rerank(?:er)?|retriev(?:al|er))\\b"
+    reason: "embedding/rerank model"
+  - pattern: "\\b(bge|e5|gte|nomic-embed|sentence-?transformers?)\\b"
+    reason: "embedding model"
+
+  # ── Reward / ORM / PRM ──
+  - pattern: "\\b[op]rm\\b"
+    reason: "reward/ORM/PRM model"
+  - pattern: "\\breward-?model\\b"
+    reason: "reward model"
+
+  # ── Translation ──
+  - pattern: "\\b(nllb|m2m100|mbart|opus-mt)\\b"
+    reason: "translation model"
+
+  # ── Diffusion (image gen, not LM) ──
+  - pattern: "\\b(stable-?diffusion|sdxl|sd-?v\\d|sd\\d|flux|kandinsky|dall-?e|midjourney|imagen|pixart|cogvideox)\\b"
+    reason: "diffusion (image gen, not LM)"
+
+  # ── Classifier / Discriminator ──
+  - pattern: "\\b(classifier|discriminator)\\b"
+    reason: "classifier/discriminator model"

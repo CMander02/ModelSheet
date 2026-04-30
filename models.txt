@@ -34,6 +34,21 @@ ibm-granite/granite-4.1-3b
 ibm-granite/granite-4.1-8b
 ibm-granite/granite-4.1-30b
 
+# Stepfun / 阶跃星辰 Series
+stepfun-ai/Step-3.5-Flash
+stepfun-ai/Step-3.5-Flash-Base
+stepfun-ai/Step-3.5-Flash-Base-Midtrain
+stepfun-ai/step3
+stepfun-ai/Step3-VL-10B
+stepfun-ai/Step3-VL-10B-Base
+stepfun-ai/GELab-Zero-4B-preview
+stepfun-ai/PaCoRe-8B
+stepfun-ai/RLVR-8B-0926
+stepfun-ai/StepFun-Formalizer-32B
+stepfun-ai/StepFun-Formalizer-7B
+stepfun-ai/StepFun-Prover-Preview-32B
+stepfun-ai/StepFun-Prover-Preview-7B
+
 # olmo
 # falcon
 # stepfun

@@ -27,6 +27,7 @@ DATA_DIR = PROJECT_ROOT / "data"
 TEMP_DIR = DATA_DIR / "temp"
 OUTPUT_FILE = DATA_DIR / "models.json"
 PROVIDERS_FILE = DATA_DIR / "providers.json"
+WATCHLIST_FILE = DATA_DIR / "watchlist.json"
 
 # Ensure directories exist
 DATA_DIR.mkdir(exist_ok=True)

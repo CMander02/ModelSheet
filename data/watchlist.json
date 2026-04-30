@@ -1,0 +1,12 @@
+{
+  "orgs": [
+    "mistralai",
+    "qwen",
+    "deepseek-ai",
+    "meta",
+    "google",
+    "microsoft",
+    "poolside"
+  ],
+  "snapshots": {}
+}

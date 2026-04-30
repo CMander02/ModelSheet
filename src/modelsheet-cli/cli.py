@@ -1656,5 +1656,134 @@ def fetch_google_cmd(
                 console.print(f"  {m['id']}")
 
 
+# ── org subcommand ──────────────────────────────────────────────────
+
+
+@app.command("org")
+def org_cmd(
+    action: str = typer.Argument(..., help="Action: add, list, remove, search"),
+    slug: str = typer.Argument("", help="Org slug (required for add/remove)"),
+    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed model info"),
+):
+    """Manage org watchlist: add/list/remove/search HuggingFace orgs for new models.
+
+    The watchlist tracks which HF orgs to monitor. 'org search' scans them
+    for newly released models and reports what's changed since last scan.
+
+    Examples:
+
+        # Add an org
+        modelsheet org add mistralai
+
+        # List watched orgs
+        modelsheet org list
+
+        # Remove an org
+        modelsheet org remove poolside
+
+        # Scan all watched orgs for new models
+        modelsheet org search
+
+        # Scan with details
+        modelsheet org search --verbose
+    """
+    from .scanner import (
+        watchlist_add_org, watchlist_remove_org, watchlist_get_orgs,
+        fetch_hf_org_models, load_watchlist, save_watchlist,
+        get_watchlist_snapshot, update_watchlist_snapshot,
+        _apply_filters,
+    )
+    from rich.table import Table
+    from rich import box
+    import httpx
+
+    if action == "add":
+        if not slug:
+            console.print("[red]Error:[/red] Provide a slug: modelsheet org add <slug>")
+            raise typer.Exit(1)
+        if watchlist_add_org(slug):
+            console.print(f"[green]✅ Added [bold]{slug}[/bold] to watchlist[/green]")
+        else:
+            console.print(f"[yellow]⚠️  [bold]{slug}[/bold] is already in watchlist[/yellow]")
+
+    elif action == "remove":
+        if not slug:
+            console.print("[red]Error:[/red] Provide a slug: modelsheet org remove <slug>")
+            raise typer.Exit(1)
+        if watchlist_remove_org(slug):
+            console.print(f"[red]🗑️  Removed [bold]{slug}[/bold] from watchlist[/red]")
+        else:
+            console.print(f"[yellow]⚠️  [bold]{slug}[/bold] is not in watchlist[/yellow]")
+
+    elif action == "list":
+        orgs = watchlist_get_orgs()
+        if not orgs:
+            console.print("[yellow]No orgs in watchlist.[/yellow]")
+            console.print("  Add one: [bold]modelsheet org add <slug>[/bold]")
+            return
+        wl = load_watchlist()
+        table = Table(box=box.SIMPLE)
+        table.add_column("Org", style="cyan")
+        table.add_column("Known Models", style="blue", justify="right")
+        for o in orgs:
+            snap = get_watchlist_snapshot(o, wl)
+            table.add_row(o, str(len(snap)) if snap else "—")
+        console.print(table)
+        console.print(f"\nTotal: [bold]{len(orgs)}[/bold] org(s)")
+
+    elif action == "search":
+        orgs = watchlist_get_orgs()
+        if not orgs:
+            console.print("[yellow]No orgs to scan. Add one:[/yellow] modelsheet org add <slug>")
+            return
+
+        total_new = 0
+        total_found = 0
+        new_list = []
+
+        with httpx.Client(timeout=30, follow_redirects=True) as client:
+            for o in orgs:
+                console.print(f"\n[bold cyan]🔍[/bold cyan] Scanning [bold]{o}[/bold] ...")
+                models = fetch_hf_org_models(o, client)
+                if not models:
+                    console.print(f"  [red]✗ No models fetched[/red]")
+                    continue
+
+                kept, skipped = _apply_filters(models)
+                current_ids = {m["id"] for m in kept}
+                known = get_watchlist_snapshot(o)
+                new_ids = current_ids - known
+
+                total_found += len(kept)
+                total_new += len(new_ids)
+
+                if new_ids:
+                    console.print(f"  [green]✨ {len(new_ids)} new model(s)[/green]")
+                    for mid in sorted(new_ids):
+                        detail = next((m for m in kept if m["id"] == mid), None)
+                        if detail:
+                            pipe = f" [{detail['pipeline_tag']}]" if detail.get("pipeline_tag") else ""
+                            console.print(f"    [bold cyan]→[/bold cyan] {mid}{pipe}")
+                            new_list.append(mid)
+                else:
+                    console.print(f"  [dim]No new models[/dim]")
+
+                update_watchlist_snapshot(o, list(current_ids))
+
+        console.print("\n" + "─" * 50)
+        console.print(f"Scanned [bold]{len(orgs)}[/bold] org(s)")
+        console.print(f"Total models: [bold]{total_found}[/bold]")
+        console.print(f"[green]New: [bold]{total_new}[/bold][/green]")
+
+        if new_list:
+            console.print("\n[bold]New model URLs:[/bold]")
+            for mid in new_list:
+                console.print(f"  https://huggingface.co/{mid}")
+
+    else:
+        console.print(f"[red]Unknown action: {action}[/red]")
+        console.print("Usage: modelsheet org [add|list|remove|search]")
+
+
 if __name__ == "__main__":
     app()

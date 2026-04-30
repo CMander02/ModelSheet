@@ -313,3 +313,72 @@ def get_scan_orgs_from_providers(source_filter: Optional[str] = None) -> list[tu
         result.append((source, org))
 
     return result
+
+
+# ---------------------------------------------------------------------------
+# Watchlist management (for monitoring/tracking orgs outside providers.json)
+# ---------------------------------------------------------------------------
+
+def load_watchlist() -> dict:
+    """Load the watchlist config."""
+    from .config import WATCHLIST_FILE
+    if WATCHLIST_FILE.exists():
+        try:
+            return json.loads(WATCHLIST_FILE.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {"orgs": [], "snapshots": {}}
+
+
+def save_watchlist(watchlist: dict) -> None:
+    """Save the watchlist config."""
+    from .config import WATCHLIST_FILE
+    WATCHLIST_FILE.write_text(
+        json.dumps(watchlist, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+
+def watchlist_add_org(slug: str) -> bool:
+    """Add an org slug to the watchlist. Returns True if newly added."""
+    wl = load_watchlist()
+    orgs = wl.setdefault("orgs", [])
+    slug = slug.strip().lower()
+    if slug in orgs:
+        return False
+    orgs.append(slug)
+    save_watchlist(wl)
+    return True
+
+
+def watchlist_remove_org(slug: str) -> bool:
+    """Remove an org slug from the watchlist. Returns True if removed."""
+    wl = load_watchlist()
+    orgs = wl.get("orgs", [])
+    slug = slug.strip().lower()
+    if slug not in orgs:
+        return False
+    wl["orgs"] = [o for o in orgs if o != slug]
+    wl.get("snapshots", {}).pop(slug, None)
+    save_watchlist(wl)
+    return True
+
+
+def watchlist_get_orgs() -> list[str]:
+    """Get the list of watched org slugs."""
+    wl = load_watchlist()
+    return sorted(wl.get("orgs", []))
+
+
+def get_watchlist_snapshot(org: str, wl: dict = None) -> set[str]:
+    """Get the snapshot of known model IDs for a watched org."""
+    if wl is None:
+        wl = load_watchlist()
+    return set(wl.get("snapshots", {}).get(org, []))
+
+
+def update_watchlist_snapshot(org: str, model_ids: list[str]):
+    """Update the snapshot for a watched org."""
+    wl = load_watchlist()
+    wl.setdefault("snapshots", {})[org] = sorted(model_ids)
+    save_watchlist(wl)

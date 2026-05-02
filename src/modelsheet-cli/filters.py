@@ -164,6 +164,12 @@ _SKIP_PIPELINE_TAGS = {
     "text-to-video",
     "video-classification",
     "image-to-video",
+    "zero-shot-image-classification",  # SigLIP, CLIP etc.
+    "zero-shot-object-detection",      # OWLv2 etc.
+    "time-series-forecasting",         # TimesFM
+    "mask-generation",
+    "visual-question-answering",       # VQA-only models
+    "translation",                     # NLLB, M2M100 etc.
 }
 
 # Model types in config.json that are clearly not LMs

@@ -5,8 +5,50 @@
     "deepseek-ai",
     "meta",
     "google",
-    "microsoft",
-    "poolside"
+    "mimo",
+    "kimi",
+    "glm",
+    "minimax"
   ],
-  "snapshots": {}
+  "sources": {
+    "mistralai": [
+      "hf"
+    ],
+    "qwen": [
+      "hf",
+      "ms"
+    ],
+    "deepseek-ai": [
+      "hf",
+      "ms"
+    ],
+    "meta": [
+      "hf"
+    ],
+    "google": [
+      "hf"
+    ],
+    "mimo": [
+      "hf",
+      "ms"
+    ],
+    "kimi": [
+      "hf",
+      "ms"
+    ],
+    "glm": [
+      "hf",
+      "ms"
+    ],
+    "minimax": [
+      "hf",
+      "ms"
+    ]
+  },
+  "snapshots": {
+    "mimo": [],
+    "kimi": [],
+    "glm": [],
+    "minimax": []
+  }
 }

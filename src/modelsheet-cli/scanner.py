@@ -339,16 +339,44 @@ def save_watchlist(watchlist: dict) -> None:
     )
 
 
-def watchlist_add_org(slug: str) -> bool:
-    """Add an org slug to the watchlist. Returns True if newly added."""
+def watchlist_add_org(slug: str, sources: Optional[list[str]] = None) -> bool:
+    """Add an org slug to the watchlist. Returns True if newly added.
+
+    Args:
+        slug: Org slug (e.g. 'mistralai')
+        sources: List of sources to scan (e.g. ['hf'] or ['hf', 'ms']).
+                 Defaults to ['hf'].
+    """
     wl = load_watchlist()
     orgs = wl.setdefault("orgs", [])
     slug = slug.strip().lower()
+    sources = sources or ["hf"]
     if slug in orgs:
         return False
     orgs.append(slug)
+    wl.setdefault("sources", {})[slug] = sources
+    wl.setdefault("snapshots", {})[slug] = []
     save_watchlist(wl)
     return True
+
+
+def watchlist_add_orgs(slugs: list[str], sources: Optional[list[str]] = None) -> list[str]:
+    """Add multiple org slugs to the watchlist. Returns list of newly added."""
+    wl = load_watchlist()
+    orgs = wl.setdefault("orgs", [])
+    srcs = wl.setdefault("sources", {})
+    sources = sources or ["hf"]
+    added = []
+    for slug in slugs:
+        slug = slug.strip().lower()
+        if slug not in orgs:
+            orgs.append(slug)
+            srcs[slug] = sources
+            wl.setdefault("snapshots", {}).setdefault(slug, [])
+            added.append(slug)
+    if added:
+        save_watchlist(wl)
+    return added
 
 
 def watchlist_remove_org(slug: str) -> bool:
@@ -360,14 +388,54 @@ def watchlist_remove_org(slug: str) -> bool:
         return False
     wl["orgs"] = [o for o in orgs if o != slug]
     wl.get("snapshots", {}).pop(slug, None)
+    wl.get("sources", {}).pop(slug, None)
     save_watchlist(wl)
     return True
+
+
+def watchlist_remove_orgs(slugs: list[str]) -> list[str]:
+    """Remove multiple org slugs from the watchlist. Returns list of removed."""
+    wl = load_watchlist()
+    orgs = wl.get("orgs", [])
+    removed = []
+    for slug in slugs:
+        slug = slug.strip().lower()
+        if slug in orgs:
+            removed.append(slug)
+    if removed:
+        wl["orgs"] = [o for o in orgs if o.lower().strip() not in removed]
+        for slug in removed:
+            wl.get("snapshots", {}).pop(slug, None)
+            wl.get("sources", {}).pop(slug, None)
+        save_watchlist(wl)
+    return removed
 
 
 def watchlist_get_orgs() -> list[str]:
     """Get the list of watched org slugs."""
     wl = load_watchlist()
     return sorted(wl.get("orgs", []))
+
+
+def get_scan_orgs_from_watchlist(source_filter: Optional[str] = None) -> list[tuple[str, str]]:
+    """Get (source, org) tuples from the watchlist for scanning.
+
+    Args:
+        source_filter: if 'hf' or 'ms', only return that source
+
+    Returns:
+        List of (source, org) tuples
+    """
+    wl = load_watchlist()
+    srcs = wl.get("sources", {})
+    result = []
+    for org in wl.get("orgs", []):
+        org_sources = srcs.get(org, ["hf"])
+        for source in org_sources:
+            if source_filter and source != source_filter:
+                continue
+            result.append((source, org))
+    return result
 
 
 def get_watchlist_snapshot(org: str, wl: dict = None) -> set[str]:

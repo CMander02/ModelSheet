@@ -37,6 +37,7 @@ from .filters import (
 )
 from .scanner import (
     get_scan_orgs_from_providers,
+    get_scan_orgs_from_watchlist,
     load_snapshot,
     save_snapshot,
     scan_orgs,
@@ -62,14 +63,15 @@ app = typer.Typer(
 
     \\b
     [bold]Quick start (add open-weight models):[/bold]
-        modelsheet add Qwen/Qwen2.5-7B
-        modelsheet add --file models.txt
-        modelsheet list
-        modelsheet show Qwen/Qwen2.5-7B
+        modelsheet model add Qwen/Qwen2.5-7B
+        modelsheet model add --file models.txt
+        modelsheet model list
+        modelsheet model show Qwen/Qwen2.5-7B
 
     \\b
     [bold]Discover new models and filter them:[/bold]
         modelsheet scan                          # scan tracked HF orgs
+        modelsheet scan --watchlist              # scan only watchlist orgs
         modelsheet filter list                   # view active filter rules
         modelsheet filter test org/new-model     # preview if a model would be filtered
 
@@ -86,10 +88,13 @@ app = typer.Typer(
 
     \\b
     [bold]Subcommand groups:[/bold]
-        add, remove, list, show, scan            # HuggingFace open models
-        fetch openai / anthropic / google        # closed model card scraping
-        filter list / add / remove / test        # manage YAML suffix filters
-        paper arxiv / update                     # paper search & update
+        model add / list / show / remove          # manage model database
+        scan                                       # scan for new models
+        scan --watchlist / watchlist               # manage monitoring list
+        fetch openai / anthropic / google          # closed model card scraping
+        filter list / add / remove / test          # manage YAML suffix filters
+        paper arxiv / update                       # paper search & update
+        tag set / list / sync                      # manage model metadata tags
     """,
     no_args_is_help=True,
     rich_markup_mode="rich",
@@ -115,7 +120,7 @@ console = Console(theme=custom_theme)
 #  add
 # ═════════════════════════════════════════════════════════════════════════════
 
-@app.command()
+@app.command(hidden=True)
 def add(
     model_ids: Optional[List[str]] = typer.Argument(
         None,
@@ -287,7 +292,7 @@ def add(
 #  remove
 # ═════════════════════════════════════════════════════════════════════════════
 
-@app.command()
+@app.command(hidden=True)
 def remove(
     models_file: Optional[Path] = typer.Option(
         None,
@@ -375,7 +380,7 @@ def remove(
 #  list
 # ═════════════════════════════════════════════════════════════════════════════
 
-@app.command()
+@app.command(hidden=True)
 def list_models():
     """
     List all models in the database.
@@ -425,7 +430,7 @@ def list_models():
 #  show
 # ═════════════════════════════════════════════════════════════════════════════
 
-@app.command()
+@app.command(hidden=True)
 def show(
     model_id: str = typer.Argument(
         ...,
@@ -571,6 +576,12 @@ def scan(
         help="Specific org(s) to scan (repeatable: --org Qwen --org deepseek-ai). "
              "If omitted, scans all orgs in providers.json.",
     ),
+    watchlist: bool = typer.Option(
+        False,
+        "--watchlist",
+        "-w",
+        help="Scan only watchlist orgs (instead of all providers).",
+    ),
     show_skipped: bool = typer.Option(
         False,
         "--show-skipped",
@@ -613,6 +624,9 @@ def scan(
         # Scan a specific org
         modelsheet scan --source hf --org Qwen
 
+        # Scan only watchlist orgs
+        modelsheet scan --watchlist
+
         # Show filtered-out models
         modelsheet scan --show-skipped
 
@@ -637,6 +651,8 @@ def scan(
     if org:
         src = source or "hf"
         orgs_to_scan = [(src, o) for o in org]
+    elif watchlist:
+        orgs_to_scan = get_scan_orgs_from_watchlist(source_filter=source)
     else:
         orgs_to_scan = get_scan_orgs_from_providers(source_filter=source)
 
@@ -715,6 +731,294 @@ def scan(
             )
             for mid in ms_only:
                 console.print(f"  {mid}")
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+#  model subcommand group
+# ═════════════════════════════════════════════════════════════════════════════
+
+
+model_app = typer.Typer(help="Manage models: add, list, show, remove.")
+app.add_typer(model_app, name="model")
+
+
+@model_app.command("add")
+def model_add(
+    model_ids: Optional[List[str]] = typer.Argument(
+        None,
+        help="Model ID(s) to add (format: org/model, e.g., Qwen/Qwen3-8B). "
+             "Can specify multiple models separated by space.",
+    ),
+    file: Optional[Path] = typer.Option(
+        None,
+        "--file",
+        "-f",
+        help="Path to file containing model IDs (.txt or .yaml). One ID per line or YAML list.",
+    ),
+    update_all: bool = typer.Option(
+        False,
+        "--update-all",
+        "-u",
+        help="Re-fetch and update all existing models in the database.",
+    ),
+    timeout: int = typer.Option(
+        60,
+        "--timeout",
+        "-t",
+        help="Request timeout in seconds.",
+    ),
+):
+    """Add models to the database from HuggingFace.
+
+    Downloads config files from HuggingFace, parses them, and adds to
+    [cyan]data/models.json[/cyan].
+
+    \\b
+    Examples:
+        # Add a single model
+        modelsheet model add Qwen/Qwen2.5-7B-Instruct
+
+        # Add multiple models
+        modelsheet model add Qwen/Qwen2.5-7B mistralai/Mistral-7B-v0.3
+
+        # Add from a file
+        modelsheet model add --file models.txt
+
+        # Update all existing models (re-fetch configs)
+        modelsheet model add --update-all
+    """
+    # Delegate to the same logic as the flat 'add' command
+    from .utils import read_model_list, validate_model_id
+
+    model_ids_list: list[str] = list(model_ids or [])
+
+    if file:
+        file_ids = read_model_list(file)
+        model_ids_list.extend(file_ids)
+
+    if not model_ids_list and not update_all:
+        console.print("[red]Error:[/red] Provide model IDs, --file, or --update-all")
+        console.print("  Usage: modelsheet model add <model-id> [model-id ...]")
+        raise typer.Exit(1)
+
+    fetcher = None
+    try:
+        fetcher = ModelFetcher(timeout=timeout)
+
+        if update_all:
+            if not OUTPUT_FILE.exists():
+                console.print("[yellow]No existing models to update.[/yellow]")
+                return
+
+            with open(OUTPUT_FILE, 'r', encoding='utf-8') as f:
+                existing = json.load(f)
+            model_ids_list = [m['id'] for m in existing]
+            console.print(f"[bold]Updating {len(model_ids_list)} existing model(s)...[/bold]")
+
+        # Validate
+        valid_ids = []
+        for mid in model_ids_list:
+            mid = mid.strip()
+            if not validate_model_id(mid):
+                console.print(f"[red]Invalid model ID: {mid}[/red]")
+                continue
+            valid_ids.append(mid)
+
+        if not valid_ids:
+            console.print("[red]No valid model IDs provided.[/red]")
+            raise typer.Exit(1)
+
+        # Fetch
+        console.print(f"Fetching {len(valid_ids)} model(s) from HuggingFace...")
+        models_configs = fetcher.fetch_models(valid_ids)
+
+        if not models_configs:
+            console.print("[red]No models were successfully fetched.[/red]")
+            raise typer.Exit(1)
+
+        # Parse
+        parser = ModelParser()
+        parsed_models = parser.parse_models(models_configs)
+
+        # Merge with existing
+        existing_models = []
+        if OUTPUT_FILE.exists() and not update_all:
+            with open(OUTPUT_FILE, 'r', encoding='utf-8') as f:
+                existing_models = json.load(f)
+
+        existing_ids = {m['id'] for m in existing_models}
+        merged = existing_models.copy()
+        added = 0
+        updated = 0
+        exporter = ModelExporter()
+
+        for pm in parsed_models:
+            data = exporter._to_frontend_format(pm)
+            if pm.id not in existing_ids:
+                merged.append(data)
+                added += 1
+            else:
+                for i, em in enumerate(existing_models):
+                    if em['id'] == pm.id:
+                        merged[i] = data
+                        updated += 1
+                        break
+
+        OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
+        with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
+            json.dump(merged, f, indent=2, ensure_ascii=False)
+
+        console.print(f"\n[bold green]Done![/bold green]")
+        if added:
+            console.print(f"  [green]Added: {added}[/green]")
+        if updated:
+            console.print(f"  [blue]Updated: {updated}[/blue]")
+        if added == 0 and updated == 0:
+            console.print("  [dim]No changes.[/dim]")
+
+    finally:
+        if fetcher:
+            fetcher.cleanup()
+
+
+@model_app.command("list")
+def model_list():
+    """List all models currently in the database."""
+    if not OUTPUT_FILE.exists():
+        console.print("[yellow]No models in database.[/yellow]")
+        console.print("  Add one: [bold]modelsheet model add <model-id>[/bold]")
+        return
+
+    try:
+        with open(OUTPUT_FILE, 'r', encoding='utf-8') as f:
+            models = json.load(f)
+    except Exception as e:
+        console.print(f"[red]Error reading database: {e}[/red]")
+        raise typer.Exit(1)
+
+    if not models:
+        console.print("[yellow]No models in database.[/yellow]")
+        return
+
+    from rich.table import Table
+    from rich import box
+
+    table = Table(box=box.SIMPLE)
+    table.add_column("#", style="dim", justify="right")
+    table.add_column("Model ID", style="cyan")
+    table.add_column("Parameters", justify="right")
+    table.add_column("Context", justify="right")
+    table.add_column("Architecture")
+
+    for i, m in enumerate(models, 1):
+        params = m.get("totalParameters", "")
+        ctx = m.get("contextLength", "")
+        arch = m.get("architecture", "")
+        table.add_row(
+            str(i),
+            m.get("id", "?"),
+            f"{params:,}" if isinstance(params, (int, float)) and params else str(params) if params else "—",
+            f"{ctx:,}" if isinstance(ctx, (int, float)) and ctx else str(ctx) if ctx else "—",
+            arch or "—",
+        )
+
+    console.print(table)
+    console.print(f"\nTotal: [bold]{len(models)}[/bold] model(s)")
+
+
+@model_app.command("show")
+def model_show(
+    model_id: str = typer.Argument(
+        ...,
+        help="Model ID to display (e.g., Qwen/Qwen2.5-7B). Supports partial match.",
+    ),
+):
+    """Show detailed information about a model."""
+    if not OUTPUT_FILE.exists():
+        console.print("[yellow]No models in database.[/yellow]")
+        return
+
+    with open(OUTPUT_FILE, 'r', encoding='utf-8') as f:
+        models = json.load(f)
+
+    # Exact match first, then partial
+    exact = [m for m in models if m.get("id") == model_id]
+    matches = exact or [m for m in models if model_id.lower() in (m.get("id", "") or "").lower()]
+
+    if not matches:
+        console.print(f"[red]Model '{model_id}' not found in database.[/red]")
+        return
+
+    if len(matches) > 1:
+        console.print(f"[yellow]{len(matches)} matches found. Showing first:[/yellow]")
+
+    m = matches[0]
+    excluded_keys = {"id", "logo", "updatedAt"}
+    for key, val in m.items():
+        if key in excluded_keys:
+            continue
+        display = key
+        display_val = val
+
+        if isinstance(val, bool):
+            display_val = "[green]✓[/green]" if val else "[dim]✗[/dim]"
+        elif val is None or val == "":
+            display_val = "[dim]—[/dim]"
+        elif isinstance(val, (int, float)) and val > 1000:
+            display_val = f"{val:,}"
+
+        console.print(f"  [bold]{display}:[/bold] {display_val}")
+
+
+@model_app.command("remove")
+def model_remove(
+    model: Optional[List[str]] = typer.Option(
+        None,
+        "--model",
+        "-m",
+        help="Model ID(s) to remove (repeatable: --model Qwen/Qwen2.5-7B).",
+    ),
+    file: Optional[Path] = typer.Option(
+        None,
+        "--file",
+        "-f",
+        help="Path to file containing model IDs to remove.",
+    ),
+):
+    """Remove models from the database."""
+    from .utils import read_model_list
+
+    if not OUTPUT_FILE.exists():
+        console.print("[yellow]No models in database.[/yellow]")
+        return
+
+    ids_to_remove: set[str] = set()
+    if model:
+        ids_to_remove.update(m.strip() for m in model if m.strip())
+    if file:
+        file_ids = read_model_list(file)
+        ids_to_remove.update(m.strip() for m in file_ids if m.strip())
+
+    if not ids_to_remove:
+        console.print("[red]Provide --model or --file.[/red]")
+        raise typer.Exit(1)
+
+    with open(OUTPUT_FILE, 'r', encoding='utf-8') as f:
+        models = json.load(f)
+
+    before = len(models)
+    models = [m for m in models if m.get("id") not in ids_to_remove]
+    removed = before - len(models)
+
+    if removed == 0:
+        console.print("[yellow]No models matched.[/yellow]")
+        return
+
+    with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
+        json.dump(models, f, indent=2, ensure_ascii=False)
+
+    console.print(f"[green]🗑️  Removed {removed} model(s).[/green]")
+    console.print(f"  Remaining: {len(models)}")
 
 
 # ═════════════════════════════════════════════════════════════════════════════
@@ -1656,102 +1960,167 @@ def fetch_google_cmd(
                 console.print(f"  {m['id']}")
 
 
-# ── org subcommand ──────────────────────────────────────────────────
+# ═════════════════════════════════════════════════════════════════════════════
+#  watchlist
+# ═════════════════════════════════════════════════════════════════════════════
 
 
-@app.command("org")
-def org_cmd(
-    action: str = typer.Argument(..., help="Action: add, list, remove, search"),
-    slug: str = typer.Argument("", help="Org slug (required for add/remove)"),
-    verbose: bool = typer.Option(False, "--verbose", "-v", help="Show detailed model info"),
+@app.command("watchlist")
+def watchlist_cmd(
+    action: str = typer.Argument(..., help="Action: add, remove, list, search"),
+    orgs: List[str] = typer.Argument(
+        None,
+        help="Org slug(s). For add/remove, can specify multiple: watchlist add Qwen deepseek-ai"
+    ),
+    huggingface: bool = typer.Option(
+        True,
+        "--huggingface",
+        "-hf",
+        help="Track on HuggingFace (default: True)",
+    ),
+    modelscope: bool = typer.Option(
+        False,
+        "--modelscope",
+        "-ms",
+        help="Track on ModelScope",
+    ),
+    verbose: bool = typer.Option(
+        False,
+        "--verbose",
+        "-v",
+        help="Show detailed model info during search",
+    ),
 ):
-    """Manage org watchlist: add/list/remove/search HuggingFace orgs for new models.
+    """Manage watchlist: add/remove/list/search orgs to monitor for new models.
 
-    The watchlist tracks which HF orgs to monitor. 'org search' scans them
-    for newly released models and reports what's changed since last scan.
+    Each org can be tracked on HuggingFace and/or ModelScope.
 
+    \b
     Examples:
 
-        # Add an org
-        modelsheet org add mistralai
+        # Add orgs to watchlist (HuggingFace by default)
+        modelsheet watchlist add Qwen deepseek-ai
+
+        # Add orgs tracked on both HF and ModelScope
+        modelsheet watchlist add Qwen minimax --huggingface --modelscope
+
+        # Remove orgs from watchlist
+        modelsheet watchlist remove poolside microsoft
 
         # List watched orgs
-        modelsheet org list
+        modelsheet watchlist list
 
-        # Remove an org
-        modelsheet org remove poolside
+        # Search all watched orgs for new models
+        modelsheet watchlist search
 
-        # Scan all watched orgs for new models
-        modelsheet org search
-
-        # Scan with details
-        modelsheet org search --verbose
+        # Search with details
+        modelsheet watchlist search --verbose
     """
     from .scanner import (
-        watchlist_add_org, watchlist_remove_org, watchlist_get_orgs,
-        fetch_hf_org_models, load_watchlist, save_watchlist,
+        watchlist_add_orgs, watchlist_remove_orgs, watchlist_get_orgs,
+        load_watchlist, save_watchlist, fetch_hf_org_models,
         get_watchlist_snapshot, update_watchlist_snapshot,
-        _apply_filters,
+        _apply_filters, get_scan_orgs_from_watchlist,
     )
     from rich.table import Table
     from rich import box
     import httpx
 
     if action == "add":
-        if not slug:
-            console.print("[red]Error:[/red] Provide a slug: modelsheet org add <slug>")
+        if not orgs:
+            console.print("[red]Error:[/red] Provide org slug(s): modelsheet watchlist add <org> [org2 ...]")
             raise typer.Exit(1)
-        if watchlist_add_org(slug):
-            console.print(f"[green]✅ Added [bold]{slug}[/bold] to watchlist[/green]")
-        else:
-            console.print(f"[yellow]⚠️  [bold]{slug}[/bold] is already in watchlist[/yellow]")
+        sources = []
+        if huggingface:
+            sources.append("hf")
+        if modelscope:
+            sources.append("ms")
+        if not sources:
+            sources = ["hf"]
+        added = watchlist_add_orgs(list(orgs), sources=sources)
+        for s in added:
+            src_str = "+".join(sources)
+            console.print(f"[green]✅ Added [bold]{s}[/bold] ({src_str}) to watchlist[/green]")
+        # Also update sources for already-existing orgs
+        existing = [s.strip().lower() for s in orgs if s.strip().lower() not in added]
+        if existing:
+            wl = load_watchlist()
+            srcs = wl.setdefault("sources", {})
+            changed = []
+            for slug in existing:
+                current = srcs.get(slug, ["hf"])
+                if sorted(current) != sorted(sources):
+                    srcs[slug] = sources
+                    changed.append(slug)
+            if changed:
+                save_watchlist(wl)
+                for s in changed:
+                    src_str = "+".join(sources)
+                    console.print(f"[blue]🔄 Updated [bold]{s}[/bold] sources → {src_str}[/blue]")
+            for s in existing:
+                if s not in changed:
+                    console.print(f"[dim]  {s} already has sources: {srcs.get(s, ['hf'])}[/dim]")
 
     elif action == "remove":
-        if not slug:
-            console.print("[red]Error:[/red] Provide a slug: modelsheet org remove <slug>")
+        if not orgs:
+            console.print("[red]Error:[/red] Provide org slug(s): modelsheet watchlist remove <org> [org2 ...]")
             raise typer.Exit(1)
-        if watchlist_remove_org(slug):
-            console.print(f"[red]🗑️  Removed [bold]{slug}[/bold] from watchlist[/red]")
-        else:
-            console.print(f"[yellow]⚠️  [bold]{slug}[/bold] is not in watchlist[/yellow]")
+        removed = watchlist_remove_orgs(list(orgs))
+        if removed:
+            for s in removed:
+                console.print(f"[red]🗑️  Removed [bold]{s}[/bold] from watchlist[/red]")
+        not_found = [s for s in orgs if s.strip().lower() not in removed]
+        for s in not_found:
+            console.print(f"[yellow]⚠️  [bold]{s}[/bold] is not in watchlist[/yellow]")
 
     elif action == "list":
         orgs = watchlist_get_orgs()
         if not orgs:
             console.print("[yellow]No orgs in watchlist.[/yellow]")
-            console.print("  Add one: [bold]modelsheet org add <slug>[/bold]")
+            console.print("  Add one: [bold]modelsheet watchlist add <slug>[/bold]")
             return
         wl = load_watchlist()
+        srcs = wl.get("sources", {})
         table = Table(box=box.SIMPLE)
         table.add_column("Org", style="cyan")
+        table.add_column("Sources", style="blue")
         table.add_column("Known Models", style="blue", justify="right")
         for o in orgs:
             snap = get_watchlist_snapshot(o, wl)
-            table.add_row(o, str(len(snap)) if snap else "—")
+            org_srcs = srcs.get(o, ["hf"])
+            src_str = ", ".join(("HF" if s == "hf" else "MS") for s in org_srcs)
+            table.add_row(o, src_str, str(len(snap)) if snap else "—")
         console.print(table)
         console.print(f"\nTotal: [bold]{len(orgs)}[/bold] org(s)")
 
     elif action == "search":
-        orgs = watchlist_get_orgs()
-        if not orgs:
-            console.print("[yellow]No orgs to scan. Add one:[/yellow] modelsheet org add <slug>")
+        scan_orgs = get_scan_orgs_from_watchlist()
+        if not scan_orgs:
+            console.print("[yellow]No orgs to scan. Add one:[/yellow] modelsheet watchlist add <slug>")
             return
 
         total_new = 0
         total_found = 0
         new_list = []
 
-        with httpx.Client(timeout=30, follow_redirects=True) as client:
-            for o in orgs:
-                console.print(f"\n[bold cyan]🔍[/bold cyan] Scanning [bold]{o}[/bold] ...")
-                models = fetch_hf_org_models(o, client)
+        with httpx.Client(timeout=30, follow_redirects=True) as hf_client:
+            for source, org in scan_orgs:
+                src_label = "HF" if source == "hf" else "MS"
+                console.print(f"\n[bold cyan]🔍[/bold cyan] Scanning [bold]{org}[/bold] ({src_label}) ...")
+
+                if source == "hf":
+                    models = fetch_hf_org_models(org, hf_client)
+                else:
+                    console.print(f"  [yellow]⚠ ModelScope scan not fully implemented yet[/yellow]")
+                    continue
+
                 if not models:
                     console.print(f"  [red]✗ No models fetched[/red]")
                     continue
 
                 kept, skipped = _apply_filters(models)
                 current_ids = {m["id"] for m in kept}
-                known = get_watchlist_snapshot(o)
+                known = get_watchlist_snapshot(org)
                 new_ids = current_ids - known
 
                 total_found += len(kept)
@@ -1768,10 +2137,10 @@ def org_cmd(
                 else:
                     console.print(f"  [dim]No new models[/dim]")
 
-                update_watchlist_snapshot(o, list(current_ids))
+                update_watchlist_snapshot(org, list(current_ids))
 
         console.print("\n" + "─" * 50)
-        console.print(f"Scanned [bold]{len(orgs)}[/bold] org(s)")
+        console.print(f"Scanned [bold]{len(scan_orgs)}[/bold] org-source pair(s)")
         console.print(f"Total models: [bold]{total_found}[/bold]")
         console.print(f"[green]New: [bold]{total_new}[/bold][/green]")
 
@@ -1782,7 +2151,8 @@ def org_cmd(
 
     else:
         console.print(f"[red]Unknown action: {action}[/red]")
-        console.print("Usage: modelsheet org [add|list|remove|search]")
+        console.print("Usage: modelsheet watchlist [add|remove|list|search]")
+        raise typer.Exit(1)
 
 
 if __name__ == "__main__":

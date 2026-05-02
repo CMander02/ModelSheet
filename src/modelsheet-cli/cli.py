@@ -801,9 +801,7 @@ def model_add(
         console.print("  Usage: modelsheet model add <model-id> [model-id ...]")
         raise typer.Exit(1)
 
-    fetcher = None
-    try:
-        fetcher = ModelFetcher(timeout=timeout)
+    with ModelFetcher(timeout=timeout) as fetcher:
 
         if update_all:
             if not OUTPUT_FILE.exists():
@@ -875,10 +873,6 @@ def model_add(
             console.print(f"  [blue]Updated: {updated}[/blue]")
         if added == 0 and updated == 0:
             console.print("  [dim]No changes.[/dim]")
-
-    finally:
-        if fetcher:
-            fetcher.cleanup()
 
 
 @model_app.command("list")

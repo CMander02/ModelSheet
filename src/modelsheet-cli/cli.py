@@ -690,7 +690,7 @@ def scan(
         console.print(f"\n[bold cyan]Snapshot saved.[/bold cyan]")
 
     if add_new and new_models:
-        new_hf_ids = [m["id"] for m in new_models if m.get("source") == "hf"]
+        new_hf_ids = [m["id"] for m in new_models if m.get("source") in ("hf", "huggingface")]
         if new_hf_ids:
             console.print(f"\n[bold cyan]Adding {len(new_hf_ids)} new HF model(s)...[/bold cyan]\n")
             with ModelFetcher(timeout=timeout) as fetcher:
@@ -723,7 +723,7 @@ def scan(
 
             console.print(f"\n[bold green]Added {added} new model(s) to database.[/bold green]")
 
-        ms_only = [m["id"] for m in new_models if m.get("source") == "ms"]
+        ms_only = [m["id"] for m in new_models if m.get("source") in ("ms", "modelscope")]
         if ms_only:
             console.print(
                 f"\n[yellow]{len(ms_only)} ModelScope-only model(s) — "

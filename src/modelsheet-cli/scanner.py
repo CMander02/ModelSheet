@@ -15,7 +15,7 @@ from .filters import skip_reason
 console = Console()
 
 HF_API_URL = "https://huggingface.co/api"
-MS_API_URL = "https://modelscope.cn/api/v1"
+MS_API_URL = "https://modelscope.cn"
 
 # Snapshot file stores org→[model_ids] from last scan
 SNAPSHOT_FILE = DATA_DIR / "scan_snapshot.json"
@@ -82,38 +82,58 @@ def fetch_ms_org_models(
     client: httpx.Client,
     limit: int = 200,
 ) -> list[dict]:
-    """Fetch all models for an org from ModelScope API.
+    """Fetch all models for an org from ModelScope API (PUT-based).
+
+    ModelScope API changed from GET to PUT. Uses:
+      PUT {MS_API_URL}/api/v1/models/
+      Body: {"Path": org, "PageNumber": n, "PageSize": limit}
 
     Returns list of dicts compatible with HF format.
     """
     models = []
-    url = f"{MS_API_URL}/models"
-    params = {
-        "owner": org,
-        "page_size": limit,
-        "page_number": 1,
+    url = f"{MS_API_URL}/api/v1/models/"
+    headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
     }
-    headers = {}
     token = _get_ms_token()
     if token:
         headers["Authorization"] = f"Bearer {token}"
 
-    try:
-        resp = client.get(url, params=params, headers=headers)
-        resp.raise_for_status()
-        data = resp.json()
-        items = data.get("Data", {}).get("Models", []) or data.get("data", {}).get("models", []) or []
-        for m in items:
-            ms_id = m.get("Path") or m.get("Name") or ""
-            models.append({
-                "id": ms_id,
-                "pipeline_tag": m.get("Tasks", [None])[0] if m.get("Tasks") else None,
-                "tags": m.get("Tags", []),
-                "created_at": m.get("CreatedAt") or m.get("created_at"),
-                "source": "modelscope",
+    page = 1
+    while True:
+        try:
+            body = json.dumps({
+                "Path": org,
+                "PageNumber": page,
+                "PageSize": limit,
             })
-    except Exception as e:
-        console.print(f"[yellow]  WARN MS {org}: {e}[/yellow]")
+            resp = client.put(url, content=body, headers=headers)
+            resp.raise_for_status()
+            data = resp.json()
+            items = (data.get("Data", {}) or {}).get("Models", [])
+            if not items:
+                break
+            for m in items:
+                path = m.get("Path", "")
+                name = m.get("Name", "")
+                ms_id = f"{path}/{name}" if path and name else (m.get("Path") or m.get("Name") or "")
+                tasks = m.get("Tasks") or []
+                pipeline_tag = tasks[0]["Name"] if tasks and isinstance(tasks[0], dict) else None
+                models.append({
+                    "id": ms_id,
+                    "pipeline_tag": pipeline_tag,
+                    "tags": m.get("Tags", []),
+                    "created_at": m.get("CreatedTime"),
+                    "source": "modelscope",
+                })
+            total = (data.get("Data", {}) or {}).get("TotalCount", 0)
+            if len(items) < limit or page * limit >= total:
+                break
+            page += 1
+        except Exception as e:
+            console.print(f"[yellow]  WARN MS {org}: {e}[/yellow]")
+            break
 
     return models
 
@@ -241,10 +261,13 @@ def scan_orgs(
             pass
 
     # Build new snapshot
+    # Map "hf"/"ms" source codes to model dict source values
+    _SOURCE_MAP = {"hf": "huggingface", "ms": "modelscope"}
     new_snapshot = dict(snapshot)
     for source, org in orgs:
         key = f"{source}/{org}"
-        org_models = [m["id"] for m in kept if m.get("source") == source
+        model_source = _SOURCE_MAP.get(source, source)
+        org_models = [m["id"] for m in kept if m.get("source") == model_source
                       and m["id"].split("/")[0].lower() == org.lower()]
         new_snapshot[key] = org_models
 

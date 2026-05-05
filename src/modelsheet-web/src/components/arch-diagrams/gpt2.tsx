@@ -1,10 +1,10 @@
 import { ReactFlowDiagram } from "../react-flow-diagram"
 import { type DiagramParams } from "./shared"
-import { pill, rect, resid, note, seq, merge, residEdge, resetIds } from "./diagram-builder"
+import { pill, rect, resid, note, seq, residEdge, resetIds } from "./diagram-builder"
 
 export default function Gpt2Diagram(p: DiagramParams) {
   resetIds()
-  const { numLayers = 12, numHeads = 12, hiddenSize = 768, vocabSize = 50257 } = p
+  const {numHeads = 12, hiddenSize = 768, vocabSize = 50257 } = p
 
   const input = pill("Input tokens")
   const emb = rect("Token + Position Embedding", "emb", { sublabel: "Learned positional emb" })

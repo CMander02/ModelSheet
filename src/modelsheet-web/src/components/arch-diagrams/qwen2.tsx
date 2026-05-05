@@ -1,10 +1,10 @@
 import { ReactFlowDiagram } from "../react-flow-diagram"
 import { type DiagramParams } from "./shared"
-import { pill, rect, resid, note, seq, merge, residEdge, resetIds } from "./diagram-builder"
+import { pill, rect, resid, note, seq, residEdge, resetIds } from "./diagram-builder"
 
 export default function Qwen2Diagram(p: DiagramParams) {
   resetIds()
-  const { numLayers = 28, numHeads = 28, numKvHeads = 4, hiddenSize = 3584 } = p
+  const {numHeads = 28, numKvHeads = 4, hiddenSize = 3584 } = p
 
   const input = pill("Input tokens")
   const emb = rect("Token Embedding", "emb")

@@ -4,7 +4,7 @@ import { pill, rect, resid, note, edge, residEdge, resetIds } from "./diagram-bu
 
 export default function DeepseekV2Diagram(p: DiagramParams) {
   resetIds()
-  const { numLayers = 60, numExperts = 160, numSharedExperts = 2, numExpertsPerToken = 6 } = p
+  const {numExperts = 160, numSharedExperts = 2, numExpertsPerToken = 6 } = p
 
   const input = pill("Input tokens")
   const emb = rect("Token Embedding", "emb")

@@ -1,10 +1,10 @@
 import { ReactFlowDiagram } from "../react-flow-diagram"
 import { type DiagramParams } from "./shared"
-import { pill, rect, resid, note, seq, merge, residEdge, resetIds } from "./diagram-builder"
+import { pill, rect, resid, note, seq, residEdge, resetIds } from "./diagram-builder"
 
 export default function DeepseekDenseDiagram(p: DiagramParams) {
   resetIds()
-  const { numLayers = 30, numHeads = 32, numKvHeads = 32, hiddenSize = 4096 } = p
+  const {numHeads = 32, numKvHeads = 32, hiddenSize = 4096 } = p
   const isMHA = !numKvHeads || numKvHeads === numHeads
   const attnLabel = isMHA ? `MHA heads:${numHeads}` : `GQA Q:${numHeads} KV:${numKvHeads}`
 

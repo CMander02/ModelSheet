@@ -30,6 +30,12 @@ export type { Node, Edge }
 
 export type RFNodeType = "rect" | "pill" | "resid" | "block" | "note"
 
+/**
+ * Visual style categories for coloring nodes.
+ * Maps to keys in NODE_STYLES from react-flow-nodes.tsx
+ */
+export type VisualNodeType = "attn" | "emb" | "ffn" | "moe" | "norm" | "out" | "pool" | "resid" | "input" | "note" | "block"
+
 declare module "@xyflow/react" {
   interface NodeData {
     [key: string]: unknown

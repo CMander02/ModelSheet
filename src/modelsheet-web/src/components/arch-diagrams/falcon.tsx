@@ -1,10 +1,10 @@
 import { ReactFlowDiagram } from "../react-flow-diagram"
 import { type DiagramParams } from "./shared"
-import { pill, rect, resid, note, seq, edge, residEdge, resetIds } from "./diagram-builder"
+import { pill, rect, resid, note, edge, residEdge, resetIds } from "./diagram-builder"
 
 export default function FalconDiagram(p: DiagramParams) {
   resetIds()
-  const { numLayers = 32, numHeads = 71, numKvHeads = 1, hiddenSize = 4544 } = p
+  const {numHeads = 71, numKvHeads = 1, hiddenSize = 4544 } = p
 
   const input = pill("Input tokens")
   const emb = rect("Token Embedding", "emb")

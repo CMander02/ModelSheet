@@ -1,10 +1,10 @@
 import { ReactFlowDiagram } from "../react-flow-diagram"
 import { type DiagramParams } from "./shared"
-import { pill, rect, resid, note, seq, merge, residEdge, resetIds } from "./diagram-builder"
+import { pill, rect, resid, note, seq, residEdge, resetIds } from "./diagram-builder"
 
 export default function LlamaDiagram(p: DiagramParams) {
   resetIds()
-  const { numLayers = 32, numHeads = 32, numKvHeads = 8, hiddenSize = 4096 } = p
+  const {numHeads = 32, numKvHeads = 8, hiddenSize = 4096 } = p
   const gqaNote = `Q:${numHeads} KV:${numKvHeads}`
 
   const input = pill("Input tokens")

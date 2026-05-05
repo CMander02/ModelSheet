@@ -3,7 +3,7 @@
  * Each node type corresponds to a Mermaid classDef style.
  */
 
-import { type HandleType, type NodeProps, Handle, Position } from "@xyflow/react"
+import { type Node, type NodeProps, Handle, Position } from "@xyflow/react"
 
 // ─── Color map ────────────────────────────────────────────────────────────────
 
@@ -25,11 +25,14 @@ interface BaseNodeData {
   label: string
   sublabel?: string
   nodeType: NodeType
+  [key: string]: unknown
 }
+
+type RectFlowNode = Node<BaseNodeData>
 
 // ─── Rectangle node (default) ────────────────────────────────────────────────
 
-export function RectNode({ data }: NodeProps<BaseNodeData>) {
+export function RectNode({ data }: NodeProps<RectFlowNode>) {
   const style = NODE_STYLES[data.nodeType]
   return (
     <div
@@ -54,7 +57,7 @@ export function RectNode({ data }: NodeProps<BaseNodeData>) {
 
 // ─── Pill node (for input/output tokens) ──────────────────────────────────────
 
-export function PillNode({ data }: NodeProps<BaseNodeData>) {
+export function PillNode({ data }: NodeProps<RectFlowNode>) {
   const style = NODE_STYLES[data.nodeType]
   return (
     <div
@@ -75,7 +78,7 @@ export function PillNode({ data }: NodeProps<BaseNodeData>) {
 
 // ─── Residual add node (circle) ──────────────────────────────────────────────
 
-export function ResidNode({ data }: NodeProps<BaseNodeData>) {
+export function ResidNode({ data }: NodeProps<RectFlowNode>) {
   const style = NODE_STYLES[data.nodeType]
   return (
     <div
@@ -100,17 +103,18 @@ export function ResidNode({ data }: NodeProps<BaseNodeData>) {
 interface BlockNodeData {
   label: string
   count?: number
+  [key: string]: unknown
 }
 
-export function BlockNode({ data }: NodeProps<BlockNodeData>) {
+type BlockFlowNode = Node<BlockNodeData>
+
+export function BlockNode({ data }: NodeProps<BlockFlowNode>) {
   return (
     <div
-      className="rounded-xl border-2 border-dashed p-3 pt-7 bg-muted/10 select-none"
+      className="rounded-xl border-2 border-dashed p-3 pt-7 bg-muted/10 select-none relative"
       style={{ borderColor: "#94a3b8", minWidth: 240, minHeight: 100 }}
     >
-      <div
-        className="absolute top-2 left-3 text-[11px] font-semibold text-muted-foreground tracking-wide"
-      >
+      <div className="absolute top-2 left-3 text-[11px] font-semibold text-muted-foreground tracking-wide">
         {data.label}{data.count ? ` ×${data.count}` : ""}
       </div>
       {/* Children are rendered as separate React Flow nodes positioned inside */}
@@ -122,9 +126,12 @@ export function BlockNode({ data }: NodeProps<BlockNodeData>) {
 
 interface NoteNodeData {
   label: string
+  [key: string]: unknown
 }
 
-export function NoteNode({ data }: NodeProps<NoteNodeData>) {
+type NoteFlowNode = Node<NoteNodeData>
+
+export function NoteNode({ data }: NodeProps<NoteFlowNode>) {
   return (
     <div
       className="text-[10px] text-muted-foreground italic select-none px-2 py-1 border border-dashed rounded"

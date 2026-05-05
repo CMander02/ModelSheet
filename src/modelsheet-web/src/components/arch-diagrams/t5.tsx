@@ -4,7 +4,7 @@ import { pill, rect, resid, note, edge, residEdge, resetIds } from "./diagram-bu
 
 export default function T5Diagram(p: DiagramParams) {
   resetIds()
-  const { numLayers = 24, numHeads = 32, hiddenSize = 2048 } = p
+  const {numHeads = 32, hiddenSize = 2048 } = p
 
   // ─── Encoder ──────────────────────────────────────────────────────────────
   const inputEnc = pill("Encoder Input tokens")

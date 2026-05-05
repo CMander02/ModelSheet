@@ -1,10 +1,10 @@
 import { ReactFlowDiagram } from "../react-flow-diagram"
 import { type DiagramParams } from "./shared"
-import { pill, rect, resid, note, seq, merge, residEdge, resetIds } from "./diagram-builder"
+import { pill, rect, resid, note, seq, residEdge, resetIds } from "./diagram-builder"
 
 export default function BloomDiagram(p: DiagramParams) {
   resetIds()
-  const { numLayers = 70, numHeads = 112, hiddenSize = 14336 } = p
+  const {numHeads = 112, hiddenSize = 14336 } = p
 
   const input = pill("Input tokens")
   const emb = rect("Token Embedding", "emb")

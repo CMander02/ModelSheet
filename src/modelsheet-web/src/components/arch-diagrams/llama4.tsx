@@ -4,7 +4,7 @@ import { pill, rect, resid, note, edge, residEdge, resetIds } from "./diagram-bu
 
 export default function Llama4Diagram(p: DiagramParams) {
   resetIds()
-  const { numLayers = 48, numExperts = 128, numExpertsPerToken = 1 } = p
+  const {numExperts = 128, numExpertsPerToken = 1 } = p
 
   const input = pill("Input tokens")
   const emb = rect("Token Embedding", "emb")

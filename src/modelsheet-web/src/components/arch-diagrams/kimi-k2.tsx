@@ -4,7 +4,7 @@ import { pill, rect, resid, note, edge, residEdge, resetIds } from "./diagram-bu
 
 export default function KimiK2Diagram(p: DiagramParams) {
   resetIds()
-  const { numLayers = 61, numExperts = 384, numSharedExperts = 1, numExpertsPerToken = 8 } = p
+  const {numExperts = 384, numSharedExperts = 1, numExpertsPerToken = 8 } = p
 
   const input = pill("Input tokens")
   const emb = rect("Token Embedding", "emb")

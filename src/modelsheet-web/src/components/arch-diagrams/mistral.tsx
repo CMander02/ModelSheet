@@ -4,7 +4,7 @@ import { pill, rect, resid, note, edge, residEdge, resetIds } from "./diagram-bu
 
 export default function MistralDiagram(p: DiagramParams) {
   resetIds()
-  const { numLayers = 32, numHeads = 32, numKvHeads = 8, hiddenSize = 4096, numExperts, numExpertsPerToken = 2 } = p
+  const {numHeads = 32, numKvHeads = 8, hiddenSize = 4096, numExperts, numExpertsPerToken = 2 } = p
   const isMoE = numExperts && numExperts > 1
 
   const input = pill("Input tokens")

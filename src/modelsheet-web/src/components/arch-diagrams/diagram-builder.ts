@@ -4,7 +4,7 @@
  */
 
 import { type Node, type Edge } from "@xyflow/react"
-import type { RFNodeType } from "./shared"
+import type { RFNodeType, VisualNodeType } from "./shared"
 import { MAIN_EDGE, RESID_EDGE } from "./shared"
 
 let _counter = 0
@@ -28,12 +28,13 @@ interface MakeNodeOpts {
 
 export function makeNode(
   label: string,
-  nodeType: RFNodeType,
+  nodeType: VisualNodeType,
   opts: MakeNodeOpts = {},
 ): Node {
   return {
     id: id(),
-    type: nodeType,
+    type: opts.type ?? nodeType,
+    position: { x: 0, y: 0 },
     data: {
       nodeType,
       label,
@@ -46,12 +47,12 @@ export function makeNode(
   }
 }
 
-export function rect(label: string, nodeType: RFNodeType, opts?: MakeNodeOpts): Node {
+export function rect(label: string, nodeType: VisualNodeType, opts?: MakeNodeOpts): Node {
   return makeNode(label, nodeType, { ...opts, type: "rect" })
 }
 
 export function pill(label: string, opts?: MakeNodeOpts): Node {
-  return makeNode(label, "pill", opts)
+  return makeNode(label, "input", { ...opts, type: "pill" })
 }
 
 export function note(label: string, opts?: MakeNodeOpts): Node {
@@ -91,7 +92,7 @@ export function residEdge(from: Node, to: Node, label = "residual"): Edge {
 // ─── Convenience: build a standard decoder chain ──────────────────────────────
 
 export function buildDecoderChain(
-  layerCount: number,
+  _layerCount: number,
   steps: Array<{ node: Node; after?: Node[]; parallel?: Node[] }>,
 ): { nodes: Node[]; edges: Edge[] } {
   const nodes: Node[] = []

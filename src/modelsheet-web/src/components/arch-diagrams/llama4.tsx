@@ -1,38 +1,40 @@
-import { MermaidDiagram } from "../mermaid-diagram"
-import { BASE_STYLES, type DiagramParams } from "./shared"
-
-function llama4Def({ numLayers = 48, numExperts = 128, numExpertsPerToken = 1 }: DiagramParams) {
-  return `flowchart TD
-    input(["Input tokens"]):::input
-
-    subgraph outer["LLaMA 4"]
-      emb["Token Embedding"]:::emb
-      note_layers["Layers alternate: full-attn every 4th, chunk-attn others"]:::resid
-
-      subgraph block["Decoder Block ×${numLayers}"]
-        ln1["RMSNorm  pre-norm"]:::norm
-        attn["Attention  NoPE or iRoPE  interleaved per layer"]:::attn
-        plus1(("+")):::resid
-        ln2["RMSNorm  pre-norm"]:::norm
-
-        subgraph moe["MoE  top-${numExpertsPerToken} of ${numExperts}  no shared expert"]
-          router2["Router  sigmoid  no aux loss"]:::moe
-          experts2["Expert FFN  SwiGLU  ×${numExpertsPerToken}"]:::moe
-        end
-
-        plus2(("+")):::resid
-      end
-
-      lnf["Final RMSNorm"]:::norm
-      lmh["LM Head"]:::out
-    end
-
-    input --> emb --> ln1 --> attn --> plus1 --> ln2 --> router2 --> experts2 --> plus2 --> lnf --> lmh
-    emb -.->|residual| plus1
-    plus1 -.->|residual| plus2
-${BASE_STYLES}`
-}
+import { ReactFlowDiagram } from "../react-flow-diagram"
+import { type DiagramParams } from "./shared"
+import { pill, rect, resid, note, edge, residEdge, resetIds } from "./diagram-builder"
 
 export default function Llama4Diagram(p: DiagramParams) {
-  return <MermaidDiagram definition={llama4Def(p)} fit={p.fit} />
+  resetIds()
+  const { numLayers = 48, numExperts = 128, numExpertsPerToken = 1 } = p
+
+  const input = pill("Input tokens")
+  const emb = rect("Token Embedding", "emb")
+  const layerNote = note("Layers alternate: full-attn every 4th, chunk-attn others")
+
+  const ln1 = rect("RMSNorm", "norm", { sublabel: "pre-norm" })
+  const attn = rect("Attention", "attn", { sublabel: "NoPE or iRoPE · interleaved per layer" })
+  const r1 = resid()
+  const ln2 = rect("RMSNorm", "norm", { sublabel: "pre-norm" })
+  const router = rect(`Router top-${numExpertsPerToken} of ${numExperts}`, "moe", { sublabel: "sigmoid · no aux loss" })
+  const experts = rect(`Expert FFN ×${numExpertsPerToken}`, "moe", { sublabel: "SwiGLU · no shared expert" })
+  const r2 = resid()
+  const lnf = rect("Final RMSNorm", "norm")
+  const lmh = rect("LM Head", "out")
+
+  const nodes = [input, emb, layerNote, ln1, attn, r1, ln2, router, experts, r2, lnf, lmh]
+  const edges = [
+    edge(input, emb),
+    edge(emb, ln1),
+    edge(ln1, attn),
+    edge(attn, r1),
+    residEdge(emb, r1),
+    edge(r1, ln2),
+    edge(ln2, router),
+    edge(router, experts),
+    edge(experts, r2),
+    residEdge(r1, r2),
+    edge(r2, lnf),
+    edge(lnf, lmh),
+  ]
+
+  return <ReactFlowDiagram nodes={nodes} edges={edges} fit={p.fit} />
 }

@@ -6,7 +6,6 @@
 import React from "react"
 
 export type { DiagramParams } from "./arch-diagrams/shared"
-export { BASE_STYLES } from "./arch-diagrams/shared"
 
 // ─── Lazy-loaded diagram components — each is a separate Vite chunk ───────────
 

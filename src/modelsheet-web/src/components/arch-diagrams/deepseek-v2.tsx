@@ -1,55 +1,56 @@
-import { MermaidDiagram } from "../mermaid-diagram"
-import { BASE_STYLES, type DiagramParams } from "./shared"
-
-function deepseekV2Def({ numLayers = 60, numExperts = 160, numSharedExperts = 2, numExpertsPerToken = 6 }: DiagramParams) {
-  return `flowchart TD
-    input(["Input tokens"]):::input
-
-    subgraph outer["DeepSeek-V2"]
-      emb["Token Embedding"]:::emb
-      dense_note["First 1 layer: Dense FFN"]:::resid
-
-      subgraph block["MoE Decoder Block ×${numLayers - 1}"]
-        ln1["RMSNorm  pre-norm"]:::norm
-
-        subgraph mla["MLA — Multi-head Latent Attention"]
-          q_path["Q: proj → RMSNorm → proj → split nope/rope"]:::attn
-          kv_path["KV: proj → split  →  RMSNorm → proj  k/v nope"]:::attn
-          rope["Decoupled RoPE  on rope dims only"]:::norm
-          sdpa["Scaled Dot-Product Attention"]:::attn
-          oproj["o_proj"]:::attn
-        end
-
-        plus1(("+")):::resid
-        ln2["RMSNorm  pre-norm"]:::norm
-
-        subgraph moe["DeepSeekMoE  softmax routing"]
-          router["Router  top-${numExpertsPerToken} of ${numExperts}  group-limited"]:::moe
-          experts["Routed Experts  ×${numExpertsPerToken}  SwiGLU"]:::moe
-          shared["Shared Experts  ×${numSharedExperts}  always active"]:::moe
-          moe_add(("+")):::resid
-        end
-
-        plus2(("+")):::resid
-      end
-
-      lnf["Final RMSNorm"]:::norm
-      lmh["LM Head"]:::out
-    end
-
-    input --> emb --> ln1
-    ln1 --> q_path & kv_path
-    q_path & kv_path --> rope --> sdpa --> oproj --> plus1
-    emb -.->|residual| plus1
-    plus1 --> ln2 --> router
-    router --> experts --> moe_add
-    ln2 --> shared --> moe_add
-    moe_add --> plus2
-    plus1 -.->|residual| plus2
-    plus2 --> lnf --> lmh
-${BASE_STYLES}`
-}
+import { ReactFlowDiagram } from "../react-flow-diagram"
+import { type DiagramParams } from "./shared"
+import { pill, rect, resid, note, edge, residEdge, resetIds } from "./diagram-builder"
 
 export default function DeepseekV2Diagram(p: DiagramParams) {
-  return <MermaidDiagram definition={deepseekV2Def(p)} fit={p.fit} />
+  resetIds()
+  const { numLayers = 60, numExperts = 160, numSharedExperts = 2, numExpertsPerToken = 6 } = p
+
+  const input = pill("Input tokens")
+  const emb = rect("Token Embedding", "emb")
+  const denseNote = note("First 1 layer: Dense FFN")
+
+  const ln1 = rect("RMSNorm", "norm", { sublabel: "pre-norm" })
+  const qPath = rect("Q Projection", "attn", { sublabel: "proj → RMSNorm → proj → split nope/rope" })
+  const kvPath = rect("KV Projection", "attn", { sublabel: "proj → split → RMSNorm → proj" })
+  const rope = rect("Decoupled RoPE", "norm", { sublabel: "on rope dims only" })
+  const sdpa = rect("Scaled Dot-Product Attn", "attn")
+  const oproj = rect("o_proj", "attn")
+  const r1 = resid()
+
+  const ln2 = rect("RMSNorm", "norm", { sublabel: "pre-norm" })
+  const router = rect(`Router top-${numExpertsPerToken} of ${numExperts}`, "moe", { sublabel: "group-limited" })
+  const experts = rect(`Routed Experts ×${numExpertsPerToken}`, "moe", { sublabel: "SwiGLU" })
+  const shared = rect(`Shared Experts ×${numSharedExperts}`, "moe", { sublabel: "always active" })
+  const moeAdd = resid()
+  const r2 = resid()
+
+  const lnf = rect("Final RMSNorm", "norm")
+  const lmh = rect("LM Head", "out")
+
+  const nodes = [input, emb, denseNote, ln1, qPath, kvPath, rope, sdpa, oproj, r1, ln2, router, experts, shared, moeAdd, r2, lnf, lmh]
+  const edges = [
+    edge(input, emb),
+    edge(emb, ln1),
+    edge(ln1, qPath),
+    edge(ln1, kvPath),
+    edge(qPath, rope),
+    edge(kvPath, rope),
+    edge(rope, sdpa),
+    edge(sdpa, oproj),
+    edge(oproj, r1),
+    residEdge(emb, r1),
+    edge(r1, ln2),
+    edge(ln2, router),
+    edge(router, experts),
+    edge(experts, moeAdd),
+    edge(ln2, shared),
+    edge(shared, moeAdd),
+    edge(moeAdd, r2),
+    residEdge(r1, r2),
+    edge(r2, lnf),
+    edge(lnf, lmh),
+  ]
+
+  return <ReactFlowDiagram nodes={nodes} edges={edges} fit={p.fit} />
 }

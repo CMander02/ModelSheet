@@ -1,33 +1,26 @@
-import { MermaidDiagram } from "../mermaid-diagram"
-import { BASE_STYLES, type DiagramParams } from "./shared"
-
-function bertDef({ numLayers = 12, numHeads, hiddenSize }: DiagramParams) {
-  return `flowchart TD
-    input(["Input tokens"]):::input
-
-    subgraph outer["BERT"]
-      emb["Token + Position + Type Embedding"]:::emb
-      drop0["Dropout"]:::resid
-
-      subgraph block["Encoder Block ×${numLayers}"]
-        attn["Multi-Head Self-Attention  bidirectional"]:::attn
-        plus1(("+")):::resid
-        ln1["LayerNorm  post-norm"]:::norm
-        ffn["Feed Forward  Linear → GELU → Linear"]:::ffn
-        plus2(("+")):::resid
-        ln2["LayerNorm  post-norm"]:::norm
-      end
-
-      pool["[CLS] Pooler  Linear → Tanh"]:::pool
-    end
-
-    input --> emb --> drop0 --> attn --> plus1 --> ln1 --> ffn --> plus2 --> ln2 --> pool
-    drop0 -.->|residual| plus1
-    ln1 -.->|residual| plus2
-    ${numHeads ? `\n    note_h["Heads: ${numHeads}${hiddenSize ? `  ·  hidden: ${hiddenSize.toLocaleString()}` : ""}"]:::resid` : ""}
-${BASE_STYLES}`
-}
+import { ReactFlowDiagram } from "../react-flow-diagram"
+import { type DiagramParams } from "./shared"
+import { pill, rect, resid, note, seq, merge, residEdge, resetIds } from "./diagram-builder"
 
 export default function BertDiagram(p: DiagramParams) {
-  return <MermaidDiagram definition={bertDef(p)} fit={p.fit} />
+  resetIds()
+  const { numLayers = 12, numHeads = 12, hiddenSize = 768 } = p
+
+  const input = pill("Input tokens")
+  const emb = rect("Token + Position + Type Embedding", "emb")
+  const drop = rect("Dropout", "resid")
+  const attn = rect("Multi-Head Self-Attention", "attn", { sublabel: "bidirectional" })
+  const r1 = resid()
+  const ln1 = rect("LayerNorm", "norm", { sublabel: "post-norm" })
+  const ffn = rect("Feed Forward", "ffn", { sublabel: "Linear → GELU → Linear" })
+  const r2 = resid()
+  const ln2 = rect("LayerNorm", "norm", { sublabel: "post-norm" })
+  const pool = rect("[CLS] Pooler", "pool", { sublabel: "Linear → Tanh" })
+  const info = note(`Heads: ${numHeads} · hidden: ${hiddenSize.toLocaleString()}`)
+
+  const main = seq(input, emb, drop, attn, r1, ln1, ffn, r2, ln2, pool)
+  const res1 = residEdge(drop, r1)
+  const res2 = residEdge(ln1, r2)
+
+  return <ReactFlowDiagram nodes={[...main.nodes, info]} edges={[...main.edges, res1, res2]} fit={p.fit} />
 }

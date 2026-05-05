@@ -1,56 +1,79 @@
-import { MermaidDiagram } from "../mermaid-diagram"
-import { BASE_STYLES, type DiagramParams } from "./shared"
-
-function t5Def({ numLayers = 24, numHeads = 32, hiddenSize = 2048 }: DiagramParams) {
-  return `flowchart TD
-    input_enc(["Encoder Input tokens"]):::input
-    input_dec(["Decoder Input tokens"]):::input
-
-    subgraph outer["T5 / FLAN-T5"]
-      emb_enc["Encoder Token Embedding  weight-tied"]:::emb
-
-      subgraph enc["Encoder Block ×${numLayers}"]
-        enc_ln1["RMSNorm  pre-norm"]:::norm
-        enc_attn["MHA  ${numHeads} heads  Relative Attention Bias  no RoPE"]:::attn
-        enc_plus1(("+")):::resid
-        enc_ln2["RMSNorm  pre-norm"]:::norm
-        enc_ffn["SwiGLU FFN  wi_0 · wi_1 → GELU → wo"]:::ffn
-        enc_plus2(("+")):::resid
-      end
-
-      enc_lnf["Encoder Final RMSNorm"]:::norm
-
-      emb_dec["Decoder Token Embedding  weight-tied"]:::emb
-
-      subgraph dec["Decoder Block ×${numLayers}"]
-        dec_ln1["RMSNorm  pre-norm"]:::norm
-        dec_sattn["Causal Self-Attention  Relative Attention Bias"]:::attn
-        dec_plus1(("+")):::resid
-        dec_ln2["RMSNorm  pre-norm"]:::norm
-        dec_cattn["Cross-Attention  Q from decoder  KV from encoder"]:::attn
-        dec_plus2(("+")):::resid
-        dec_ln3["RMSNorm  pre-norm"]:::norm
-        dec_ffn["SwiGLU FFN"]:::ffn
-        dec_plus3(("+")):::resid
-      end
-
-      dec_lnf["Decoder Final RMSNorm"]:::norm
-      lmh["LM Head  tied to token emb"]:::out
-    end
-
-    input_enc --> emb_enc --> enc_ln1 --> enc_attn --> enc_plus1 --> enc_ln2 --> enc_ffn --> enc_plus2 --> enc_lnf
-    emb_enc -.->|residual| enc_plus1
-    enc_plus1 -.->|residual| enc_plus2
-
-    input_dec --> emb_dec --> dec_ln1 --> dec_sattn --> dec_plus1 --> dec_ln2 --> dec_cattn --> dec_plus2 --> dec_ln3 --> dec_ffn --> dec_plus3 --> dec_lnf --> lmh
-    emb_dec -.->|residual| dec_plus1
-    dec_plus1 -.->|residual| dec_plus2
-    dec_plus2 -.->|residual| dec_plus3
-    enc_lnf -->|encoder hidden states| dec_cattn
-    note_h["hidden: ${hiddenSize.toLocaleString()}  ·  no bias  weight-tied emb/LM head"]:::resid
-${BASE_STYLES}`
-}
+import { ReactFlowDiagram } from "../react-flow-diagram"
+import { type DiagramParams } from "./shared"
+import { pill, rect, resid, note, edge, residEdge, resetIds } from "./diagram-builder"
 
 export default function T5Diagram(p: DiagramParams) {
-  return <MermaidDiagram definition={t5Def(p)} fit={p.fit} />
+  resetIds()
+  const { numLayers = 24, numHeads = 32, hiddenSize = 2048 } = p
+
+  // ─── Encoder ──────────────────────────────────────────────────────────────
+  const inputEnc = pill("Encoder Input tokens")
+  const embEnc = rect("Encoder Token Embedding", "emb", { sublabel: "weight-tied" })
+  const encLn1 = rect("RMSNorm", "norm", { sublabel: "pre-norm" })
+  const encAttn = rect(`MHA · ${numHeads} heads`, "attn", { sublabel: "Relative Attention Bias · no RoPE" })
+  const encR1 = resid()
+  const encLn2 = rect("RMSNorm", "norm", { sublabel: "pre-norm" })
+  const encFfn = rect("SwiGLU FFN", "ffn", { sublabel: "wi_0 · wi_1 → GELU → wo" })
+  const encR2 = resid()
+  const encLnf = rect("Encoder Final RMSNorm", "norm")
+
+  // ─── Decoder ──────────────────────────────────────────────────────────────
+  const inputDec = pill("Decoder Input tokens")
+  const embDec = rect("Decoder Token Embedding", "emb", { sublabel: "weight-tied" })
+  const decLn1 = rect("RMSNorm", "norm", { sublabel: "pre-norm" })
+  const decSattn = rect("Causal Self-Attention", "attn", { sublabel: "Relative Attention Bias" })
+  const decR1 = resid()
+  const decLn2 = rect("RMSNorm", "norm", { sublabel: "pre-norm" })
+  const decCattn = rect("Cross-Attention", "attn", { sublabel: "Q from decoder · KV from encoder" })
+  const decR2 = resid()
+  const decLn3 = rect("RMSNorm", "norm", { sublabel: "pre-norm" })
+  const decFfn = rect("SwiGLU FFN", "ffn")
+  const decR3 = resid()
+  const decLnf = rect("Decoder Final RMSNorm", "norm")
+  const lmh = rect("LM Head", "out", { sublabel: "tied to token emb" })
+  const info = note(`hidden: ${hiddenSize.toLocaleString()} · no bias · weight-tied emb/LM head`)
+
+  const nodes = [
+    inputEnc, embEnc, encLn1, encAttn, encR1, encLn2, encFfn, encR2, encLnf,
+    inputDec, embDec, decLn1, decSattn, decR1, decLn2, decCattn, decR2, decLn3, decFfn, decR3, decLnf, lmh,
+    info,
+  ]
+
+  const edges = [
+    // Encoder chain
+    edge(inputEnc, embEnc),
+    edge(embEnc, encLn1),
+    edge(encLn1, encAttn),
+    edge(encAttn, encR1),
+    edge(encR1, encLn2),
+    edge(encLn2, encFfn),
+    edge(encFfn, encR2),
+    edge(encR2, encLnf),
+    // Encoder residual
+    residEdge(embEnc, encR1),
+    residEdge(encR1, encR2),
+
+    // Decoder chain
+    edge(inputDec, embDec),
+    edge(embDec, decLn1),
+    edge(decLn1, decSattn),
+    edge(decSattn, decR1),
+    edge(decR1, decLn2),
+    edge(decLn2, decCattn),
+    edge(decCattn, decR2),
+    edge(decR2, decLn3),
+    edge(decLn3, decFfn),
+    edge(decFfn, decR3),
+    edge(decR3, decLnf),
+    edge(decLnf, lmh),
+    // Decoder residual
+    residEdge(embDec, decR1),
+    residEdge(decR1, decR2),
+    residEdge(decR2, decR3),
+
+    // Cross-attention: encoder → decoder
+    edge(encLnf, decCattn),
+  ]
+
+  return <ReactFlowDiagram nodes={nodes} edges={edges} fit={p.fit} />
 }

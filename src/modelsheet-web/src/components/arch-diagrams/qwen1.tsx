@@ -1,33 +1,26 @@
-import { MermaidDiagram } from "../mermaid-diagram"
-import { BASE_STYLES, type DiagramParams } from "./shared"
-
-function qwen1Def({ numLayers = 32, numHeads, hiddenSize }: DiagramParams) {
-  return `flowchart TD
-    input(["Input tokens"]):::input
-
-    subgraph outer["Qwen1"]
-      emb["Token Embedding"]:::emb
-
-      subgraph block["Decoder Block ×${numLayers}"]
-        ln1["RMSNorm  pre-norm"]:::norm
-        attn["MHA  RoPE + LogN scaling  QKV with bias"]:::attn
-        plus1(("+")):::resid
-        ln2["RMSNorm  pre-norm"]:::norm
-        ffn["SwiGLU FFN  gate · up → SiLU → down"]:::ffn
-        plus2(("+")):::resid
-      end
-
-      lnf["Final RMSNorm"]:::norm
-      lmh["LM Head  tied to token emb"]:::out
-    end
-
-    input --> emb --> ln1 --> attn --> plus1 --> ln2 --> ffn --> plus2 --> lnf --> lmh
-    emb -.->|residual| plus1
-    plus1 -.->|residual| plus2
-    ${numHeads ? `\n    note_h["Heads: ${numHeads}${hiddenSize ? `  ·  hidden: ${hiddenSize.toLocaleString()}` : ""}"]:::resid` : ""}
-${BASE_STYLES}`
-}
+import { ReactFlowDiagram } from "../react-flow-diagram"
+import { type DiagramParams } from "./shared"
+import { pill, rect, resid, note, seq, merge, residEdge, resetIds } from "./diagram-builder"
 
 export default function Qwen1Diagram(p: DiagramParams) {
-  return <MermaidDiagram definition={qwen1Def(p)} fit={p.fit} />
+  resetIds()
+  const { numLayers = 32, numHeads = 32, hiddenSize = 4096 } = p
+
+  const input = pill("Input tokens")
+  const emb = rect("Token Embedding", "emb")
+  const ln1 = rect("RMSNorm", "norm", { sublabel: "pre-norm" })
+  const attn = rect("MHA", "attn", { sublabel: `Heads: ${numHeads} · RoPE + LogN scaling · QKV bias` })
+  const r1 = resid()
+  const ln2 = rect("RMSNorm", "norm", { sublabel: "pre-norm" })
+  const ffn = rect("SwiGLU FFN", "ffn", { sublabel: "gate · up → SiLU → down" })
+  const r2 = resid()
+  const lnf = rect("Final RMSNorm", "norm")
+  const lmh = rect("LM Head", "out", { sublabel: "tied to token emb" })
+  const info = note(`Heads: ${numHeads} · hidden: ${hiddenSize.toLocaleString()} · QKV bias = True`)
+
+  const main = seq(input, emb, ln1, attn, r1, ln2, ffn, r2, lnf, lmh)
+  const res1 = residEdge(emb, r1)
+  const res2 = residEdge(r1, r2)
+
+  return <ReactFlowDiagram nodes={[...main.nodes, info]} edges={[...main.edges, res1, res2]} fit={p.fit} />
 }

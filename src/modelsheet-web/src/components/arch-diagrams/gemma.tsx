@@ -1,30 +1,36 @@
-import { ReactFlowDiagram } from "../react-flow-diagram"
+import { ArchTreeDiagram, type TreeNode } from "../arch-tree-diagram"
 import { type DiagramParams } from "./shared"
-import { pill, rect, resid, note, seq, residEdge, resetIds } from "./diagram-builder"
 
 export default function GemmaDiagram(p: DiagramParams) {
-  resetIds()
-  const {numHeads = 16, numKvHeads = 8, hiddenSize = 3584 } = p
+  const { numHeads = 16, numKvHeads = 8, numLayers = 42, hiddenSize = 3584 } = p
 
-  const input = pill("Input tokens")
-  const emb = rect("Token Embedding", "emb", { sublabel: "×√hiddenSize scaling" })
-  const ln1 = rect("RMSNorm", "norm", { sublabel: "pre-norm" })
-  const qknorm = rect("QK-RMSNorm", "norm", { sublabel: "per-head on Q and K" })
-  const attn = rect(`GQA Q:${numHeads} KV:${numKvHeads}`, "attn", { sublabel: "RoPE · logit soft-cap (tanh)" })
-  const ln1post = rect("RMSNorm", "norm", { sublabel: "post-norm" })
-  const r1 = resid()
-  const ln2 = rect("RMSNorm", "norm", { sublabel: "pre-norm" })
-  const ffn = rect("GeGLU FFN", "ffn", { sublabel: "gate · up → GELU → down" })
-  const ln2post = rect("RMSNorm", "norm", { sublabel: "post-norm" })
-  const r2 = resid()
-  const lnf = rect("Final RMSNorm", "norm")
-  const cap = rect("Logit Soft-Cap", "out", { sublabel: "tanh(x/30)×30" })
-  const lmh = rect("LM Head", "out", { sublabel: "tied to token emb" })
-  const info = note(`hidden: ${hiddenSize.toLocaleString()} · no bias`)
+  const nodes: TreeNode[] = [
+    { id: "input", type: "leaf", label: "Input tokens", color: "input" },
+    { id: "emb", type: "leaf", label: "Token Embedding", sub: "×√hiddenSize scaling", color: "emb" },
+    {
+      id: "block", type: "group", label: "Transformer Block", badge: `×${numLayers}`, color: "steel",
+      sub: "Gemma 2: pre+post norm, logit soft-cap",
+      children: [
+        { id: "ln1", type: "leaf", label: "RMSNorm", sub: "pre-norm", color: "norm" },
+        { id: "qknorm", type: "leaf", label: "QK-RMSNorm", sub: "per-head on Q and K", color: "norm" },
+        { id: "attn", type: "leaf", label: `GQA  Q:${numHeads}  KV:${numKvHeads}`, sub: "RoPE · logit soft-cap (tanh)", color: "attn" },
+        { id: "ln1post", type: "leaf", label: "RMSNorm", sub: "post-norm (Gemma 2)", color: "norm" },
+        { id: "r1", type: "leaf", label: "+ residual", color: "resid" },
+        { id: "ln2", type: "leaf", label: "RMSNorm", sub: "pre-norm", color: "norm" },
+        { id: "ffn", type: "leaf", label: "GeGLU FFN", sub: "gate · up → GELU → down", color: "ffn" },
+        { id: "ln2post", type: "leaf", label: "RMSNorm", sub: "post-norm (Gemma 2)", color: "norm" },
+        { id: "r2", type: "leaf", label: "+ residual", color: "resid" },
+      ],
+    },
+    { id: "lnf", type: "leaf", label: "Final RMSNorm", color: "norm" },
+    { id: "cap", type: "leaf", label: "Logit Soft-Cap", sub: "tanh(x/30)×30", color: "out" },
+    { id: "lmh", type: "leaf", label: "LM Head", sub: "tied to token emb", color: "out" },
+  ]
 
-  const main = seq(input, emb, ln1, qknorm, attn, ln1post, r1, ln2, ffn, ln2post, r2, lnf, cap, lmh)
-  const res1 = residEdge(emb, r1)
-  const res2 = residEdge(r1, r2)
-
-  return <ReactFlowDiagram nodes={[...main.nodes, info]} edges={[...main.edges, res1, res2]} fit={p.fit} />
+  return (
+    <ArchTreeDiagram
+      nodes={nodes}
+      subtitle={`hidden: ${hiddenSize.toLocaleString()} · no bias`}
+    />
+  )
 }

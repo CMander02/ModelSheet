@@ -1,40 +1,39 @@
-import { ReactFlowDiagram } from "../react-flow-diagram"
+import { ArchTreeDiagram, type TreeNode } from "../arch-tree-diagram"
 import { type DiagramParams } from "./shared"
-import { pill, rect, resid, note, edge, residEdge, resetIds } from "./diagram-builder"
 
 export default function Llama4Diagram(p: DiagramParams) {
-  resetIds()
-  const {numExperts = 128, numExpertsPerToken = 1 } = p
+  const { numLayers = 48, numExperts = 128, numExpertsPerToken = 1 } = p
 
-  const input = pill("Input tokens")
-  const emb = rect("Token Embedding", "emb")
-  const layerNote = note("Layers alternate: full-attn every 4th, chunk-attn others")
-
-  const ln1 = rect("RMSNorm", "norm", { sublabel: "pre-norm" })
-  const attn = rect("Attention", "attn", { sublabel: "NoPE or iRoPE · interleaved per layer" })
-  const r1 = resid()
-  const ln2 = rect("RMSNorm", "norm", { sublabel: "pre-norm" })
-  const router = rect(`Router top-${numExpertsPerToken} of ${numExperts}`, "moe", { sublabel: "sigmoid · no aux loss" })
-  const experts = rect(`Expert FFN ×${numExpertsPerToken}`, "moe", { sublabel: "SwiGLU · no shared expert" })
-  const r2 = resid()
-  const lnf = rect("Final RMSNorm", "norm")
-  const lmh = rect("LM Head", "out")
-
-  const nodes = [input, emb, layerNote, ln1, attn, r1, ln2, router, experts, r2, lnf, lmh]
-  const edges = [
-    edge(input, emb),
-    edge(emb, ln1),
-    edge(ln1, attn),
-    edge(attn, r1),
-    residEdge(emb, r1),
-    edge(r1, ln2),
-    edge(ln2, router),
-    edge(router, experts),
-    edge(experts, r2),
-    residEdge(r1, r2),
-    edge(r2, lnf),
-    edge(lnf, lmh),
+  const nodes: TreeNode[] = [
+    { id: "input", type: "leaf", label: "Input tokens", color: "input" },
+    { id: "emb", type: "leaf", label: "Token Embedding", color: "emb" },
+    {
+      id: "block", type: "group", label: "Transformer Block", badge: `×${numLayers}`, color: "steel",
+      sub: "Layers alternate: full-attn every 4th, chunk-attn others",
+      children: [
+        { id: "ln1", type: "leaf", label: "RMSNorm", sub: "pre-norm", color: "norm" },
+        { id: "attn", type: "leaf", label: "Attention", sub: "NoPE or iRoPE · interleaved per layer", color: "attn" },
+        { id: "r1", type: "leaf", label: "+ residual", color: "resid" },
+        { id: "ln2", type: "leaf", label: "RMSNorm", sub: "pre-norm", color: "norm" },
+        {
+          id: "moe", type: "group", label: "MoE FFN", color: "teal",
+          sub: `${numExperts} experts · sigmoid routing · no aux loss · no shared expert`,
+          children: [
+            { id: "router", type: "leaf", label: `Router  top-${numExpertsPerToken} of ${numExperts}`, sub: "sigmoid · no aux loss", color: "moe" },
+            { id: "experts", type: "leaf", label: `Expert FFN ×${numExpertsPerToken}`, sub: "SwiGLU · no shared expert", color: "moe" },
+          ],
+        },
+        { id: "r2", type: "leaf", label: "+ residual", color: "resid" },
+      ],
+    },
+    { id: "lnf", type: "leaf", label: "Final RMSNorm", color: "norm" },
+    { id: "lmh", type: "leaf", label: "LM Head", color: "out" },
   ]
 
-  return <ReactFlowDiagram nodes={nodes} edges={edges} fit={p.fit} />
+  return (
+    <ArchTreeDiagram
+      nodes={nodes}
+      subtitle={`${numExperts} experts · top-${numExpertsPerToken} routing · iRoPE alternating layers`}
+    />
+  )
 }

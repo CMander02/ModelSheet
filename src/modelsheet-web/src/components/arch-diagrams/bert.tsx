@@ -1,26 +1,32 @@
-import { ReactFlowDiagram } from "../react-flow-diagram"
+import { ArchTreeDiagram, type TreeNode } from "../arch-tree-diagram"
 import { type DiagramParams } from "./shared"
-import { pill, rect, resid, note, seq, residEdge, resetIds } from "./diagram-builder"
 
 export default function BertDiagram(p: DiagramParams) {
-  resetIds()
-  const {numHeads = 12, hiddenSize = 768 } = p
+  const { numHeads = 12, numLayers = 12, hiddenSize = 768 } = p
 
-  const input = pill("Input tokens")
-  const emb = rect("Token + Position + Type Embedding", "emb")
-  const drop = rect("Dropout", "resid")
-  const attn = rect("Multi-Head Self-Attention", "attn", { sublabel: "bidirectional" })
-  const r1 = resid()
-  const ln1 = rect("LayerNorm", "norm", { sublabel: "post-norm" })
-  const ffn = rect("Feed Forward", "ffn", { sublabel: "Linear → GELU → Linear" })
-  const r2 = resid()
-  const ln2 = rect("LayerNorm", "norm", { sublabel: "post-norm" })
-  const pool = rect("[CLS] Pooler", "pool", { sublabel: "Linear → Tanh" })
-  const info = note(`Heads: ${numHeads} · hidden: ${hiddenSize.toLocaleString()}`)
+  const nodes: TreeNode[] = [
+    { id: "input", type: "leaf", label: "Input tokens", color: "input" },
+    { id: "emb", type: "leaf", label: "Token + Position + Type Embedding", color: "emb" },
+    { id: "drop", type: "leaf", label: "Dropout", color: "resid" },
+    {
+      id: "block", type: "group", label: "Encoder Block", badge: `×${numLayers}`, color: "steel",
+      sub: `${numLayers} identical layers · bidirectional`,
+      children: [
+        { id: "attn", type: "leaf", label: `MHA  heads:${numHeads}`, sub: "bidirectional self-attention", color: "attn" },
+        { id: "r1", type: "leaf", label: "+ residual", color: "resid" },
+        { id: "ln1", type: "leaf", label: "LayerNorm", sub: "post-norm", color: "norm" },
+        { id: "ffn", type: "leaf", label: "Feed Forward", sub: "Linear → GELU → Linear", color: "ffn" },
+        { id: "r2", type: "leaf", label: "+ residual", color: "resid" },
+        { id: "ln2", type: "leaf", label: "LayerNorm", sub: "post-norm", color: "norm" },
+      ],
+    },
+    { id: "pool", type: "leaf", label: "[CLS] Pooler", sub: "Linear → Tanh", color: "out" },
+  ]
 
-  const main = seq(input, emb, drop, attn, r1, ln1, ffn, r2, ln2, pool)
-  const res1 = residEdge(drop, r1)
-  const res2 = residEdge(ln1, r2)
-
-  return <ReactFlowDiagram nodes={[...main.nodes, info]} edges={[...main.edges, res1, res2]} fit={p.fit} />
+  return (
+    <ArchTreeDiagram
+      nodes={nodes}
+      subtitle={`hidden: ${hiddenSize.toLocaleString()} · heads: ${numHeads}`}
+    />
+  )
 }

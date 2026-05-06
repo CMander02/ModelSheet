@@ -1,56 +1,57 @@
-import { ReactFlowDiagram } from "../react-flow-diagram"
+import { ArchTreeDiagram, type TreeNode } from "../arch-tree-diagram"
 import { type DiagramParams } from "./shared"
-import { pill, rect, resid, note, edge, residEdge, resetIds } from "./diagram-builder"
 
 export default function DeepseekV3Diagram(p: DiagramParams) {
-  resetIds()
-  const {numExperts = 256, numSharedExperts = 1, numExpertsPerToken = 8 } = p
+  const { numLayers = 61, numExperts = 256, numSharedExperts = 1, numExpertsPerToken = 8 } = p
 
-  const input = pill("Input tokens")
-  const emb = rect("Token Embedding", "emb")
-  const denseNote = note("First 3 layers: Dense FFN")
-
-  const ln1 = rect("RMSNorm", "norm", { sublabel: "pre-norm" })
-  const qPath = rect("Q Projection", "attn", { sublabel: "proj → RMSNorm → proj → split nope/rope" })
-  const kvPath = rect("KV Projection", "attn", { sublabel: "proj → split → RMSNorm → proj" })
-  const rope = rect("Decoupled RoPE + YaRN", "norm", { sublabel: "YaRN scaling" })
-  const sdpa = rect("Scaled Dot-Product Attn", "attn")
-  const oproj = rect("o_proj", "attn")
-  const r1 = resid()
-
-  const ln2 = rect("RMSNorm", "norm", { sublabel: "pre-norm" })
-  const router = rect(`Router top-${numExpertsPerToken} of ${numExperts}`, "moe", { sublabel: "sigmoid + e_score_bias · no aux loss" })
-  const experts = rect(`Routed Experts ×${numExpertsPerToken}`, "moe", { sublabel: "SwiGLU" })
-  const shared = rect(`Shared Expert ×${numSharedExperts}`, "moe", { sublabel: "always active" })
-  const moeAdd = resid()
-  const r2 = resid()
-
-  const lnf = rect("Final RMSNorm", "norm")
-  const lmh = rect("LM Head", "out")
-
-  const nodes = [input, emb, denseNote, ln1, qPath, kvPath, rope, sdpa, oproj, r1, ln2, router, experts, shared, moeAdd, r2, lnf, lmh]
-  const edges = [
-    edge(input, emb),
-    edge(emb, ln1),
-    edge(ln1, qPath),
-    edge(ln1, kvPath),
-    edge(qPath, rope),
-    edge(kvPath, rope),
-    edge(rope, sdpa),
-    edge(sdpa, oproj),
-    edge(oproj, r1),
-    residEdge(emb, r1),
-    edge(r1, ln2),
-    edge(ln2, router),
-    edge(router, experts),
-    edge(experts, moeAdd),
-    edge(ln2, shared),
-    edge(shared, moeAdd),
-    edge(moeAdd, r2),
-    residEdge(r1, r2),
-    edge(r2, lnf),
-    edge(lnf, lmh),
+  const nodes: TreeNode[] = [
+    { id: "input", type: "leaf", label: "Input tokens", color: "input" },
+    { id: "emb", type: "leaf", label: "Token Embedding", color: "emb" },
+    { id: "densenote", type: "leaf", label: "First 3 layers: Dense FFN", sub: "remaining layers use MoE", color: "steel" },
+    {
+      id: "block", type: "group", label: "Transformer Block", badge: `×${numLayers}`, color: "steel",
+      sub: `${numLayers} layers · MLA attention · MoE FFN (after first 3)`,
+      defaultExpanded: true,
+      children: [
+        { id: "ln1", type: "leaf", label: "RMSNorm", sub: "pre-norm", color: "norm" },
+        {
+          id: "mla", type: "group", label: "MLA (Multi-head Latent Attention)", color: "attn",
+          sub: "KV cache compression · decoupled RoPE · YaRN scaling",
+          children: [
+            { id: "qpath", type: "leaf", label: "Q Projection", sub: "proj → RMSNorm → proj → split nope/rope", color: "attn" },
+            { id: "kvpath", type: "leaf", label: "KV Projection", sub: "proj → split → RMSNorm → proj", color: "attn" },
+            { id: "rope", type: "leaf", label: "Decoupled RoPE + YaRN", sub: "YaRN scaling", color: "norm" },
+            { id: "sdpa", type: "leaf", label: "Scaled Dot-Product Attn", color: "attn" },
+            { id: "oproj", type: "leaf", label: "o_proj", color: "attn" },
+          ],
+        },
+        { id: "r1", type: "leaf", label: "+ residual", color: "resid" },
+        { id: "ln2", type: "leaf", label: "RMSNorm", sub: "pre-norm", color: "norm" },
+        {
+          id: "moe", type: "group", label: "MoE FFN", color: "teal",
+          sub: `${numExperts} routed + ${numSharedExperts} shared · top-${numExpertsPerToken} · sigmoid + e_score_bias`,
+          children: [
+            { id: "router", type: "leaf", label: `Router  top-${numExpertsPerToken} of ${numExperts}`, sub: "sigmoid + e_score_correction_bias · no aux loss", color: "moe" },
+            {
+              id: "experts_row", type: "row", children: [
+                { id: "routed", type: "leaf", label: `Routed ×${numExpertsPerToken}`, sub: "SwiGLU", color: "moe" },
+                { id: "shared", type: "leaf", label: `Shared ×${numSharedExperts}`, sub: "always active", color: "amber" },
+              ],
+            },
+            { id: "moeadd", type: "leaf", label: "+ combine", color: "resid" },
+          ],
+        },
+        { id: "r2", type: "leaf", label: "+ residual", color: "resid" },
+      ],
+    },
+    { id: "lnf", type: "leaf", label: "Final RMSNorm", color: "norm" },
+    { id: "lmh", type: "leaf", label: "LM Head", color: "out" },
   ]
 
-  return <ReactFlowDiagram nodes={nodes} edges={edges} fit={p.fit} />
+  return (
+    <ArchTreeDiagram
+      nodes={nodes}
+      subtitle={`${numExperts} experts · top-${numExpertsPerToken} · ${numSharedExperts} shared · sigmoid routing · no aux loss`}
+    />
+  )
 }

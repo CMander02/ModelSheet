@@ -1,40 +1,34 @@
-import { ReactFlowDiagram } from "../react-flow-diagram"
+import { ArchTreeDiagram, type TreeNode } from "../arch-tree-diagram"
 import { type DiagramParams } from "./shared"
-import { pill, rect, resid, note, edge, residEdge, resetIds } from "./diagram-builder"
 
 export default function MambaDiagram(p: DiagramParams) {
-  resetIds()
-  const {hiddenSize = 2560 } = p
+  const { hiddenSize = 2560, numLayers = 64 } = p
 
-  const input = pill("Input tokens")
-  const emb = rect("Token Embedding", "emb")
-  const ln1 = rect("RMSNorm", "norm", { sublabel: "pre-norm" })
-  const inProj = rect("Input Projection", "attn", { sublabel: "split → x and z" })
-  const conv1d = rect("Conv1d", "attn", { sublabel: "causal · depthwise" })
-  const silu1 = rect("SiLU", "attn", { sublabel: "activation" })
-  const ssm = rect("SSM Selective Scan", "attn", { sublabel: "S6 · dt/A/B/C learned from x" })
-  const gate = rect("× gate", "attn", { sublabel: "silu(z) gating" })
-  const outProj = rect("Output Projection", "attn")
-  const plus1 = resid()
-  const lnf = rect("Final RMSNorm", "norm")
-  const lmh = rect("LM Head", "out", { sublabel: "tied to token emb" })
-  const info = note(`hidden: ${hiddenSize.toLocaleString()} · no attention · linear-time inference`)
-
-  const nodes = [input, emb, ln1, inProj, conv1d, silu1, ssm, gate, outProj, plus1, lnf, lmh, info]
-  const edges = [
-    edge(input, emb),
-    edge(emb, ln1),
-    edge(ln1, inProj),
-    edge(inProj, conv1d),
-    edge(conv1d, silu1),
-    edge(silu1, ssm),
-    edge(ssm, gate),
-    edge(gate, outProj),
-    edge(outProj, plus1),
-    residEdge(emb, plus1),
-    edge(plus1, lnf),
-    edge(lnf, lmh),
+  const nodes: TreeNode[] = [
+    { id: "input", type: "leaf", label: "Input tokens", color: "input" },
+    { id: "emb", type: "leaf", label: "Token Embedding", color: "emb" },
+    {
+      id: "block", type: "group", label: "Mamba Block", badge: `×${numLayers}`, color: "steel",
+      sub: "no attention · SSM selective scan",
+      children: [
+        { id: "ln1", type: "leaf", label: "RMSNorm", sub: "pre-norm", color: "norm" },
+        { id: "inproj", type: "leaf", label: "Input Projection", sub: "split → x and z", color: "attn" },
+        { id: "conv1d", type: "leaf", label: "Conv1d", sub: "causal · depthwise", color: "attn" },
+        { id: "silu1", type: "leaf", label: "SiLU", sub: "activation", color: "attn" },
+        { id: "ssm", type: "leaf", label: "SSM Selective Scan", sub: "S6 · dt/A/B/C learned from x", color: "attn" },
+        { id: "gate", type: "leaf", label: "× gate", sub: "silu(z) gating", color: "attn" },
+        { id: "outproj", type: "leaf", label: "Output Projection", color: "attn" },
+        { id: "r1", type: "leaf", label: "+ residual", color: "resid" },
+      ],
+    },
+    { id: "lnf", type: "leaf", label: "Final RMSNorm", color: "norm" },
+    { id: "lmh", type: "leaf", label: "LM Head", sub: "tied to token emb", color: "out" },
   ]
 
-  return <ReactFlowDiagram nodes={nodes} edges={edges} fit={p.fit} />
+  return (
+    <ArchTreeDiagram
+      nodes={nodes}
+      subtitle={`hidden: ${hiddenSize.toLocaleString()} · no attention · linear-time inference`}
+    />
+  )
 }

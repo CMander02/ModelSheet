@@ -1,35 +1,35 @@
-import { ReactFlowDiagram } from "../react-flow-diagram"
+import { ArchTreeDiagram, type TreeNode } from "../arch-tree-diagram"
 import { type DiagramParams } from "./shared"
-import { pill, rect, resid, note, edge, residEdge, resetIds } from "./diagram-builder"
 
 export default function FalconDiagram(p: DiagramParams) {
-  resetIds()
-  const {numHeads = 71, numKvHeads = 1, hiddenSize = 4544 } = p
+  const { numHeads = 71, numKvHeads = 1, numLayers = 32, hiddenSize = 4544 } = p
 
-  const input = pill("Input tokens")
-  const emb = rect("Token Embedding", "emb")
-  const ln1 = rect("LayerNorm", "norm", { sublabel: "pre-norm · ln_attn" })
-  const parallelNote = note("Attention + FFN computed in PARALLEL from same input")
-  const attn = rect(`MQA · ${numHeads}Q ${numKvHeads}KV`, "attn", { sublabel: "RoPE · no bias" })
-  const ffn = rect("FFN", "ffn", { sublabel: "Linear → GELU → Linear" })
-  const plus1 = resid()
-  const lnf = rect("Final LayerNorm", "norm")
-  const lmh = rect("LM Head", "out", { sublabel: "tied to token emb" })
-  const info = note(`hidden: ${hiddenSize.toLocaleString()} · parallel attn+FFN is Falcon key design`)
-
-  const nodes = [input, emb, ln1, parallelNote, attn, ffn, plus1, lnf, lmh, info]
-  const edges = [
-    edge(input, emb),
-    edge(emb, ln1),
-    edge(ln1, parallelNote),
-    edge(parallelNote, attn),
-    edge(attn, plus1),
-    edge(parallelNote, ffn),
-    edge(ffn, plus1),
-    residEdge(emb, plus1),
-    edge(plus1, lnf),
-    edge(lnf, lmh),
+  const nodes: TreeNode[] = [
+    { id: "input", type: "leaf", label: "Input tokens", color: "input" },
+    { id: "emb", type: "leaf", label: "Token Embedding", color: "emb" },
+    {
+      id: "block", type: "group", label: "Transformer Block", badge: `×${numLayers}`, color: "steel",
+      sub: "Attention + FFN computed in parallel from same input",
+      defaultExpanded: true,
+      children: [
+        { id: "ln1", type: "leaf", label: "LayerNorm", sub: "pre-norm · ln_attn", color: "norm" },
+        {
+          id: "parallel", type: "row", children: [
+            { id: "attn", type: "leaf", label: `MQA  Q:${numHeads}  KV:${numKvHeads}`, sub: "RoPE · no bias · parallel", color: "attn" },
+            { id: "ffn", type: "leaf", label: "FFN", sub: "Linear → GELU → Linear", color: "ffn" },
+          ],
+        },
+        { id: "r1", type: "leaf", label: "+ residual (attn + FFN)", color: "resid" },
+      ],
+    },
+    { id: "lnf", type: "leaf", label: "Final LayerNorm", color: "norm" },
+    { id: "lmh", type: "leaf", label: "LM Head", sub: "tied to token emb", color: "out" },
   ]
 
-  return <ReactFlowDiagram nodes={nodes} edges={edges} fit={p.fit} />
+  return (
+    <ArchTreeDiagram
+      nodes={nodes}
+      subtitle={`hidden: ${hiddenSize.toLocaleString()} · parallel attn+FFN is Falcon key design`}
+    />
+  )
 }

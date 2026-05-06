@@ -1,26 +1,32 @@
-import { ReactFlowDiagram } from "../react-flow-diagram"
+import { ArchTreeDiagram, type TreeNode } from "../arch-tree-diagram"
 import { type DiagramParams } from "./shared"
-import { pill, rect, resid, note, seq, residEdge, resetIds } from "./diagram-builder"
 
 export default function Qwen2Diagram(p: DiagramParams) {
-  resetIds()
-  const {numHeads = 28, numKvHeads = 4, hiddenSize = 3584 } = p
+  const { numHeads = 28, numKvHeads = 4, numLayers = 28, hiddenSize = 3584 } = p
 
-  const input = pill("Input tokens")
-  const emb = rect("Token Embedding", "emb")
-  const ln1 = rect("RMSNorm", "norm", { sublabel: "pre-norm" })
-  const attn = rect(`GQA Q:${numHeads} KV:${numKvHeads}`, "attn", { sublabel: "RoPE · QKV bias · optional sliding window" })
-  const r1 = resid()
-  const ln2 = rect("RMSNorm", "norm", { sublabel: "pre-norm" })
-  const ffn = rect("SwiGLU FFN", "ffn", { sublabel: "gate · up → SiLU → down" })
-  const r2 = resid()
-  const lnf = rect("Final RMSNorm", "norm")
-  const lmh = rect("LM Head", "out", { sublabel: "tied to token emb" })
-  const info = note(`hidden: ${hiddenSize.toLocaleString()} · QKV bias = True`)
+  const nodes: TreeNode[] = [
+    { id: "input", type: "leaf", label: "Input tokens", color: "input" },
+    { id: "emb", type: "leaf", label: "Token Embedding", color: "emb" },
+    {
+      id: "block", type: "group", label: "Transformer Block", badge: `×${numLayers}`, color: "steel",
+      sub: `${numLayers} identical layers`,
+      children: [
+        { id: "ln1", type: "leaf", label: "RMSNorm", sub: "pre-norm", color: "norm" },
+        { id: "attn", type: "leaf", label: `GQA  Q:${numHeads}  KV:${numKvHeads}`, sub: "RoPE · QKV bias · optional sliding window", color: "attn" },
+        { id: "r1", type: "leaf", label: "+ residual", color: "resid" },
+        { id: "ln2", type: "leaf", label: "RMSNorm", sub: "pre-norm", color: "norm" },
+        { id: "ffn", type: "leaf", label: "SwiGLU FFN", sub: "gate · up → SiLU → down", color: "ffn" },
+        { id: "r2", type: "leaf", label: "+ residual", color: "resid" },
+      ],
+    },
+    { id: "lnf", type: "leaf", label: "Final RMSNorm", color: "norm" },
+    { id: "lmh", type: "leaf", label: "LM Head", sub: "tied to token emb", color: "out" },
+  ]
 
-  const main = seq(input, emb, ln1, attn, r1, ln2, ffn, r2, lnf, lmh)
-  const res1 = residEdge(emb, r1)
-  const res2 = residEdge(r1, r2)
-
-  return <ReactFlowDiagram nodes={[...main.nodes, info]} edges={[...main.edges, res1, res2]} fit={p.fit} />
+  return (
+    <ArchTreeDiagram
+      nodes={nodes}
+      subtitle={`hidden: ${hiddenSize.toLocaleString()} · QKV bias = true`}
+    />
+  )
 }

@@ -33831,5 +33831,42 @@
     "createdAt": "2026-05-01T13:39:57.000Z",
     "openness": "open-weight",
     "isMoe": false
+  },
+  {
+    "id": "openbmb/SciCore-Mol",
+    "name": "SciCore-Mol",
+    "provider": "OpenBMB",
+    "huggingfaceUrl": "https://huggingface.co/openbmb/SciCore-Mol",
+    "techReport": "",
+    "modelscopeUrl": "https://modelscope.cn/models/OpenBMB/SciCore-Mol",
+    "totalParameters": 8188556288,
+    "activeParameters": 8188556288,
+    "embeddingParameters": 621240320,
+    "nonEmbeddingParameters": 7567315968,
+    "contextLength": 40960,
+    "embeddingDim": 4096,
+    "vocabSize": 151670,
+    "architecture": "qwen3",
+    "numLayers": 36,
+    "numHeads": 32,
+    "numKvHeads": 8,
+    "hiddenSize": 4096,
+    "intermediateSize": 12288,
+    "positionEncoding": "RoPE",
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-06,
+    "attentionDropout": 0.0,
+    "mlpFactor": 3.0,
+    "gqaRatio": 4.0,
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "createdAt": "2026-04-29T05:49:27.000Z",
+    "openness": "open-weight",
+    "isMoe": false
   }
 ]

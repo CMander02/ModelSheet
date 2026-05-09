@@ -34451,5 +34451,43 @@
     "createdAt": "2026-05-08T15:59:58.000Z",
     "openness": "open-weight",
     "isMoe": true
+  },
+  {
+    "id": "microsoft/Phi-Ground-Any",
+    "name": "Phi-Ground-Any",
+    "provider": "Microsoft",
+    "huggingfaceUrl": "https://huggingface.co/microsoft/Phi-Ground-Any",
+    "techReport": "",
+    "arxivUrl": "https://arxiv.org/abs/2507.23779",
+    "totalParameters": 3722379264,
+    "activeParameters": 3722379264,
+    "embeddingParameters": 98500608,
+    "nonEmbeddingParameters": 3623878656,
+    "contextLength": 131072,
+    "embeddingDim": 3072,
+    "vocabSize": 32064,
+    "architecture": "phi3_v",
+    "numLayers": 32,
+    "numHeads": 32,
+    "numKvHeads": 32,
+    "hiddenSize": 3072,
+    "intermediateSize": 8192,
+    "positionEncoding": "RoPE",
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-05,
+    "attentionDropout": 0.0,
+    "mlpFactor": 2.67,
+    "gqaRatio": 1.0,
+    "torchDtype": "bfloat16",
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "createdAt": "2026-05-07T05:00:37.000Z",
+    "openness": "open-weight",
+    "isMoe": false
   }
 ]

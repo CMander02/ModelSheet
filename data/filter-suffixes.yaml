@@ -42,8 +42,8 @@ rules:
     reason: "SmoothQuant quantized"
   - pattern: "NVFP4"
     reason: "NVFP4 quantized variant"
-  - pattern: "eagle\\d*$"
-    reason: "speculative decoding head (EAGLE/Eagle2/Eagle3)"
+  - pattern: "\\beagle\\d*"
+    reason: "speculative decoding head (EAGLE/Eagle2/Eagle3/Eagle3-v3)"
   - pattern: "_gguf"
     reason: "GGUF quantized variant"
 

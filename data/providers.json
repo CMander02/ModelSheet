@@ -1,960 +1,975 @@
 {
-    "$schema": "./providers.schema.json",
-    "$comment": "Provider mapping configuration. CLI and frontend both read from this file.",
-    "providers": {
-        "Qwen": {
-            "orgs": [
-                "Qwen",
-                "alibaba-PAI",
-                "Alibaba-NLP"
-            ],
-            "i18n": {
-                "en": "Qwen",
-                "zh": "通义千问"
-            },
-            "scan": {
-                "hf": [
-                    "Qwen"
-                ],
-                "ms": [
-                    "Qwen"
-                ]
-            },
-            "region": "cn"
-        },
-        "Damo Academy": {
-            "orgs": [
-                "Alibaba-DAMO-Academy"
-            ],
-            "i18n": {
-                "en": "Damo Academy",
-                "zh": "达摩院"
-            },
-            "scan": {
-                "hf": [
-                    "Alibaba-DAMO-Academy"
-                ],
-                "ms": [
-                    "damo"
-                ]
-            },
-            "region": "cn"
-        },
-        "Meta": {
-            "orgs": [
-                "facebook"
-            ],
-            "i18n": {
-                "en": "Meta",
-                "zh": "Meta"
-            },
-            "region": "global"
-        },
-        "Llama Team": {
-            "orgs": [
-                "meta-llama"
-            ],
-            "i18n": {
-                "en": "Llama Team",
-                "zh": "Llama 团队"
-            },
-            "region": "global"
-        },
-        "Google DeepMind": {
-            "orgs": [
-                "google",
-                "deepmind"
-            ],
-            "i18n": {
-                "en": "Google DeepMind",
-                "zh": "Google DeepMind"
-            },
-            "region": "global"
-        },
-        "Microsoft": {
-            "orgs": [
-                "microsoft"
-            ],
-            "i18n": {
-                "en": "Microsoft",
-                "zh": "微软"
-            },
-            "region": "global"
-        },
-        "Mistral AI": {
-            "orgs": [
-                "mistralai"
-            ],
-            "i18n": {
-                "en": "Mistral AI",
-                "zh": "Mistral AI"
-            },
-            "region": "global"
-        },
-        "DeepSeek": {
-            "orgs": [
-                "deepseek-ai"
-            ],
-            "i18n": {
-                "en": "DeepSeek",
-                "zh": "深度求索"
-            },
-            "scan": {
-                "hf": [
-                    "deepseek-ai"
-                ],
-                "ms": [
-                    "deepseek-ai"
-                ]
-            },
-            "region": "cn"
-        },
-        "01.AI": {
-            "orgs": [
-                "01-ai"
-            ],
-            "i18n": {
-                "en": "01.AI",
-                "zh": "零一万物"
-            },
-            "scan": {
-                "hf": [
-                    "01-ai"
-                ],
-                "ms": [
-                    "01ai"
-                ]
-            },
-            "region": "cn"
-        },
-        "Zhipu AI": {
-            "orgs": [
-                "THUDM",
-                "zai-org"
-            ],
-            "i18n": {
-                "en": "Zhipu AI",
-                "zh": "智谱AI"
-            },
-            "scan": {
-                "hf": [
-                    "THUDM",
-                    "zai-org"
-                ],
-                "ms": [
-                    "ZhipuAI"
-                ]
-            },
-            "region": "cn"
-        },
-        "Shanghai AI Lab": {
-            "orgs": [
-                "internlm",
-                "OpenGVLab",
-                "OpenMMLab"
-            ],
-            "i18n": {
-                "en": "Shanghai AI Lab",
-                "zh": "上海人工智能实验室"
-            },
-            "scan": {
-                "hf": [
-                    "internlm",
-                    "OpenGVLab"
-                ],
-                "ms": [
-                    "Shanghai_AI_Laboratory"
-                ]
-            },
-            "ms_name_rewrites": {
-                "InternVL3_5-20B-A4B-Preview": "InternVL3_5-GPT-OSS-20B-A4B-Preview",
-                "-v1.1": "-v1_1",
-                "-Pretrained": ""
-            },
-            "region": "cn"
-        },
-        "Baichuan": {
-            "orgs": [
-                "baichuan-inc"
-            ],
-            "i18n": {
-                "en": "Baichuan",
-                "zh": "百川智能"
-            },
-            "scan": {
-                "hf": [
-                    "baichuan-inc"
-                ],
-                "ms": [
-                    "baichuan-inc"
-                ]
-            },
-            "region": "global"
-        },
-        "BigScience": {
-            "orgs": [
-                "bigscience"
-            ],
-            "i18n": {
-                "en": "BigScience",
-                "zh": "BigScience"
-            },
-            "region": "global"
-        },
-        "EleutherAI": {
-            "orgs": [
-                "EleutherAI"
-            ],
-            "i18n": {
-                "en": "EleutherAI",
-                "zh": "EleutherAI"
-            },
-            "region": "global"
-        },
-        "TII": {
-            "orgs": [
-                "tiiuae"
-            ],
-            "i18n": {
-                "en": "TII",
-                "zh": "阿联酋技术创新研究院"
-            },
-            "region": "global"
-        },
-        "Stability AI": {
-            "orgs": [
-                "stabilityai"
-            ],
-            "i18n": {
-                "en": "Stability AI",
-                "zh": "Stability AI"
-            },
-            "region": "global"
-        },
-        "Nous Research": {
-            "orgs": [
-                "NousResearch"
-            ],
-            "i18n": {
-                "en": "Nous Research",
-                "zh": "Nous Research"
-            },
-            "region": "global"
-        },
-        "Teknium": {
-            "orgs": [
-                "teknium"
-            ],
-            "i18n": {
-                "en": "Teknium",
-                "zh": "Teknium"
-            },
-            "region": "global"
-        },
-        "Open Orca": {
-            "orgs": [
-                "Open-Orca"
-            ],
-            "i18n": {
-                "en": "Open Orca",
-                "zh": "Open Orca"
-            },
-            "region": "global"
-        },
-        "LMSYS": {
-            "orgs": [
-                "lmsys"
-            ],
-            "i18n": {
-                "en": "LMSYS",
-                "zh": "LMSYS"
-            },
-            "region": "global"
-        },
-        "Hugging Face": {
-            "orgs": [
-                "HuggingFaceH4",
-                "huggingface"
-            ],
-            "i18n": {
-                "en": "Hugging Face",
-                "zh": "Hugging Face"
-            },
-            "region": "global"
-        },
-        "Databricks": {
-            "orgs": [
-                "mosaicml",
-                "databricks"
-            ],
-            "i18n": {
-                "en": "Databricks",
-                "zh": "Databricks"
-            },
-            "region": "global"
-        },
-        "Allen AI": {
-            "orgs": [
-                "allenai"
-            ],
-            "i18n": {
-                "en": "Allen AI",
-                "zh": "艾伦人工智能研究院"
-            },
-            "region": "global"
-        },
-        "Cohere": {
-            "orgs": [
-                "CohereForAI"
-            ],
-            "i18n": {
-                "en": "Cohere",
-                "zh": "Cohere"
-            },
-            "region": "global"
-        },
-        "NVIDIA": {
-            "orgs": [
-                "nvidia"
-            ],
-            "i18n": {
-                "en": "NVIDIA",
-                "zh": "英伟达"
-            },
-            "region": "global"
-        },
-        "Amazon": {
-            "orgs": [
-                "amazon"
-            ],
-            "i18n": {
-                "en": "Amazon",
-                "zh": "亚马逊"
-            },
-            "region": "global"
-        },
-        "Apple": {
-            "orgs": [
-                "apple"
-            ],
-            "i18n": {
-                "en": "Apple",
-                "zh": "苹果"
-            },
-            "region": "global"
-        },
-        "xAI": {
-            "orgs": [
-                "xai-org"
-            ],
-            "i18n": {
-                "en": "xAI",
-                "zh": "xAI"
-            },
-            "region": "global"
-        },
-        "ByteDance": {
-            "orgs": [
-                "ByteDance"
-            ],
-            "i18n": {
-                "en": "ByteDance",
-                "zh": "字节跳动"
-            },
-            "region": "cn",
-            "scan": {
-                "ms": [
-                    "ByteDance"
-                ]
-            }
-        },
-        "OpenAI": {
-            "orgs": [
-                "openai-community",
-                "openai"
-            ],
-            "i18n": {
-                "en": "OpenAI",
-                "zh": "OpenAI"
-            },
-            "region": "global"
-        },
-        "Moonshot AI": {
-            "orgs": [
-                "moonshotai"
-            ],
-            "i18n": {
-                "en": "Moonshot AI",
-                "zh": "月之暗面"
-            },
-            "scan": {
-                "hf": [
-                    "moonshotai"
-                ],
-                "ms": [
-                    "moonshot-ai"
-                ]
-            },
-            "region": "cn"
-        },
-        "IBM": {
-            "orgs": [
-                "ibm-granite",
-                "ibm"
-            ],
-            "i18n": {
-                "en": "IBM",
-                "zh": "IBM"
-            },
-            "region": "global"
-        },
-        "Skywork": {
-            "orgs": [
-                "Skywork"
-            ],
-            "i18n": {
-                "en": "Skywork",
-                "zh": "昆仑万维"
-            },
-            "scan": {
-                "hf": [
-                    "Skywork"
-                ],
-                "ms": [
-                    "Skywork"
-                ]
-            },
-            "region": "cn"
-        },
-        "Xiaomi MiMo": {
-            "orgs": [
-                "XiaomiMiMo"
-            ],
-            "i18n": {
-                "en": "Xiaomi MiMo",
-                "zh": "小米 MiMo"
-            },
-            "scan": {
-                "hf": [
-                    "XiaomiMiMo"
-                ],
-                "ms": [
-                    "XiaomiMiMo"
-                ]
-            },
-            "region": "cn"
-        },
-        "Stepfun": {
-            "orgs": [
-                "stepfun-ai"
-            ],
-            "i18n": {
-                "en": "Stepfun",
-                "zh": "阶跃星辰"
-            },
-            "scan": {
-                "hf": [
-                    "stepfun-ai"
-                ],
-                "ms": [
-                    "stepfun-ai"
-                ]
-            },
-            "region": "cn"
-        },
-        "MiniMax": {
-            "orgs": [
-                "MiniMaxAI"
-            ],
-            "i18n": {
-                "en": "MiniMax",
-                "zh": "MiniMax"
-            },
-            "scan": {
-                "hf": [
-                    "MiniMaxAI"
-                ],
-                "ms": [
-                    "MiniMaxAI"
-                ]
-            },
-            "region": "cn"
-        },
-        "Cursor": {
-            "orgs": [
-                "cursor"
-            ],
-            "i18n": {
-                "en": "Cursor",
-                "zh": "Cursor"
-            },
-            "region": "global"
-        },
-        "Liquid AI": {
-            "orgs": [
-                "LiquidAI"
-            ],
-            "i18n": {
-                "en": "Liquid AI",
-                "zh": "Liquid AI"
-            },
-            "region": "global"
-        },
-        "Reka AI": {
-            "orgs": [
-                "RekaAI"
-            ],
-            "i18n": {
-                "en": "Reka AI",
-                "zh": "Reka"
-            },
-            "region": "global"
-        },
-        "Aleph Alpha": {
-            "orgs": [
-                "Aleph-Alpha"
-            ],
-            "i18n": {
-                "en": "Aleph Alpha",
-                "zh": "Aleph Alpha"
-            },
-            "region": "global"
-        },
-        "Yandex": {
-            "orgs": [
-                "yandex"
-            ],
-            "i18n": {
-                "en": "Yandex",
-                "zh": "Yandex"
-            },
-            "region": "global"
-        },
-        "Snowflake": {
-            "orgs": [
-                "Snowflake"
-            ],
-            "i18n": {
-                "en": "Snowflake",
-                "zh": "Snowflake"
-            },
-            "region": "global"
-        },
-        "Upstage": {
-            "orgs": [
-                "upstage"
-            ],
-            "i18n": {
-                "en": "Upstage",
-                "zh": "Upstage"
-            },
-            "region": "global"
-        },
-        "LG AI": {
-            "orgs": [
-                "LGAI-EXAONE"
-            ],
-            "i18n": {
-                "en": "LG AI",
-                "zh": "LG AI 研究院"
-            },
-            "region": "global"
-        },
-        "Perplexity": {
-            "orgs": [
-                "perplexity-ai"
-            ],
-            "i18n": {
-                "en": "Perplexity",
-                "zh": "Perplexity"
-            },
-            "region": "global"
-        },
-        "Deep Cogito": {
-            "orgs": [
-                "deepcogito"
-            ],
-            "i18n": {
-                "en": "Deep Cogito",
-                "zh": "Deep Cogito"
-            },
-            "region": "global"
-        },
-        "Arcee AI": {
-            "orgs": [
-                "arcee-ai"
-            ],
-            "i18n": {
-                "en": "Arcee AI",
-                "zh": "Arcee"
-            },
-            "region": "global"
-        },
-        "Meituan": {
-            "orgs": [
-                "meituan-longcat"
-            ],
-            "i18n": {
-                "en": "Meituan",
-                "zh": "美团"
-            },
-            "scan": {
-                "hf": [
-                    "meituan-longcat"
-                ],
-                "ms": [
-                    "meituan-longcat"
-                ]
-            },
-            "region": "cn"
-        },
-        "Infinigence": {
-            "orgs": [
-                "Infinigence"
-            ],
-            "i18n": {
-                "en": "Infinigence",
-                "zh": "无问芯穹"
-            },
-            "scan": {
-                "hf": [
-                    "Infinigence"
-                ],
-                "ms": [
-                    "Infinigence"
-                ]
-            },
-            "region": "cn"
-        },
-        "XVERSE": {
-            "orgs": [
-                "xverse"
-            ],
-            "i18n": {
-                "en": "XVERSE",
-                "zh": "元象"
-            },
-            "scan": {
-                "hf": [
-                    "xverse"
-                ],
-                "ms": [
-                    "xverse"
-                ]
-            },
-            "region": "cn"
-        },
-        "Bilibili": {
-            "orgs": [
-                "IndexTeam"
-            ],
-            "i18n": {
-                "en": "Bilibili",
-                "zh": "哔哩哔哩"
-            },
-            "scan": {
-                "hf": [
-                    "IndexTeam"
-                ],
-                "ms": [
-                    "IndexTeam"
-                ]
-            },
-            "region": "cn"
-        },
-        "RedNote Hi-Lab": {
-            "orgs": [
-                "rednote-hilab"
-            ],
-            "i18n": {
-                "en": "RedNote Hi-Lab",
-                "zh": "小红书 Hi-Lab"
-            },
-            "scan": {
-                "hf": [
-                    "rednote-hilab"
-                ],
-                "ms": [
-                    "rednote-hilab"
-                ]
-            },
-            "region": "cn"
-        },
-        "AIDC-AI": {
-            "orgs": [
-                "AIDC-AI"
-            ],
-            "i18n": {
-                "en": "AIDC-AI",
-                "zh": "AIDC-AI"
-            },
-            "scan": {
-                "hf": [
-                    "AIDC-AI"
-                ],
-                "ms": [
-                    "AIDC-AI"
-                ]
-            },
-            "region": "cn"
-        },
-        "OpenBMB": {
-            "orgs": [
-                "openbmb"
-            ],
-            "i18n": {
-                "en": "OpenBMB",
-                "zh": "OpenBMB"
-            },
-            "scan": {
-                "hf": [
-                    "openbmb"
-                ],
-                "ms": [
-                    "OpenBMB"
-                ]
-            },
-            "region": "cn"
-        },
-        "AntGroup": {
-            "orgs": [
-                "inclusionAI"
-            ],
-            "i18n": {
-                "en": "Ant Group",
-                "zh": "蚂蚁集团"
-            },
-            "scan": {
-                "hf": [
-                    "inclusionAI"
-                ],
-                "ms": [
-                    "inclusionAI"
-                ]
-            },
-            "region": "cn"
-        },
-        "Qihoo 360": {
-            "orgs": [
-                "qihoo360"
-            ],
-            "i18n": {
-                "en": "Qihoo 360",
-                "zh": "360"
-            },
-            "scan": {
-                "hf": [
-                    "qihoo360"
-                ],
-                "ms": [
-                    "qihoo360"
-                ]
-            },
-            "region": "cn"
-        },
-        "Orion Star": {
-            "orgs": [
-                "OrionStarAI",
-                "orionstarai"
-            ],
-            "i18n": {
-                "en": "Orion Star",
-                "zh": "猎户星空"
-            },
-            "scan": {
-                "hf": [
-                    "OrionStarAI"
-                ],
-                "ms": [
-                    "OrionStarAI"
-                ]
-            },
-            "region": "cn"
-        },
-        "RWKV": {
-            "orgs": [
-                "RWKV",
-                "BlinkDL"
-            ],
-            "i18n": {
-                "en": "RWKV",
-                "zh": "RWKV"
-            },
-            "region": "global"
-        },
-        "State Spaces": {
-            "orgs": [
-                "state-spaces"
-            ],
-            "i18n": {
-                "en": "State Spaces",
-                "zh": "State Spaces"
-            },
-            "region": "global"
-        },
-        "GSAI": {
-            "orgs": [
-                "GSAI-ML"
-            ],
-            "i18n": {
-                "en": "GSAI",
-                "zh": "GSAI"
-            },
-            "region": "global"
-        },
-        "OpenChat": {
-            "orgs": [
-                "openchat"
-            ],
-            "i18n": {
-                "en": "OpenChat",
-                "zh": "OpenChat"
-            },
-            "region": "global"
-        },
-        "Cognitive Computations": {
-            "orgs": [
-                "cognitivecomputations"
-            ],
-            "i18n": {
-                "en": "Cognitive Computations",
-                "zh": "Cognitive Computations"
-            },
-            "region": "global"
-        },
-        "Open Thoughts": {
-            "orgs": [
-                "open-thoughts"
-            ],
-            "i18n": {
-                "en": "Open Thoughts",
-                "zh": "Open Thoughts"
-            },
-            "region": "global"
-        },
-        "AI21 Labs": {
-            "orgs": [
-                "ai21labs"
-            ],
-            "i18n": {
-                "en": "AI21 Labs",
-                "zh": "AI21 Labs"
-            },
-            "region": "global"
-        },
-        "BAAI": {
-            "orgs": [
-                "BAAI"
-            ],
-            "i18n": {
-                "en": "BAAI",
-                "zh": "智源研究院"
-            },
-            "scan": {
-                "hf": [
-                    "BAAI"
-                ],
-                "ms": [
-                    "BAAI"
-                ]
-            },
-            "region": "cn"
-        },
-        "Inception Labs": {
-            "orgs": [
-                "inceptionlabs",
-                "InceptionLabs"
-            ],
-            "i18n": {
-                "en": "Inception Labs",
-                "zh": "Inception Labs"
-            },
-            "region": "global"
-        },
-        "Essential AI": {
-            "orgs": [
-                "essential-ai",
-                "EssentialAI"
-            ],
-            "i18n": {
-                "en": "Essential AI",
-                "zh": "Essential AI"
-            },
-            "region": "global"
-        },
-        "Anthropic": {
-            "orgs": [
-                "anthropic"
-            ],
-            "i18n": {
-                "en": "Anthropic",
-                "zh": "Anthropic"
-            },
-            "region": "global"
-        },
-        "ByteDance Seed": {
-            "orgs": [
-                "ByteDance-Seed",
-                "bytedance-research"
-            ],
-            "i18n": {
-                "en": "ByteDance Seed",
-                "zh": "字节 Seed"
-            },
-            "region": "cn",
-            "scan": {
-                "ms": [
-                    "ByteDance-Seed"
-                ]
-            }
-        },
-        "Poolside": {
-            "orgs": [
-                "poolside"
-            ],
-            "i18n": {
-                "en": "Poolside",
-                "zh": "Poolside"
-            },
-            "scan": {
-                "hf": [
-                    "poolside"
-                ]
-            },
-            "region": "global"
-        },
-        "iFlyTek": {
-            "orgs": [
-                "iFlytek"
-            ],
-            "i18n": {
-                "en": "iFlyTek",
-                "zh": "科大讯飞"
-            },
-            "scan": {
-                "ms": [
-                    "iFlytek"
-                ]
-            },
-            "region": "cn"
-        },
-        "腾讯": {
-            "orgs": [
-                "tencent"
-            ],
-            "i18n": {
-                "en": "Tencent",
-                "zh": "腾讯"
-            },
-            "scan": {
-                "hf": [
-                    "tencent"
-                ],
-                "ms": [
-                    "Tencent"
-                ]
-            },
-            "region": "cn"
-        }
+  "$schema": "./providers.schema.json",
+  "$comment": "Provider mapping configuration. CLI and frontend both read from this file.",
+  "providers": {
+    "Qwen": {
+      "orgs": [
+        "Qwen",
+        "alibaba-PAI",
+        "Alibaba-NLP"
+      ],
+      "i18n": {
+        "en": "Qwen",
+        "zh": "通义千问"
+      },
+      "scan": {
+        "hf": [
+          "Qwen"
+        ],
+        "ms": [
+          "Qwen"
+        ]
+      },
+      "region": "cn"
+    },
+    "Damo Academy": {
+      "orgs": [
+        "Alibaba-DAMO-Academy"
+      ],
+      "i18n": {
+        "en": "Damo Academy",
+        "zh": "达摩院"
+      },
+      "scan": {
+        "hf": [
+          "Alibaba-DAMO-Academy"
+        ],
+        "ms": [
+          "damo"
+        ]
+      },
+      "region": "cn"
+    },
+    "Meta": {
+      "orgs": [
+        "facebook"
+      ],
+      "i18n": {
+        "en": "Meta",
+        "zh": "Meta"
+      },
+      "region": "global"
+    },
+    "Llama Team": {
+      "orgs": [
+        "meta-llama"
+      ],
+      "i18n": {
+        "en": "Llama Team",
+        "zh": "Llama 团队"
+      },
+      "region": "global"
+    },
+    "Google DeepMind": {
+      "orgs": [
+        "google",
+        "deepmind"
+      ],
+      "i18n": {
+        "en": "Google DeepMind",
+        "zh": "Google DeepMind"
+      },
+      "region": "global"
+    },
+    "Microsoft": {
+      "orgs": [
+        "microsoft"
+      ],
+      "i18n": {
+        "en": "Microsoft",
+        "zh": "微软"
+      },
+      "region": "global"
+    },
+    "Mistral AI": {
+      "orgs": [
+        "mistralai"
+      ],
+      "i18n": {
+        "en": "Mistral AI",
+        "zh": "Mistral AI"
+      },
+      "region": "global"
+    },
+    "DeepSeek": {
+      "orgs": [
+        "deepseek-ai"
+      ],
+      "i18n": {
+        "en": "DeepSeek",
+        "zh": "深度求索"
+      },
+      "scan": {
+        "hf": [
+          "deepseek-ai"
+        ],
+        "ms": [
+          "deepseek-ai"
+        ]
+      },
+      "region": "cn"
+    },
+    "01.AI": {
+      "orgs": [
+        "01-ai"
+      ],
+      "i18n": {
+        "en": "01.AI",
+        "zh": "零一万物"
+      },
+      "scan": {
+        "hf": [
+          "01-ai"
+        ],
+        "ms": [
+          "01ai"
+        ]
+      },
+      "region": "cn"
+    },
+    "Zhipu AI": {
+      "orgs": [
+        "THUDM",
+        "zai-org"
+      ],
+      "i18n": {
+        "en": "Zhipu AI",
+        "zh": "智谱AI"
+      },
+      "scan": {
+        "hf": [
+          "THUDM",
+          "zai-org"
+        ],
+        "ms": [
+          "ZhipuAI"
+        ]
+      },
+      "region": "cn"
+    },
+    "Shanghai AI Lab": {
+      "orgs": [
+        "internlm",
+        "OpenGVLab",
+        "OpenMMLab"
+      ],
+      "i18n": {
+        "en": "Shanghai AI Lab",
+        "zh": "上海人工智能实验室"
+      },
+      "scan": {
+        "hf": [
+          "internlm",
+          "OpenGVLab"
+        ],
+        "ms": [
+          "Shanghai_AI_Laboratory"
+        ]
+      },
+      "ms_name_rewrites": {
+        "InternVL3_5-20B-A4B-Preview": "InternVL3_5-GPT-OSS-20B-A4B-Preview",
+        "-v1.1": "-v1_1",
+        "-Pretrained": ""
+      },
+      "region": "cn"
+    },
+    "Baichuan": {
+      "orgs": [
+        "baichuan-inc"
+      ],
+      "i18n": {
+        "en": "Baichuan",
+        "zh": "百川智能"
+      },
+      "scan": {
+        "hf": [
+          "baichuan-inc"
+        ],
+        "ms": [
+          "baichuan-inc"
+        ]
+      },
+      "region": "global"
+    },
+    "BigScience": {
+      "orgs": [
+        "bigscience"
+      ],
+      "i18n": {
+        "en": "BigScience",
+        "zh": "BigScience"
+      },
+      "region": "global"
+    },
+    "EleutherAI": {
+      "orgs": [
+        "EleutherAI"
+      ],
+      "i18n": {
+        "en": "EleutherAI",
+        "zh": "EleutherAI"
+      },
+      "region": "global"
+    },
+    "TII": {
+      "orgs": [
+        "tiiuae"
+      ],
+      "i18n": {
+        "en": "TII",
+        "zh": "阿联酋技术创新研究院"
+      },
+      "region": "global"
+    },
+    "Stability AI": {
+      "orgs": [
+        "stabilityai"
+      ],
+      "i18n": {
+        "en": "Stability AI",
+        "zh": "Stability AI"
+      },
+      "region": "global"
+    },
+    "Nous Research": {
+      "orgs": [
+        "NousResearch"
+      ],
+      "i18n": {
+        "en": "Nous Research",
+        "zh": "Nous Research"
+      },
+      "region": "global"
+    },
+    "Teknium": {
+      "orgs": [
+        "teknium"
+      ],
+      "i18n": {
+        "en": "Teknium",
+        "zh": "Teknium"
+      },
+      "region": "global"
+    },
+    "Open Orca": {
+      "orgs": [
+        "Open-Orca"
+      ],
+      "i18n": {
+        "en": "Open Orca",
+        "zh": "Open Orca"
+      },
+      "region": "global"
+    },
+    "LMSYS": {
+      "orgs": [
+        "lmsys"
+      ],
+      "i18n": {
+        "en": "LMSYS",
+        "zh": "LMSYS"
+      },
+      "region": "global"
+    },
+    "Hugging Face": {
+      "orgs": [
+        "HuggingFaceH4",
+        "huggingface"
+      ],
+      "i18n": {
+        "en": "Hugging Face",
+        "zh": "Hugging Face"
+      },
+      "region": "global"
+    },
+    "Databricks": {
+      "orgs": [
+        "mosaicml",
+        "databricks"
+      ],
+      "i18n": {
+        "en": "Databricks",
+        "zh": "Databricks"
+      },
+      "region": "global"
+    },
+    "Allen AI": {
+      "orgs": [
+        "allenai"
+      ],
+      "i18n": {
+        "en": "Allen AI",
+        "zh": "艾伦人工智能研究院"
+      },
+      "region": "global"
+    },
+    "Cohere": {
+      "orgs": [
+        "CohereForAI"
+      ],
+      "i18n": {
+        "en": "Cohere",
+        "zh": "Cohere"
+      },
+      "region": "global"
+    },
+    "NVIDIA": {
+      "orgs": [
+        "nvidia"
+      ],
+      "i18n": {
+        "en": "NVIDIA",
+        "zh": "英伟达"
+      },
+      "region": "global"
+    },
+    "Amazon": {
+      "orgs": [
+        "amazon"
+      ],
+      "i18n": {
+        "en": "Amazon",
+        "zh": "亚马逊"
+      },
+      "region": "global"
+    },
+    "Apple": {
+      "orgs": [
+        "apple"
+      ],
+      "i18n": {
+        "en": "Apple",
+        "zh": "苹果"
+      },
+      "region": "global"
+    },
+    "xAI": {
+      "orgs": [
+        "xai-org"
+      ],
+      "i18n": {
+        "en": "xAI",
+        "zh": "xAI"
+      },
+      "region": "global"
+    },
+    "ByteDance": {
+      "orgs": [
+        "ByteDance"
+      ],
+      "i18n": {
+        "en": "ByteDance",
+        "zh": "字节跳动"
+      },
+      "region": "cn",
+      "scan": {
+        "ms": [
+          "ByteDance"
+        ]
+      }
+    },
+    "OpenAI": {
+      "orgs": [
+        "openai-community",
+        "openai"
+      ],
+      "i18n": {
+        "en": "OpenAI",
+        "zh": "OpenAI"
+      },
+      "region": "global"
+    },
+    "Moonshot AI": {
+      "orgs": [
+        "moonshotai"
+      ],
+      "i18n": {
+        "en": "Moonshot AI",
+        "zh": "月之暗面"
+      },
+      "scan": {
+        "hf": [
+          "moonshotai"
+        ],
+        "ms": [
+          "moonshot-ai"
+        ]
+      },
+      "region": "cn"
+    },
+    "IBM": {
+      "orgs": [
+        "ibm-granite",
+        "ibm"
+      ],
+      "i18n": {
+        "en": "IBM",
+        "zh": "IBM"
+      },
+      "region": "global"
+    },
+    "Skywork": {
+      "orgs": [
+        "Skywork"
+      ],
+      "i18n": {
+        "en": "Skywork",
+        "zh": "昆仑万维"
+      },
+      "scan": {
+        "hf": [
+          "Skywork"
+        ],
+        "ms": [
+          "Skywork"
+        ]
+      },
+      "region": "cn"
+    },
+    "Xiaomi MiMo": {
+      "orgs": [
+        "XiaomiMiMo"
+      ],
+      "i18n": {
+        "en": "Xiaomi MiMo",
+        "zh": "小米 MiMo"
+      },
+      "scan": {
+        "hf": [
+          "XiaomiMiMo"
+        ],
+        "ms": [
+          "XiaomiMiMo"
+        ]
+      },
+      "region": "cn"
+    },
+    "Stepfun": {
+      "orgs": [
+        "stepfun-ai"
+      ],
+      "i18n": {
+        "en": "Stepfun",
+        "zh": "阶跃星辰"
+      },
+      "scan": {
+        "hf": [
+          "stepfun-ai"
+        ],
+        "ms": [
+          "stepfun-ai"
+        ]
+      },
+      "region": "cn"
+    },
+    "MiniMax": {
+      "orgs": [
+        "MiniMaxAI"
+      ],
+      "i18n": {
+        "en": "MiniMax",
+        "zh": "MiniMax"
+      },
+      "scan": {
+        "hf": [
+          "MiniMaxAI"
+        ],
+        "ms": [
+          "MiniMaxAI"
+        ]
+      },
+      "region": "cn"
+    },
+    "Cursor": {
+      "orgs": [
+        "cursor"
+      ],
+      "i18n": {
+        "en": "Cursor",
+        "zh": "Cursor"
+      },
+      "region": "global"
+    },
+    "Liquid AI": {
+      "orgs": [
+        "LiquidAI"
+      ],
+      "i18n": {
+        "en": "Liquid AI",
+        "zh": "Liquid AI"
+      },
+      "region": "global"
+    },
+    "Reka AI": {
+      "orgs": [
+        "RekaAI"
+      ],
+      "i18n": {
+        "en": "Reka AI",
+        "zh": "Reka"
+      },
+      "region": "global"
+    },
+    "Aleph Alpha": {
+      "orgs": [
+        "Aleph-Alpha"
+      ],
+      "i18n": {
+        "en": "Aleph Alpha",
+        "zh": "Aleph Alpha"
+      },
+      "region": "global"
+    },
+    "Yandex": {
+      "orgs": [
+        "yandex"
+      ],
+      "i18n": {
+        "en": "Yandex",
+        "zh": "Yandex"
+      },
+      "region": "global"
+    },
+    "Snowflake": {
+      "orgs": [
+        "Snowflake"
+      ],
+      "i18n": {
+        "en": "Snowflake",
+        "zh": "Snowflake"
+      },
+      "region": "global"
+    },
+    "Upstage": {
+      "orgs": [
+        "upstage"
+      ],
+      "i18n": {
+        "en": "Upstage",
+        "zh": "Upstage"
+      },
+      "region": "global"
+    },
+    "LG AI": {
+      "orgs": [
+        "LGAI-EXAONE"
+      ],
+      "i18n": {
+        "en": "LG AI",
+        "zh": "LG AI 研究院"
+      },
+      "region": "global"
+    },
+    "Perplexity": {
+      "orgs": [
+        "perplexity-ai"
+      ],
+      "i18n": {
+        "en": "Perplexity",
+        "zh": "Perplexity"
+      },
+      "region": "global"
+    },
+    "Deep Cogito": {
+      "orgs": [
+        "deepcogito"
+      ],
+      "i18n": {
+        "en": "Deep Cogito",
+        "zh": "Deep Cogito"
+      },
+      "region": "global"
+    },
+    "Arcee AI": {
+      "orgs": [
+        "arcee-ai"
+      ],
+      "i18n": {
+        "en": "Arcee AI",
+        "zh": "Arcee"
+      },
+      "region": "global"
+    },
+    "Meituan": {
+      "orgs": [
+        "meituan-longcat"
+      ],
+      "i18n": {
+        "en": "Meituan",
+        "zh": "美团"
+      },
+      "scan": {
+        "hf": [
+          "meituan-longcat"
+        ],
+        "ms": [
+          "meituan-longcat"
+        ]
+      },
+      "region": "cn"
+    },
+    "Infinigence": {
+      "orgs": [
+        "Infinigence"
+      ],
+      "i18n": {
+        "en": "Infinigence",
+        "zh": "无问芯穹"
+      },
+      "scan": {
+        "hf": [
+          "Infinigence"
+        ],
+        "ms": [
+          "Infinigence"
+        ]
+      },
+      "region": "cn"
+    },
+    "XVERSE": {
+      "orgs": [
+        "xverse"
+      ],
+      "i18n": {
+        "en": "XVERSE",
+        "zh": "元象"
+      },
+      "scan": {
+        "hf": [
+          "xverse"
+        ],
+        "ms": [
+          "xverse"
+        ]
+      },
+      "region": "cn"
+    },
+    "Bilibili": {
+      "orgs": [
+        "IndexTeam"
+      ],
+      "i18n": {
+        "en": "Bilibili",
+        "zh": "哔哩哔哩"
+      },
+      "scan": {
+        "hf": [
+          "IndexTeam"
+        ],
+        "ms": [
+          "IndexTeam"
+        ]
+      },
+      "region": "cn"
+    },
+    "RedNote Hi-Lab": {
+      "orgs": [
+        "rednote-hilab"
+      ],
+      "i18n": {
+        "en": "RedNote Hi-Lab",
+        "zh": "小红书 Hi-Lab"
+      },
+      "scan": {
+        "hf": [
+          "rednote-hilab"
+        ],
+        "ms": [
+          "rednote-hilab"
+        ]
+      },
+      "region": "cn"
+    },
+    "AIDC-AI": {
+      "orgs": [
+        "AIDC-AI"
+      ],
+      "i18n": {
+        "en": "AIDC-AI",
+        "zh": "AIDC-AI"
+      },
+      "scan": {
+        "hf": [
+          "AIDC-AI"
+        ],
+        "ms": [
+          "AIDC-AI"
+        ]
+      },
+      "region": "cn"
+    },
+    "OpenBMB": {
+      "orgs": [
+        "openbmb"
+      ],
+      "i18n": {
+        "en": "OpenBMB",
+        "zh": "OpenBMB"
+      },
+      "scan": {
+        "hf": [
+          "openbmb"
+        ],
+        "ms": [
+          "OpenBMB"
+        ]
+      },
+      "region": "cn"
+    },
+    "AntGroup": {
+      "orgs": [
+        "inclusionAI"
+      ],
+      "i18n": {
+        "en": "Ant Group",
+        "zh": "蚂蚁集团"
+      },
+      "scan": {
+        "hf": [
+          "inclusionAI"
+        ],
+        "ms": [
+          "inclusionAI"
+        ]
+      },
+      "region": "cn"
+    },
+    "Qihoo 360": {
+      "orgs": [
+        "qihoo360"
+      ],
+      "i18n": {
+        "en": "Qihoo 360",
+        "zh": "360"
+      },
+      "scan": {
+        "hf": [
+          "qihoo360"
+        ],
+        "ms": [
+          "qihoo360"
+        ]
+      },
+      "region": "cn"
+    },
+    "Orion Star": {
+      "orgs": [
+        "OrionStarAI",
+        "orionstarai"
+      ],
+      "i18n": {
+        "en": "Orion Star",
+        "zh": "猎户星空"
+      },
+      "scan": {
+        "hf": [
+          "OrionStarAI"
+        ],
+        "ms": [
+          "OrionStarAI"
+        ]
+      },
+      "region": "cn"
+    },
+    "RWKV": {
+      "orgs": [
+        "RWKV",
+        "BlinkDL"
+      ],
+      "i18n": {
+        "en": "RWKV",
+        "zh": "RWKV"
+      },
+      "region": "global"
+    },
+    "State Spaces": {
+      "orgs": [
+        "state-spaces"
+      ],
+      "i18n": {
+        "en": "State Spaces",
+        "zh": "State Spaces"
+      },
+      "region": "global"
+    },
+    "GSAI": {
+      "orgs": [
+        "GSAI-ML"
+      ],
+      "i18n": {
+        "en": "GSAI",
+        "zh": "GSAI"
+      },
+      "region": "global"
+    },
+    "OpenChat": {
+      "orgs": [
+        "openchat"
+      ],
+      "i18n": {
+        "en": "OpenChat",
+        "zh": "OpenChat"
+      },
+      "region": "global"
+    },
+    "Cognitive Computations": {
+      "orgs": [
+        "cognitivecomputations"
+      ],
+      "i18n": {
+        "en": "Cognitive Computations",
+        "zh": "Cognitive Computations"
+      },
+      "region": "global"
+    },
+    "Open Thoughts": {
+      "orgs": [
+        "open-thoughts"
+      ],
+      "i18n": {
+        "en": "Open Thoughts",
+        "zh": "Open Thoughts"
+      },
+      "region": "global"
+    },
+    "AI21 Labs": {
+      "orgs": [
+        "ai21labs"
+      ],
+      "i18n": {
+        "en": "AI21 Labs",
+        "zh": "AI21 Labs"
+      },
+      "region": "global"
+    },
+    "BAAI": {
+      "orgs": [
+        "BAAI"
+      ],
+      "i18n": {
+        "en": "BAAI",
+        "zh": "智源研究院"
+      },
+      "scan": {
+        "hf": [
+          "BAAI"
+        ],
+        "ms": [
+          "BAAI"
+        ]
+      },
+      "region": "cn"
+    },
+    "Inception Labs": {
+      "orgs": [
+        "inceptionlabs",
+        "InceptionLabs"
+      ],
+      "i18n": {
+        "en": "Inception Labs",
+        "zh": "Inception Labs"
+      },
+      "region": "global"
+    },
+    "Essential AI": {
+      "orgs": [
+        "essential-ai",
+        "EssentialAI"
+      ],
+      "i18n": {
+        "en": "Essential AI",
+        "zh": "Essential AI"
+      },
+      "region": "global"
+    },
+    "Anthropic": {
+      "orgs": [
+        "anthropic"
+      ],
+      "i18n": {
+        "en": "Anthropic",
+        "zh": "Anthropic"
+      },
+      "region": "global"
+    },
+    "ByteDance Seed": {
+      "orgs": [
+        "ByteDance-Seed",
+        "bytedance-research"
+      ],
+      "i18n": {
+        "en": "ByteDance Seed",
+        "zh": "字节 Seed"
+      },
+      "region": "cn",
+      "scan": {
+        "ms": [
+          "ByteDance-Seed"
+        ]
+      }
+    },
+    "Poolside": {
+      "orgs": [
+        "poolside"
+      ],
+      "i18n": {
+        "en": "Poolside",
+        "zh": "Poolside"
+      },
+      "scan": {
+        "hf": [
+          "poolside"
+        ]
+      },
+      "region": "global"
+    },
+    "iFlyTek": {
+      "orgs": [
+        "iFlytek"
+      ],
+      "i18n": {
+        "en": "iFlyTek",
+        "zh": "科大讯飞"
+      },
+      "scan": {
+        "ms": [
+          "iFlytek"
+        ]
+      },
+      "region": "cn"
+    },
+    "腾讯": {
+      "orgs": [
+        "tencent"
+      ],
+      "i18n": {
+        "en": "Tencent",
+        "zh": "腾讯"
+      },
+      "scan": {
+        "hf": [
+          "tencent"
+        ],
+        "ms": [
+          "Tencent"
+        ]
+      },
+      "region": "cn"
     }
+  },
+  "Tilde Research": {
+    "orgs": [
+      "tilde-research"
+    ],
+    "i18n": {
+      "en": "Tilde Research",
+      "zh": "Tilde Research"
+    },
+    "scan": {
+      "hf": [
+        "tilde-research"
+      ]
+    },
+    "region": "global"
+  }
 }

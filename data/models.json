@@ -34688,5 +34688,45 @@
     "createdAt": "2025-08-25T16:38:37.000Z",
     "openness": "open-weight",
     "isMoe": true
+  },
+  {
+    "id": "tilde-research/aurora-1.1B",
+    "name": "aurora-1.1B",
+    "provider": "Tilde Research",
+    "huggingfaceUrl": "https://huggingface.co/tilde-research/aurora-1.1B",
+    "techReport": "",
+    "arxivUrl": "",
+    "totalParameters": 1720456192,
+    "activeParameters": 1720456192,
+    "embeddingParameters": 0,
+    "nonEmbeddingParameters": 1720456192,
+    "contextLength": 0,
+    "embeddingDim": 0,
+    "vocabSize": 0,
+    "architecture": "aurora",
+    "numLayers": 0,
+    "numHeads": 0,
+    "numKvHeads": 0,
+    "hiddenSize": 0,
+    "intermediateSize": 0,
+    "positionEncoding": "RoPE",
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-06,
+    "attentionDropout": 0.0,
+    "mlpFactor": 0.0,
+    "gqaRatio": 0.0,
+    "torchDtype": "bfloat16",
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "createdAt": "2026-05-08T02:15:50.000Z",
+    "isMoe": false,
+    "architectureFamily": "Aurora",
+    "modelscopeUrl": "",
+    "openness": "open-weight"
   }
 ]

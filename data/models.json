@@ -34645,5 +34645,48 @@
     "createdAt": "2025-04-13T17:31:26.000Z",
     "openness": "open-weight",
     "isMoe": false
+  },
+  {
+    "id": "OpenGVLab/InternVL3_5-GPT-OSS-20B-A4B-Preview",
+    "name": "InternVL3_5-GPT-OSS-20B-A4B-Preview",
+    "provider": "Shanghai AI Lab",
+    "huggingfaceUrl": "https://huggingface.co/OpenGVLab/InternVL3_5-GPT-OSS-20B-A4B-Preview",
+    "techReport": "",
+    "modelscopeUrl": "https://modelscope.cn/models/Shanghai_AI_Laboratory/InternVL3_5-GPT-OSS-20B-A4B-Preview",
+    "arxivUrl": "https://arxiv.org/abs/2312.14238",
+    "totalParameters": 392282304,
+    "activeParameters": 3761130240,
+    "embeddingParameters": 576080640,
+    "nonEmbeddingParameters": -183798336,
+    "contextLength": 131072,
+    "embeddingDim": 2880,
+    "vocabSize": 200028,
+    "architecture": "internvl_chat",
+    "numLayers": 24,
+    "numHeads": 64,
+    "numKvHeads": 8,
+    "hiddenSize": 2880,
+    "intermediateSize": 2880,
+    "positionEncoding": "RoPE",
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-05,
+    "attentionDropout": 0.0,
+    "mlpFactor": 1.0,
+    "gqaRatio": 8.0,
+    "torchDtype": "bfloat16",
+    "numExperts": 32,
+    "numExpertsPerToken": 4,
+    "numActivatedExperts": 4,
+    "inputModalities": [
+      "image",
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "createdAt": "2025-08-25T16:38:37.000Z",
+    "openness": "open-weight",
+    "isMoe": true
   }
 ]

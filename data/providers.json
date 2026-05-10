@@ -159,11 +159,17 @@
             },
             "scan": {
                 "hf": [
-                    "internlm"
+                    "internlm",
+                    "OpenGVLab"
                 ],
                 "ms": [
                     "Shanghai_AI_Laboratory"
                 ]
+            },
+            "ms_name_rewrites": {
+                "InternVL3_5-20B-A4B-Preview": "InternVL3_5-GPT-OSS-20B-A4B-Preview",
+                "-v1.1": "-v1_1",
+                "-Pretrained": ""
             },
             "region": "cn"
         },

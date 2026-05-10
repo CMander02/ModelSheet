@@ -9,7 +9,7 @@ from typing import Optional
 import httpx
 from rich.console import Console
 
-from .config import DATA_DIR, OUTPUT_FILE, load_provider_map
+from .config import DATA_DIR, OUTPUT_FILE, PROVIDERS_FILE, load_provider_map
 from .filters import skip_reason
 
 console = Console()
@@ -141,6 +141,53 @@ def fetch_ms_org_models(
 # ---------------------------------------------------------------------------
 # Snapshot management
 # ---------------------------------------------------------------------------
+
+def rewrite_ms_name(ms_id: str, rewrites: dict[str, str]) -> str:
+    """Apply ms_name_rewrites rules to convert a MS model ID to HF style.
+
+    Two types of rules supported:
+    1. Exact match: if the whole ms_id equals the key → use the value as-is
+    2. Suffix strip: if the key starts with '-' (e.g. '-Pretrained'),
+       remove that suffix from the name portion (after '/').
+
+    Applied in order; first match wins.
+    Returns the original ms_id if no rule matches.
+    """
+    for pattern, replacement in (rewrites or {}).items():
+        # Type 1: exact full-ID match
+        if '/' not in pattern and not pattern.startswith('-'):
+            # It's a name-only match — compare against name portion
+            name = ms_id.split('/')[-1] if '/' in ms_id else ms_id
+            if name == pattern:
+                return ms_id.replace(name, replacement)
+        elif '/' in pattern and ms_id == pattern:
+            return replacement
+        # Type 2: suffix strip (key starts with '-')
+        elif pattern.startswith('-') and ms_id.endswith(pattern):
+            return ms_id[: -len(pattern)] + replacement
+    return ms_id
+
+
+def load_ms_name_rewrites() -> dict[str, dict[str, str]]:
+    """Load ms_name_rewrites from providers.json, keyed by MS org name.
+
+    Returns:
+        {ms_org: {pattern: replacement, ...}}
+    """
+    from .config import PROVIDERS_FILE
+    try:
+        data = json.loads(PROVIDERS_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+    result: dict[str, dict[str, str]] = {}
+    for cfg in data.get("providers", {}).values():
+        rewrites = cfg.get("ms_name_rewrites") or {}
+        if not rewrites:
+            continue
+        for ms_org in cfg.get("scan", {}).get("ms", []):
+            result[ms_org] = rewrites
+    return result
+
 
 def load_snapshot() -> dict:
     """Load previous scan snapshot. Keys: hf/<org> or ms/<org> → [model_ids]."""
@@ -276,10 +323,53 @@ def scan_orgs(
     for key, ids in snapshot.items():
         prev_all_ids.update(ids)
 
-    new_model_candidates = [
-        m for m in kept
-        if m["id"] not in known_ids and m["id"] not in prev_all_ids
-    ]
+    # Load ms_name_rewrites rules for cross-source dedup
+    ms_rewrites = load_ms_name_rewrites()
+    # Build reverse map: ms_org → [hf_orgs]
+    ms_to_hf_orgs: dict[str, list[str]] = {}
+    try:
+        prov_data = json.loads(PROVIDERS_FILE.read_text(encoding="utf-8"))
+        for cfg in prov_data.get("providers", {}).values():
+            ms_orgs = cfg.get("scan", {}).get("ms", [])
+            hf_orgs = cfg.get("orgs", []) + cfg.get("scan", {}).get("hf", [])
+            for ms_o in ms_orgs:
+                ms_to_hf_orgs[ms_o] = list(dict.fromkeys(hf_orgs))  # dedup, preserve order
+    except Exception:
+        pass
+
+    # Build reverse lookup: rewrite → original MS ID for reporting
+    rewrite_matched: dict[str, str] = {}  # ms_id → hf_equivalent
+    matched_by_rewrite: set[str] = set()
+
+    new_model_candidates = []
+    for m in kept:
+        if m["id"] in known_ids or m["id"] in prev_all_ids:
+            continue
+        # For MS models, check if name rewrite maps to an already-tracked HF model
+        if m.get("source") == "modelscope":
+            ms_org = m["id"].split("/")[0]
+            ms_name = m["id"].split("/")[-1] if "/" in m["id"] else ""
+            org_rewrites = ms_rewrites.get(ms_org, {})
+            rewritten_name = ms_name
+            if org_rewrites:
+                full_rewritten = rewrite_ms_name(m["id"], org_rewrites)
+                rewritten_name = full_rewritten.split("/")[-1] if "/" in full_rewritten else full_rewritten
+            # Check against all candidate HF orgs
+            hf_orgs = ms_to_hf_orgs.get(ms_org, [])
+            found_in_db = False
+            for hf_org in hf_orgs:
+                hf_candidate = f"{hf_org}/{rewritten_name}"
+                if hf_candidate in known_ids:
+                    found_in_db = True
+                    rewrite_matched[m["id"]] = hf_candidate
+                    matched_by_rewrite.add(m["id"])
+                    console.print(
+                        f"  [dim]↳ MS {m['id']} matched HF [cyan]{hf_candidate}[/cyan] via rewrite & org map[/dim]"
+                    )
+                    break
+            if found_in_db:
+                continue
+        new_model_candidates.append(m)
 
     # Also find models in DB that now appear on source (for cross-reference)
     return {

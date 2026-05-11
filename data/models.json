@@ -42300,5 +42300,144 @@
     "createdAt": "2023-12-17T08:12:59.000Z",
     "openness": "open-weight",
     "isMoe": false
+  },
+  {
+    "id": "baidu/ERNIE-4.5-0.3B-PT",
+    "name": "ERNIE-4.5-0.3B-PT",
+    "provider": "baidu",
+    "huggingfaceUrl": "https://huggingface.co/baidu/ERNIE-4.5-0.3B-PT",
+    "techReport": "",
+    "totalParameters": 351272960,
+    "activeParameters": 351272960,
+    "embeddingParameters": 105906176,
+    "nonEmbeddingParameters": 245366784,
+    "contextLength": 131072,
+    "embeddingDim": 1024,
+    "vocabSize": 103424,
+    "architecture": "ernie4_5",
+    "numLayers": 18,
+    "numHeads": 16,
+    "numKvHeads": 2,
+    "hiddenSize": 1024,
+    "intermediateSize": 3072,
+    "positionEncoding": "RoPE",
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-05,
+    "mlpFactor": 3.0,
+    "gqaRatio": 8.0,
+    "torchDtype": "bfloat16",
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "openness": "open-weight",
+    "isMoe": false
+  },
+  {
+    "id": "baidu/ERNIE-4.5-0.3B-Base-PT",
+    "name": "ERNIE-4.5-0.3B-Base-PT",
+    "provider": "baidu",
+    "huggingfaceUrl": "https://huggingface.co/baidu/ERNIE-4.5-0.3B-Base-PT",
+    "techReport": "",
+    "totalParameters": 351272960,
+    "activeParameters": 351272960,
+    "embeddingParameters": 105906176,
+    "nonEmbeddingParameters": 245366784,
+    "contextLength": 131072,
+    "embeddingDim": 1024,
+    "vocabSize": 103424,
+    "architecture": "ernie4_5",
+    "numLayers": 18,
+    "numHeads": 16,
+    "numKvHeads": 2,
+    "hiddenSize": 1024,
+    "intermediateSize": 3072,
+    "positionEncoding": "RoPE",
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-05,
+    "mlpFactor": 3.0,
+    "gqaRatio": 8.0,
+    "torchDtype": "bfloat16",
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "openness": "open-weight",
+    "isMoe": false
+  },
+  {
+    "id": "baidu/ERNIE-4.5-21B-A3B-Base-PT",
+    "name": "ERNIE-4.5-21B-A3B-Base-PT",
+    "provider": "baidu",
+    "huggingfaceUrl": "https://huggingface.co/baidu/ERNIE-4.5-21B-A3B-Base-PT",
+    "techReport": "",
+    "embeddingParameters": 264765440,
+    "contextLength": 131072,
+    "embeddingDim": 2560,
+    "vocabSize": 103424,
+    "architecture": "ernie4_5_moe",
+    "numLayers": 28,
+    "numHeads": 20,
+    "numKvHeads": 4,
+    "hiddenSize": 2560,
+    "intermediateSize": 12288,
+    "positionEncoding": "RoPE",
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-05,
+    "mlpFactor": 4.8,
+    "gqaRatio": 5.0,
+    "torchDtype": "bfloat16",
+    "moeIntermediateSize": 1536,
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "openness": "open-weight",
+    "isMoe": true
+  },
+  {
+    "id": "baidu/ERNIE-4.5-VL-28B-A3B-Base-PT",
+    "name": "ERNIE-4.5-VL-28B-A3B-Base-PT",
+    "provider": "baidu",
+    "huggingfaceUrl": "https://huggingface.co/baidu/ERNIE-4.5-VL-28B-A3B-Base-PT",
+    "techReport": "",
+    "embeddingParameters": 264765440,
+    "contextLength": 131072,
+    "embeddingDim": 2560,
+    "vocabSize": 103424,
+    "architecture": "ernie4_5_moe_vl",
+    "numLayers": 28,
+    "numHeads": 20,
+    "numKvHeads": 4,
+    "hiddenSize": 2560,
+    "intermediateSize": 12288,
+    "positionEncoding": "RoPE",
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-05,
+    "mlpFactor": 4.8,
+    "gqaRatio": 5.0,
+    "torchDtype": "bfloat16",
+    "moeIntermediateSize": [
+      1536,
+      512
+    ],
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "openness": "open-weight",
+    "isMoe": true
   }
 ]

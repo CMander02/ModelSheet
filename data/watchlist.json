@@ -8,7 +8,8 @@
     "mimo",
     "kimi",
     "glm",
-    "minimax"
+    "minimax",
+    "baidu"
   ],
   "sources": {
     "mistralai": [
@@ -43,12 +44,16 @@
     "minimax": [
       "hf",
       "ms"
+    ],
+    "baidu": [
+      "hf"
     ]
   },
   "snapshots": {
     "mimo": [],
     "kimi": [],
     "glm": [],
-    "minimax": []
+    "minimax": [],
+    "baidu": []
   }
 }

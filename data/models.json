@@ -42439,5 +42439,31 @@
     ],
     "openness": "open-weight",
     "isMoe": true
+  },
+  {
+    "id": "google/switch-c-2048",
+    "name": "switch-c-2048",
+    "provider": "Google DeepMind",
+    "huggingfaceUrl": "https://huggingface.co/google/switch-c-2048",
+    "techReport": "",
+    "arxivUrl": "https://arxiv.org/abs/2101.03961",
+    "embeddingParameters": 66826240,
+    "embeddingDim": 2080,
+    "vocabSize": 32128,
+    "architecture": "switch_transformers",
+    "numLayers": 15,
+    "hiddenSize": 2080,
+    "normType": "LayerNorm",
+    "normEps": 1e-06,
+    "numExperts": 2048,
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "createdAt": "2022-11-04T10:32:46.000Z",
+    "openness": "open-weight",
+    "isMoe": true
   }
 ]

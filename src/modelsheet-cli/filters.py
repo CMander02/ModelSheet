@@ -58,7 +58,11 @@ _DEFAULT_RULES = [
     {"pattern": r"\bpaligemma-3b-ft-", "reason": "PaliGemma fine-tune checkpoint"},
     {"pattern": r"ft-docci", "reason": "PaliGemma2 ft-docci fine-tune checkpoint"},
     # Deployment backend variants
-    {"pattern": r"-(jax|paddle)$", "reason": "deployment backend variant (JAX/Paddle)"},
+    {"pattern": r"-(jax|paddle|flax|pytorch|tflite|cpp|sfp-cpp|litert|keras)$", "reason": "deployment backend variant"},
+    # MLX deployment (Apple ecosystem)
+    {"pattern": r"-mlx(-?\w+)?$", "reason": "MLX deployment variant (Apple ecosystem)"},
+    # Quantization-aware training
+    {"pattern": r"-qat\b", "reason": "quantization-aware training variant"},
 ]
 
 

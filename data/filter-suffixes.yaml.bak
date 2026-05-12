@@ -12,129 +12,136 @@
 # Pipeline-tag and model-type filters are still hardcoded in filters.py
 # (they don't change often). This file covers name-based suffix/pattern rules.
 #
+# NOTE: In YAML double-quoted strings, \b (backspace) and \d are special escapes.
+# To write a regex word boundary \\b, use \\\\\\b (4 backslashes) in the raw file.
+# To write a regex digit \\d, use \\\\\\d (4 backslashes) in the raw file.
 # =============================================================================
 
 rules:
   # ── Quantization formats ──
-  - pattern: "\\b(AWQ|GPTQ|GGUF|GGML)\\b"
+  - pattern: "\\\\b(AWQ|GPTQ|GGUF|GGML)\\\\b"
     reason: "quantized (AWQ/GPTQ/GGUF/GGML)"
-  - pattern: "\\bQ\\d+_K_[SM]\\b"
+  - pattern: "\\\\bQ\\\\d+_K_[SM]\\\\b"
     reason: "quantized (Q level)"
-  - pattern: "\\bW\\d+A\\d+\\b"
+  - pattern: "\\\\bW\\\\d+A\\\\d+\\\\b"
     reason: "weight-only quantized"
-  - pattern: "\\bINT[248]\\b"
+  - pattern: "\\\\bINT[248]\\\\b"
     reason: "INT quantized"
-  - pattern: "\\bFP[48]\\b"
+  - pattern: "\\\\bFP[48]\\\\b"
     reason: "FP quantized"
-  - pattern: "\\bFP4\\b"
+  - pattern: "\\\\bFP4\\\\b"
     reason: "FP4 quantized"
-  - pattern: "\\bNF4\\b"
+  - pattern: "\\\\bNF4\\\\b"
     reason: "NF4 quantized"
-  - pattern: "\\bBNB\\b"
+  - pattern: "\\\\bBNB\\\\b"
     reason: "bitsandbytes quantized"
-  - pattern: "\\bAQLM\\b"
+  - pattern: "\\\\bAQLM\\\\b"
     reason: "AQLM quantized"
-  - pattern: "\\bEXL2\\b"
+  - pattern: "\\\\bEXL2\\\\b"
     reason: "EXL2 quantized"
-  - pattern: "\\b(?:4|8)-?bit(?:s)?\\b"
+  - pattern: "\\\\b(?:4|8)-?bit(?:s)?\\\\b"
     reason: "X-bit quantized"
-  - pattern: "\\bSQ\\b"
+  - pattern: "\\\\bSQ\\\\b"
     reason: "SmoothQuant quantized"
   - pattern: "NVFP4"
     reason: "NVFP4 quantized variant"
-  - pattern: "\\beagle\\d*"
+  - pattern: "\\\\beagle\\\\d*"
     reason: "speculative decoding head (EAGLE/Eagle2/Eagle3/Eagle3-v3)"
   - pattern: "_gguf"
     reason: "GGUF quantized variant"
+  - pattern: "-2bits$"
+    reason: "2-bit quantized (Baidu ERNIE)"
+  - pattern: "-tp\\\\d+$"
+    reason: "tensor parallelism variant"
 
   # ── ASR / TTS / Speech ──
-  - pattern: "\\b(whisper|asr|tts|speech|vocoder)\\b"
+  - pattern: "\\\\b(whisper|asr|tts|speech|vocoder)\\\\b"
     reason: "ASR/TTS model"
 
   # ── Embedding / Rerank / Retrieval ──
-  - pattern: "\\b(embed(?:ding)?s?|rerank(?:er)?|retriev(?:al|er))\\b"
+  - pattern: "\\\\b(embed(?:ding)?s?|rerank(?:er)?|retriev(?:al|er))\\\\b"
     reason: "embedding/rerank model"
-  - pattern: "\\b(bge|e5|gte|nomic-embed|sentence-?transformers?)\\b"
+  - pattern: "\\\\b(bge|e5|gte|nomic-embed|sentence-?transformers?)\\\\b"
     reason: "embedding model"
 
   # ── Reward / ORM / PRM ──
-  - pattern: "\\b[op]rm\\b"
+  - pattern: "\\\\b[op]rm\\\\b"
     reason: "reward/ORM/PRM model"
-  - pattern: "\\breward-?model\\b"
+  - pattern: "\\\\breward-?model\\\\b"
     reason: "reward model"
 
   # ── Translation ──
-  - pattern: "\\b(nllb|m2m100|mbart|opus-mt)\\b"
+  - pattern: "\\\\b(nllb|m2m100|mbart|opus-mt)\\\\b"
     reason: "translation model"
 
   # ── Diffusion (image gen, not LM) ──
-  - pattern: "\\b(stable-?diffusion|sdxl|sd-?v\\d|sd\\d|flux|kandinsky|dall-?e|midjourney|imagen|pixart|cogvideox)\\b"
+  - pattern: "\\\\b(stable-?diffusion|sdxl|sd-?v\\\\d|sd\\\\d|flux|kandinsky|dall-?e|midjourney|imagen|pixart|cogvideox)\\\\b"
     reason: "diffusion (image gen, not LM)"
 
   # ── Classifier / Discriminator ──
-  - pattern: "\\b(classifier|discriminator)\\b"
+  - pattern: "\\\\b(classifier|discriminator)\\\\b"
     reason: "classifier/discriminator model"
 
   # ── Vision-only / CLIP / SigLIP ──
-  - pattern: "\\b(siglip|siglip2|tip|clip|owlv2|owlvit|vit|deit|beit|convnext|swin)\\b"
+  - pattern: "\\\\b(siglip|siglip2|tip|clip|owlv2|owlvit|vit|deit|beit|convnext|swin)\\\\b"
     reason: "vision-only model (CLIP/SigLIP/ViT)"
 
   # ── Bio / AlphaGenome (not LLM) ──
-  - pattern: "\\b(alphagenome|alphafold|esm-?fold|protbert)\\b"
+  - pattern: "\\\\b(alphagenome|alphafold|esm-?fold|protbert)\\\\b"
     reason: "bioinformatics model"
 
   # ── Evaluation / Metric models ──
-  - pattern: "\\b(metricx|seahorse|comet-|bleurt|rubric)\\b"
+  - pattern: "\\\\b(metricx|seahorse|comet-|bleurt|rubric)\\\\b"
     reason: "evaluation/metric model"
 
   # ── Retrieval / Search / Rerank ──
-  - pattern: "\\b(xtr|colbert|colbertv2|dpr|ance|splade|contriever)\\b"
+  - pattern: "\\\\b(xtr|colbert|colbertv2|dpr|ance|splade|contriever)\\\\b"
     reason: "retrieval/search model"
 
   # ── Interpretability probes ──
-  - pattern: "\\bgemma-scope\\b"
+  - pattern: "\\\\bgemma-scope\\\\b"
     reason: "interpretability probe (not LLM)"
 
   # ── Music / Audio non-TTS ──
-  - pattern: "\\b(magenta|musicgen|audiogen|encodec|soundstream|hilbert)\\b"
+  - pattern: "\\\\b(magenta|musicgen|audiogen|encodec|soundstream|hilbert)\\\\b"
     reason: "music/audio generation model"
 
   # ── Diarization / Speaker ──
-  - pattern: "\\b(diarizationlm|diarization|speaker-verification|speaker-diarization)\\b"
+  - pattern: "\\\\b(diarizationlm|diarization|speaker-verification|speaker-diarization)\\\\b"
     reason: "speaker diarization model"
 
   # ── Time series ──
-  - pattern: "\\btimesfm\\b"
+  - pattern: "\\\\btimesfm\\\\b"
     reason: "time series forecasting model"
 
   # ── Pose / Keypoint / Tracking ──
-  - pattern: "\\b(tapnet|pose|keypoint|tracking)\\b"
+  - pattern: "\\\\b(tapnet|pose|keypoint|tracking)\\\\b"
     reason: "pose/tracking model"
 
   # ── Model deployment variants / backends ──
-  - pattern: "-(keras|pytorch|flax|tflite|cpp|sfp-cpp|litert-(lm|preview)|litert-lm|litert-preview|mlx(-\\w+)?)$"
+  - pattern: "-(keras|pytorch|flax|tflite|cpp|sfp-cpp|litert-(lm|preview)|litert-lm|litert-preview|mlx(-\\\\w+)?|jax|paddle)$"
     reason: "deployment backend variant"
   - pattern: "-onnx$"
     reason: "ONNX deployment variant"
 
   # ── Domain-specific Mistral variants ──
-  - pattern: "\\b(leanstral|magistral|devstral)\\b"
+  - pattern: "\\\\b(leanstral|magistral|devstral)\\\\b"
     reason: "domain-specific Mistral variant"
 
   # ── Old Gemma generations (pre-gemma-3) ──
-  - pattern: "\\bgemma-1\\.1\\b"
+  - pattern: "\\\\bgemma-1\\\\.1\\\\b"
     reason: "old Gemma 1.1 generation"
-  - pattern: "\\bgemma-2\\b"
+  - pattern: "\\\\bgemma-2\\\\b"
     reason: "old Gemma 2 generation"
-  - pattern: "\\b(gemma-7b|gemma-2b)\\b"
+  - pattern: "\\\\b(gemma-7b|gemma-2b)\\\\b"
     reason: "old Gemma 1 generation"
 
   # ── Old codegemma (pre-1.1) ──
-  - pattern: "\\bcodegemma\\b"
+  - pattern: "\\\\bcodegemma\\\\b"
     reason: "CodeGemma (not pure Gemma)"
 
   # ── Old recurrentgemma (pre-9b) ──
-  - pattern: "\\brecurrentgemma-2b\\b"
+  - pattern: "\\\\brecurrentgemma-2b\\\\b"
     reason: "old RecurrentGemma (pre-9b)"
 
   # ── QAT / quantization-aware training variants ──
@@ -142,23 +149,23 @@ rules:
     reason: "QAT (quantization-aware training) variant"
 
   # ── Safety classifiers ──
-  - pattern: "\\bshieldgemma\\b"
+  - pattern: "\\\\bshieldgemma\\\\b"
     reason: "safety classifier (not LLM)"
 
   # ── Google domain-specific Gemma variants ──
-  - pattern: "\\b(txgemma|datagemma|functiongemma|vaultgemma|medgemma|recurrentgemma)\\b"
+  - pattern: "\\\\b(txgemma|datagemma|functiongemma|vaultgemma|medgemma|recurrentgemma)\\\\b"
     reason: "domain-specific Gemma variant (not pure Gemma)"
 
   # ── UMT5 (multilingual T5 variant) ──
-  - pattern: "\\bumt5\\b"
+  - pattern: "\\\\bumt5\\\\b"
     reason: "multilingual T5 variant (not pure LLM)"
 
   # ── Translation models (explicit) ──
-  - pattern: "\\b(translategemma|madlad400)\\b"
+  - pattern: "\\\\b(translategemma|madlad400)\\\\b"
     reason: "translation model"
 
   # ── Evaluation / misc Google models ──
-  - pattern: "\\b(svq|hear)\\b"
+  - pattern: "\\\\b(svq|hear)\\\\b"
     reason: "evaluation/audio model (not LLM)"
   - pattern: "t5_11b_trueteacher"
     reason: "evaluation model (Trueteacher/ANLI)"
@@ -167,10 +174,18 @@ rules:
   - pattern: "janus"
     reason: "Janus multimodal generation model"
 
-  # ── DeepSeek — OCR (pure OCR, not MLLM) ──
-  - pattern: "\\bdeepseek-ocr\\b"
+  # ── OCR models (not MLLM) ──
+  - pattern: "\\\\bdeepseek-ocr\\\\b"
     reason: "DeepSeek OCR model"
+  - pattern: "\\\\bqianfan-ocr\\\\b"
+    reason: "OCR model (not MLLM)"
 
-  # ── PaliGemma fine-tune variants (ft-* checkpoints) ──
-  - pattern: "\\bpaligemma-3b-ft-"
+  # ── PaliGemma fine-tune variants ──
+  - pattern: "\\\\bpaligemma-3b-ft-"
     reason: "PaliGemma fine-tune checkpoint"
+  - pattern: "ft-docci"
+    reason: "PaliGemma2 ft-docci fine-tune checkpoint"
+
+  # ── Baidu weight+activation quantized ──
+  - pattern: "-w\\\\d+a\\\\d+c\\\\d+"
+    reason: "weight+activation quantized (e.g. -W4A8C8)"

@@ -46,7 +46,21 @@ _DEFAULT_RULES = [
     {"pattern": r"\b(stable-?diffusion|sdxl|sd-?v\d|sd\d|flux|kandinsky|dall-?e|midjourney|imagen|pixart|cogvideox)\b", "reason": "diffusion (image gen, not LM)"},
     # Classifier
     {"pattern": r"\b(classifier|discriminator)\b", "reason": "classifier/discriminator model"},
+    # OCR (not MLLM)
+    {"pattern": r"\b(qianfan-ocr|deepseek-ocr)\b", "reason": "OCR model (not MLLM)"},
+    # Baidu 2-bit quantized (not at end of name, so no $ anchor)
+    {"pattern": r"-2bits", "reason": "2-bit quantized (Baidu ERNIE)"},
+    # Tensor parallelism variant (not at end of name, so no $ anchor)
+    {"pattern": r"-tp\d+", "reason": "tensor parallelism variant"},
+    # Weight+activation quantized (e.g. -W4A8C8)
+    {"pattern": r"-w\d+a\d+c\d+", "reason": "weight+activation quantized (e.g. -W4A8C8)"},
+    # PaliGemma fine-tune variants
+    {"pattern": r"\bpaligemma-3b-ft-", "reason": "PaliGemma fine-tune checkpoint"},
+    {"pattern": r"ft-docci", "reason": "PaliGemma2 ft-docci fine-tune checkpoint"},
+    # Deployment backend variants
+    {"pattern": r"-(jax|paddle)$", "reason": "deployment backend variant (JAX/Paddle)"},
 ]
+
 
 # Compiled cache
 _compiled_rules_cache: Optional[list[tuple[re.Pattern, str]]] = None

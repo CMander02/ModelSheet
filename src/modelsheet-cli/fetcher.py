@@ -25,7 +25,7 @@ from tqdm import tqdm
 
 from .config import (
     CONFIG_FILES, TEMP_DIR, PROJECT_ROOT,
-    HF_BASE_URL, HF_MIRROR_URL, HF_API_URL,
+    HF_BASE_URL, HF_MIRROR_URL, HF_API_URL, HF_MIRROR_API_URL,
     MS_BASE_URL, MS_API_URL,
     build_org_region_map, build_hf_org_to_ms_org_map,
 )
@@ -115,18 +115,29 @@ class ModelFetcher:
 
     def fetch_hf_metadata(self, model_id: str) -> Optional[dict]:
         """Fetch model metadata from HuggingFace API (createdAt, safetensors, tags)."""
-        url = f"{HF_API_URL}/{model_id}"
-        try:
-            resp = self.hf_client.get(url)
-            resp.raise_for_status()
-            return resp.json()
-        except httpx.HTTPStatusError as e:
-            if e.response.status_code != 404:
-                console.print(f"[yellow]  WARN HF metadata: HTTP {e.response.status_code}[/yellow]")
-            return None
-        except Exception as e:
-            console.print(f"[yellow]  WARN HF metadata: {e}[/yellow]")
-            return None
+        urls = [f"{HF_API_URL}/{model_id}", f"{HF_MIRROR_API_URL}/{model_id}"]
+        last_error = None
+        for i, url in enumerate(urls):
+            try:
+                resp = self.hf_client.get(url)
+                resp.raise_for_status()
+                if i == 1:
+                    console.print("[dim]  HF metadata fallback → hf-mirror[/dim]")
+                return resp.json()
+            except httpx.HTTPStatusError as e:
+                last_error = e
+                if e.response.status_code == 404:
+                    return None
+                continue
+            except Exception as e:
+                last_error = e
+                continue
+
+        if isinstance(last_error, httpx.HTTPStatusError):
+            console.print(f"[yellow]  WARN HF metadata: HTTP {last_error.response.status_code}[/yellow]")
+        elif last_error is not None:
+            console.print(f"[yellow]  WARN HF metadata: {last_error}[/yellow]")
+        return None
 
     def _fetch_hf_file(self, model_id: str, filename: str,
                        use_mirror: bool = True) -> Optional[dict]:

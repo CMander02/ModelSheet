@@ -9,12 +9,13 @@ from typing import Optional
 import httpx
 from rich.console import Console
 
-from .config import DATA_DIR, OUTPUT_FILE, PROVIDERS_FILE, load_provider_map
+from .config import DATA_DIR, OUTPUT_FILE, PROVIDERS_FILE, load_provider_map, HF_MIRROR_API_URL
 from .filters import skip_reason
 
 console = Console()
 
 HF_API_URL = "https://huggingface.co/api"
+HF_MIRROR_API_BASE = HF_MIRROR_API_URL.removesuffix("/models")
 MS_API_URL = "https://modelscope.cn"
 
 # Snapshot file stores org→[model_ids] from last scan
@@ -45,7 +46,6 @@ def fetch_hf_org_models(
     Returns list of dicts with keys: id, pipeline_tag, tags, createdAt.
     """
     models = []
-    url = f"{HF_API_URL}/models"
     params = {
         "author": org,
         "limit": limit,
@@ -54,21 +54,28 @@ def fetch_hf_org_models(
         "sort": "createdAt",
         "direction": -1,
     }
+    last_error = None
+    for api_base in (HF_API_URL, HF_MIRROR_API_BASE):
+        try:
+            resp = client.get(f"{api_base}/models", params=params)
+            resp.raise_for_status()
+            data = resp.json()
+            if api_base == HF_MIRROR_API_BASE:
+                console.print(f"[dim]  HF org fallback → hf-mirror: {org}[/dim]")
+            for m in data:
+                models.append({
+                    "id": m.get("id", ""),
+                    "pipeline_tag": m.get("pipeline_tag"),
+                    "tags": m.get("tags", []),
+                    "created_at": m.get("createdAt"),
+                    "source": "huggingface",
+                })
+            return models
+        except Exception as e:
+            last_error = e
+            continue
 
-    try:
-        resp = client.get(url, params=params)
-        resp.raise_for_status()
-        data = resp.json()
-        for m in data:
-            models.append({
-                "id": m.get("id", ""),
-                "pipeline_tag": m.get("pipeline_tag"),
-                "tags": m.get("tags", []),
-                "created_at": m.get("createdAt"),
-                "source": "huggingface",
-            })
-    except Exception as e:
-        console.print(f"[yellow]  WARN HF {org}: {e}[/yellow]")
+    console.print(f"[yellow]  WARN HF {org}: {last_error}[/yellow]")
 
     return models
 

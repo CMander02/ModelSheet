@@ -10,7 +10,7 @@ import httpx
 from rich.console import Console
 from rich.table import Table
 
-from .config import DATA_DIR, PROJECT_ROOT, load_provider_map
+from .config import DATA_DIR, PROJECT_ROOT, load_provider_map, HF_MIRROR_API_URL
 from .fetcher import get_hf_token
 
 console = Console()
@@ -83,22 +83,25 @@ def _fetch_org_recent_models(
     limit: int = 20,
 ) -> list[dict]:
     """Fetch the most recently modified models for an org."""
-    try:
-        resp = client.get(
-            HF_API_URL,
-            params={
-                "author": org,
-                "sort": "lastModified",
-                "direction": -1,
-                "limit": limit,
-            },
-            timeout=30,
-        )
-        resp.raise_for_status()
-        return resp.json()
-    except Exception as exc:
-        console.print(f"[yellow]  Warning: failed to fetch {org}: {exc}[/yellow]")
-        return []
+    params = {
+        "author": org,
+        "sort": "lastModified",
+        "direction": -1,
+        "limit": limit,
+    }
+    last_error = None
+    for url in (HF_API_URL, HF_MIRROR_API_URL):
+        try:
+            resp = client.get(url, params=params, timeout=30)
+            resp.raise_for_status()
+            if url == HF_MIRROR_API_URL:
+                console.print(f"[dim]  HF watch fallback → hf-mirror: {org}[/dim]")
+            return resp.json()
+        except Exception as exc:
+            last_error = exc
+            continue
+    console.print(f"[yellow]  Warning: failed to fetch {org}: {last_error}[/yellow]")
+    return []
 
 
 def run_watch(

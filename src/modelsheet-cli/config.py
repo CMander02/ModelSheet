@@ -5,8 +5,9 @@ from pathlib import Path
 
 # HuggingFace
 HF_BASE_URL = "https://huggingface.co"
-HF_MIRROR_URL = "https://hf-mirror.com"   # used for config file downloads
+HF_MIRROR_URL = "https://hf-mirror.com"
 HF_API_URL = "https://huggingface.co/api/models"
+HF_MIRROR_API_URL = "https://hf-mirror.com/api/models"
 
 # ModelScope
 MS_BASE_URL = "https://modelscope.cn"

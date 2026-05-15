@@ -74942,5 +74942,82 @@
     "createdAt": "2026-05-14T08:10:02.000Z",
     "openness": "open-weight",
     "isMoe": true
+  },
+  {
+    "id": "inclusionAI/ARGenSeg-8B",
+    "name": "ARGenSeg-8B",
+    "provider": "AntGroup",
+    "huggingfaceUrl": "https://huggingface.co/inclusionAI/ARGenSeg-8B",
+    "techReport": "",
+    "modelscopeUrl": "https://modelscope.cn/models/inclusionAI/ARGenSeg-8B",
+    "arxivUrl": "https://arxiv.org/abs/2510.20803",
+    "totalParameters": 8220903299,
+    "activeParameters": 8220903299,
+    "embeddingParameters": 395890688,
+    "nonEmbeddingParameters": 7825012611,
+    "contextLength": 32768,
+    "embeddingDim": 4096,
+    "vocabSize": 96653,
+    "architecture": "internvl_chat",
+    "numLayers": 32,
+    "numHeads": 32,
+    "numKvHeads": 8,
+    "hiddenSize": 4096,
+    "intermediateSize": 14336,
+    "positionEncoding": "RoPE",
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-05,
+    "mlpFactor": 3.5,
+    "gqaRatio": 4.0,
+    "torchDtype": "bfloat16",
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "createdAt": "2026-05-15T02:33:52.000Z",
+    "openness": "open-weight",
+    "isMoe": false
+  },
+  {
+    "id": "internlm/Intern-S2-Preview",
+    "name": "Intern-S2-Preview",
+    "provider": "Shanghai AI Lab",
+    "huggingfaceUrl": "https://huggingface.co/internlm/Intern-S2-Preview",
+    "techReport": "",
+    "modelscopeUrl": "https://modelscope.cn/models/Shanghai_AI_Laboratory/Intern-S2-Preview",
+    "totalParameters": 35964405616,
+    "activeParameters": 2192572416,
+    "embeddingParameters": 514850816,
+    "nonEmbeddingParameters": 35449554800,
+    "contextLength": 262144,
+    "embeddingDim": 2048,
+    "vocabSize": 251392,
+    "architecture": "intern_s2_preview",
+    "numLayers": 40,
+    "numHeads": 16,
+    "numKvHeads": 2,
+    "hiddenSize": 2048,
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-06,
+    "attentionDropout": 0.0,
+    "gqaRatio": 8.0,
+    "numExperts": 256,
+    "numExpertsPerToken": 8,
+    "numActivatedExperts": 8,
+    "moeIntermediateSize": 512,
+    "inputModalities": [
+      "image",
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "createdAt": "2026-05-15T03:49:25.000Z",
+    "openness": "open-weight",
+    "isMoe": true
   }
 ]

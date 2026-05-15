@@ -26,12 +26,15 @@ _DEFAULT_RULES = [
     {"pattern": r"\bW\d+A\d+\b", "reason": "weight-only quantized"},
     {"pattern": r"\bINT[248]\b", "reason": "INT quantized"},
     {"pattern": r"\bFP[48]\b", "reason": "FP quantized"},
+    {"pattern": r"NVFP4", "reason": "NVFP4 quantized"},
     {"pattern": r"\bNF4\b", "reason": "NF4 quantized"},
     {"pattern": r"\bBNB\b", "reason": "bitsandbytes quantized"},
     {"pattern": r"\bAQLM\b", "reason": "AQLM quantized"},
     {"pattern": r"\bEXL2\b", "reason": "EXL2 quantized"},
     {"pattern": r"\b(?:4|8)-?bit(?:s)?\b", "reason": "X-bit quantized"},
     {"pattern": r"\bSQ\b", "reason": "SmoothQuant quantized"},
+    # Speculative decoding draft heads (not base LLMs)
+    {"pattern": r"\beagle\d*(?:\.\d+)?", "reason": "speculative decoding draft head (EAGLE)"},
     # ASR / TTS
     {"pattern": r"\b(whisper|asr|tts|speech|vocoder)\b", "reason": "ASR/TTS model"},
     # Embedding / Rerank

@@ -39,6 +39,7 @@ const COLUMN_CONFIGS: Omit<ColumnConfig, "label">[] = [
   // Modalities
   { key: "inputModalities", visible: false, sortable: false, type: "array" },
   { key: "outputModalities", visible: false, sortable: false, type: "array" },
+  { key: "task", visible: false, sortable: true, type: "string" },
 
   // Other Information
   { key: "huggingfaceUrl", visible: false, sortable: false, type: "string" },
@@ -109,7 +110,7 @@ export const COMPLEXITY_PRESETS: Record<string, ComplexityPreset> = {
   },
   custom: {
     level: "custom",
-    columns: DEFAULT_COLUMNS.map(col => col.key),
+    columns: DEFAULT_COLUMNS.map(col => col.key).filter(k => k !== "task"),
     description: "自定义级：显示所有可用参数",
   },
 }

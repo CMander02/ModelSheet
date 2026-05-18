@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback } from "react"
+import { useMemo, useState, useCallback, useRef, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { providerSlug, isNewThisWeek } from "@/lib/utils"
 import { ArrowUpDown, Check, ChevronDown } from "lucide-react"
@@ -83,25 +83,17 @@ function BottomSheet({
   if (!open) return null
   return (
     <>
-      {/* Backdrop */}
-      <div
-        className="fixed inset-0 z-40 bg-black/40"
-        onClick={onClose}
-      />
-      {/* Sheet */}
+      <div className="fixed inset-0 z-40 bg-black/40" onClick={onClose} />
       <div
         className="fixed bottom-0 left-0 right-0 z-50 rounded-t-3xl bg-background shadow-2xl"
         style={{ maxHeight: "80vh", display: "flex", flexDirection: "column" }}
       >
-        {/* Drag handle */}
         <div className="flex justify-center pt-3 pb-1 shrink-0">
           <div className="w-10 h-1 rounded-full bg-muted-foreground/30" />
         </div>
-        {/* Title */}
         <div className="px-5 pt-2 pb-3 shrink-0">
           <h3 className="text-lg font-bold">{title}</h3>
         </div>
-        {/* Content */}
         <div className="overflow-y-auto flex-1 px-5 pb-8">
           {children}
         </div>
@@ -201,7 +193,7 @@ function ModelCard({ model, language, selected, onSelect, onNavigate, cardFields
           </div>
         )}
 
-        {/* Modalities — single row */}
+        {/* Modalities */}
         {showModalities && (
           <div className="flex items-center gap-3 mt-1.5 flex-wrap">
             {showInputModal && (
@@ -240,21 +232,29 @@ function ModelCard({ model, language, selected, onSelect, onNavigate, cardFields
 
 interface MobileModelListProps {
   models: ModelInfo[]
+  totalCount: number
+  hasMore: boolean
+  isLoadingMore: boolean
+  onLoadMore: () => void
   searchTerm?: string
   language: Language
-  /** complexity preset from parent */
   complexityLevel?: string
   onComplexityChange?: (level: string) => void
   onCompare?: (ids: string[]) => void
+  onModelClick?: (model: ModelInfo) => void
 }
 
 export function MobileModelList({
   models,
-  searchTerm = "",
+  totalCount,
+  hasMore,
+  isLoadingMore,
+  onLoadMore,
   language,
   complexityLevel = "enthusiast",
   onComplexityChange,
   onCompare,
+  onModelClick,
 }: MobileModelListProps) {
   const navigate = useNavigate()
   const isZh = language === "zh"
@@ -273,25 +273,34 @@ export function MobileModelList({
   const [sortSheetOpen, setSortSheetOpen]         = useState(false)
   const [fieldSheetOpen, setFieldSheetOpen]       = useState(false)
 
+  // Infinite scroll — load more when reaching bottom
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const loadMoreTriggerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const trigger = loadMoreTriggerRef.current
+    if (!trigger || !hasMore || isLoadingMore) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          onLoadMore()
+        }
+      },
+      { rootMargin: "200px" }
+    )
+    observer.observe(trigger)
+    return () => observer.disconnect()
+  }, [hasMore, isLoadingMore, onLoadMore])
+
   // Active card fields
   const cardFields: CardField[] = complexityLevel === "custom"
     ? customCardFields
     : (COMPLEXITY_FIELD_MAP[complexityLevel] ?? COMPLEXITY_FIELD_MAP.enthusiast)
 
-  // Filter
-  const filteredModels = useMemo(() => {
-    if (!searchTerm.trim()) return models
-    const q = searchTerm.toLowerCase()
-    return models.filter(m => {
-      const parts = m.id?.toLowerCase().split("/") ?? []
-      return [m.name?.toLowerCase(), m.provider?.toLowerCase(), ...parts]
-        .filter(Boolean).some(s => s!.includes(q))
-    })
-  }, [models, searchTerm])
-
-  // Sort
+  // Sort (client-side, current page only)
   const sortedModels = useMemo(() => {
-    return [...filteredModels].sort((a, b) => {
+    return [...models].sort((a, b) => {
       const av = a[sortField], bv = b[sortField]
       if (av == null) return 1
       if (bv == null) return -1
@@ -301,7 +310,7 @@ export function MobileModelList({
       const as = String(av), bs = String(bv)
       return sortDir === "asc" ? as.localeCompare(bs) : bs.localeCompare(as)
     })
-  }, [filteredModels, sortField, sortDir])
+  }, [models, sortField, sortDir])
 
   const handleSelect = useCallback((id: string) => {
     setSelectedIds(prev => {
@@ -312,11 +321,13 @@ export function MobileModelList({
   }, [])
 
   const handleNavigate = useCallback((model: ModelInfo) => {
-    if (model.id?.includes("/")) {
+    if (onModelClick) {
+      onModelClick(model)
+    } else if (model.id?.includes("/")) {
       const [org, name] = model.id.split("/")
       navigate(`/${org}/${name}`)
     }
-  }, [navigate])
+  }, [navigate, onModelClick])
 
   const handleCompare = () => {
     if (selectedIds.size >= 2 && onCompare) {
@@ -339,7 +350,7 @@ export function MobileModelList({
   ]
 
   return (
-    <div className="flex flex-col h-full w-full min-w-0">
+    <div className="flex flex-col h-full w-full min-w-0 overflow-x-hidden">
       {/* ── Controls bar ── */}
       <div className="shrink-0 flex items-center gap-2 pb-3 overflow-x-auto">
         {/* Sort button */}
@@ -360,10 +371,8 @@ export function MobileModelList({
               <button
                 key={opt.value}
                 onClick={() => {
-                  // "custom" always opens the field sheet; never propagate "custom" to parent
                   if (opt.value === "custom") {
                     setFieldSheetOpen(true)
-                    // switch to custom internally without calling parent
                     onComplexityChange?.("custom")
                     return
                   }
@@ -385,12 +394,15 @@ export function MobileModelList({
       {/* ── Model count ── */}
       <div className="shrink-0 pb-2">
         <span className="text-xs text-muted-foreground">
-          {isZh ? `共 ${filteredModels.length} 个模型` : `${filteredModels.length} models`}
+          {isZh ? `共 ${totalCount} 个模型` : `${totalCount} models`}
         </span>
       </div>
 
       {/* ── List ── */}
-      <div className="flex-1 overflow-y-auto pb-32 -mx-4 px-4">
+      <div
+        ref={scrollRef}
+        className="flex-1 overflow-y-auto pb-32 -mx-4 px-4 overflow-x-hidden"
+      >
         {sortedModels.length === 0 ? (
           <div className="flex items-center justify-center h-32 text-sm text-muted-foreground">
             {isZh ? "没有找到匹配的模型" : "No matching models found"}
@@ -408,6 +420,35 @@ export function MobileModelList({
                 cardFields={cardFields}
               />
             ))}
+          </div>
+        )}
+
+        {/* Load more trigger (invisible sentinel) */}
+        {hasMore && (
+          <div ref={loadMoreTriggerRef} className="flex items-center justify-center py-6">
+            {isLoadingMore ? (
+              <span className="text-sm text-muted-foreground">
+                {isZh ? "加载中..." : "Loading..."}
+              </span>
+            ) : (
+              <button
+                onClick={onLoadMore}
+                className="text-sm text-primary font-medium hover:underline"
+              >
+                {isZh ? "加载更多" : "Load More"}
+                <span className="text-muted-foreground font-normal ml-1">
+                  ({models.length}/{totalCount})
+                </span>
+              </button>
+            )}
+          </div>
+        )}
+
+        {!hasMore && models.length > 0 && (
+          <div className="flex items-center justify-center py-4">
+            <span className="text-xs text-muted-foreground">
+              {isZh ? "已显示全部模型" : "All models loaded"}
+            </span>
           </div>
         )}
       </div>
@@ -451,7 +492,6 @@ export function MobileModelList({
         <div className="flex flex-col divide-y divide-border">
           {SORT_OPTIONS.map(opt => {
             const isActive = opt.field === sortField
-            // Labels for asc/desc per field
             const isText = opt.field === "name" || opt.field === "provider"
             const isDate = opt.field === "createdAt"
             const ascLabel  = isText ? "A→Z"  : isDate ? (isZh ? "旧→新" : "Old→New") : (isZh ? "小→大" : "Low→High")
@@ -468,7 +508,6 @@ export function MobileModelList({
                     setSortField(opt.field)
                     setSortDir(opt.defaultDir)
                   }
-                  // don't close — user swipes down or taps backdrop to dismiss
                 }}
               >
                 <span className={`text-base ${isActive ? "font-semibold" : ""}`}>

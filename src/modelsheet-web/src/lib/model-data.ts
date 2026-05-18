@@ -115,6 +115,54 @@ export const COMPLEXITY_PRESETS: Record<string, ComplexityPreset> = {
   },
 }
 
+// ─── API search ─────────────────────────────────────────────────────────────
+
+export interface SearchResult {
+  items: ModelInfo[]
+  total: number
+  page: number
+  limit: number
+  totalPages: number
+}
+
+const SEARCH_CACHE_KEY = "modelsheet_cache_data"
+const SEARCH_QUERY_KEY = "modelsheet_search_query"
+
+/** 调用服务端搜索 API */
+export async function searchModels(
+  q: string = "",
+  page: number = 1,
+  limit: number = 30
+): Promise<SearchResult> {
+  const params = new URLSearchParams({ q, page: String(page), limit: String(limit) })
+  const resp = await fetch(`/api/search?${params}`)
+  if (!resp.ok) throw new Error(`Search failed: ${resp.status}`)
+  return resp.json()
+}
+
+/** 缓存当前搜索状态，供导航返回时恢复 */
+export function saveSearchState(term: string, page: number): void {
+  if (typeof window === "undefined") return
+  try {
+    sessionStorage.setItem(SEARCH_QUERY_KEY, JSON.stringify({ term, page }))
+  } catch { /* quota exceeded — ignore */ }
+}
+
+/** 恢复导航前的搜索状态 */
+export function loadSearchState(): { term: string; page: number } | null {
+  if (typeof window === "undefined") return null
+  try {
+    const raw = sessionStorage.getItem(SEARCH_QUERY_KEY)
+    return raw ? JSON.parse(raw) : null
+  } catch { return null }
+}
+
+/** 清除搜索缓存（导航到详情页时调用） */
+export function clearSearchState(): void {
+  if (typeof window === "undefined") return
+  sessionStorage.removeItem(SEARCH_QUERY_KEY)
+}
+
 // 从 localStorage 读取模型数据
 export function loadModelsFromStorage(): ModelInfo[] {
   if (typeof window === "undefined") return []

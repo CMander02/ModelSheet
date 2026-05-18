@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react"
+import { useState, useMemo, useCallback } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { providerSlug, isNewThisWeek } from "@/lib/utils"
 import { ArrowUpDown, ArrowUp, ArrowDown, Info } from "lucide-react"
@@ -19,6 +19,10 @@ import type { Language } from "@/lib/i18n"
 
 interface ModelTableProps {
   models: ModelInfo[]
+  totalCount: number
+  hasMore: boolean
+  isLoadingMore: boolean
+  onLoadMore: () => void
   columns: ColumnConfig[]
   onColumnChange?: (columns: ColumnConfig[]) => void
   onComplexityChange?: (level: ComplexityLevel) => void
@@ -30,11 +34,15 @@ interface ModelTableProps {
   onClearSelection?: () => void
   onCompare?: () => void
   searchTerm?: string
-  onSearchChange?: (value: string) => void
+  onModelClick?: (model: ModelInfo) => void
 }
 
 export function ModelTable({
   models,
+  totalCount,
+  hasMore,
+  isLoadingMore,
+  onLoadMore,
   columns,
   currentComplexity,
   onComplexityChange: _onComplexityChange,
@@ -44,23 +52,13 @@ export function ModelTable({
   onClearSelection,
   onCompare,
   language,
-  searchTerm = "",
+  onModelClick,
 }: ModelTableProps) {
   const navigate = useNavigate()
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("")
   const [sortConfig, setSortConfig] = useState<SortConfig>({
     key: "createdAt",
     direction: "desc",
   })
-
-  // Debounce search
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm)
-    }, 300)
-
-    return () => clearTimeout(timer)
-  }, [searchTerm])
 
   // Get visible columns based on complexity
   const preset = COMPLEXITY_PRESETS[currentComplexity]
@@ -69,29 +67,11 @@ export function ModelTable({
     [columns, preset.columns]
   )
 
-  // Filter models - 使用 debounced search term
-  // 支持：1. 不区分大小写 2. 部分匹配 3. 搜索 id 中 / 前后的内容
-  const filteredModels = useMemo(() => {
-    if (!debouncedSearchTerm) return models
-
-    const searchLower = debouncedSearchTerm.toLowerCase()
-    return models.filter((model) => {
-      // 将 id 按 / 分割，分别搜索
-      const idParts = model.id?.toLowerCase().split("/") || []
-      const searchableText = [
-        model.name?.toLowerCase(),
-        model.provider?.toLowerCase(),
-        ...idParts
-      ].filter(Boolean).join(" ")
-      return searchableText.includes(searchLower)
-    })
-  }, [models, debouncedSearchTerm])
-
-  // Sort models
+  // Sort models (client-side, current page only)
   const sortedModels = useMemo(() => {
-    if (!sortConfig.key) return filteredModels
+    if (!sortConfig.key) return models
 
-    return [...filteredModels].sort((a, b) => {
+    return [...models].sort((a, b) => {
       const aVal = a[sortConfig.key!]
       const bVal = b[sortConfig.key!]
 
@@ -114,7 +94,7 @@ export function ModelTable({
         ? aStr.localeCompare(bStr)
         : bStr.localeCompare(aStr)
     })
-  }, [filteredModels, sortConfig])
+  }, [models, sortConfig])
 
   const handleSort = (key: string) => {
     setSortConfig((prev) => {
@@ -128,6 +108,17 @@ export function ModelTable({
       return { key, direction: "asc" }
     })
   }
+
+  const handleRowClick = useCallback((model: ModelInfo, e: React.MouseEvent) => {
+    const target = e.target as HTMLElement
+    if (target.closest('a, button, input, [role="checkbox"]')) return
+    if (onModelClick) {
+      onModelClick(model)
+    } else if (model.id?.includes("/")) {
+      const [org, name] = model.id.split("/")
+      navigate(`/${org}/${name}`)
+    }
+  }, [navigate, onModelClick])
 
   const formatValue = (value: any, type: string) => {
     if (value === null || value === undefined) return "-"
@@ -171,7 +162,9 @@ export function ModelTable({
           developer: "开发者",
           custom: "自定义",
           searchModels: "搜索模型...",
-          noResults: "没有找到匹配的模型"
+          noResults: "没有找到匹配的模型",
+          loadMore: "加载更多",
+          loading: "加载中...",
         }
       : {
           modelsTotal: (count: number) => `${count} models in total`,
@@ -184,13 +177,15 @@ export function ModelTable({
           developer: "Developer",
           custom: "Custom",
           searchModels: "Search models...",
-          noResults: "No matching models found"
+          noResults: "No matching models found",
+          loadMore: "Load More",
+          loading: "Loading...",
         }
   }, [language])
 
   return (
     <div className="flex flex-col h-full gap-2">
-      {/* Selection bar — only visible when rows are selected */}
+      {/* Selection bar */}
       {selectedModels.size > 0 && (
         <div className="shrink-0 flex items-center gap-3 h-9">
           <span className="text-sm font-medium whitespace-nowrap">
@@ -216,15 +211,13 @@ export function ModelTable({
         </div>
       )}
 
-      {/* Table Container - 外层 overflow-hidden 保证圆角裁剪，内层滚动 */}
-      <div className="flex-1 rounded-md border overflow-hidden bg-card min-h-0">
-        {/* 滚动容器：scrollbar-gutter stable 让滚动条常驻但不跳动；thin 让滚动条更细 */}
+      {/* Table Container */}
+      <div className="flex-1 rounded-md border overflow-hidden bg-card min-h-0 flex flex-col">
         <div
-          className="h-full overflow-auto modelsheet-scroll"
+          className="flex-1 overflow-auto modelsheet-scroll"
           style={{ scrollbarGutter: 'stable' }}
         >
           <table className="w-full caption-bottom text-sm border-collapse">
-            {/* 表头：sticky 定在滚动容器顶部 */}
             <thead className="sticky top-0 z-20 bg-card border-b shadow-[0_1px_0_0_var(--border)]">
               <tr>
                 {onModelSelect && (
@@ -289,15 +282,7 @@ export function ModelTable({
                   <tr
                     key={model.id}
                     className="group border-b transition-colors cursor-pointer"
-                    onClick={(e) => {
-                      // don't navigate if clicking a link/button/checkbox inside the row
-                      const target = e.target as HTMLElement
-                      if (target.closest('a, button, input, [role="checkbox"]')) return
-                      if (model.id?.includes("/")) {
-                        const [org, name] = model.id.split("/")
-                        navigate(`/${org}/${name}`)
-                      }
-                    }}
+                    onClick={(e) => handleRowClick(model, e)}
                   >
                     {onModelSelect && (
                       <td
@@ -323,7 +308,6 @@ export function ModelTable({
                           maxWidth: '200px',
                         } : undefined}
                       >
-                        {/* Special handling for modality columns */}
                         {(column.key === "inputModalities" || column.key === "outputModalities") ? (
                           <ModalityIcons modalities={model[column.key] || []} />
                         ) : (column.key === "totalParameters" || column.key === "activeParameters") ? (
@@ -396,6 +380,33 @@ export function ModelTable({
             </tbody>
           </table>
         </div>
+
+        {/* Load more indicator */}
+        {hasMore && (
+          <div className="shrink-0 border-t px-4 py-3 flex items-center justify-center">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onLoadMore}
+              disabled={isLoadingMore}
+            >
+              {isLoadingMore ? t.loading : t.loadMore}
+              {totalCount > models.length && (
+                <span className="ml-1 text-muted-foreground font-normal">
+                  ({models.length}/{totalCount})
+                </span>
+              )}
+            </Button>
+          </div>
+        )}
+
+        {!hasMore && models.length > 0 && (
+          <div className="shrink-0 border-t px-4 py-2 flex items-center justify-center">
+            <span className="text-xs text-muted-foreground">
+              {t.modelsTotal(totalCount)}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   )

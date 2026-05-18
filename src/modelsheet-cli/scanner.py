@@ -273,8 +273,8 @@ def scan_orgs(
     if token:
         headers["Authorization"] = f"Bearer {token}"
 
-    with httpx.Client(timeout=30, follow_redirects=True) as hf_client:
-        with httpx.Client(timeout=30, follow_redirects=True) as ms_client:
+    with httpx.Client(timeout=5, follow_redirects=True) as hf_client:
+        with httpx.Client(timeout=5, follow_redirects=True) as ms_client:
 
             def fetch_org(source_org):
                 source, org = source_org

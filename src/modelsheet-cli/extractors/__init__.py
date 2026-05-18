@@ -10,6 +10,8 @@ from .metadata import (
     extract_tech_report,
     extract_arxiv_url,
     extract_created_at,
+    extract_pipeline_tag,
+    extract_task,
     extract_input_modalities,
     extract_output_modalities,
 )
@@ -60,6 +62,8 @@ __all__ = [
     "extract_tech_report",
     "extract_arxiv_url",
     "extract_created_at",
+    "extract_pipeline_tag",
+    "extract_task",
     "extract_input_modalities",
     "extract_output_modalities",
     # Architecture

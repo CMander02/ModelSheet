@@ -96,6 +96,8 @@ class ModelExporter:
             # Modalities
             "inputModalities": model.input_modalities,
             "outputModalities": model.output_modalities,
+            # Pipeline tag (task display name only — raw pipelineTag is internal)
+            "task": model.task,
             # Metadata
             "createdAt": model.created_at,
             # Openness

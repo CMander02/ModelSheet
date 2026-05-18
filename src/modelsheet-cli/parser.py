@@ -21,6 +21,8 @@ from .extractors import (
     extract_tech_report,
     extract_arxiv_url,
     extract_created_at,
+    extract_pipeline_tag,
+    extract_task,
     extract_input_modalities,
     extract_output_modalities,
     # Architecture
@@ -110,6 +112,10 @@ class ParsedModel:
     input_modalities: Optional[list[str]] = None
     output_modalities: Optional[list[str]] = None
 
+    # Pipeline tag
+    pipeline_tag: Optional[str] = None
+    task: Optional[str] = None
+
     # Metadata
     created_at: Optional[str] = None
     openness: str = "open-weight"
@@ -194,6 +200,9 @@ class ModelParser:
             # Modalities
             input_modalities=extract_input_modalities(ctx),
             output_modalities=extract_output_modalities(ctx),
+            # Pipeline tag
+            pipeline_tag=extract_pipeline_tag(ctx),
+            task=extract_task(ctx),
             # Metadata
             created_at=extract_created_at(ctx),
         )

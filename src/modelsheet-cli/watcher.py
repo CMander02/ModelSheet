@@ -92,7 +92,7 @@ def _fetch_org_recent_models(
     last_error = None
     for url in (HF_API_URL, HF_MIRROR_API_URL):
         try:
-            resp = client.get(url, params=params, timeout=30)
+            resp = client.get(url, params=params, timeout=5)
             resp.raise_for_status()
             if url == HF_MIRROR_API_URL:
                 console.print(f"[dim]  HF watch fallback → hf-mirror: {org}[/dim]")

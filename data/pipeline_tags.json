@@ -1,0 +1,272 @@
+{
+  "text-generation": {
+    "display": "Text Generation",
+    "input": ["text"],
+    "output": ["text"]
+  },
+  "text2text-generation": {
+    "display": "Text Generation",
+    "input": ["text"],
+    "output": ["text"]
+  },
+  "fill-mask": {
+    "display": "Fill-Mask",
+    "input": ["text"],
+    "output": ["text"]
+  },
+  "summarization": {
+    "display": "Summarization",
+    "input": ["text"],
+    "output": ["text"]
+  },
+  "translation": {
+    "display": "Translation",
+    "input": ["text"],
+    "output": ["text"]
+  },
+  "question-answering": {
+    "display": "Question Answering",
+    "input": ["text"],
+    "output": ["text"]
+  },
+  "table-question-answering": {
+    "display": "Table Question Answering",
+    "input": ["text"],
+    "output": ["text"]
+  },
+  "zero-shot-classification": {
+    "display": "Zero-Shot Classification",
+    "input": ["text"],
+    "output": ["text"]
+  },
+  "feature-extraction": {
+    "display": "Feature Extraction",
+    "input": ["text"],
+    "output": ["text"]
+  },
+  "sentence-similarity": {
+    "display": "Sentence Similarity",
+    "input": ["text"],
+    "output": ["text"]
+  },
+  "text-classification": {
+    "display": "Text Classification",
+    "input": ["text"],
+    "output": ["text"]
+  },
+  "token-classification": {
+    "display": "Token Classification",
+    "input": ["text"],
+    "output": ["text"]
+  },
+  "conversational": {
+    "display": "Text Generation",
+    "input": ["text"],
+    "output": ["text"]
+  },
+  "text-ranking": {
+    "display": "Text Ranking",
+    "input": ["text"],
+    "output": ["text"]
+  },
+  "image-text-to-text": {
+    "display": "Image-Text-to-Text",
+    "input": ["image", "text"],
+    "output": ["text"]
+  },
+  "visual-question-answering": {
+    "display": "Visual Question Answering",
+    "input": ["image", "text"],
+    "output": ["text"]
+  },
+  "document-question-answering": {
+    "display": "Document Question Answering",
+    "input": ["image", "text"],
+    "output": ["text"]
+  },
+  "image-to-text": {
+    "display": "Image-to-Text",
+    "input": ["image"],
+    "output": ["text"]
+  },
+  "any-to-any": {
+    "display": "Any-to-Any",
+    "input": ["text", "image", "audio", "video"],
+    "output": ["text", "image", "audio", "video"]
+  },
+  "audio-text-to-text": {
+    "display": "Audio-Text-to-Text",
+    "input": ["audio", "text"],
+    "output": ["text"]
+  },
+  "video-text-to-text": {
+    "display": "Video-Text-to-Text",
+    "input": ["video", "text"],
+    "output": ["text"]
+  },
+  "image-text-to-image": {
+    "display": "Image-Text-to-Image",
+    "input": ["image", "text"],
+    "output": ["image"]
+  },
+  "image-text-to-video": {
+    "display": "Image-Text-to-Video",
+    "input": ["image", "text"],
+    "output": ["video"]
+  },
+  "visual-document-retrieval": {
+    "display": "Visual Document Retrieval",
+    "input": ["image", "text"],
+    "output": ["text"]
+  },
+  "image-classification": {
+    "display": "Image Classification",
+    "input": ["image"],
+    "output": ["text"]
+  },
+  "object-detection": {
+    "display": "Object Detection",
+    "input": ["image"],
+    "output": ["text"]
+  },
+  "image-segmentation": {
+    "display": "Image Segmentation",
+    "input": ["image"],
+    "output": ["image"]
+  },
+  "depth-estimation": {
+    "display": "Depth Estimation",
+    "input": ["image"],
+    "output": ["image"]
+  },
+  "image-feature-extraction": {
+    "display": "Image Feature Extraction",
+    "input": ["image"],
+    "output": ["text"]
+  },
+  "zero-shot-image-classification": {
+    "display": "Zero-Shot Image Classification",
+    "input": ["image", "text"],
+    "output": ["text"]
+  },
+  "zero-shot-object-detection": {
+    "display": "Zero-Shot Object Detection",
+    "input": ["image", "text"],
+    "output": ["text"]
+  },
+  "text-to-image": {
+    "display": "Text-to-Image",
+    "input": ["text"],
+    "output": ["image"]
+  },
+  "image-to-image": {
+    "display": "Image-to-Image",
+    "input": ["image"],
+    "output": ["image"]
+  },
+  "unconditional-image-generation": {
+    "display": "Unconditional Image Generation",
+    "input": [],
+    "output": ["image"]
+  },
+  "mask-generation": {
+    "display": "Mask Generation",
+    "input": ["image"],
+    "output": ["image"]
+  },
+  "keypoint-detection": {
+    "display": "Keypoint Detection",
+    "input": ["image"],
+    "output": ["text"]
+  },
+  "text-to-video": {
+    "display": "Text-to-Video",
+    "input": ["text"],
+    "output": ["video"]
+  },
+  "image-to-video": {
+    "display": "Image-to-Video",
+    "input": ["image"],
+    "output": ["video"]
+  },
+  "video-classification": {
+    "display": "Video Classification",
+    "input": ["video"],
+    "output": ["text"]
+  },
+  "video-to-video": {
+    "display": "Video-to-Video",
+    "input": ["video"],
+    "output": ["video"]
+  },
+  "text-to-3d": {
+    "display": "Text-to-3D",
+    "input": ["text"],
+    "output": ["image"]
+  },
+  "image-to-3d": {
+    "display": "Image-to-3D",
+    "input": ["image"],
+    "output": ["image"]
+  },
+  "automatic-speech-recognition": {
+    "display": "Automatic Speech Recognition",
+    "input": ["audio"],
+    "output": ["text"]
+  },
+  "text-to-speech": {
+    "display": "Text-to-Speech",
+    "input": ["text"],
+    "output": ["audio"]
+  },
+  "text-to-audio": {
+    "display": "Text-to-Audio",
+    "input": ["text"],
+    "output": ["audio"]
+  },
+  "audio-classification": {
+    "display": "Audio Classification",
+    "input": ["audio"],
+    "output": ["text"]
+  },
+  "audio-to-audio": {
+    "display": "Audio-to-Audio",
+    "input": ["audio"],
+    "output": ["audio"]
+  },
+  "voice-activity-detection": {
+    "display": "Voice Activity Detection",
+    "input": ["audio"],
+    "output": ["text"]
+  },
+  "tabular-classification": {
+    "display": "Tabular Classification",
+    "input": ["text"],
+    "output": ["text"]
+  },
+  "tabular-regression": {
+    "display": "Tabular Regression",
+    "input": ["text"],
+    "output": ["text"]
+  },
+  "time-series-forecasting": {
+    "display": "Time Series Forecasting",
+    "input": ["text"],
+    "output": ["text"]
+  },
+  "reinforcement-learning": {
+    "display": "Reinforcement Learning",
+    "input": ["text"],
+    "output": ["text"]
+  },
+  "robotics": {
+    "display": "Robotics",
+    "input": ["text", "image"],
+    "output": ["text"]
+  },
+  "graph-machine-learning": {
+    "display": "Graph Machine Learning",
+    "input": ["text"],
+    "output": ["text"]
+  }
+}

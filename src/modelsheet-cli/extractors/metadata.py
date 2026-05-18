@@ -1,10 +1,12 @@
 """Metadata field extractors (id, name, provider, urls, timestamps)."""
 
+import json
 import re
+from pathlib import Path
 from typing import Optional
 
 from .base import ConfigContext
-from ..config import load_provider_map, build_hf_org_to_ms_org_map, MS_BASE_URL
+from ..config import DATA_DIR, load_provider_map, build_hf_org_to_ms_org_map, MS_BASE_URL
 
 # Load provider mapping from data/providers.json
 # Maps HuggingFace org name -> normalized display name
@@ -156,92 +158,72 @@ def extract_created_at(ctx: ConfigContext) -> Optional[str]:
     return ctx.metadata.get("createdAt")
 
 
-# Pipeline tag to modality mapping
-# Input/Output modalities: text, image, audio, video
-PIPELINE_TAG_MODALITIES = {
-    # Text only
-    "text-generation": (["text"], ["text"]),
-    "text2text-generation": (["text"], ["text"]),
-    "fill-mask": (["text"], ["text"]),
-    "summarization": (["text"], ["text"]),
-    "translation": (["text"], ["text"]),
-    "question-answering": (["text"], ["text"]),
-    "conversational": (["text"], ["text"]),
-    "feature-extraction": (["text"], ["text"]),
-    "sentence-similarity": (["text"], ["text"]),
-    "text-classification": (["text"], ["text"]),
-    "token-classification": (["text"], ["text"]),
-    "table-question-answering": (["text"], ["text"]),
-    "zero-shot-classification": (["text"], ["text"]),
+# Pipeline tag to modality mapping (loaded from data/pipeline_tags.json)
+# Maps HF pipeline_tag → {display, input, output}
+_PIPELINE_TAG_DATA: Optional[dict] = None
 
-    # Audio input
-    "automatic-speech-recognition": (["audio"], ["text"]),
-    "audio-classification": (["audio"], ["text"]),
+def _get_pipeline_tag_data() -> dict:
+    global _PIPELINE_TAG_DATA
+    if _PIPELINE_TAG_DATA is not None:
+        return _PIPELINE_TAG_DATA
+    path = DATA_DIR / "pipeline_tags.json"
+    if path.exists():
+        with open(path) as f:
+            _PIPELINE_TAG_DATA = json.load(f)
+    else:
+        _PIPELINE_TAG_DATA = {}
+    return _PIPELINE_TAG_DATA
 
-    # Audio output
-    "text-to-speech": (["text"], ["audio"]),
-    "text-to-audio": (["text"], ["audio"]),
 
-    # Image input
-    "image-classification": (["image"], ["text"]),
-    "object-detection": (["image"], ["text"]),
-    "image-segmentation": (["image"], ["text"]),
-    "depth-estimation": (["image"], ["image"]),
-    "image-feature-extraction": (["image"], ["text"]),
-    "zero-shot-image-classification": (["image", "text"], ["text"]),
-    "zero-shot-object-detection": (["image", "text"], ["text"]),
+def extract_pipeline_tag(ctx: ConfigContext) -> Optional[str]:
+    """Extract raw HuggingFace pipeline_tag.
 
-    # Image output
-    "text-to-image": (["text"], ["image"]),
-    "image-to-image": (["image"], ["image"]),
-    "unconditional-image-generation": ([], ["image"]),
+    Source: API metadata pipelineTag
+    """
+    return ctx.metadata.get("pipelineTag")
 
-    # Vision-Language (multimodal)
-    "image-text-to-text": (["image", "text"], ["text"]),
-    "visual-question-answering": (["image", "text"], ["text"]),
-    "document-question-answering": (["image", "text"], ["text"]),
-    "image-to-text": (["image"], ["text"]),
 
-    # Video
-    "text-to-video": (["text"], ["video"]),
-    "video-classification": (["video"], ["text"]),
-    "image-to-video": (["image"], ["video"]),
-    "video-text-to-text": (["video", "text"], ["text"]),
+def extract_task(ctx: ConfigContext) -> Optional[str]:
+    """Extract display name for the pipeline_tag (the "task" column).
 
-    # Audio-to-Audio
-    "audio-to-audio": (["audio"], ["audio"]),
-}
+    Source: pipeline_tags.json lookup
+    """
+    pipeline_tag = ctx.metadata.get("pipelineTag")
+    if not pipeline_tag:
+        return None
+    data = _get_pipeline_tag_data().get(pipeline_tag)
+    if data:
+        return data.get("display", pipeline_tag)
+    return pipeline_tag
 
 
 def extract_input_modalities(ctx: ConfigContext) -> list[str]:
     """Extract input modalities from pipeline_tag.
 
-    Source: API metadata pipelineTag
-    Returns: List of modalities: ["text"], ["image", "text"], ["audio"], ["video"], etc.
+    Source: API metadata pipelineTag → pipeline_tags.json
+    Returns: List of modalities or ["text"] as default.
     """
     pipeline_tag = ctx.metadata.get("pipelineTag")
     if not pipeline_tag:
-        return ["text"]  # Default to text for unknown
-
-    modalities = PIPELINE_TAG_MODALITIES.get(pipeline_tag)
-    if modalities:
-        return modalities[0] if modalities[0] else ["text"]
-
-    return ["text"]  # Default fallback
+        return ["text"]
+    data = _get_pipeline_tag_data().get(pipeline_tag)
+    if data:
+        mods = data.get("input", [])
+        return mods if mods else ["text"]
+    return ["text"]
 
 
 def extract_output_modalities(ctx: ConfigContext) -> list[str]:
     """Extract output modalities from pipeline_tag.
 
-    Source: API metadata pipelineTag
-    Returns: List of modalities: ["text"], ["image"], ["audio"], ["video"], etc.
+    Source: API metadata pipelineTag → pipeline_tags.json
+    Returns: List of modalities or ["text"] as default.
     """
     pipeline_tag = ctx.metadata.get("pipelineTag")
     if not pipeline_tag:
-        return ["text"]  # Default to text for unknown
-
-    modalities = PIPELINE_TAG_MODALITIES.get(pipeline_tag)
-    if modalities:
-        return modalities[1] if modalities[1] else ["text"]
-
-    return ["text"]  # Default fallback
+        return ["text"]
+    data = _get_pipeline_tag_data().get(pipeline_tag)
+    if data:
+        mods = data.get("output", [])
+        return mods if mods else ["text"]
+    return ["text"]

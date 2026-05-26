@@ -76372,5 +76372,43 @@
     "createdAt": "2026-04-22T19:39:50.000Z",
     "openness": "open-weight",
     "isMoe": false
+  },
+  {
+    "id": "internlm/CapRL-Video-4B",
+    "name": "CapRL-Video-4B",
+    "provider": "Shanghai AI Lab",
+    "huggingfaceUrl": "https://huggingface.co/internlm/CapRL-Video-4B",
+    "techReport": "",
+    "modelscopeUrl": "https://modelscope.cn/models/Shanghai_AI_Laboratory/CapRL-Video-4B",
+    "arxivUrl": "https://arxiv.org/abs/2509.22647",
+    "totalParameters": 4826771968,
+    "activeParameters": 4826771968,
+    "embeddingParameters": 388956160,
+    "nonEmbeddingParameters": 4437815808,
+    "contextLength": 262144,
+    "embeddingDim": 2560,
+    "vocabSize": 151936,
+    "architecture": "qwen3_vl",
+    "numLayers": 36,
+    "numHeads": 32,
+    "numKvHeads": 8,
+    "hiddenSize": 2560,
+    "intermediateSize": 9728,
+    "positionEncoding": "RoPE",
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-06,
+    "attentionDropout": 0.0,
+    "mlpFactor": 3.8,
+    "gqaRatio": 4.0,
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "createdAt": "2026-05-22T11:23:34.000Z",
+    "openness": "open-weight",
+    "isMoe": false
   }
 ]

@@ -61,6 +61,87 @@ export interface ModelInfo {
   [key: string]: any
 }
 
+export type TreeColor =
+  | "attn" | "ffn" | "norm" | "emb" | "out" | "moe" | "resid" | "input"
+  | "cyan" | "purple" | "green" | "steel" | "orange" | "sky" | "blue"
+  | "indigo" | "teal" | "amber" | "pink" | "violet"
+
+export interface LeafNode {
+  id: string
+  type: "leaf"
+  label: string
+  sub?: string
+  color: TreeColor
+}
+
+export interface GroupNode {
+  id: string
+  type: "group"
+  label: string
+  badge?: string
+  sub?: string
+  color: TreeColor
+  children: TreeNode[]
+  defaultExpanded?: boolean
+}
+
+export interface RowNode {
+  id: string
+  type: "row"
+  children: Array<LeafNode | GroupNode>
+}
+
+export type TreeNode = LeafNode | GroupNode | RowNode
+
+export interface DiagramParams {
+  numLayers?: number
+  numHeads?: number
+  numKvHeads?: number
+  hiddenSize?: number
+  contextLength?: number
+  vocabSize?: number
+  intermediateSize?: number
+  numExperts?: number
+  numSharedExperts?: number
+  numExpertsPerToken?: number
+  [key: string]: string | number | boolean | null | undefined
+}
+
+export interface ArchitectureSpec {
+  id: string
+  family: string
+  era: string
+  type: "encoder" | "decoder" | "encoder-decoder"
+  normPlacement: "pre" | "post"
+  descriptionZh: string
+  descriptionEn: string
+  paperUrl?: string
+  hfOrg?: string
+  defaultParams: DiagramParams
+  diagramSubtitle?: string
+  diagramNodes: TreeNode[]
+  modelTypeAliases?: string[]
+}
+
+export interface ProviderInfo {
+  id: string
+  name: string
+  displayName: string
+  nameEn?: string
+  nameZh?: string
+  region?: "cn" | "global" | "other" | string
+  orgs?: string[]
+  scan?: Record<string, unknown>
+  modelCount: number
+  archCount: number
+  latestCreatedAt: string | null
+}
+
+export interface ProviderDetail {
+  provider: ProviderInfo
+  models: ModelInfo[]
+}
+
 export type ComplexityLevel = "simple" | "enthusiast" | "developer" | "custom"
 
 export interface ColumnConfig {

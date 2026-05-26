@@ -24,6 +24,20 @@ const translations = {
     nav: {
       title: "模型参数对比",
       compareModels: "对比模型",
+      providers: "厂商图鉴",
+    },
+    // 厂商图鉴
+    providersPage: {
+      title: "厂商图鉴",
+      subtitle: "浏览所有收录的公司、研究机构和开源团队。",
+      regionCN: "中国",
+      regionGlobal: "全球",
+      regionOther: "其他",
+      countModels: (n: number) => `${n} 个模型`,
+      countArchs: (n: number) => `${n} 种架构`,
+      backToHome: "返回",
+      noProviders: "暂无数据",
+      searchPlaceholder: "搜索厂商...",
     },
     // Provider 名称翻译
     providers: providerTranslations.zh,
@@ -135,6 +149,20 @@ const translations = {
     nav: {
       title: "Model Parameter Comparison",
       compareModels: "Compare Models",
+      providers: "Providers",
+    },
+    // Providers index
+    providersPage: {
+      title: "Providers",
+      subtitle: "Browse all companies, research labs, and open-source teams in the catalog.",
+      regionCN: "China",
+      regionGlobal: "Global",
+      regionOther: "Other",
+      countModels: (n: number) => `${n} model${n !== 1 ? "s" : ""}`,
+      countArchs: (n: number) => `${n} arch${n !== 1 ? "s" : ""}`,
+      backToHome: "Back",
+      noProviders: "No providers yet",
+      searchPlaceholder: "Search providers...",
     },
     // Provider name translations
     providers: providerTranslations.en,

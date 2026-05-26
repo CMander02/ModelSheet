@@ -117,6 +117,105 @@ console = Console(theme=custom_theme)
 
 
 # ═════════════════════════════════════════════════════════════════════════════
+#  db subcommand group
+# ═════════════════════════════════════════════════════════════════════════════
+
+
+db_app = typer.Typer(
+    help="Build and verify the SQLite/D1 database generated from data files.",
+    no_args_is_help=True,
+    rich_markup_mode="rich",
+    pretty_exceptions_show_locals=False,
+)
+app.add_typer(db_app, name="db")
+
+
+@db_app.command("build")
+def db_build(
+    output: Optional[Path] = typer.Option(
+        None,
+        "--output",
+        "-o",
+        help="SQLite output path. Defaults to data/modelsheet.sqlite.",
+    ),
+):
+    """Build data/modelsheet.sqlite from models.json, providers.json, and architecture YAML."""
+    from .db import SQLITE_FILE, build_sqlite
+
+    sqlite_file = output or SQLITE_FILE
+    try:
+        result = build_sqlite(sqlite_file=sqlite_file)
+    except Exception as e:
+        console.print(f"[red]Failed to build SQLite database:[/red] {e}")
+        raise typer.Exit(1)
+
+    console.print("[bold green]SQLite database built.[/bold green]")
+    console.print(f"  File: {result['sqlite_file']}")
+    console.print(f"  Models: {result['model_count']}")
+    console.print(f"  Providers: {result['provider_count']}")
+    console.print(f"  Architectures: {result['architecture_count']}")
+    console.print(f"  Source hash: {result['source_hash']}")
+
+
+@db_app.command("seed")
+def db_seed(
+    sqlite: Optional[Path] = typer.Option(
+        None,
+        "--sqlite",
+        help="SQLite input path. Defaults to data/modelsheet.sqlite.",
+    ),
+    output: Optional[Path] = typer.Option(
+        None,
+        "--output",
+        "-o",
+        help="Seed SQL output path. Defaults to data/d1/seed.sql.",
+    ),
+):
+    """Write an idempotent D1 seed SQL file from the local SQLite database."""
+    from .db import SEED_SQL_FILE, SQLITE_FILE, write_seed_sql
+
+    sqlite_file = sqlite or SQLITE_FILE
+    seed_file = output or SEED_SQL_FILE
+    try:
+        result = write_seed_sql(sqlite_file=sqlite_file, seed_file=seed_file)
+    except Exception as e:
+        console.print(f"[red]Failed to write seed SQL:[/red] {e}")
+        raise typer.Exit(1)
+
+    console.print("[bold green]D1 seed SQL written.[/bold green]")
+    console.print(f"  File: {result['seed_file']}")
+    console.print(f"  Models: {result['model_count']}")
+    console.print(f"  Architectures: {result['architecture_count']}")
+    console.print(f"  Source hash: {result['source_hash']}")
+
+
+@db_app.command("verify")
+def db_verify(
+    sqlite: Optional[Path] = typer.Option(
+        None,
+        "--sqlite",
+        help="SQLite input path. Defaults to data/modelsheet.sqlite.",
+    ),
+):
+    """Verify the generated SQLite database against source JSON/YAML files."""
+    from .db import SQLITE_FILE, verify_sqlite
+
+    sqlite_file = sqlite or SQLITE_FILE
+    try:
+        result = verify_sqlite(sqlite_file=sqlite_file)
+    except Exception as e:
+        console.print(f"[red]SQLite verification failed:[/red] {e}")
+        raise typer.Exit(1)
+
+    console.print("[bold green]SQLite verification passed.[/bold green]")
+    console.print(f"  Models: {result['model_count']}")
+    console.print(f"  Providers: {result['provider_count']}")
+    console.print(f"  Architectures: {result['architecture_count']}")
+    console.print(f"  Aliases: {result['alias_count']}")
+    console.print(f"  Source hash: {result['source_hash']}")
+
+
+# ═════════════════════════════════════════════════════════════════════════════
 #  add
 # ═════════════════════════════════════════════════════════════════════════════
 

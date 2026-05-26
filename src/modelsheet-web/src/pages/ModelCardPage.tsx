@@ -2,7 +2,8 @@ import { useEffect, useState } from "react"
 import { useParams, useNavigate, Link } from "react-router-dom"
 import type { ModelInfo } from "@/lib/types"
 import type { Language } from "@/lib/i18n"
-import { loadModelsFromFile } from "@/lib/model-data"
+import { loadModelById } from "@/lib/model-data"
+import { loadArchitecture } from "@/lib/architecture-data"
 import { providerSlug } from "@/lib/utils"
 import { formatParameters, formatContextLength, formatNumber, formatDecimal, formatDate } from "@/lib/formatters"
 import { ModelBrandIcon, ProviderBrandIcon } from "@/components/brand-icon"
@@ -14,17 +15,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { ArrowLeft, HelpCircle, Info, Lock } from "lucide-react"
 import HuggingFaceIcon from "@lobehub/icons/es/HuggingFace"
 import ModelScopeIcon from "@lobehub/icons/es/ModelScope"
-import { ARCH_REGISTRY, type ArchSpec } from "@/components/arch-diagram"
-
-function findArchEntry(architecture?: string | null): ArchSpec | undefined {
-  if (!architecture) return undefined
-  const q = architecture.toLowerCase()
-  return ARCH_REGISTRY.find(a =>
-    a.id === q ||
-    a.family.toLowerCase() === q ||
-    (a.modelTypeAliases?.includes(architecture) ?? false)
-  )
-}
+import type { ArchitectureSpec } from "@/lib/types"
 
 // ─── Param confidence ───────────────────────────────────────────────────────
 
@@ -103,13 +94,13 @@ function PlatformLink({ href, icon, label }: { href: string; icon: React.ReactNo
 export function ModelCardPage() {
   const { org, modelName } = useParams<{ org: string; modelName: string }>()
   const navigate = useNavigate()
-  const [models, setModels] = useState<ModelInfo[]>([])
+  const [model, setModel] = useState<ModelInfo | null>(null)
+  const [archEntry, setArchEntry] = useState<ArchitectureSpec | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [language, setLanguage] = useState<Language>("zh")
   const [theme, setTheme] = useState<"light" | "dark">("light")
 
   const modelId = org && modelName ? `${org}/${modelName}` : null
-  const model = models.find(m => m.id === modelId)
 
   useEffect(() => {
     const savedTheme = (localStorage.getItem("theme") as "light" | "dark") || "light"
@@ -117,8 +108,25 @@ export function ModelCardPage() {
     document.documentElement.classList.toggle("dark", savedTheme === "dark")
     const savedLanguage = (localStorage.getItem("language") || "zh") as Language
     setLanguage(savedLanguage)
-    loadModelsFromFile().then(loaded => { setModels(loaded); setIsLoading(false) })
-  }, [])
+
+    if (!modelId) {
+      setIsLoading(false)
+      return
+    }
+
+    loadModelById(modelId)
+      .then(async loaded => {
+        setModel(loaded)
+        if (loaded?.architecture) {
+          try {
+            setArchEntry(await loadArchitecture(loaded.architecture))
+          } catch {
+            setArchEntry(null)
+          }
+        }
+      })
+      .finally(() => setIsLoading(false))
+  }, [modelId])
 
   const handleThemeToggle = () => {
     const newTheme = theme === "dark" ? "light" : "dark"
@@ -170,8 +178,8 @@ export function ModelCardPage() {
       <PlatformLink key="hf" href={model.huggingfaceUrl}
         icon={<HuggingFaceIcon.Color size={17} />} label="HuggingFace" />
     ),
-    model.modelScopeUrl && (
-      <PlatformLink key="ms" href={model.modelScopeUrl}
+    model.modelscopeUrl && (
+      <PlatformLink key="ms" href={model.modelscopeUrl}
         icon={<ModelScopeIcon.Color size={17} />} label="ModelScope" />
     ),
     model.arxivUrl && (
@@ -242,9 +250,7 @@ export function ModelCardPage() {
                   style={{ background: "rgba(99,102,241,0.15)", color: "#818cf8" }}>MoE</span>
               )}
               {model.architecture && (() => {
-                const archEntry = findArchEntry(model.architecture)
                 const isClosed = !archEntry
-                const isPlaceholder = archEntry?.placeholder
 
                 const badge = (
                   <span className="inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs text-muted-foreground">
@@ -266,23 +272,8 @@ export function ModelCardPage() {
                   )
                 }
 
-                if (isPlaceholder) {
-                  return (
-                    <TooltipProvider delayDuration={200}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Link to={`/arch/${archEntry!.id}`}>{badge}</Link>
-                        </TooltipTrigger>
-                        <TooltipContent side="top" className="text-xs">
-                          {isZh ? "架构图即将推出" : "Diagram coming soon"}
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  )
-                }
-
                 return (
-                  <Link to={`/arch/${archEntry!.id}`}
+                  <Link to={`/arch/${archEntry.id}`}
                     className="rounded-md border px-2 py-0.5 text-xs text-muted-foreground hover:border-foreground/50 hover:text-foreground transition-colors cursor-pointer">
                     {model.architecture}
                   </Link>

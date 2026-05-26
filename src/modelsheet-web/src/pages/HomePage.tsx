@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import type { ModelInfo, ColumnConfig, ComplexityLevel } from "@/lib/types"
+import type { ModelInfo, ColumnConfig, ComplexityLevel, SortConfig } from "@/lib/types"
 import type { Language } from "@/lib/i18n"
 import {
   searchModels,
@@ -10,7 +10,6 @@ import {
   COMPLEXITY_PRESETS,
   saveSearchState,
   loadSearchState,
-  clearSearchState,
 } from "@/lib/model-data"
 import type { SearchResult } from "@/lib/model-data"
 import { getTranslations } from "@/lib/i18n"
@@ -21,8 +20,16 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { LanguageToggle } from "@/components/language-toggle"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
-import { Search } from "lucide-react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Building2, ChevronDown, GitCompareArrows, Network, Search, SlidersHorizontal } from "lucide-react"
+
+const DEFAULT_SORT_CONFIG: SortConfig = { key: "createdAt", direction: "desc" }
 
 export function HomePage() {
   const navigate = useNavigate()
@@ -41,37 +48,83 @@ export function HomePage() {
   const [showFieldSelector, setShowFieldSelector] = useState(false)
   const [customFields, setCustomFields] = useState<string[]>([])
   const [searchTerm, setSearchTerm] = useState("")
+  const [sortConfig, setSortConfig] = useState<SortConfig>(DEFAULT_SORT_CONFIG)
   const searchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [itemsPerPage] = useState(30)
 
   // ─── API search ──────────────────────────────────────────────────────────
 
-  const doSearch = useCallback(async (q: string, page: number, append: boolean = false) => {
+  const doSearch = useCallback(async (
+    q: string,
+    page: number,
+    append: boolean = false,
+    nextSort: SortConfig = DEFAULT_SORT_CONFIG,
+  ) => {
     setIsSearching(true)
     try {
-      const result: SearchResult = await searchModels(q, page, itemsPerPage)
+      const result: SearchResult = await searchModels(q, page, itemsPerPage, nextSort)
       setModels(prev => append ? [...prev, ...result.items] : result.items)
       setTotalCount(result.total)
       setCurrentPage(page)
-      setHasMore(page < result.totalPages)
-      saveSearchState(q, page)
+      setHasMore(page < Math.ceil(result.total / itemsPerPage))
+      saveSearchState(q, page, nextSort)
     } finally {
       setIsSearching(false)
     }
   }, [itemsPerPage])
 
+  const restoreSearch = useCallback(async (
+    q: string,
+    savedPage: number,
+    nextSort: SortConfig = DEFAULT_SORT_CONFIG,
+  ) => {
+    const page = Math.max(1, savedPage || 1)
+    setIsSearching(true)
+    try {
+      const targetItems = page * itemsPerPage
+      const restoreLimit = 100
+      const restoredItems: ModelInfo[] = []
+      let total = 0
+      let requestPage = 1
+
+      while (restoredItems.length < targetItems) {
+        const result: SearchResult = await searchModels(q, requestPage, restoreLimit, nextSort)
+        total = result.total
+        restoredItems.push(...result.items)
+        if (result.items.length === 0 || restoredItems.length >= total) break
+        requestPage += 1
+      }
+
+      const items = restoredItems.slice(0, targetItems)
+      const totalPages = Math.ceil(total / itemsPerPage)
+      const restoredPage = Math.max(1, Math.min(Math.ceil(items.length / itemsPerPage), totalPages || 1))
+      setModels(items)
+      setTotalCount(total)
+      setCurrentPage(restoredPage)
+      setHasMore(items.length < total)
+      saveSearchState(q, restoredPage, nextSort)
+    } finally {
+      setIsSearching(false)
+    }
+  }, [itemsPerPage])
+
+  const handleSortChange = useCallback((nextSort: SortConfig) => {
+    setSortConfig(nextSort)
+    doSearch(searchTerm, 1, false, nextSort)
+  }, [doSearch, searchTerm])
+
   const handleSearch = useCallback((value: string) => {
     setSearchTerm(value)
     if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current)
     searchDebounceRef.current = setTimeout(() => {
-      doSearch(value, 1)
+      doSearch(value, 1, false, sortConfig)
     }, 300)
-  }, [doSearch])
+  }, [doSearch, sortConfig])
 
   const loadMore = useCallback(() => {
     if (!hasMore || isSearching) return
-    doSearch(searchTerm, currentPage + 1, true)
-  }, [hasMore, isSearching, searchTerm, currentPage, doSearch])
+    doSearch(searchTerm, currentPage + 1, true, sortConfig)
+  }, [hasMore, isSearching, searchTerm, currentPage, sortConfig, doSearch])
 
   // ─── Init ────────────────────────────────────────────────────────────────
 
@@ -99,25 +152,27 @@ export function HomePage() {
     // Restore search state if returning from detail page
     const savedState = loadSearchState()
     if (savedState) {
+      const restoredSort = savedState.sortConfig ?? DEFAULT_SORT_CONFIG
       setSearchTerm(savedState.term)
-      doSearch(savedState.term, savedState.page)
+      setSortConfig(restoredSort)
+      restoreSearch(savedState.term, savedState.page, restoredSort)
       setIsLoading(false)
     } else {
       // First load — show initial batch (browse mode)
       doSearch("", 1)
       setIsLoading(false)
     }
-  }, [doSearch])
+  }, [doSearch, restoreSearch])
 
   // ─── Save state before navigating away ────────────────────────────────
 
   const handleModelClick = useCallback((model: ModelInfo) => {
-    saveSearchState(searchTerm, currentPage)
+    saveSearchState(searchTerm, currentPage, sortConfig)
     if (model.id?.includes("/")) {
       const [org, name] = model.id.split("/")
       navigate(`/${org}/${name}`)
     }
-  }, [searchTerm, currentPage, navigate])
+  }, [searchTerm, currentPage, sortConfig, navigate])
 
   // ─── Rest ────────────────────────────────────────────────────────────────
 
@@ -186,6 +241,46 @@ export function HomePage() {
   }
 
   const t = getTranslations(language)
+  const complexityLabels: Record<ComplexityLevel, string> = {
+    simple: language === "zh" ? "简单" : "Simple",
+    enthusiast: language === "zh" ? "爱好者" : "Enthusiast",
+    developer: language === "zh" ? "开发者" : "Developer",
+    custom: language === "zh" ? "自定义" : "Custom",
+  }
+
+  const renderComplexityMenu = (compact = false) => (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          size="sm"
+          className={compact ? "h-9 w-[7.25rem] justify-between px-2.5 text-xs" : "h-9 min-w-[8.5rem] justify-between px-3"}
+        >
+          <SlidersHorizontal className="h-4 w-4" />
+          <span>{complexityLabels[complexityLevel]}</span>
+          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="min-w-36">
+        <DropdownMenuRadioGroup
+          value={complexityLevel}
+          onValueChange={(value) => handleComplexityChange(value as ComplexityLevel)}
+        >
+          {(Object.keys(complexityLabels) as ComplexityLevel[]).map((level) => (
+            <DropdownMenuRadioItem
+              key={level}
+              value={level}
+              onSelect={() => {
+                if (level === "custom" && complexityLevel === "custom") setShowFieldSelector(true)
+              }}
+            >
+              {complexityLabels[level]}
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
 
   if (isLoading) {
     return (
@@ -225,54 +320,53 @@ export function HomePage() {
     <div className="h-screen flex flex-col overflow-hidden bg-background">
       {/* Header */}
       <header className="shrink-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        {/* Desktop header row */}
-        <div className="container hidden md:flex h-16 items-center justify-between">
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold">{t.nav.title}</h1>
-            <span className="text-sm text-muted-foreground">
-              {language === "zh" ? `共 ${totalCount} 个模型` : `${totalCount} models`}
+        {/* Desktop header */}
+        <div className="container hidden md:flex h-14 items-center gap-3">
+          <div className="flex shrink-0 items-baseline gap-2">
+            <h1 className="text-xl font-bold leading-none">{t.nav.title}</h1>
+            <span className="rounded border bg-muted/40 px-2 py-0.5 text-xs text-muted-foreground">
+              {language === "zh" ? `${totalCount} 个` : `${totalCount}`}
             </span>
           </div>
-          <div className="flex items-center gap-3 flex-1 justify-center max-w-sm mx-8">
-            <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input
-                placeholder={language === "zh" ? "搜索模型..." : "Search models..."}
-                value={searchTerm}
-                onChange={(e) => handleSearch(e.target.value)}
-                className="pl-9 h-9"
-              />
-            </div>
+
+          <div className="relative min-w-[220px] max-w-xl flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Input
+              placeholder={language === "zh" ? "搜索模型..." : "Search models..."}
+              value={searchTerm}
+              onChange={(e) => handleSearch(e.target.value)}
+              className="h-9 pl-9"
+            />
           </div>
-          <div className="flex items-center gap-3">
-            <ToggleGroup
-              type="single"
-              value={complexityLevel}
-              onValueChange={(value) => { if (value) handleComplexityChange(value as ComplexityLevel) }}
-            >
-              <ToggleGroupItem value="simple" className="h-8 px-3 text-sm">
-                {language === "zh" ? "简单" : "Simple"}
-              </ToggleGroupItem>
-              <ToggleGroupItem value="enthusiast" className="h-8 px-3 text-sm">
-                {language === "zh" ? "爱好者" : "Enthusiast"}
-              </ToggleGroupItem>
-              <ToggleGroupItem value="developer" className="h-8 px-3 text-sm">
-                {language === "zh" ? "开发者" : "Developer"}
-              </ToggleGroupItem>
-              <ToggleGroupItem
-                value="custom"
-                className="h-8 px-3 text-sm"
-                onClick={() => { if (complexityLevel === "custom") setShowFieldSelector(true) }}
-              >
-                {language === "zh" ? "自定义" : "Custom"}
-              </ToggleGroupItem>
-            </ToggleGroup>
+
+          <div className="flex shrink-0 items-center gap-1.5">
+            {renderComplexityMenu()}
+            <div className="mx-1 h-5 w-px bg-border" />
+            <Link to="/providers">
+              <Button variant="ghost" size="sm" className="h-9 px-2.5" title={t.nav.providers} aria-label={t.nav.providers}>
+                <Building2 className="h-4 w-4" />
+                <span className="hidden xl:inline">{t.nav.providers}</span>
+              </Button>
+            </Link>
             <Link to="/arch">
-              <Button variant="outline" size="sm">{language === "zh" ? "架构图鉴" : "Arch Gallery"}</Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-9 px-2.5"
+                title={language === "zh" ? "架构图鉴" : "Arch Gallery"}
+                aria-label={language === "zh" ? "架构图鉴" : "Arch Gallery"}
+              >
+                <Network className="h-4 w-4" />
+                <span className="hidden xl:inline">{language === "zh" ? "架构图鉴" : "Arch Gallery"}</span>
+              </Button>
             </Link>
             <Link to="/compare">
-              <Button variant="outline" size="sm">{t.nav.compareModels}</Button>
+              <Button variant="ghost" size="sm" className="h-9 px-2.5" title={t.nav.compareModels} aria-label={t.nav.compareModels}>
+                <GitCompareArrows className="h-4 w-4" />
+                <span className="hidden xl:inline">{t.nav.compareModels}</span>
+              </Button>
             </Link>
+            <div className="mx-1 h-5 w-px bg-border" />
             <ThemeToggle theme={theme} onToggle={handleThemeToggle} />
             <LanguageToggle
               currentLanguage={language}
@@ -281,29 +375,51 @@ export function HomePage() {
           </div>
         </div>
 
-        {/* Mobile header row */}
-        <div className="container flex md:hidden h-14 items-center gap-2">
-          <h1 className="text-lg font-bold shrink-0">{t.nav.title}</h1>
-          <div className="relative flex-1 min-w-0 mx-2">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              placeholder={language === "zh" ? "搜索..." : "Search..."}
-              value={searchTerm}
-              onChange={(e) => handleSearch(e.target.value)}
-              className="pl-9 h-9 text-sm"
-            />
+        {/* Mobile header */}
+        <div className="container flex md:hidden flex-col gap-2 py-2">
+          <div className="flex h-9 items-center gap-2">
+            <h1 className="text-lg font-bold shrink-0">{t.nav.title}</h1>
+            <span className="shrink-0 rounded border bg-muted/40 px-1.5 py-0.5 text-[11px] text-muted-foreground">
+              {language === "zh" ? `${totalCount} 个` : totalCount}
+            </span>
+            <div className="min-w-0 flex-1" />
+            <Link to="/providers">
+              <Button variant="ghost" size="sm" className="h-8 w-8 px-0" title={t.nav.providers} aria-label={t.nav.providers}>
+                <Building2 className="h-4 w-4" />
+              </Button>
+            </Link>
+            <Link to="/arch">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 px-0"
+                title={language === "zh" ? "架构图鉴" : "Arch Gallery"}
+                aria-label={language === "zh" ? "架构图鉴" : "Arch Gallery"}
+              >
+                <Network className="h-4 w-4" />
+              </Button>
+            </Link>
+            <ThemeToggle theme={theme} onToggle={handleThemeToggle} />
+            <LanguageToggle currentLanguage={language} onLanguageChange={handleLanguageChange} />
           </div>
-          <Link to="/arch">
-            <Button variant="outline" size="sm" className="text-xs px-2">{language === "zh" ? "架构" : "Arch"}</Button>
-          </Link>
-          <ThemeToggle theme={theme} onToggle={handleThemeToggle} />
-          <LanguageToggle currentLanguage={language} onLanguageChange={handleLanguageChange} />
+          <div className="flex items-center gap-2">
+            <div className="relative flex-1 min-w-0">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
+              <Input
+                placeholder={language === "zh" ? "搜索..." : "Search..."}
+                value={searchTerm}
+                onChange={(e) => handleSearch(e.target.value)}
+                className="pl-9 h-9 text-sm"
+              />
+            </div>
+            {renderComplexityMenu(true)}
+          </div>
         </div>
       </header>
 
       {/* Main Content */}
       {/* Desktop: scrollable data table */}
-      <main className="hidden md:flex flex-1 overflow-hidden flex-col container pt-4 pb-4">
+      <main className="hidden md:flex flex-1 overflow-hidden flex-col container pt-3 pb-3">
         <ModelTable
           models={models}
           totalCount={totalCount}
@@ -321,6 +437,8 @@ export function HomePage() {
           onClearSelection={() => setSelectedModels(new Set())}
           onCompare={handleCompare}
           searchTerm={searchTerm}
+          sortConfig={sortConfig}
+          onSortChange={handleSortChange}
           onModelClick={handleModelClick}
         />
       </main>
@@ -337,6 +455,9 @@ export function HomePage() {
           language={language}
           complexityLevel={complexityLevel}
           onComplexityChange={(level) => setComplexityLevel(level as ComplexityLevel)}
+          customFields={customFields}
+          sortConfig={sortConfig}
+          onSortChange={handleSortChange}
           onModelClick={handleModelClick}
         />
       </main>

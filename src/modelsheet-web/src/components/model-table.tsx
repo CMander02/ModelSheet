@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react"
+import { useState, useMemo, useCallback, useEffect, useRef } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { providerSlug, isNewThisWeek } from "@/lib/utils"
 import { ArrowUpDown, ArrowUp, ArrowDown, Info } from "lucide-react"
@@ -16,6 +16,10 @@ import {
 import type { ModelInfo, ColumnConfig, ComplexityLevel, SortConfig } from "@/lib/types"
 import { COMPLEXITY_PRESETS } from "@/lib/model-data"
 import type { Language } from "@/lib/i18n"
+
+const PULL_LOAD_THRESHOLD = 72
+const PULL_MAX = 112
+const PULL_PRIME_WHEELS = 2
 
 interface ModelTableProps {
   models: ModelInfo[]
@@ -35,11 +39,12 @@ interface ModelTableProps {
   onCompare?: () => void
   searchTerm?: string
   onModelClick?: (model: ModelInfo) => void
+  sortConfig: SortConfig
+  onSortChange: (sortConfig: SortConfig) => void
 }
 
 export function ModelTable({
   models,
-  totalCount,
   hasMore,
   isLoadingMore,
   onLoadMore,
@@ -53,12 +58,21 @@ export function ModelTable({
   onCompare,
   language,
   onModelClick,
+  sortConfig,
+  onSortChange,
 }: ModelTableProps) {
   const navigate = useNavigate()
-  const [sortConfig, setSortConfig] = useState<SortConfig>({
-    key: "createdAt",
-    direction: "desc",
-  })
+  const scrollRef = useRef<HTMLDivElement | null>(null)
+  const autoLoadLockRef = useRef(false)
+  const bottomPullEventsRef = useRef(0)
+  const pullDistanceRef = useRef(0)
+  const pullResetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [pullDistance, setPullDistanceState] = useState(0)
+  const setPullDistance = useCallback((value: number) => {
+    const next = Math.max(0, Math.min(PULL_MAX, value))
+    pullDistanceRef.current = next
+    setPullDistanceState(next)
+  }, [])
 
   // Get visible columns based on complexity
   const preset = COMPLEXITY_PRESETS[currentComplexity]
@@ -67,46 +81,12 @@ export function ModelTable({
     [columns, preset.columns]
   )
 
-  // Sort models (client-side, current page only)
-  const sortedModels = useMemo(() => {
-    if (!sortConfig.key) return models
-
-    return [...models].sort((a, b) => {
-      const aVal = a[sortConfig.key!]
-      const bVal = b[sortConfig.key!]
-
-      if (aVal == null) return 1
-      if (bVal == null) return -1
-
-      if (typeof aVal === "number" && typeof bVal === "number") {
-        return sortConfig.direction === "asc" ? aVal - bVal : bVal - aVal
-      }
-
-      if (sortConfig.key!.includes("Date") || sortConfig.key!.includes("date")) {
-        const aDate = new Date(aVal as string).getTime()
-        const bDate = new Date(bVal as string).getTime()
-        return sortConfig.direction === "asc" ? aDate - bDate : bDate - aDate
-      }
-
-      const aStr = String(aVal).toLowerCase()
-      const bStr = String(bVal).toLowerCase()
-      return sortConfig.direction === "asc"
-        ? aStr.localeCompare(bStr)
-        : bStr.localeCompare(aStr)
-    })
-  }, [models, sortConfig])
-
-  const handleSort = (key: string) => {
-    setSortConfig((prev) => {
-      if (prev.key === key) {
-        if (prev.direction === "asc") {
-          return { key, direction: "desc" }
-        } else {
-          return { key: null, direction: "asc" }
-        }
-      }
-      return { key, direction: "asc" }
-    })
+  const handleSort = (column: ColumnConfig) => {
+    const defaultDirection = column.type === "string" ? "asc" : "desc"
+    const direction = sortConfig.key === column.key
+      ? (sortConfig.direction === "asc" ? "desc" : "asc")
+      : defaultDirection
+    onSortChange({ key: column.key, direction })
   }
 
   const handleRowClick = useCallback((model: ModelInfo, e: React.MouseEvent) => {
@@ -119,6 +99,83 @@ export function ModelTable({
       navigate(`/${org}/${name}`)
     }
   }, [navigate, onModelClick])
+
+  useEffect(() => {
+    if (!isLoadingMore) {
+      autoLoadLockRef.current = false
+      setPullDistance(0)
+    }
+  }, [isLoadingMore, models.length, setPullDistance])
+
+  useEffect(() => {
+    return () => {
+      if (pullResetTimerRef.current) clearTimeout(pullResetTimerRef.current)
+    }
+  }, [])
+
+  const schedulePullReset = useCallback(() => {
+    if (pullResetTimerRef.current) clearTimeout(pullResetTimerRef.current)
+    pullResetTimerRef.current = setTimeout(() => setPullDistance(0), 520)
+  }, [setPullDistance])
+
+  const triggerPullLoad = useCallback(() => {
+    if (!hasMore || isLoadingMore || autoLoadLockRef.current) return
+    autoLoadLockRef.current = true
+    setPullDistance(PULL_MAX)
+    onLoadMore()
+  }, [hasMore, isLoadingMore, onLoadMore, setPullDistance])
+
+  const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    const container = e.currentTarget
+    const remaining = container.scrollHeight - container.scrollTop - container.clientHeight
+    if (remaining > 24 && pullDistanceRef.current > 0 && !isLoadingMore) {
+      bottomPullEventsRef.current = 0
+      setPullDistance(0)
+    } else if (remaining > 24) {
+      bottomPullEventsRef.current = 0
+    }
+  }, [isLoadingMore, setPullDistance])
+
+  const handleWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
+    const container = e.currentTarget
+    const remaining = container.scrollHeight - container.scrollTop - container.clientHeight
+    const isAtBottom = remaining <= 4
+
+    if (!isAtBottom || !hasMore || isLoadingMore) {
+      if (!isAtBottom) bottomPullEventsRef.current = 0
+      if (pullDistanceRef.current > 0 && e.deltaY < 0) {
+        setPullDistance(pullDistanceRef.current + e.deltaY * 0.25)
+      }
+      return
+    }
+
+    if (e.deltaY <= 0) {
+      bottomPullEventsRef.current = 0
+      setPullDistance(pullDistanceRef.current + e.deltaY * 0.35)
+      schedulePullReset()
+      return
+    }
+
+    e.preventDefault()
+    if (pullResetTimerRef.current) clearTimeout(pullResetTimerRef.current)
+    bottomPullEventsRef.current += 1
+
+    if (bottomPullEventsRef.current <= PULL_PRIME_WHEELS) {
+      setPullDistance(Math.min(18, bottomPullEventsRef.current * 7))
+      schedulePullReset()
+      return
+    }
+
+    const next = pullDistanceRef.current + Math.min(18, e.deltaY * 0.16)
+    setPullDistance(next)
+
+    if (next >= PULL_LOAD_THRESHOLD) {
+      bottomPullEventsRef.current = 0
+      triggerPullLoad()
+    } else {
+      schedulePullReset()
+    }
+  }, [hasMore, isLoadingMore, schedulePullReset, setPullDistance, triggerPullLoad])
 
   const formatValue = (value: any, type: string) => {
     if (value === null || value === undefined) return "-"
@@ -163,8 +220,6 @@ export function ModelTable({
           custom: "自定义",
           searchModels: "搜索模型...",
           noResults: "没有找到匹配的模型",
-          loadMore: "加载更多",
-          loading: "加载中...",
         }
       : {
           modelsTotal: (count: number) => `${count} models in total`,
@@ -178,10 +233,10 @@ export function ModelTable({
           custom: "Custom",
           searchModels: "Search models...",
           noResults: "No matching models found",
-          loadMore: "Load More",
-          loading: "Loading...",
         }
   }, [language])
+
+  const pullProgress = Math.min(1, pullDistance / PULL_LOAD_THRESHOLD)
 
   return (
     <div className="flex flex-col h-full gap-2">
@@ -212,9 +267,12 @@ export function ModelTable({
       )}
 
       {/* Table Container */}
-      <div className="flex-1 rounded-md border overflow-hidden bg-card min-h-0 flex flex-col">
+      <div className="relative flex-1 rounded-md border overflow-hidden bg-card min-h-0 flex flex-col shadow-xs">
         <div
-          className="flex-1 overflow-auto modelsheet-scroll"
+          ref={scrollRef}
+          className="flex-1 overflow-auto modelsheet-scroll pb-16"
+          onScroll={handleScroll}
+          onWheel={handleWheel}
           style={{ scrollbarGutter: 'stable' }}
         >
           <table className="w-full caption-bottom text-sm border-collapse">
@@ -222,7 +280,7 @@ export function ModelTable({
               <tr>
                 {onModelSelect && (
                   <th
-                    className="h-12 px-4 text-left align-middle font-medium text-muted-foreground sticky left-0 z-30 bg-card w-12"
+                    className="h-10 px-3 text-left align-middle font-medium text-muted-foreground sticky left-0 z-30 bg-card w-12"
                     style={{ minWidth: '48px', maxWidth: '48px' }}
                   >
                     <span className="sr-only">选择</span>
@@ -231,7 +289,7 @@ export function ModelTable({
                 {visibleColumns.map((column, index) => (
                   <th
                     key={column.key}
-                    className={`h-12 px-4 text-left align-middle font-medium text-muted-foreground whitespace-nowrap ${
+                    className={`h-10 px-3 text-left align-middle font-medium text-muted-foreground whitespace-nowrap ${
                       index === 0
                         ? `sticky z-30 bg-card`
                         : ''
@@ -246,8 +304,8 @@ export function ModelTable({
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="-ml-3 h-8 data-[state=open]:bg-accent"
-                        onClick={() => handleSort(column.key)}
+                        className="-ml-2 h-7 px-2 text-xs data-[state=open]:bg-accent"
+                        onClick={() => handleSort(column)}
                       >
                         {column.label}
                         {sortConfig.key === column.key ? (
@@ -268,7 +326,7 @@ export function ModelTable({
               </tr>
             </thead>
             <tbody>
-              {sortedModels.length === 0 ? (
+              {models.length === 0 ? (
                 <tr>
                   <td
                     colSpan={visibleColumns.length + (onModelSelect ? 1 : 0)}
@@ -278,7 +336,7 @@ export function ModelTable({
                   </td>
                 </tr>
               ) : (
-                sortedModels.map((model) => (
+                models.map((model) => (
                   <tr
                     key={model.id}
                     className="group border-b transition-colors cursor-pointer"
@@ -286,7 +344,7 @@ export function ModelTable({
                   >
                     {onModelSelect && (
                       <td
-                        className="p-4 align-middle sticky left-0 z-10 bg-card group-hover:bg-muted transition-colors"
+                        className="px-3 py-2.5 align-middle sticky left-0 z-10 bg-card group-hover:bg-muted transition-colors"
                         style={{ minWidth: '48px', maxWidth: '48px' }}
                       >
                         <Checkbox
@@ -299,7 +357,7 @@ export function ModelTable({
                     {visibleColumns.map((column, colIndex) => (
                       <td
                         key={column.key}
-                        className={`p-4 align-middle bg-card group-hover:bg-muted transition-colors ${
+                        className={`px-3 py-2.5 align-middle bg-card group-hover:bg-muted transition-colors ${
                           colIndex === 0 ? `sticky z-10` : ''
                         } ${column.key === "name" ? 'relative overflow-hidden' : ''}`}
                         style={colIndex === 0 ? {
@@ -351,6 +409,14 @@ export function ModelTable({
                             <ProviderBrandIcon provider={String(model[column.key] ?? "")} />
                             <span>{formatValue(model[column.key], column.type)}</span>
                           </Link>
+                        ) : column.key === "architecture" && model.architecture ? (
+                          <Link
+                            to={`/arch/${encodeURIComponent(model.architecture)}`}
+                            className="inline-flex max-w-full items-center rounded-md border border-transparent px-1.5 py-0.5 font-mono text-xs text-foreground/80 transition-colors hover:border-primary/25 hover:bg-primary/5 hover:text-primary"
+                            onClick={e => e.stopPropagation()}
+                          >
+                            <span className="truncate">{model.architecture}</span>
+                          </Link>
                         ) : column.key === "huggingfaceUrl" && model.huggingfaceUrl ? (
                           <a
                             href={model.huggingfaceUrl}
@@ -379,32 +445,28 @@ export function ModelTable({
               )}
             </tbody>
           </table>
+
         </div>
 
-        {/* Load more indicator */}
-        {hasMore && (
-          <div className="shrink-0 border-t px-4 py-3 flex items-center justify-center">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onLoadMore}
-              disabled={isLoadingMore}
-            >
-              {isLoadingMore ? t.loading : t.loadMore}
-              {totalCount > models.length && (
-                <span className="ml-1 text-muted-foreground font-normal">
-                  ({models.length}/{totalCount})
-                </span>
-              )}
-            </Button>
-          </div>
-        )}
-
-        {!hasMore && models.length > 0 && (
-          <div className="shrink-0 border-t px-4 py-2 flex items-center justify-center">
-            <span className="text-xs text-muted-foreground">
-              {t.modelsTotal(totalCount)}
-            </span>
+        {models.length > 0 && (
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 z-30 h-14 overflow-hidden rounded-b-md bg-gradient-to-t from-card via-card/95 to-transparent"
+            aria-live="polite"
+          >
+            {hasMore ? (
+              <div className="relative h-full">
+                <div
+                  className="absolute inset-x-8 bottom-0 h-10 rounded-full blur-2xl transition-opacity duration-200"
+                  style={{
+                    opacity: isLoadingMore ? 0.88 : 0.14 + pullProgress * 0.6,
+                    background: "radial-gradient(ellipse at center, rgba(2,132,199,0.68), rgba(8,47,73,0.34) 46%, transparent 74%)",
+                    transform: `translateY(${12 - pullProgress * 9}px) scaleX(${0.65 + pullProgress * 0.42})`,
+                  }}
+                />
+              </div>
+            ) : (
+              <div />
+            )}
           </div>
         )}
       </div>

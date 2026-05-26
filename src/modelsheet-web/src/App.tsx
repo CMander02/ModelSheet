@@ -5,6 +5,7 @@ import { ModelCardPage } from "@/pages/ModelCardPage"
 import { ArchPage } from "@/pages/ArchPage"
 import { ArchDetailPage } from "@/pages/ArchDetailPage"
 import { ProviderPage } from "@/pages/ProviderPage"
+import { ProvidersPage } from "@/pages/ProvidersPage"
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/compare" element={<ComparePage />} />
         <Route path="/arch" element={<ArchPage />} />
         <Route path="/arch/:archId" element={<ArchDetailPage />} />
+        <Route path="/providers" element={<ProvidersPage />} />
         <Route path="/:providerSlug" element={<ProviderPage />} />
         <Route path="/:org/:modelName" element={<ModelCardPage />} />
       </Routes>

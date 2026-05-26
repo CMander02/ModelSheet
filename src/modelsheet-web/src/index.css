@@ -200,8 +200,8 @@
   }
   .modelsheet-scroll::-webkit-scrollbar-track {
     background: transparent;
-    /* 表头高度 48px，scrollbar track 从表头下方开始 */
-    margin-top: 48px;
+    /* 表头高度 40px，scrollbar track 从表头下方开始 */
+    margin-top: 40px;
   }
   .modelsheet-scroll::-webkit-scrollbar-thumb {
     background: var(--border);

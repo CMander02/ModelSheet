@@ -1,0 +1,76 @@
+id: qwen2
+family: Qwen2 / Qwen2.5
+era: "2024"
+type: decoder
+normPlacement: pre
+description:
+  zh: "引入 GQA，移除 LogN/动态 NTK，部分层支持 Sliding Window Attention。SwiGLU FFN，QKV 带 bias。"
+  en: "Introduces GQA, removes LogN/NTK tricks, and supports optional sliding-window attention in some layers. SwiGLU FFN with QKV bias."
+paperUrl: https://arxiv.org/abs/2407.10671
+hfOrg: Qwen/Qwen2.5-7B
+aliases:
+  - qwen2
+  - qwen2_moe
+  - qwen2_vl
+  - qwen2_5_vl
+  - qwen2_5_omni
+defaultParams:
+  numLayers: 28
+  numHeads: 28
+  numKvHeads: 4
+  hiddenSize: 3584
+diagram:
+  subtitle: "hidden: {{hiddenSize}} · Q:{{numHeads}} KV:{{numKvHeads}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Transformer Block
+      badge: "x{{numLayers}}"
+      color: steel
+      sub: "{{numLayers}} identical layers"
+      children:
+        - id: ln1
+          type: leaf
+          label: RMSNorm
+          sub: pre-norm
+          color: norm
+        - id: attn
+          type: leaf
+          label: "GQA Q:{{numHeads}} KV:{{numKvHeads}}"
+          sub: RoPE · QKV bias · optional sliding window
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: ln2
+          type: leaf
+          label: RMSNorm
+          sub: pre-norm
+          color: norm
+        - id: ffn
+          type: leaf
+          label: SwiGLU FFN
+          sub: gate · up -> SiLU -> down
+          color: ffn
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: lnf
+      type: leaf
+      label: Final RMSNorm
+      color: norm
+    - id: lmh
+      type: leaf
+      label: LM Head
+      sub: tied to token emb
+      color: out

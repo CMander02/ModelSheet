@@ -2,7 +2,7 @@ import { useMemo, useState, useCallback, useRef, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { providerSlug, isNewThisWeek } from "@/lib/utils"
 import { ArrowUpDown, Check, ChevronDown } from "lucide-react"
-import type { ModelInfo } from "@/lib/types"
+import type { ModelInfo, SortConfig } from "@/lib/types"
 import type { Language } from "@/lib/i18n"
 import { ModelBrandIcon, ProviderBrandIcon } from "@/components/brand-icon"
 import { ModalityIcons } from "@/components/modality-icons"
@@ -55,8 +55,12 @@ const CARD_FIELD_DEFS: CardFieldDef[] = [
   { key: "numExperts",       labelZh: "专家数",   labelEn: "Experts",  group: "属性" },
   { key: "createdAt",        labelZh: "发布时间", labelEn: "Released", group: "属性" },
 ]
+const CARD_FIELD_KEYS = new Set<CardField>(CARD_FIELD_DEFS.map(def => def.key))
 
 const DEFAULT_CARD_FIELDS: CardField[] = ["totalParameters", "activeParameters", "contextLength", "inputModalities", "outputModalities"]
+const PULL_LOAD_THRESHOLD = 72
+const PULL_MAX = 112
+const PULL_PRIME_WHEELS = 2
 
 // ─── complexity presets (which card fields to show) ────────────────────────
 
@@ -187,7 +191,17 @@ function ModelCard({ model, language, selected, onSelect, onNavigate, cardFields
             {metricFields.map(field => (
               <div key={field}>
                 <p className="text-[11px] text-muted-foreground">{getMetricLabel(field)}</p>
-                <p className="text-sm font-semibold tabular-nums">{renderMetricValue(field)}</p>
+                {field === "architecture" && model.architecture ? (
+                  <Link
+                    to={`/arch/${encodeURIComponent(model.architecture)}`}
+                    className="inline-flex max-w-[8rem] rounded-md border border-transparent px-1.5 py-0.5 font-mono text-xs font-semibold text-foreground/80 transition-colors hover:border-primary/25 hover:bg-primary/5 hover:text-primary"
+                    onClick={e => e.stopPropagation()}
+                  >
+                    <span className="truncate">{model.architecture}</span>
+                  </Link>
+                ) : (
+                  <p className="text-sm font-semibold tabular-nums">{renderMetricValue(field)}</p>
+                )}
               </div>
             ))}
           </div>
@@ -240,6 +254,9 @@ interface MobileModelListProps {
   language: Language
   complexityLevel?: string
   onComplexityChange?: (level: string) => void
+  customFields?: string[]
+  sortConfig: SortConfig
+  onSortChange: (sortConfig: SortConfig) => void
   onCompare?: (ids: string[]) => void
   onModelClick?: (model: ModelInfo) => void
 }
@@ -252,65 +269,160 @@ export function MobileModelList({
   onLoadMore,
   language,
   complexityLevel = "enthusiast",
-  onComplexityChange,
+  customFields,
+  sortConfig,
+  onSortChange,
   onCompare,
   onModelClick,
 }: MobileModelListProps) {
   const navigate = useNavigate()
   const isZh = language === "zh"
 
-  // Sort state
-  const [sortField, setSortField] = useState<SortField>("createdAt")
-  const [sortDir, setSortDir]     = useState<SortDir>("desc")
-
   // Selection state (for compare)
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
 
-  // Card field customisation (custom complexity)
-  const [customCardFields, setCustomCardFields] = useState<CardField[]>(DEFAULT_CARD_FIELDS)
-
   // Sheet open state
-  const [sortSheetOpen, setSortSheetOpen]         = useState(false)
-  const [fieldSheetOpen, setFieldSheetOpen]       = useState(false)
+  const [sortSheetOpen, setSortSheetOpen] = useState(false)
 
-  // Infinite scroll — load more when reaching bottom
+  // Bottom pull loading
   const scrollRef = useRef<HTMLDivElement>(null)
-  const loadMoreTriggerRef = useRef<HTMLDivElement>(null)
+  const autoLoadLockRef = useRef(false)
+  const bottomPullEventsRef = useRef(0)
+  const pullDistanceRef = useRef(0)
+  const pullStartYRef = useRef<number | null>(null)
+  const touchPullActiveRef = useRef(false)
+  const pullResetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const [pullDistance, setPullDistanceState] = useState(0)
 
-  useEffect(() => {
-    const trigger = loadMoreTriggerRef.current
-    if (!trigger || !hasMore || isLoadingMore) return
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          onLoadMore()
-        }
-      },
-      { rootMargin: "200px" }
-    )
-    observer.observe(trigger)
-    return () => observer.disconnect()
-  }, [hasMore, isLoadingMore, onLoadMore])
+  const customCardFields = useMemo(() => {
+    const selected = customFields?.filter((key): key is CardField => CARD_FIELD_KEYS.has(key as CardField)) ?? []
+    return selected.length > 0 ? selected : DEFAULT_CARD_FIELDS
+  }, [customFields])
 
   // Active card fields
   const cardFields: CardField[] = complexityLevel === "custom"
     ? customCardFields
     : (COMPLEXITY_FIELD_MAP[complexityLevel] ?? COMPLEXITY_FIELD_MAP.enthusiast)
 
-  // Sort (client-side, current page only)
-  const sortedModels = useMemo(() => {
-    return [...models].sort((a, b) => {
-      const av = a[sortField], bv = b[sortField]
-      if (av == null) return 1
-      if (bv == null) return -1
-      if (typeof av === "number" && typeof bv === "number") {
-        return sortDir === "asc" ? av - bv : bv - av
+  const setPullDistance = useCallback((value: number) => {
+    const next = Math.max(0, Math.min(PULL_MAX, value))
+    pullDistanceRef.current = next
+    setPullDistanceState(next)
+  }, [])
+
+  useEffect(() => {
+    if (!isLoadingMore) {
+      autoLoadLockRef.current = false
+      setPullDistance(0)
+    }
+  }, [isLoadingMore, models.length, setPullDistance])
+
+  useEffect(() => {
+    return () => {
+      if (pullResetTimerRef.current) clearTimeout(pullResetTimerRef.current)
+    }
+  }, [])
+
+  const schedulePullReset = useCallback(() => {
+    if (pullResetTimerRef.current) clearTimeout(pullResetTimerRef.current)
+    pullResetTimerRef.current = setTimeout(() => setPullDistance(0), 520)
+  }, [setPullDistance])
+
+  const triggerPullLoad = useCallback(() => {
+    if (!hasMore || isLoadingMore || autoLoadLockRef.current) return
+    autoLoadLockRef.current = true
+    setPullDistance(PULL_MAX)
+    onLoadMore()
+  }, [hasMore, isLoadingMore, onLoadMore, setPullDistance])
+
+  const handleListScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    const container = e.currentTarget
+    const remaining = container.scrollHeight - container.scrollTop - container.clientHeight
+    if (remaining > 24 && pullDistanceRef.current > 0 && !isLoadingMore) {
+      bottomPullEventsRef.current = 0
+      touchPullActiveRef.current = false
+      setPullDistance(0)
+    } else if (remaining > 24) {
+      bottomPullEventsRef.current = 0
+      touchPullActiveRef.current = false
+    }
+  }, [isLoadingMore, setPullDistance])
+
+  const handleListWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
+    const container = e.currentTarget
+    const remaining = container.scrollHeight - container.scrollTop - container.clientHeight
+    const isAtBottom = remaining <= 4
+
+    if (!isAtBottom || !hasMore || isLoadingMore) {
+      if (!isAtBottom) bottomPullEventsRef.current = 0
+      if (pullDistanceRef.current > 0 && e.deltaY < 0) {
+        setPullDistance(pullDistanceRef.current + e.deltaY * 0.25)
       }
-      const as = String(av), bs = String(bv)
-      return sortDir === "asc" ? as.localeCompare(bs) : bs.localeCompare(as)
-    })
-  }, [models, sortField, sortDir])
+      return
+    }
+
+    if (e.deltaY <= 0) {
+      bottomPullEventsRef.current = 0
+      setPullDistance(pullDistanceRef.current + e.deltaY * 0.35)
+      schedulePullReset()
+      return
+    }
+
+    e.preventDefault()
+    if (pullResetTimerRef.current) clearTimeout(pullResetTimerRef.current)
+    bottomPullEventsRef.current += 1
+
+    if (bottomPullEventsRef.current <= PULL_PRIME_WHEELS) {
+      setPullDistance(Math.min(18, bottomPullEventsRef.current * 7))
+      schedulePullReset()
+      return
+    }
+
+    const next = pullDistanceRef.current + Math.min(18, e.deltaY * 0.16)
+    setPullDistance(next)
+
+    if (next >= PULL_LOAD_THRESHOLD) {
+      bottomPullEventsRef.current = 0
+      triggerPullLoad()
+    } else {
+      schedulePullReset()
+    }
+  }, [hasMore, isLoadingMore, schedulePullReset, setPullDistance, triggerPullLoad])
+
+  const handleTouchStart = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
+    const container = e.currentTarget
+    const remaining = container.scrollHeight - container.scrollTop - container.clientHeight
+    touchPullActiveRef.current = remaining <= 4 && hasMore && !isLoadingMore
+    pullStartYRef.current = e.touches[0]?.clientY ?? null
+  }, [hasMore, isLoadingMore])
+
+  const handleTouchMove = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
+    if (!touchPullActiveRef.current || pullStartYRef.current == null || isLoadingMore) return
+    const currentY = e.touches[0]?.clientY
+    if (currentY == null) return
+
+    const distance = pullStartYRef.current - currentY
+    if (distance <= 0) {
+      setPullDistance(0)
+      return
+    }
+
+    e.preventDefault()
+    if (pullResetTimerRef.current) clearTimeout(pullResetTimerRef.current)
+    const next = Math.min(PULL_MAX, distance * 0.86)
+    setPullDistance(next)
+
+    if (next >= PULL_LOAD_THRESHOLD) {
+      touchPullActiveRef.current = false
+      triggerPullLoad()
+    }
+  }, [isLoadingMore, setPullDistance, triggerPullLoad])
+
+  const handleTouchEnd = useCallback(() => {
+    touchPullActiveRef.current = false
+    pullStartYRef.current = null
+    if (!isLoadingMore) schedulePullReset()
+  }, [isLoadingMore, schedulePullReset])
 
   const handleSelect = useCallback((id: string) => {
     setSelectedIds(prev => {
@@ -339,20 +451,15 @@ export function MobileModelList({
   }
 
   // current sort label
-  const currentSortDef = SORT_OPTIONS.find(o => o.field === sortField)
+  const currentSortDef = SORT_OPTIONS.find(o => o.field === sortConfig.key)
   const sortLabel = currentSortDef ? (isZh ? currentSortDef.labelZh : currentSortDef.labelEn) : ""
 
-  const complexityOptions = [
-    { value: "simple",     zh: "简单",   en: "Simple"    },
-    { value: "enthusiast", zh: "爱好者", en: "Enthusiast" },
-    { value: "developer",  zh: "开发者", en: "Developer"  },
-    { value: "custom",     zh: "自定义", en: "Custom"    },
-  ]
+  const pullProgress = Math.min(1, pullDistance / PULL_LOAD_THRESHOLD)
 
   return (
     <div className="flex flex-col h-full w-full min-w-0 overflow-x-hidden">
       {/* ── Controls bar ── */}
-      <div className="shrink-0 flex items-center gap-2 pb-3 overflow-x-auto">
+      <div className="shrink-0 flex items-center justify-between gap-2 pb-2">
         {/* Sort button */}
         <button
           onClick={() => setSortSheetOpen(true)}
@@ -362,93 +469,56 @@ export function MobileModelList({
           <span>{sortLabel}</span>
           <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
         </button>
-
-        {/* Complexity chips */}
-        <div className="flex gap-1.5">
-          {complexityOptions.map(opt => {
-            const active = complexityLevel === opt.value
-            return (
-              <button
-                key={opt.value}
-                onClick={() => {
-                  if (opt.value === "custom") {
-                    setFieldSheetOpen(true)
-                    onComplexityChange?.("custom")
-                    return
-                  }
-                  onComplexityChange?.(opt.value)
-                }}
-                className={`shrink-0 rounded-full px-3 h-9 text-sm font-medium transition-colors ${
-                  active
-                    ? "bg-foreground text-background"
-                    : "border border-border bg-card text-foreground"
-                }`}
-              >
-                {isZh ? opt.zh : opt.en}
-              </button>
-            )
-          })}
-        </div>
-      </div>
-
-      {/* ── Model count ── */}
-      <div className="shrink-0 pb-2">
-        <span className="text-xs text-muted-foreground">
-          {isZh ? `共 ${totalCount} 个模型` : `${totalCount} models`}
+        <span className="shrink-0 rounded-full bg-muted/50 px-2.5 py-1 text-xs text-muted-foreground">
+          {models.length}/{totalCount}
         </span>
       </div>
 
       {/* ── List ── */}
-      <div
-        ref={scrollRef}
-        className="flex-1 overflow-y-auto pb-32 -mx-4 px-4 overflow-x-hidden"
-      >
-        {sortedModels.length === 0 ? (
-          <div className="flex items-center justify-center h-32 text-sm text-muted-foreground">
-            {isZh ? "没有找到匹配的模型" : "No matching models found"}
-          </div>
-        ) : (
-          <div className="flex flex-col divide-y divide-border">
-            {sortedModels.map(model => (
-              <ModelCard
-                key={model.id}
-                model={model}
-                language={language}
-                selected={selectedIds.has(model.id)}
-                onSelect={handleSelect}
-                onNavigate={handleNavigate}
-                cardFields={cardFields}
+      <div className="relative flex-1 min-h-0 -mx-4 overflow-hidden">
+        <div
+          ref={scrollRef}
+          className="h-full overflow-y-auto overscroll-contain pb-28 px-4 overflow-x-hidden"
+          onScroll={handleListScroll}
+          onWheel={handleListWheel}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onTouchCancel={handleTouchEnd}
+        >
+          {models.length === 0 ? (
+            <div className="flex items-center justify-center h-32 text-sm text-muted-foreground">
+              {isZh ? "没有找到匹配的模型" : "No matching models found"}
+            </div>
+          ) : (
+            <div className="flex flex-col divide-y divide-border">
+              {models.map(model => (
+                <ModelCard
+                  key={model.id}
+                  model={model}
+                  language={language}
+                  selected={selectedIds.has(model.id)}
+                  onSelect={handleSelect}
+                  onNavigate={handleNavigate}
+                  cardFields={cardFields}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+
+        {models.length > 0 && (
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-16 overflow-hidden bg-gradient-to-t from-background via-background/95 to-transparent">
+            {hasMore && (
+              <div
+                className="absolute inset-x-8 bottom-0 h-11 rounded-full blur-2xl transition-opacity duration-200"
+                style={{
+                  opacity: isLoadingMore ? 0.88 : 0.14 + pullProgress * 0.6,
+                  background: "radial-gradient(ellipse at center, rgba(2,132,199,0.68), rgba(8,47,73,0.34) 46%, transparent 74%)",
+                  transform: `translateY(${12 - pullProgress * 9}px) scaleX(${0.62 + pullProgress * 0.48})`,
+                }}
               />
-            ))}
-          </div>
-        )}
-
-        {/* Load more trigger (invisible sentinel) */}
-        {hasMore && (
-          <div ref={loadMoreTriggerRef} className="flex items-center justify-center py-6">
-            {isLoadingMore ? (
-              <span className="text-sm text-muted-foreground">
-                {isZh ? "加载中..." : "Loading..."}
-              </span>
-            ) : (
-              <button
-                onClick={onLoadMore}
-                className="text-sm text-primary font-medium hover:underline"
-              >
-                {isZh ? "加载更多" : "Load More"}
-                <span className="text-muted-foreground font-normal ml-1">
-                  ({models.length}/{totalCount})
-                </span>
-              </button>
             )}
-          </div>
-        )}
-
-        {!hasMore && models.length > 0 && (
-          <div className="flex items-center justify-center py-4">
-            <span className="text-xs text-muted-foreground">
-              {isZh ? "已显示全部模型" : "All models loaded"}
-            </span>
           </div>
         )}
       </div>
@@ -491,7 +561,7 @@ export function MobileModelList({
       >
         <div className="flex flex-col divide-y divide-border">
           {SORT_OPTIONS.map(opt => {
-            const isActive = opt.field === sortField
+            const isActive = opt.field === sortConfig.key
             const isText = opt.field === "name" || opt.field === "provider"
             const isDate = opt.field === "createdAt"
             const ascLabel  = isText ? "A→Z"  : isDate ? (isZh ? "旧→新" : "Old→New") : (isZh ? "小→大" : "Low→High")
@@ -502,12 +572,12 @@ export function MobileModelList({
                 key={opt.field}
                 className="flex items-center justify-between py-4 w-full text-left"
                 onClick={() => {
-                  if (isActive) {
-                    setSortDir(d => d === "asc" ? "desc" : "asc")
-                  } else {
-                    setSortField(opt.field)
-                    setSortDir(opt.defaultDir)
-                  }
+                  onSortChange({
+                    key: opt.field,
+                    direction: isActive
+                      ? (sortConfig.direction === "asc" ? "desc" : "asc")
+                      : opt.defaultDir,
+                  })
                 }}
               >
                 <span className={`text-base ${isActive ? "font-semibold" : ""}`}>
@@ -515,7 +585,7 @@ export function MobileModelList({
                 </span>
                 {isActive ? (
                   <span className="rounded-full bg-foreground text-background px-2.5 py-0.5 text-sm font-semibold">
-                    {sortDir === "asc" ? ascLabel : descLabel}
+                    {sortConfig.direction === "asc" ? ascLabel : descLabel}
                   </span>
                 ) : (
                   <span className="text-sm text-muted-foreground">
@@ -528,49 +598,6 @@ export function MobileModelList({
         </div>
       </BottomSheet>
 
-      {/* ── Field Selector Sheet ── */}
-      <BottomSheet
-        open={fieldSheetOpen}
-        onClose={() => setFieldSheetOpen(false)}
-        title={isZh ? "卡片显示字段" : "Card Fields"}
-      >
-        <p className="text-sm text-muted-foreground mb-4">
-          {isZh ? "选择要在列表卡片上显示的参数" : "Choose fields shown on cards"}
-        </p>
-        <div className="flex flex-col divide-y divide-border">
-          {CARD_FIELD_DEFS.map(def => {
-            const active = customCardFields.includes(def.key)
-            return (
-              <button
-                key={def.key}
-                onClick={() => {
-                  setCustomCardFields(prev =>
-                    prev.includes(def.key)
-                      ? prev.filter(k => k !== def.key)
-                      : [...prev, def.key]
-                  )
-                  onComplexityChange?.("custom")
-                }}
-                className="flex items-center justify-between py-3.5"
-              >
-                <div className="flex items-center gap-3">
-                  <div className={`w-6 h-6 rounded-md flex items-center justify-center transition-colors ${active ? "bg-foreground" : "border-2 border-border"}`}>
-                    {active && <Check className="h-4 w-4 text-background" />}
-                  </div>
-                  <span className="text-base">{isZh ? def.labelZh : def.labelEn}</span>
-                </div>
-                <span className="text-sm text-muted-foreground">{def.group}</span>
-              </button>
-            )
-          })}
-        </div>
-        <button
-          onClick={() => setFieldSheetOpen(false)}
-          className="w-full mt-4 rounded-2xl bg-foreground text-background py-3 font-semibold text-base"
-        >
-          {isZh ? "完成" : "Done"}
-        </button>
-      </BottomSheet>
     </div>
   )
 }

@@ -1,0 +1,8 @@
+name = "modelsheet-web"
+compatibility_date = "2026-05-26"
+pages_build_output_dir = "dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "modelsheet"
+database_id = "00000000-0000-0000-0000-000000000000"

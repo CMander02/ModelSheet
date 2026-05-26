@@ -189,7 +189,7 @@
           "baichuan-inc"
         ]
       },
-      "region": "global"
+      "region": "cn"
     },
     "BigScience": {
       "orgs": [
@@ -780,7 +780,58 @@
         "en": "RWKV",
         "zh": "RWKV"
       },
-      "region": "global"
+      "region": "cn"
+    },
+    "Baidu": {
+      "orgs": [
+        "baidu"
+      ],
+      "i18n": {
+        "en": "Baidu",
+        "zh": "百度"
+      },
+      "scan": {
+        "hf": [
+          "baidu"
+        ],
+        "ms": [
+          "PaddlePaddle"
+        ]
+      },
+      "region": "cn"
+    },
+    "RUC AI Box": {
+      "orgs": [
+        "RUC-AIBOX"
+      ],
+      "i18n": {
+        "en": "RUC AI Box",
+        "zh": "人大 AI Box"
+      },
+      "scan": {
+        "hf": [
+          "RUC-AIBOX"
+        ]
+      },
+      "region": "cn"
+    },
+    "JD": {
+      "orgs": [
+        "jd-opensource"
+      ],
+      "i18n": {
+        "en": "JD",
+        "zh": "京东"
+      },
+      "scan": {
+        "hf": [
+          "jd-opensource"
+        ],
+        "ms": [
+          "jd-opensource"
+        ]
+      },
+      "region": "cn"
     },
     "State Spaces": {
       "orgs": [

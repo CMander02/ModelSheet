@@ -1,8 +1,8 @@
 import { useEffect, useState, useMemo } from "react"
 import { Link, useParams, useNavigate } from "react-router-dom"
-import type { ModelInfo } from "@/lib/types"
+import type { ModelInfo, ProviderInfo } from "@/lib/types"
 import type { Language } from "@/lib/i18n"
-import { loadModelsFromFile } from "@/lib/model-data"
+import { loadProviderBySlug } from "@/lib/model-data"
 import { formatParameters, formatContextLength, formatDate } from "@/lib/formatters"
 import { ProviderBrandIcon, ModelBrandIcon } from "@/components/brand-icon"
 import { ModalityIcons } from "@/components/modality-icons"
@@ -11,7 +11,6 @@ import { LanguageToggle } from "@/components/language-toggle"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
 import { getTranslations } from "@/lib/i18n"
-import { findProviderBySlug } from "@/lib/utils"
 
 // ─── Model card ───────────────────────────────────────────────────────────────
 
@@ -79,6 +78,7 @@ export function ProviderPage() {
   const navigate = useNavigate()
 
   const [models, setModels] = useState<ModelInfo[]>([])
+  const [provider, setProvider] = useState<ProviderInfo | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [language, setLanguage] = useState<Language>("zh")
   const [theme, setTheme] = useState<"light" | "dark">("light")
@@ -89,8 +89,17 @@ export function ProviderPage() {
     document.documentElement.classList.toggle("dark", savedTheme === "dark")
     const savedLang = (localStorage.getItem("language") || "zh") as Language
     setLanguage(savedLang)
-    loadModelsFromFile().then(loaded => { setModels(loaded); setIsLoading(false) })
-  }, [])
+    if (!slug) {
+      setIsLoading(false)
+      return
+    }
+    loadProviderBySlug(slug)
+      .then(detail => {
+        setProvider(detail?.provider ?? null)
+        setModels(detail?.models ?? [])
+      })
+      .finally(() => setIsLoading(false))
+  }, [slug])
 
   const handleThemeToggle = () => {
     const next = theme === "dark" ? "light" : "dark"
@@ -106,23 +115,17 @@ export function ProviderPage() {
   const t = getTranslations(language)
   const isZh = language === "zh"
 
-  // Resolve canonical provider name from slug
-  const canonicalProvider = useMemo(
-    () => (slug && models.length ? findProviderBySlug(models, slug) : undefined),
-    [models, slug]
-  )
+  const canonicalProvider = provider?.name
 
   const providerModels = useMemo(() => {
-    if (!canonicalProvider) return []
     return models
-      .filter(m => m.provider === canonicalProvider)
       .sort((a, b) => {
         if (!a.createdAt && !b.createdAt) return 0
         if (!a.createdAt) return 1
         if (!b.createdAt) return -1
         return b.createdAt.localeCompare(a.createdAt)
       })
-  }, [models, canonicalProvider])
+  }, [models])
 
   const maxParams = useMemo(() => {
     const counts = providerModels.map(m => m.totalParameters).filter((v): v is number => v != null)

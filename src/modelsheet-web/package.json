@@ -7,7 +7,12 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "pages:dev": "wrangler pages dev dist",
+    "d1:migrate:local": "wrangler d1 migrations apply modelsheet --local",
+    "d1:migrate:remote": "wrangler d1 migrations apply modelsheet --remote",
+    "d1:seed:local": "wrangler d1 execute modelsheet --local --file ../../data/d1/seed.sql",
+    "d1:seed:remote": "wrangler d1 execute modelsheet --remote --file ../../data/d1/seed.sql --yes"
   },
   "dependencies": {
     "@dagrejs/dagre": "^3.0.0",
@@ -48,6 +53,7 @@
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
     "vite": "^7.2.4",
-    "vite-plugin-static-copy": "^3.1.4"
+    "vite-plugin-static-copy": "^3.1.4",
+    "wrangler": "^4.50.0"
   }
 }

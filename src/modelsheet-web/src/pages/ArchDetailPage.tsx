@@ -1,10 +1,13 @@
-import { useEffect, useState, Suspense } from "react"
+import { useEffect, useState } from "react"
 import { Link, useParams, useNavigate } from "react-router-dom"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { LanguageToggle } from "@/components/language-toggle"
 import { Button } from "@/components/ui/button"
+import { ArchitectureDiagramRenderer } from "@/components/architecture-diagram-renderer"
 import { ArrowLeft, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react"
-import { ARCH_REGISTRY, TYPE_COLORS } from "@/components/arch-diagram"
+import { TYPE_COLORS } from "@/pages/ArchPage"
+import type { ArchitectureSpec } from "@/lib/types"
+import { loadArchitecture, loadArchitectures } from "@/lib/architecture-data"
 import { getTranslations, type Language } from "@/lib/i18n"
 import HuggingFaceIcon from "@lobehub/icons/es/HuggingFace"
 
@@ -13,6 +16,9 @@ export function ArchDetailPage() {
   const navigate = useNavigate()
   const [theme, setTheme] = useState<"light" | "dark">("light")
   const [language, setLanguage] = useState<Language>("zh")
+  const [arch, setArch] = useState<ArchitectureSpec | null>(null)
+  const [architectures, setArchitectures] = useState<ArchitectureSpec[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const savedTheme = (localStorage.getItem("theme") as "light" | "dark") || "light"
@@ -20,7 +26,19 @@ export function ArchDetailPage() {
     document.documentElement.classList.toggle("dark", savedTheme === "dark")
     const savedLang = (localStorage.getItem("language") || "zh") as Language
     setLanguage(savedLang)
-  }, [])
+
+    if (!archId) {
+      setIsLoading(false)
+      return
+    }
+
+    Promise.all([loadArchitecture(archId), loadArchitectures()])
+      .then(([item, items]) => {
+        setArch(item)
+        setArchitectures(items)
+      })
+      .finally(() => setIsLoading(false))
+  }, [archId])
 
   const handleThemeToggle = () => {
     const next = theme === "dark" ? "light" : "dark"
@@ -35,38 +53,99 @@ export function ArchDetailPage() {
 
   const t = getTranslations(language).arch
   const isZh = language === "zh"
-  const arch = ARCH_REGISTRY.find(a => a.id === archId)
 
-  // Prev / next navigation (skip placeholders)
-  const navigableList = ARCH_REGISTRY.filter(a => !a.placeholder)
-  const currentIdx = arch ? navigableList.findIndex(a => a.id === arch.id) : -1
-  const prevArch = currentIdx > 0 ? navigableList[currentIdx - 1] : null
-  const nextArch = currentIdx >= 0 && currentIdx < navigableList.length - 1 ? navigableList[currentIdx + 1] : null
+  const currentIdx = arch ? architectures.findIndex(a => a.id === arch.id) : -1
+  const prevArch = currentIdx > 0 ? architectures[currentIdx - 1] : null
+  const nextArch = currentIdx >= 0 && currentIdx < architectures.length - 1 ? architectures[currentIdx + 1] : null
 
-  if (!arch) {
+  if (isLoading) {
     return (
-      <div className="h-screen bg-background flex flex-col items-center justify-center gap-4">
-        <p className="text-muted-foreground">
-          {isZh ? `找不到架构 "${archId}"` : `Architecture "${archId}" not found`}
-        </p>
-        <Button variant="outline" onClick={() => navigate("/arch")}>
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          {t.title}
-        </Button>
+      <div className="h-screen bg-background flex items-center justify-center text-muted-foreground">
+        {getTranslations(language).common.loading}
       </div>
     )
   }
 
-  const Diagram = arch.diagram
+  if (!arch) {
+    const displayId = archId ? decodeURIComponent(archId) : "unknown"
+    return (
+      <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
+        <header className="shrink-0 z-50 border-b bg-background/95 backdrop-blur">
+          <div className="px-4 h-14 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2 min-w-0">
+              <button
+                onClick={() => navigate("/arch")}
+                className="shrink-0 flex items-center justify-center w-8 h-8 rounded-full hover:bg-muted transition-colors"
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </button>
+              <Link to="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors shrink-0 hidden sm:inline">
+                ModelSheet
+              </Link>
+              <span className="text-muted-foreground shrink-0 hidden sm:inline">/</span>
+              <Link to="/arch" className="text-sm text-muted-foreground hover:text-foreground transition-colors shrink-0">
+                {t.title}
+              </Link>
+              <span className="text-muted-foreground shrink-0">/</span>
+              <span className="text-sm font-mono font-semibold truncate">{displayId}</span>
+            </div>
+
+            <div className="flex items-center gap-1 shrink-0">
+              <ThemeToggle theme={theme} onToggle={handleThemeToggle} />
+              <LanguageToggle currentLanguage={language} onLanguageChange={handleLanguageChange} />
+            </div>
+          </div>
+        </header>
+
+        <main className="flex-1 overflow-auto">
+          <div className="mx-auto flex min-h-full max-w-4xl flex-col justify-center px-6 py-12">
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <span className="inline-flex w-fit rounded-full border bg-muted/50 px-2.5 py-1 text-xs font-mono text-muted-foreground">
+                  model_type
+                </span>
+                <h1 className="break-all font-mono text-4xl font-bold tracking-tight sm:text-5xl">
+                  {displayId}
+                </h1>
+              </div>
+
+              <div className="max-w-2xl space-y-2 text-sm leading-relaxed text-muted-foreground">
+                <p>
+                  {isZh
+                    ? "这个架构页暂时还没做。"
+                    : "This architecture page has not been built yet."}
+                </p>
+                <p>
+                  {isZh
+                    ? "模型里的架构类型已经可以跳到这里；等 DSL 图和说明补上后，这个地址会直接变成对应的架构详情页。"
+                    : "Model architecture labels can already link here; once the DSL diagram and notes are added, this URL will become the architecture detail page."}
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                <Button variant="default" onClick={() => navigate("/arch")}>
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  {t.title}
+                </Button>
+                <Link to="/">
+                  <Button variant="outline">
+                    ModelSheet
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    )
+  }
+
   const desc = isZh ? arch.descriptionZh : arch.descriptionEn
-  const isPlaceholder = arch.placeholder
 
   return (
     <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
-      {/* ── Header ── */}
       <header className="shrink-0 z-50 border-b bg-background/95 backdrop-blur">
         <div className="px-4 h-14 flex items-center justify-between gap-4">
-          {/* Breadcrumb */}
           <div className="flex items-center gap-2 min-w-0">
             <button
               onClick={() => navigate("/arch")}
@@ -85,7 +164,6 @@ export function ArchDetailPage() {
             <span className="text-sm font-semibold truncate">{arch.family}</span>
           </div>
 
-          {/* Prev / Next + toggles */}
           <div className="flex items-center gap-1 shrink-0">
             <button
               onClick={() => prevArch && navigate(`/arch/${prevArch.id}`)}
@@ -110,46 +188,22 @@ export function ArchDetailPage() {
         </div>
       </header>
 
-      {/* ── Body: diagram left (60%) + info right (40%) ── */}
       <main className="flex-1 flex overflow-hidden">
-
-        {/* ── Left: Diagram
-              overflow-auto so the pane scrolls internally if the diagram is taller
-              than the viewport — the outer page never scrolls.
-              The inner div uses min-h-full + flex so short diagrams stay centered. ── */}
         <div className="flex-[3] overflow-auto border-r bg-muted/10">
           <div className="min-h-full flex items-center justify-center p-8">
             <div className="w-full [&_svg.flowchart]:!max-w-[640px] [&_svg.flowchart]:!w-full [&_svg.flowchart]:mx-auto [&>div]:flex [&>div]:justify-center">
-            <Suspense fallback={<div className="text-xs text-muted-foreground">Rendering…</div>}>
-              {isPlaceholder ? (
-                <div className="flex flex-col items-center gap-4 text-muted-foreground select-none">
-                  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="opacity-15">
-                    <rect x="3" y="3" width="7" height="7" rx="1" />
-                    <rect x="14" y="3" width="7" height="7" rx="1" />
-                    <rect x="3" y="14" width="7" height="7" rx="1" />
-                    <path d="M14 17.5h7M17.5 14v7" />
-                  </svg>
-                  <span className="text-sm font-medium opacity-30">Coming Soon</span>
-                </div>
-              ) : (
-                <Diagram {...arch.defaultParams} />
-              )}
-            </Suspense>
+              <ArchitectureDiagramRenderer architecture={arch} />
             </div>
           </div>
         </div>
 
-        {/* ── Right: Info panel ── */}
         <div className="flex-[2] flex flex-col overflow-y-auto">
           <div className="p-8 space-y-6">
-
-            {/* Title + era */}
             <div>
               <h1 className="text-3xl font-bold tracking-tight">{arch.family}</h1>
               <p className="text-sm text-muted-foreground font-mono mt-1">{arch.era}</p>
             </div>
 
-            {/* Badges */}
             <div className="flex flex-wrap gap-2">
               <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${TYPE_COLORS[arch.type]}`}>
                 {arch.type}
@@ -157,20 +211,11 @@ export function ArchDetailPage() {
               <span className="text-xs px-2.5 py-1 rounded-full font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
                 {arch.normPlacement === "pre" ? t.normPre : t.normPost}
               </span>
-              {isPlaceholder && (
-                <span className="text-xs px-2.5 py-1 rounded-full font-medium bg-muted text-muted-foreground border border-dashed">
-                  Coming Soon
-                </span>
-              )}
             </div>
 
-            {/* Divider */}
             <div className="h-px bg-border" />
-
-            {/* Description */}
             <p className="text-sm text-foreground/80 leading-relaxed">{desc}</p>
 
-            {/* model_type aliases */}
             {arch.modelTypeAliases && arch.modelTypeAliases.length > 0 && (
               <div>
                 <p className="text-xs text-muted-foreground mb-2 font-medium uppercase tracking-wider">
@@ -186,7 +231,6 @@ export function ArchDetailPage() {
               </div>
             )}
 
-            {/* Links */}
             {(arch.paperUrl || arch.hfOrg) && (
               <div className="flex flex-col gap-2">
                 <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
@@ -217,7 +261,6 @@ export function ArchDetailPage() {
               </div>
             )}
 
-            {/* Prev / next cards */}
             {(prevArch || nextArch) && (
               <>
                 <div className="h-px bg-border" />

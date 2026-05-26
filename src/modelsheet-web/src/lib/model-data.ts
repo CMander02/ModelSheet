@@ -1,4 +1,4 @@
-import type { ModelInfo, ComplexityPreset, ColumnConfig } from "./types"
+import type { ModelInfo, ComplexityPreset, ColumnConfig, ProviderDetail, ProviderInfo, SortConfig } from "./types"
 import type { Language } from "./i18n"
 import { getTranslations } from "./i18n"
 
@@ -125,31 +125,57 @@ export interface SearchResult {
   totalPages: number
 }
 
-const SEARCH_CACHE_KEY = "modelsheet_cache_data"
 const SEARCH_QUERY_KEY = "modelsheet_search_query"
 
 /** 调用服务端搜索 API */
 export async function searchModels(
   q: string = "",
   page: number = 1,
-  limit: number = 30
+  limit: number = 30,
+  sortConfig: SortConfig = { key: "createdAt", direction: "desc" }
 ): Promise<SearchResult> {
-  const params = new URLSearchParams({ q, page: String(page), limit: String(limit) })
+  const params = new URLSearchParams({
+    q,
+    page: String(page),
+    limit: String(limit),
+    sort: sortConfig.key ?? "createdAt",
+    dir: sortConfig.direction,
+  })
   const resp = await fetch(`/api/search?${params}`)
   if (!resp.ok) throw new Error(`Search failed: ${resp.status}`)
   return resp.json()
 }
 
+export async function loadModelById(id: string): Promise<ModelInfo | null> {
+  const resp = await fetch(`/api/model?id=${encodeURIComponent(id)}`)
+  if (resp.status === 404) return null
+  if (!resp.ok) throw new Error(`Model load failed: ${resp.status}`)
+  return resp.json()
+}
+
+export async function loadProviders(): Promise<ProviderInfo[]> {
+  const resp = await fetch("/api/providers")
+  if (!resp.ok) throw new Error(`Providers load failed: ${resp.status}`)
+  return resp.json()
+}
+
+export async function loadProviderBySlug(slug: string): Promise<ProviderDetail | null> {
+  const resp = await fetch(`/api/provider?slug=${encodeURIComponent(slug)}`)
+  if (resp.status === 404) return null
+  if (!resp.ok) throw new Error(`Provider load failed: ${resp.status}`)
+  return resp.json()
+}
+
 /** 缓存当前搜索状态，供导航返回时恢复 */
-export function saveSearchState(term: string, page: number): void {
+export function saveSearchState(term: string, page: number, sortConfig?: SortConfig): void {
   if (typeof window === "undefined") return
   try {
-    sessionStorage.setItem(SEARCH_QUERY_KEY, JSON.stringify({ term, page }))
+    sessionStorage.setItem(SEARCH_QUERY_KEY, JSON.stringify({ term, page, sortConfig }))
   } catch { /* quota exceeded — ignore */ }
 }
 
 /** 恢复导航前的搜索状态 */
-export function loadSearchState(): { term: string; page: number } | null {
+export function loadSearchState(): { term: string; page: number; sortConfig?: SortConfig } | null {
   if (typeof window === "undefined") return null
   try {
     const raw = sessionStorage.getItem(SEARCH_QUERY_KEY)
@@ -211,6 +237,17 @@ export function loadColumnConfigFromStorage(): ColumnConfig[] {
 
 // 从 public/data/models.json 加载模型数据
 export async function loadModelsFromFile(): Promise<ModelInfo[]> {
+  try {
+    const response = await fetch('/api/models')
+    if (response.ok) {
+      const data = await response.json()
+      console.log(`Loaded ${data.length} models from API`)
+      return data
+    }
+  } catch (error) {
+    console.warn('Error loading models from API, falling back to static file:', error)
+  }
+
   try {
     const response = await fetch('/data/models.json')
     if (!response.ok) {

@@ -26,6 +26,8 @@ env/
 
 # Data and cache
 data/temp/
+data/modelsheet.sqlite
+src/modelsheet-web/.wrangler/
 
 # Environment variables (contains secrets)
 .env

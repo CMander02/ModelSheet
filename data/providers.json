@@ -817,7 +817,8 @@
     },
     "JD": {
       "orgs": [
-        "jd-opensource"
+        "jd-opensource",
+        "jdopensource"
       ],
       "i18n": {
         "en": "JD",
@@ -825,7 +826,8 @@
       },
       "scan": {
         "hf": [
-          "jd-opensource"
+          "jd-opensource",
+          "jdopensource"
         ],
         "ms": [
           "jd-opensource"

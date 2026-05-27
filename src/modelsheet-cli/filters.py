@@ -49,8 +49,8 @@ _DEFAULT_RULES = [
     {"pattern": r"\b(stable-?diffusion|sdxl|sd-?v\d|sd\d|flux|kandinsky|dall-?e|midjourney|imagen|pixart|cogvideox)\b", "reason": "diffusion (image gen, not LM)"},
     # Classifier
     {"pattern": r"\b(classifier|discriminator)\b", "reason": "classifier/discriminator model"},
-    # OCR (not MLLM)
-    {"pattern": r"\b(qianfan-ocr|deepseek-ocr)\b", "reason": "OCR model (not MLLM)"},
+    # OCR (not MLLM) — expanded to catch PaddleOCR, olmOCR, HunyuanOCR, GLM-OCR, etc.
+    {"pattern": r"(?:ocr-vl|paddleocr|olmocr|hunyuanocr|glm-ocr|dots\.ocr|qianfan-ocr|deepseek-ocr|pp-ocr)", "reason": "OCR model (not MLLM)"},
     # Baidu 2-bit quantized (not at end of name, so no $ anchor)
     {"pattern": r"-2bits", "reason": "2-bit quantized (Baidu ERNIE)"},
     # Tensor parallelism variant (not at end of name, so no $ anchor)
@@ -240,6 +240,12 @@ def skip_reason(
     """
     name = model_id.split("/")[-1]
     model_type_lower = (model_type or "").lower()
+    org = model_id.split("/")[0].lower() if "/" in model_id else ""
+
+    # 0. Org-level blocklist (entire organizations excluded by user preference)
+    _BLOCKED_ORGS = {"ruc-aibox"}
+    if org in _BLOCKED_ORGS:
+        return f"blocked org={org} (excluded per user preference)"
 
     # Always include explicitly-listed model types (mamba, rwkv, etc.)
     if model_type_lower in _ALWAYS_INCLUDE_MODEL_TYPES:

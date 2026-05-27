@@ -2252,6 +2252,6 @@ INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen2_moe', '
 INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen2_vl', 'qwen2');
 INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen2_5_vl', 'qwen2');
 INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen2_5_omni', 'qwen2');
-INSERT INTO sync_runs (id, source_hash, model_count, architecture_count, synced_at) VALUES (1, 'c6517acef6213c77d69cd12b78d8c5d83ca87e9ee976d1a3c5d69a54f6c7a07e', 2045, 1, '2026-05-27 14:28:04');
+INSERT INTO sync_runs (id, source_hash, model_count, architecture_count, synced_at) VALUES (1, '806ed16f1ab42cffabcb9c6e6cec8c29eb227c2bb50dac435ddf56247480fcae', 2045, 1, '2026-05-27 15:28:31');
 COMMIT;
 PRAGMA foreign_keys=ON;

@@ -107,9 +107,7 @@ class ModelFetcher:
         parts = model_id.split("/")
         if len(parts) != 2:
             raise ValueError(f"Invalid model_id: {model_id}")
-        model_dir = TEMP_DIR / parts[0] / parts[1]
-        model_dir.mkdir(parents=True, exist_ok=True)
-        return model_dir
+        return TEMP_DIR / parts[0] / parts[1]
 
     # ── HuggingFace ────────────────────────────────────────────────────────
 
@@ -336,21 +334,13 @@ class ModelFetcher:
     # ── cache ──────────────────────────────────────────────────────────────
 
     def _save(self, model_dir: Path, filename: str, content: dict):
-        (model_dir / filename).write_text(
-            json.dumps(content, indent=2, ensure_ascii=False), encoding="utf-8"
-        )
+        # No-op: config data flows in-memory from fetch → parse.
+        # models.json / SQLite are the canonical store; disk cache is unnecessary.
+        pass
 
     def _load_cached(self, model_id: str) -> dict:
-        model_dir = self.get_model_dir(model_id)
-        result: dict = {}
-        for filename in CONFIG_FILES:
-            fp = model_dir / filename
-            if fp.exists():
-                try:
-                    result[filename] = json.loads(fp.read_text(encoding="utf-8"))
-                except Exception:
-                    pass
-        return result
+        # Cache disabled — always fetch fresh. models.json is the single source of truth.
+        return {}
 
     # ── batch fetch ────────────────────────────────────────────────────────
 

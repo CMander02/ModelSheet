@@ -32,7 +32,6 @@ WATCHLIST_FILE = DATA_DIR / "watchlist.json"
 
 # Ensure directories exist
 DATA_DIR.mkdir(exist_ok=True)
-TEMP_DIR.mkdir(exist_ok=True)
 
 
 def load_providers_data() -> dict:

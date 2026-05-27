@@ -34,6 +34,8 @@ src/modelsheet-web/.wrangler/
 
 # Environment variables (contains secrets)
 .env
+.env.*
+src/modelsheet-web/.dev.vars
 
 # IDE
 .vscode/

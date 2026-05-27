@@ -60,7 +60,7 @@ export function ArchDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="h-screen bg-background flex items-center justify-center text-muted-foreground">
+      <div className="flex h-full items-center justify-center bg-background text-muted-foreground">
         {getTranslations(language).common.loading}
       </div>
     )
@@ -69,7 +69,7 @@ export function ArchDetailPage() {
   if (!arch) {
     const displayId = archId ? decodeURIComponent(archId) : "unknown"
     return (
-      <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
+      <div className="flex h-full min-h-0 flex-col overflow-hidden bg-background text-foreground">
         <header className="shrink-0 z-50 border-b bg-background/95 backdrop-blur">
           <div className="px-4 h-14 flex items-center justify-between gap-4">
             <div className="flex items-center gap-2 min-w-0">
@@ -143,7 +143,7 @@ export function ArchDetailPage() {
   const desc = isZh ? arch.descriptionZh : arch.descriptionEn
 
   return (
-    <div className="h-screen flex flex-col bg-background text-foreground overflow-hidden">
+    <div className="flex h-full min-h-0 flex-col overflow-hidden bg-background text-foreground">
       <header className="shrink-0 z-50 border-b bg-background/95 backdrop-blur">
         <div className="px-4 h-14 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2 min-w-0">

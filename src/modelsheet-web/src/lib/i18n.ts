@@ -71,7 +71,11 @@ const translations = {
       custom: "自定义",
       back: "返回",
       noResults: "没有找到匹配的模型",
-      footer: "开源模型参数对比平台 © 2025",
+      footer: {
+        tagline: "开源模型参数对比",
+        inspiredBy: "灵感来自",
+        source: "Sebastian Raschka 的 LLM Architecture Gallery",
+      },
       language: "语言",
       compareSelected: "比较选中",
       loading: "加载中...",
@@ -196,7 +200,11 @@ const translations = {
       custom: "Custom",
       back: "Back",
       noResults: "No matching models found",
-      footer: "Open Source Model Parameter Comparison Platform © 2025",
+      footer: {
+        tagline: "Open model parameter comparison",
+        inspiredBy: "inspired by",
+        source: "Sebastian Raschka's LLM Architecture Gallery",
+      },
       language: "Language",
       compareSelected: "Compare Selected",
       loading: "Loading...",
@@ -272,6 +280,7 @@ const translations = {
 }
 
 export type Language = "zh" | "en"
+export const LANGUAGE_CHANGE_EVENT = "modelsheet:language-change"
 
 export function getTranslations(lang: Language) {
   return translations[lang] || translations.zh

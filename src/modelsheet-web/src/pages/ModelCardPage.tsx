@@ -4,7 +4,7 @@ import type { ModelInfo } from "@/lib/types"
 import type { Language } from "@/lib/i18n"
 import { loadModelById } from "@/lib/model-data"
 import { loadArchitecture } from "@/lib/architecture-data"
-import { providerSlug } from "@/lib/utils"
+import { cn, providerSlug } from "@/lib/utils"
 import { formatParameters, formatContextLength, formatNumber, formatDecimal, formatDate } from "@/lib/formatters"
 import { ModelBrandIcon, ProviderBrandIcon } from "@/components/brand-icon"
 import { ModalityIcons } from "@/components/modality-icons"
@@ -12,7 +12,7 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { LanguageToggle } from "@/components/language-toggle"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { ArrowLeft, HelpCircle, Info, Lock } from "lucide-react"
+import { ArrowLeft, FileText, HelpCircle, Info, Lock } from "lucide-react"
 import HuggingFaceIcon from "@lobehub/icons/es/HuggingFace"
 import ModelScopeIcon from "@lobehub/icons/es/ModelScope"
 import type { ArchitectureSpec } from "@/lib/types"
@@ -78,13 +78,52 @@ function Field({ label, value }: { label: string; value: React.ReactNode }) {
 
 // ─── Platform link button ────────────────────────────────────────────────────
 
-function PlatformLink({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
+function ArxivIcon({ className }: { className?: string }) {
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer">
-      <button className="flex items-center gap-2 rounded-xl border px-3 h-9 text-sm font-medium hover:bg-muted transition-colors">
-        {icon}
-        {label}
-      </button>
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 64 24"
+      className={className}
+      focusable="false"
+    >
+      <text
+        x="2"
+        y="17"
+        fill="currentColor"
+        fontFamily="Georgia, Times New Roman, serif"
+        fontSize="17"
+        fontWeight="700"
+      >
+        arXiv
+      </text>
+    </svg>
+  )
+}
+
+function PlatformLink({
+  href,
+  icon,
+  label,
+  className,
+}: {
+  href: string
+  icon: React.ReactNode
+  label: string
+  className?: string
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      title={label}
+      aria-label={label}
+      className={cn(
+        "inline-flex h-9 w-9 items-center justify-center rounded-lg border bg-background text-foreground transition-colors hover:bg-muted",
+        className,
+      )}
+    >
+      {icon}
     </a>
   )
 }
@@ -143,7 +182,7 @@ export function ModelCardPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-full bg-background">
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
           <div className="container flex h-14 items-center gap-3 px-6">
             <div className="h-8 w-8 bg-muted animate-pulse rounded-full" />
@@ -159,7 +198,7 @@ export function ModelCardPage() {
 
   if (!model) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4">
+      <div className="flex min-h-full flex-col items-center justify-center gap-4 bg-background">
         <p className="text-muted-foreground">
           {isZh ? `找不到模型 "${modelId}"` : `Model "${modelId}" not found`}
         </p>
@@ -184,17 +223,18 @@ export function ModelCardPage() {
     ),
     model.arxivUrl && (
       <PlatformLink key="ax" href={model.arxivUrl}
-        icon={<span className="text-sm font-bold text-red-500 leading-none">ar</span>} label="arXiv" />
+        icon={<ArxivIcon className="h-5 w-12 text-[#b31b1b]" />} label="arXiv"
+        className="w-14" />
     ),
     model.techReport && (
       <PlatformLink key="tr" href={model.techReport}
-        icon={<span className="text-sm leading-none">📄</span>}
+        icon={<FileText className="h-4 w-4" aria-hidden="true" />}
         label={isZh ? "技术报告" : "Tech Report"} />
     ),
   ].filter(Boolean)
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-full bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
         <div className="container flex h-14 items-center justify-between px-6 max-w-6xl mx-auto">

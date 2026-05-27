@@ -72,6 +72,90 @@ modelsheet scan --commit
 modelsheet scan --commit --add
 ```
 
+### Build SQLite / D1 data
+
+```bash
+modelsheet db build    # writes data/modelsheet.sqlite
+modelsheet db seed     # writes data/d1/seed.sql
+modelsheet db verify   # checks counts, providers, architecture aliases, source hash
+```
+
+`data/modelsheet.sqlite` is a local build artifact and is intentionally ignored
+by Git. `data/d1/seed.sql` is the portable SQL snapshot used by Cloudflare D1.
+
+### Sync data to Cloudflare D1
+
+Model discovery/scanning is handled outside this repository workflow. Once an
+agent or operator pushes updated source data to `main`, GitHub Actions publishes
+that snapshot to Cloudflare D1.
+
+Workflow: [`.github/workflows/d1-sync.yml`](.github/workflows/d1-sync.yml)
+
+Required GitHub repository secrets:
+
+```text
+CLOUDFLARE_API_TOKEN
+CLOUDFLARE_ACCOUNT_ID
+```
+
+The workflow does:
+
+```bash
+uv run modelsheet db build
+uv run modelsheet db seed
+uv run modelsheet db verify
+cd src/modelsheet-web
+npx wrangler d1 migrations apply modelsheet --remote
+cd ../..
+python scripts/sync_d1_seed.py --seed data/d1/seed.sql --wrangler src/modelsheet-web/wrangler.toml
+cd src/modelsheet-web
+npx wrangler d1 execute modelsheet --remote --command "SELECT COUNT(*) AS model_count FROM models" --json
+```
+
+To run the same publish path manually:
+
+```bash
+uv sync
+uv run modelsheet db build
+uv run modelsheet db seed
+uv run modelsheet db verify
+
+cd src/modelsheet-web
+npm ci
+npx wrangler d1 migrations apply modelsheet --remote
+cd ../..
+python scripts/sync_d1_seed.py --seed data/d1/seed.sql --wrangler src/modelsheet-web/wrangler.toml
+cd src/modelsheet-web
+npx wrangler d1 execute modelsheet --remote --command "SELECT COUNT(*) AS model_count FROM models" --json
+```
+
+### Export SQL from Cloudflare D1
+
+Use Wrangler export when you need a SQL copy of the remote D1 database:
+
+```bash
+cd src/modelsheet-web
+npx wrangler d1 export modelsheet --remote --output ../../data/d1/remote.sql --yes
+```
+
+`data/d1/remote.sql` is for inspection or backup; it should not replace
+`data/models.json` as the source of truth.
+
+### Modify local SQLite data
+
+Prefer editing source files, then rebuilding:
+
+```bash
+# Edit data/models.json, data/providers.json, or data/architectures/*.yaml
+uv run modelsheet db build
+uv run modelsheet db seed
+uv run modelsheet db verify
+```
+
+Direct edits to `data/modelsheet.sqlite` are only useful for temporary local
+debugging. They are overwritten by the next `modelsheet db build`. If a change
+must persist, put it in the source JSON/YAML and regenerate SQLite/seed SQL.
+
 ### Other commands
 
 ```bash
@@ -126,9 +210,10 @@ MoE models carry additional fields (`numExperts`, `numExpertsPerToken`, `activeP
 
 ## Automated updates
 
-A GitHub Actions workflow ([`.github/workflows/scan.yml`](.github/workflows/scan.yml)) runs `modelsheet scan --commit --add` every night at **00:00 CST** (UTC 16:00). New models discovered on HuggingFace are automatically added and committed, which triggers a Cloudflare Pages redeploy.
-
-To self-host this workflow, add a `HF_TOKEN` secret in your repo settings (Settings → Secrets → Actions). A read-only HuggingFace token is sufficient.
+Model scanning is intentionally separate from GitHub Actions. A scheduled agent
+can run `modelsheet scan --commit --add`, review/commit the resulting
+`data/models.json` and `data/scan_snapshot.json`, then push to `main`. The
+GitHub D1 sync workflow publishes that committed data to Cloudflare D1.
 
 ---
 
@@ -137,7 +222,7 @@ To self-host this workflow, add a `HF_TOKEN` secret in your repo settings (Setti
 ```
 ModelSheet/
 ├── .github/workflows/
-│   └── scan.yml              # nightly HuggingFace scan
+│   └── d1-sync.yml           # publish committed data snapshots to Cloudflare D1
 ├── src/
 │   ├── modelsheet-cli/       # Python CLI (fetcher, parser, exporter, scanner)
 │   └── modelsheet-web/       # React + Vite frontend

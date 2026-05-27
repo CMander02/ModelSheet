@@ -71,7 +71,7 @@ export function ProvidersPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-full bg-background">
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
           <div className="container flex h-14 items-center gap-3 px-6 max-w-6xl mx-auto">
             <div className="h-8 w-32 bg-muted animate-pulse rounded" />
@@ -112,7 +112,7 @@ export function ProvidersPage() {
   const sections: Region[] = ["cn", "global", "other"]
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-full bg-background text-foreground">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
         <div className="container flex h-14 items-center justify-between px-6 max-w-6xl mx-auto">
           <div className="flex items-center gap-2 min-w-0">

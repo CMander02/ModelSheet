@@ -142,7 +142,7 @@ export function ArchPage() {
   const filtered = architectures.filter(a => typeFilter === "all" || a.type === typeFilter)
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-full bg-background text-foreground">
       <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">

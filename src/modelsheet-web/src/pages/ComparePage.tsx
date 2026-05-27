@@ -181,14 +181,14 @@ export function ComparePage() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-full items-center justify-center">
         <p className="text-muted-foreground">{t.common.loading}</p>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-full bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
@@ -331,13 +331,6 @@ export function ComparePage() {
           </div>
         )}
       </main>
-
-      {/* Footer - 与主页一致 */}
-      <footer className="pt-3 pb-2">
-        <div className="container text-center text-sm text-muted-foreground">
-          {t.common.footer}
-        </div>
-      </footer>
 
       {/* Custom Field Selector Dialog */}
       <CustomFieldSelector

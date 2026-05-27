@@ -149,7 +149,7 @@ export function ProviderPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-full bg-background">
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
           <div className="container flex h-14 items-center gap-3 px-6 max-w-6xl mx-auto">
             <div className="h-8 w-8 bg-muted animate-pulse rounded-full" />
@@ -168,7 +168,7 @@ export function ProviderPage() {
 
   if (!canonicalProvider || providerModels.length === 0) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4">
+      <div className="flex min-h-full flex-col items-center justify-center gap-4 bg-background">
         <p className="text-muted-foreground">
           {isZh ? `找不到提供商 "${slug}"` : `Provider "${slug}" not found`}
         </p>
@@ -181,7 +181,7 @@ export function ProviderPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-full bg-background text-foreground">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
         <div className="container flex h-14 items-center justify-between px-6 max-w-6xl mx-auto">
           <div className="flex items-center gap-2 min-w-0">

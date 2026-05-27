@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
-import type { Language } from "@/lib/i18n"
+import { LANGUAGE_CHANGE_EVENT, type Language } from "@/lib/i18n"
 
 interface LanguageToggleProps {
   currentLanguage: Language
@@ -17,6 +17,11 @@ export function LanguageToggle({
   currentLanguage,
   onLanguageChange,
 }: LanguageToggleProps) {
+  const handleSelect = (lang: Language) => {
+    onLanguageChange(lang)
+    window.dispatchEvent(new CustomEvent<Language>(LANGUAGE_CHANGE_EVENT, { detail: lang }))
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -26,13 +31,13 @@ export function LanguageToggle({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem
-          onClick={() => onLanguageChange("zh")}
+          onClick={() => handleSelect("zh")}
           className={currentLanguage === "zh" ? "bg-accent" : ""}
         >
           中文
         </DropdownMenuItem>
         <DropdownMenuItem
-          onClick={() => onLanguageChange("en")}
+          onClick={() => handleSelect("en")}
           className={currentLanguage === "en" ? "bg-accent" : ""}
         >
           English

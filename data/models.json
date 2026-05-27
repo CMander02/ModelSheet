@@ -77546,5 +77546,43 @@
     "createdAt": "2026-05-27T03:11:21.000Z",
     "openness": "open-weight",
     "isMoe": false
+  },
+  {
+    "id": "JDONE-Research/AIOne-Agent-52B-A36B-it",
+    "name": "AIOne-Agent-52B-A36B-it",
+    "provider": "JD.com",
+    "huggingfaceUrl": "https://huggingface.co/JDONE-Research/AIOne-Agent-52B-A36B-it",
+    "techReport": "",
+    "totalParameters": 52085948432,
+    "activeParameters": 10946740224,
+    "embeddingParameters": 1409286144,
+    "nonEmbeddingParameters": 50676662288,
+    "contextLength": 262144,
+    "embeddingDim": 5376,
+    "vocabSize": 262144,
+    "architecture": "gemma4",
+    "numLayers": 60,
+    "numHeads": 32,
+    "numKvHeads": 16,
+    "hiddenSize": 5376,
+    "intermediateSize": 21504,
+    "normType": "RMSNorm",
+    "normEps": 1e-06,
+    "attentionDropout": 0.0,
+    "mlpFactor": 4.0,
+    "gqaRatio": 2.0,
+    "numExperts": 8,
+    "moeIntermediateSize": 2688,
+    "inputModalities": [
+      "image",
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "task": "Image-Text-to-Text",
+    "createdAt": "2026-05-11T00:08:12.000Z",
+    "openness": "open-weight",
+    "isMoe": true
   }
 ]

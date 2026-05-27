@@ -1006,6 +1006,21 @@
         ]
       },
       "region": "cn"
+    },
+    "JD.com": {
+      "orgs": [
+        "JDONE-Research"
+      ],
+      "i18n": {
+        "en": "JD.com",
+        "zh": "京东"
+      },
+      "scan": {
+        "hf": [
+          "JDONE-Research"
+        ]
+      },
+      "region": "cn"
     }
   },
   "Tilde Research": {

@@ -61,6 +61,10 @@ npm run d1:seed:remote
 npx wrangler d1 execute modelsheet --remote --command "select count(*) from models" --json
 ```
 
+`npm run d1:seed:remote` first writes `data/d1/seed.remote.sql`, a generated
+transaction-free copy of `data/d1/seed.sql`. Wrangler's remote D1 import rejects
+raw `BEGIN` / `COMMIT` statements even though the local SQLite seed accepts them.
+
 ## Scheduled server sync
 
 The normal daily flow is:
@@ -85,6 +89,7 @@ npx wrangler d1 execute modelsheet --remote --command "select source_hash from s
 If the hash is unchanged, skip the remote seed. If it changed:
 
 ```bash
+cd src/modelsheet-web
 npm run d1:seed:remote
 npx wrangler d1 execute modelsheet --remote --command "select source_hash, model_count, architecture_count, synced_at from sync_runs order by id desc limit 1" --json
 ```

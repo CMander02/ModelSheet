@@ -29,6 +29,7 @@ data/temp/
 data/modelsheet.sqlite
 data/d1/remote.sql
 data/d1/export-*.sql
+data/d1/seed.remote.sql
 src/modelsheet-web/.wrangler/
 
 # Environment variables (contains secrets)

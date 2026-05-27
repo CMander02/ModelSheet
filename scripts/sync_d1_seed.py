@@ -50,6 +50,10 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Parse inputs and print the planned batch count without calling Cloudflare.",
     )
+    parser.add_argument(
+        "--write-d1-file",
+        help="Write a transaction-free SQL file that Wrangler can import into D1, then exit.",
+    )
     return parser.parse_args()
 
 
@@ -98,6 +102,11 @@ def chunks(items: list[str], size: int) -> list[list[str]]:
     return [items[index : index + size] for index in range(0, len(items), size)]
 
 
+def write_d1_file(path: Path, statements: list[str]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(";\n".join(statements) + ";\n", encoding="utf-8")
+
+
 def d1_query(account_id: str, database_id: str, token: str, sql: str) -> dict:
     url = (
         "https://api.cloudflare.com/client/v4/accounts/"
@@ -144,17 +153,23 @@ def main() -> int:
 
     if not seed_path.exists():
         raise FileNotFoundError(seed_path)
-    if not database_id:
-        raise RuntimeError("D1 database_id not provided and not found in wrangler.toml")
-    if not account_id:
-        raise RuntimeError("CLOUDFLARE_ACCOUNT_ID is required")
 
     statements = iter_sql_statements(seed_path.read_text(encoding="utf-8"))
     batches = chunks(statements, args.batch_size)
     print(f"Prepared {len(statements)} statements in {len(batches)} batches")
 
+    if args.write_d1_file:
+        target = (root / args.write_d1_file).resolve()
+        write_d1_file(target, statements)
+        print(f"Wrote D1-compatible SQL: {target}")
+        return 0
+
     if args.dry_run:
         return 0
+    if not database_id:
+        raise RuntimeError("D1 database_id not provided and not found in wrangler.toml")
+    if not account_id:
+        raise RuntimeError("CLOUDFLARE_ACCOUNT_ID is required")
     if not token:
         raise RuntimeError("CLOUDFLARE_API_TOKEN is required")
 

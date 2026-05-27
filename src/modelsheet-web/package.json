@@ -12,7 +12,8 @@
     "d1:migrate:local": "wrangler d1 migrations apply modelsheet --local",
     "d1:migrate:remote": "wrangler d1 migrations apply modelsheet --remote",
     "d1:seed:local": "wrangler d1 execute modelsheet --local --file ../../data/d1/seed.sql",
-    "d1:seed:remote": "wrangler d1 execute modelsheet --remote --file ../../data/d1/seed.sql --yes"
+    "d1:seed:prepare": "python ../../scripts/sync_d1_seed.py --seed ../../data/d1/seed.sql --write-d1-file ../../data/d1/seed.remote.sql",
+    "d1:seed:remote": "npm run d1:seed:prepare && wrangler d1 execute modelsheet --remote --file ../../data/d1/seed.remote.sql --yes"
   },
   "dependencies": {
     "@dagrejs/dagre": "^3.0.0",

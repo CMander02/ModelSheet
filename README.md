@@ -98,6 +98,10 @@ CLOUDFLARE_API_TOKEN
 CLOUDFLARE_ACCOUNT_ID
 ```
 
+The CI helper executes the generated seed through Cloudflare's D1 query API and
+skips `PRAGMA` / transaction wrapper statements, because D1 remote imports reject
+raw `BEGIN` / `COMMIT` SQL.
+
 The workflow does:
 
 ```bash
@@ -112,7 +116,7 @@ cd src/modelsheet-web
 npx wrangler d1 execute modelsheet --remote --command "SELECT COUNT(*) AS model_count FROM models" --json
 ```
 
-To run the same publish path manually:
+To publish manually after `npx wrangler login`:
 
 ```bash
 uv sync
@@ -123,9 +127,7 @@ uv run modelsheet db verify
 cd src/modelsheet-web
 npm ci
 npx wrangler d1 migrations apply modelsheet --remote
-cd ../..
-python scripts/sync_d1_seed.py --seed data/d1/seed.sql --wrangler src/modelsheet-web/wrangler.toml
-cd src/modelsheet-web
+npm run d1:seed:remote
 npx wrangler d1 execute modelsheet --remote --command "SELECT COUNT(*) AS model_count FROM models" --json
 ```
 

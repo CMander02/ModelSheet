@@ -1,5 +1,7 @@
 # ModelSheet
 
+[English](README.md) | [简体中文](README.zh-CN.md)
+
 **Open-source LLM model parameter reference and comparison tool.**
 
 A browsable catalog of language models — parameters, architecture, context length, modalities — sourced directly from HuggingFace config files and kept up to date automatically.

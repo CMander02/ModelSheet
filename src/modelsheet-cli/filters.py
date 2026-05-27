@@ -50,7 +50,9 @@ _DEFAULT_RULES = [
     # Classifier
     {"pattern": r"\b(classifier|discriminator)\b", "reason": "classifier/discriminator model"},
     # OCR (not MLLM)
-    {"pattern": r"\b(qianfan-ocr|deepseek-ocr)\b", "reason": "OCR model (not MLLM)"},
+    {"pattern": r"\b(ocr|trocr|donut|paddleocr|surya-ocr)\b", "reason": "OCR/document model"},
+    # RUC-AIBOX (人大 Air Box)
+    {"pattern": r"\bClawGym\b", "reason": "RUC-AIBOX (人大 Air Box)"},
     # Baidu 2-bit quantized (not at end of name, so no $ anchor)
     {"pattern": r"-2bits", "reason": "2-bit quantized (Baidu ERNIE)"},
     # Tensor parallelism variant (not at end of name, so no $ anchor)

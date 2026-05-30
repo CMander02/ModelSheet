@@ -43,6 +43,8 @@ _DEFAULT_RULES = [
     # Reward / ORM / PRM
     {"pattern": r"\b[op]rm\b", "reason": "reward/ORM/PRM model"},
     {"pattern": r"\breward-?model\b", "reason": "reward model"},
+    # Anomaly detection / anomaly-specific checkpoints
+    {"pattern": r"\bAnomaly\b", "reason": "anomaly detection model"},
     # Translation
     {"pattern": r"\b(nllb|m2m100|mbart|opus-mt)\b", "reason": "translation model"},
     # Diffusion (image gen)
@@ -181,6 +183,7 @@ _SKIP_PIPELINE_TAGS = {
     "image-feature-extraction",
     "text-to-image",              # diffusion image (not LM)
     "image-to-image",
+    "image-to-3d",
     "unconditional-image-generation",
     "text-to-video",
     "video-classification",

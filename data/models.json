@@ -76690,5 +76690,41 @@
     "createdAt": "2026-05-27T17:25:41.000Z",
     "openness": "open-weight",
     "isMoe": true
+  },
+  {
+    "id": "stepfun-ai/Step-3.7-Flash",
+    "name": "Step-3.7-Flash",
+    "provider": "Stepfun",
+    "huggingfaceUrl": "https://huggingface.co/stepfun-ai/Step-3.7-Flash",
+    "techReport": "",
+    "modelscopeUrl": "https://modelscope.cn/models/stepfun-ai/Step-3.7-Flash",
+    "totalParameters": 201365316160,
+    "activeParameters": 201365316160,
+    "embeddingParameters": 527958016,
+    "nonEmbeddingParameters": 200837358144,
+    "contextLength": 262144,
+    "embeddingDim": 4096,
+    "vocabSize": 128896,
+    "architecture": "step3p7",
+    "numLayers": 45,
+    "numHeads": 64,
+    "numKvHeads": 64,
+    "hiddenSize": 4096,
+    "intermediateSize": 11264,
+    "positionEncoding": "RoPE",
+    "mlpFactor": 2.75,
+    "torchDtype": "bfloat16",
+    "moeIntermediateSize": 1280,
+    "inputModalities": [
+      "image",
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "task": "Image-Text-to-Text",
+    "createdAt": "2026-05-23T02:13:46.000Z",
+    "openness": "open-weight",
+    "isMoe": false
   }
 ]

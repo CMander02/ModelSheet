@@ -38,12 +38,20 @@ def extract_num_layers(ctx: ConfigContext) -> Optional[int]:
     Source: config.json num_hidden_layers
     Fallback: n_layer (GPT-NeoX/Falcon), num_layers
     """
-    return get_first_of(
+    value = get_first_of(
         ctx.config,
         "num_hidden_layers",
         "n_layer",
         "num_layers",
     )
+    if value is not None:
+        return value
+
+    layer_blocks = ctx.config.get("layers_block_type")
+    if isinstance(layer_blocks, list) and layer_blocks:
+        return len(layer_blocks)
+
+    return None
 
 
 def extract_num_heads(ctx: ConfigContext) -> Optional[int]:
@@ -148,6 +156,8 @@ def extract_activation(ctx: ConfigContext) -> Optional[str]:
         ctx.config,
         "hidden_act",
         "activation_function",
+        "mlp_hidden_act",
+        "mamba_hidden_act",
     )
 
 
@@ -179,6 +189,7 @@ def extract_norm_eps(ctx: ConfigContext) -> Optional[float]:
     return get_first_of(
         ctx.config,
         "rms_norm_eps",
+        "norm_eps",
         "layer_norm_eps",
         "layer_norm_epsilon",
     )
@@ -251,4 +262,8 @@ def extract_torch_dtype(ctx: ConfigContext) -> Optional[str]:
 
     Note: This indicates the precision the model was trained/stored in
     """
-    return ctx.config.get("torch_dtype")
+    return get_first_of(
+        ctx.config,
+        "torch_dtype",
+        "dtype",
+    )

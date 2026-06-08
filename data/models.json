@@ -76459,5 +76459,109 @@
     "createdAt": "2026-02-14T14:12:00.000Z",
     "openness": "open-weight",
     "isMoe": true
+  },
+  {
+    "id": "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16",
+    "name": "NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16",
+    "provider": "NVIDIA",
+    "huggingfaceUrl": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16",
+    "techReport": "https://research.nvidia.com/labs/nemotron/files/NVIDIA-Nemotron-3-Ultra-Technical-Report.pdf",
+    "totalParameters": 560524578816,
+    "activeParameters": 55000000000,
+    "embeddingParameters": 1073741824,
+    "nonEmbeddingParameters": 559450836992,
+    "contextLength": 1000000,
+    "embeddingDim": 8192,
+    "vocabSize": 131072,
+    "architecture": "nemotron_h",
+    "numLayers": 108,
+    "numHeads": 64,
+    "numKvHeads": 2,
+    "hiddenSize": 8192,
+    "intermediateSize": 5120,
+    "positionEncoding": "RoPE",
+    "activation": "relu2",
+    "normType": "LayerNorm",
+    "normEps": 1e-05,
+    "attentionDropout": 0.0,
+    "mlpFactor": 0.62,
+    "gqaRatio": 32.0,
+    "torchDtype": "bfloat16",
+    "numExperts": 512,
+    "numSharedExperts": 1,
+    "numExpertsPerToken": 22,
+    "numActivatedExperts": 23,
+    "moeIntermediateSize": 5120,
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "task": "Text Generation",
+    "createdAt": "2026-06-03T14:50:04.000Z",
+    "openness": "open-weight",
+    "isMoe": true,
+    "parameterConfidence": "official",
+    "parameterSource": "Hugging Face safetensors metadata and NVIDIA model card",
+    "parameterSourceUrl": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16"
+  },
+  {
+    "id": "microsoft/MAI-Thinking-1",
+    "name": "MAI-Thinking-1",
+    "provider": "Microsoft",
+    "techReport": "https://microsoft.ai/wp-content/uploads/2026/06/main_20260602_2.pdf",
+    "totalParameters": 1000000000000,
+    "activeParameters": 35000000000,
+    "contextLength": 262144,
+    "vocabSize": 200019,
+    "architecture": "mai_thinking",
+    "architectureFamily": "MAI",
+    "numLayers": 78,
+    "hiddenSize": 6656,
+    "intermediateSize": 13312,
+    "positionEncoding": "RoPE",
+    "activation": "swiglu",
+    "normType": "RMSNorm",
+    "isMoe": true,
+    "numExperts": 512,
+    "numExpertsPerToken": 8,
+    "numActivatedExperts": 8,
+    "moeIntermediateSize": 10240,
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "createdAt": "2026-06-02T00:00:00Z",
+    "knowledgeCutoff": "2025-07-01",
+    "openness": "closed",
+    "parameterConfidence": "official",
+    "parameterSource": "Microsoft AI MAI-Thinking-1 model page and technical report",
+    "parameterSourceUrl": "https://microsoft.ai/models/mai-thinking-1/"
+  },
+  {
+    "id": "microsoft/MAI-Code-1-Flash",
+    "name": "MAI-Code-1-Flash",
+    "provider": "Microsoft",
+    "techReport": "https://microsoft.ai/pdf/MAI-Code-1-Flash-Model-Card.PDF",
+    "totalParameters": 137000000000,
+    "activeParameters": 5000000000,
+    "contextLength": 262144,
+    "architecture": "mai_code",
+    "architectureFamily": "MAI",
+    "isMoe": true,
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "createdAt": "2026-06-02T00:00:00Z",
+    "openness": "closed",
+    "parameterConfidence": "official",
+    "parameterSource": "Microsoft AI MAI-Code-1-Flash model card",
+    "parameterSourceUrl": "https://microsoft.ai/pdf/MAI-Code-1-Flash-Model-Card.PDF"
   }
 ]

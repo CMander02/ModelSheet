@@ -10,8 +10,10 @@ import {
   COMPLEXITY_PRESETS,
   saveSearchState,
   loadSearchState,
+  saveHomeScrollPosition,
+  resetHomeScrollPositions,
 } from "@/lib/model-data"
-import type { SearchResult } from "@/lib/model-data"
+import type { HomeBrowseView, HomeScrollPosition, SearchResult } from "@/lib/model-data"
 import { getTranslations } from "@/lib/i18n"
 import { ModelTable } from "@/components/model-table"
 import { MobileModelList } from "@/components/mobile-model-list"
@@ -51,6 +53,9 @@ export function HomePage() {
   const [sortConfig, setSortConfig] = useState<SortConfig>(DEFAULT_SORT_CONFIG)
   const searchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [itemsPerPage] = useState(30)
+  const [scrollRestorePositions, setScrollRestorePositions] =
+    useState<Partial<Record<HomeBrowseView, HomeScrollPosition>>>({})
+  const [scrollRestoreKey, setScrollRestoreKey] = useState(0)
 
   // ─── API search ──────────────────────────────────────────────────────────
 
@@ -108,18 +113,29 @@ export function HomePage() {
     }
   }, [itemsPerPage])
 
+  const resetBrowsePosition = useCallback(() => {
+    resetHomeScrollPositions()
+    setScrollRestorePositions({
+      desktop: { top: 0, left: 0 },
+      mobile: { top: 0, left: 0 },
+    })
+    setScrollRestoreKey(key => key + 1)
+  }, [])
+
   const handleSortChange = useCallback((nextSort: SortConfig) => {
+    resetBrowsePosition()
     setSortConfig(nextSort)
     doSearch(searchTerm, 1, false, nextSort)
-  }, [doSearch, searchTerm])
+  }, [doSearch, resetBrowsePosition, searchTerm])
 
   const handleSearch = useCallback((value: string) => {
     setSearchTerm(value)
     if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current)
     searchDebounceRef.current = setTimeout(() => {
+      resetBrowsePosition()
       doSearch(value, 1, false, sortConfig)
     }, 300)
-  }, [doSearch, sortConfig])
+  }, [doSearch, resetBrowsePosition, sortConfig])
 
   const loadMore = useCallback(() => {
     if (!hasMore || isSearching) return
@@ -153,6 +169,8 @@ export function HomePage() {
     const savedState = loadSearchState()
     if (savedState) {
       const restoredSort = savedState.sortConfig ?? DEFAULT_SORT_CONFIG
+      setScrollRestorePositions(savedState.scroll ?? {})
+      setScrollRestoreKey(key => key + 1)
       setSearchTerm(savedState.term)
       setSortConfig(restoredSort)
       restoreSearch(savedState.term, savedState.page, restoredSort)
@@ -173,6 +191,18 @@ export function HomePage() {
       navigate(`/${org}/${name}`)
     }
   }, [searchTerm, currentPage, sortConfig, navigate])
+
+  const handleHomeScrollPositionChange = useCallback((view: HomeBrowseView, position: HomeScrollPosition) => {
+    saveHomeScrollPosition(view, position)
+  }, [])
+
+  const handleDesktopScrollPositionChange = useCallback((position: HomeScrollPosition) => {
+    handleHomeScrollPositionChange("desktop", position)
+  }, [handleHomeScrollPositionChange])
+
+  const handleMobileScrollPositionChange = useCallback((position: HomeScrollPosition) => {
+    handleHomeScrollPositionChange("mobile", position)
+  }, [handleHomeScrollPositionChange])
 
   // ─── Rest ────────────────────────────────────────────────────────────────
 
@@ -440,6 +470,9 @@ export function HomePage() {
           sortConfig={sortConfig}
           onSortChange={handleSortChange}
           onModelClick={handleModelClick}
+          scrollRestorePosition={scrollRestorePositions.desktop ?? null}
+          scrollRestoreKey={scrollRestoreKey}
+          onScrollPositionChange={handleDesktopScrollPositionChange}
         />
       </main>
 
@@ -459,6 +492,9 @@ export function HomePage() {
           sortConfig={sortConfig}
           onSortChange={handleSortChange}
           onModelClick={handleModelClick}
+          scrollRestorePosition={scrollRestorePositions.mobile ?? null}
+          scrollRestoreKey={scrollRestoreKey}
+          onScrollPositionChange={handleMobileScrollPositionChange}
         />
       </main>
 

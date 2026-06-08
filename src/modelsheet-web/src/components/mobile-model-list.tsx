@@ -4,6 +4,7 @@ import { providerSlug, isNewThisWeek } from "@/lib/utils"
 import { ArrowUpDown, Check, ChevronDown } from "lucide-react"
 import type { ModelInfo, SortConfig } from "@/lib/types"
 import type { Language } from "@/lib/i18n"
+import type { HomeScrollPosition } from "@/lib/model-data"
 import { ModelBrandIcon, ProviderBrandIcon } from "@/components/brand-icon"
 import { ModalityIcons } from "@/components/modality-icons"
 import { formatParameters, formatContextLength } from "@/lib/formatters"
@@ -114,10 +115,11 @@ interface CardProps {
   selected: boolean
   onSelect: (id: string) => void
   onNavigate: (model: ModelInfo) => void
+  onBeforeNavigate: () => void
   cardFields: CardField[]
 }
 
-function ModelCard({ model, language, selected, onSelect, onNavigate, cardFields }: CardProps) {
+function ModelCard({ model, language, selected, onSelect, onNavigate, onBeforeNavigate, cardFields }: CardProps) {
   const isZh = language === "zh"
 
   const metricFields = cardFields.filter(
@@ -179,7 +181,10 @@ function ModelCard({ model, language, selected, onSelect, onNavigate, cardFields
         <Link
           to={`/${providerSlug(model.provider ?? "")}`}
           className="flex items-center gap-1.5 mt-0.5 w-fit"
-          onClick={e => e.stopPropagation()}
+          onClick={e => {
+            onBeforeNavigate()
+            e.stopPropagation()
+          }}
         >
           <ProviderBrandIcon provider={model.provider} size={13} />
           <span className="text-xs text-muted-foreground hover:text-foreground transition-colors">{model.provider}</span>
@@ -195,7 +200,10 @@ function ModelCard({ model, language, selected, onSelect, onNavigate, cardFields
                   <Link
                     to={`/arch/${encodeURIComponent(model.architecture)}`}
                     className="inline-flex max-w-[8rem] rounded-md border border-transparent px-1.5 py-0.5 font-mono text-xs font-semibold text-foreground/80 transition-colors hover:border-primary/25 hover:bg-primary/5 hover:text-primary"
-                    onClick={e => e.stopPropagation()}
+                    onClick={e => {
+                      onBeforeNavigate()
+                      e.stopPropagation()
+                    }}
                   >
                     <span className="truncate">{model.architecture}</span>
                   </Link>
@@ -259,6 +267,9 @@ interface MobileModelListProps {
   onSortChange: (sortConfig: SortConfig) => void
   onCompare?: (ids: string[]) => void
   onModelClick?: (model: ModelInfo) => void
+  scrollRestorePosition?: HomeScrollPosition | null
+  scrollRestoreKey?: number
+  onScrollPositionChange?: (position: HomeScrollPosition) => void
 }
 
 export function MobileModelList({
@@ -274,6 +285,9 @@ export function MobileModelList({
   onSortChange,
   onCompare,
   onModelClick,
+  scrollRestorePosition,
+  scrollRestoreKey = 0,
+  onScrollPositionChange,
 }: MobileModelListProps) {
   const navigate = useNavigate()
   const isZh = language === "zh"
@@ -286,6 +300,9 @@ export function MobileModelList({
 
   // Bottom pull loading
   const scrollRef = useRef<HTMLDivElement>(null)
+  const latestScrollPositionRef = useRef<HomeScrollPosition | null>(null)
+  const scrollSaveRafRef = useRef<number | null>(null)
+  const restoredScrollKeyRef = useRef<number | null>(null)
   const autoLoadLockRef = useRef(false)
   const bottomPullEventsRef = useRef(0)
   const pullDistanceRef = useRef(0)
@@ -335,8 +352,55 @@ export function MobileModelList({
     onLoadMore()
   }, [hasMore, isLoadingMore, onLoadMore, setPullDistance])
 
+  const getCurrentScrollPosition = useCallback((): HomeScrollPosition | null => {
+    const container = scrollRef.current
+    if (container) {
+      return {
+        top: container.scrollTop,
+        left: container.scrollLeft,
+      }
+    }
+    return latestScrollPositionRef.current
+  }, [])
+
+  const flushScrollPosition = useCallback(() => {
+    if (!onScrollPositionChange) return
+    const position = getCurrentScrollPosition()
+    if (!position) return
+    latestScrollPositionRef.current = position
+    onScrollPositionChange(position)
+  }, [getCurrentScrollPosition, onScrollPositionChange])
+
+  const saveCurrentScrollPosition = useCallback(() => {
+    if (scrollSaveRafRef.current != null && typeof window !== "undefined") {
+      window.cancelAnimationFrame(scrollSaveRafRef.current)
+      scrollSaveRafRef.current = null
+    }
+    flushScrollPosition()
+  }, [flushScrollPosition])
+
+  const queueScrollPositionSave = useCallback((container: HTMLDivElement) => {
+    if (!onScrollPositionChange) return
+    latestScrollPositionRef.current = {
+      top: container.scrollTop,
+      left: container.scrollLeft,
+    }
+
+    if (typeof window === "undefined") {
+      flushScrollPosition()
+      return
+    }
+
+    if (scrollSaveRafRef.current != null) return
+    scrollSaveRafRef.current = window.requestAnimationFrame(() => {
+      scrollSaveRafRef.current = null
+      flushScrollPosition()
+    })
+  }, [flushScrollPosition, onScrollPositionChange])
+
   const handleListScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
     const container = e.currentTarget
+    queueScrollPositionSave(container)
     const remaining = container.scrollHeight - container.scrollTop - container.clientHeight
     if (remaining > 24 && pullDistanceRef.current > 0 && !isLoadingMore) {
       bottomPullEventsRef.current = 0
@@ -346,7 +410,7 @@ export function MobileModelList({
       bottomPullEventsRef.current = 0
       touchPullActiveRef.current = false
     }
-  }, [isLoadingMore, setPullDistance])
+  }, [isLoadingMore, queueScrollPositionSave, setPullDistance])
 
   const handleListWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
     const container = e.currentTarget
@@ -433,13 +497,69 @@ export function MobileModelList({
   }, [])
 
   const handleNavigate = useCallback((model: ModelInfo) => {
+    saveCurrentScrollPosition()
     if (onModelClick) {
       onModelClick(model)
     } else if (model.id?.includes("/")) {
       const [org, name] = model.id.split("/")
       navigate(`/${org}/${name}`)
     }
-  }, [navigate, onModelClick])
+  }, [navigate, onModelClick, saveCurrentScrollPosition])
+
+  useEffect(() => {
+    return () => {
+      if (scrollSaveRafRef.current != null && typeof window !== "undefined") {
+        window.cancelAnimationFrame(scrollSaveRafRef.current)
+        scrollSaveRafRef.current = null
+      }
+      flushScrollPosition()
+    }
+  }, [flushScrollPosition])
+
+  useEffect(() => {
+    if (!scrollRestorePosition) return
+    if (restoredScrollKeyRef.current === scrollRestoreKey) return
+    if (isLoadingMore && (scrollRestorePosition.top > 0 || scrollRestorePosition.left > 0)) return
+
+    const container = scrollRef.current
+    if (!container) return
+
+    const applyRestore = () => {
+      const nextPosition = {
+        top: Math.min(
+          Math.max(0, scrollRestorePosition.top),
+          Math.max(0, container.scrollHeight - container.clientHeight),
+        ),
+        left: Math.min(
+          Math.max(0, scrollRestorePosition.left),
+          Math.max(0, container.scrollWidth - container.clientWidth),
+        ),
+      }
+
+      container.scrollTo({
+        top: nextPosition.top,
+        left: nextPosition.left,
+        behavior: "auto",
+      })
+      latestScrollPositionRef.current = nextPosition
+      onScrollPositionChange?.(nextPosition)
+      restoredScrollKeyRef.current = scrollRestoreKey
+    }
+
+    if (typeof window === "undefined") {
+      applyRestore()
+      return
+    }
+
+    const frame = window.requestAnimationFrame(applyRestore)
+    return () => window.cancelAnimationFrame(frame)
+  }, [
+    isLoadingMore,
+    models.length,
+    onScrollPositionChange,
+    scrollRestoreKey,
+    scrollRestorePosition,
+  ])
 
   const handleCompare = () => {
     if (selectedIds.size >= 2 && onCompare) {
@@ -500,6 +620,7 @@ export function MobileModelList({
                   selected={selectedIds.has(model.id)}
                   onSelect={handleSelect}
                   onNavigate={handleNavigate}
+                  onBeforeNavigate={saveCurrentScrollPosition}
                   cardFields={cardFields}
                 />
               ))}

@@ -125,7 +125,43 @@ export interface SearchResult {
   totalPages: number
 }
 
+export type HomeBrowseView = "desktop" | "mobile"
+
+export interface HomeScrollPosition {
+  top: number
+  left: number
+}
+
+export interface SavedSearchState {
+  term: string
+  page: number
+  sortConfig?: SortConfig
+  scroll?: Partial<Record<HomeBrowseView, HomeScrollPosition>>
+}
+
 const SEARCH_QUERY_KEY = "modelsheet_search_query"
+
+function loadSavedSearchState(): SavedSearchState | null {
+  if (typeof window === "undefined") return null
+  try {
+    const raw = sessionStorage.getItem(SEARCH_QUERY_KEY)
+    return raw ? JSON.parse(raw) : null
+  } catch { return null }
+}
+
+function saveSavedSearchState(state: SavedSearchState): void {
+  if (typeof window === "undefined") return
+  try {
+    sessionStorage.setItem(SEARCH_QUERY_KEY, JSON.stringify(state))
+  } catch { /* quota exceeded - ignore */ }
+}
+
+function normalizeScrollPosition(position: HomeScrollPosition): HomeScrollPosition {
+  return {
+    top: Math.max(0, Math.round(position.top || 0)),
+    left: Math.max(0, Math.round(position.left || 0)),
+  }
+}
 
 /** 调用服务端搜索 API */
 export async function searchModels(
@@ -168,19 +204,36 @@ export async function loadProviderBySlug(slug: string): Promise<ProviderDetail |
 
 /** 缓存当前搜索状态，供导航返回时恢复 */
 export function saveSearchState(term: string, page: number, sortConfig?: SortConfig): void {
-  if (typeof window === "undefined") return
-  try {
-    sessionStorage.setItem(SEARCH_QUERY_KEY, JSON.stringify({ term, page, sortConfig }))
-  } catch { /* quota exceeded — ignore */ }
+  const previous = loadSavedSearchState()
+  saveSavedSearchState({
+    ...(previous ?? {}),
+    term,
+    page,
+    sortConfig,
+  })
 }
 
 /** 恢复导航前的搜索状态 */
-export function loadSearchState(): { term: string; page: number; sortConfig?: SortConfig } | null {
-  if (typeof window === "undefined") return null
-  try {
-    const raw = sessionStorage.getItem(SEARCH_QUERY_KEY)
-    return raw ? JSON.parse(raw) : null
-  } catch { return null }
+export function loadSearchState(): SavedSearchState | null {
+  return loadSavedSearchState()
+}
+
+export function saveHomeScrollPosition(view: HomeBrowseView, position: HomeScrollPosition): void {
+  const previous = loadSavedSearchState() ?? { term: "", page: 1 }
+  saveSavedSearchState({
+    ...previous,
+    scroll: {
+      ...(previous.scroll ?? {}),
+      [view]: normalizeScrollPosition(position),
+    },
+  })
+}
+
+export function resetHomeScrollPositions(): void {
+  const previous = loadSavedSearchState()
+  if (!previous?.scroll) return
+  const { scroll: _scroll, ...rest } = previous
+  saveSavedSearchState(rest)
 }
 
 /** 清除搜索缓存（导航到详情页时调用） */

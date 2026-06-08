@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/tooltip"
 import type { ModelInfo, ColumnConfig, ComplexityLevel, SortConfig } from "@/lib/types"
 import { COMPLEXITY_PRESETS } from "@/lib/model-data"
+import type { HomeScrollPosition } from "@/lib/model-data"
 import type { Language } from "@/lib/i18n"
 
 const PULL_LOAD_THRESHOLD = 72
@@ -74,6 +75,9 @@ interface ModelTableProps {
   onModelClick?: (model: ModelInfo) => void
   sortConfig: SortConfig
   onSortChange: (sortConfig: SortConfig) => void
+  scrollRestorePosition?: HomeScrollPosition | null
+  scrollRestoreKey?: number
+  onScrollPositionChange?: (position: HomeScrollPosition) => void
 }
 
 export function ModelTable({
@@ -93,9 +97,15 @@ export function ModelTable({
   onModelClick,
   sortConfig,
   onSortChange,
+  scrollRestorePosition,
+  scrollRestoreKey = 0,
+  onScrollPositionChange,
 }: ModelTableProps) {
   const navigate = useNavigate()
   const scrollRef = useRef<HTMLDivElement | null>(null)
+  const latestScrollPositionRef = useRef<HomeScrollPosition | null>(null)
+  const scrollSaveRafRef = useRef<number | null>(null)
+  const restoredScrollKeyRef = useRef<number | null>(null)
   const autoLoadLockRef = useRef(false)
   const bottomPullEventsRef = useRef(0)
   const pullDistanceRef = useRef(0)
@@ -203,16 +213,63 @@ export function ModelTable({
     [headerMenuColumnKey, visibleColumns]
   )
 
+  const getCurrentScrollPosition = useCallback((): HomeScrollPosition | null => {
+    const container = scrollRef.current
+    if (container) {
+      return {
+        top: container.scrollTop,
+        left: container.scrollLeft,
+      }
+    }
+    return latestScrollPositionRef.current
+  }, [])
+
+  const flushScrollPosition = useCallback(() => {
+    if (!onScrollPositionChange) return
+    const position = getCurrentScrollPosition()
+    if (!position) return
+    latestScrollPositionRef.current = position
+    onScrollPositionChange(position)
+  }, [getCurrentScrollPosition, onScrollPositionChange])
+
+  const saveCurrentScrollPosition = useCallback(() => {
+    if (scrollSaveRafRef.current != null && typeof window !== "undefined") {
+      window.cancelAnimationFrame(scrollSaveRafRef.current)
+      scrollSaveRafRef.current = null
+    }
+    flushScrollPosition()
+  }, [flushScrollPosition])
+
   const handleRowClick = useCallback((model: ModelInfo, e: React.MouseEvent) => {
     const target = e.target as HTMLElement
     if (target.closest('a, button, input, [role="checkbox"]')) return
+    saveCurrentScrollPosition()
     if (onModelClick) {
       onModelClick(model)
     } else if (model.id?.includes("/")) {
       const [org, name] = model.id.split("/")
       navigate(`/${org}/${name}`)
     }
-  }, [navigate, onModelClick])
+  }, [navigate, onModelClick, saveCurrentScrollPosition])
+
+  const queueScrollPositionSave = useCallback((container: HTMLDivElement) => {
+    if (!onScrollPositionChange) return
+    latestScrollPositionRef.current = {
+      top: container.scrollTop,
+      left: container.scrollLeft,
+    }
+
+    if (typeof window === "undefined") {
+      flushScrollPosition()
+      return
+    }
+
+    if (scrollSaveRafRef.current != null) return
+    scrollSaveRafRef.current = window.requestAnimationFrame(() => {
+      scrollSaveRafRef.current = null
+      flushScrollPosition()
+    })
+  }, [flushScrollPosition, onScrollPositionChange])
 
   useEffect(() => {
     if (!isLoadingMore) {
@@ -224,8 +281,59 @@ export function ModelTable({
   useEffect(() => {
     return () => {
       if (pullResetTimerRef.current) clearTimeout(pullResetTimerRef.current)
+      if (scrollSaveRafRef.current != null && typeof window !== "undefined") {
+        window.cancelAnimationFrame(scrollSaveRafRef.current)
+        scrollSaveRafRef.current = null
+      }
+      flushScrollPosition()
     }
-  }, [])
+  }, [flushScrollPosition])
+
+  useEffect(() => {
+    if (!scrollRestorePosition) return
+    if (restoredScrollKeyRef.current === scrollRestoreKey) return
+    if (isLoadingMore && (scrollRestorePosition.top > 0 || scrollRestorePosition.left > 0)) return
+
+    const container = scrollRef.current
+    if (!container) return
+
+    const applyRestore = () => {
+      const nextPosition = {
+        top: Math.min(
+          Math.max(0, scrollRestorePosition.top),
+          Math.max(0, container.scrollHeight - container.clientHeight),
+        ),
+        left: Math.min(
+          Math.max(0, scrollRestorePosition.left),
+          Math.max(0, container.scrollWidth - container.clientWidth),
+        ),
+      }
+
+      container.scrollTo({
+        top: nextPosition.top,
+        left: nextPosition.left,
+        behavior: "auto",
+      })
+      latestScrollPositionRef.current = nextPosition
+      onScrollPositionChange?.(nextPosition)
+      restoredScrollKeyRef.current = scrollRestoreKey
+    }
+
+    if (typeof window === "undefined") {
+      applyRestore()
+      return
+    }
+
+    const frame = window.requestAnimationFrame(applyRestore)
+    return () => window.cancelAnimationFrame(frame)
+  }, [
+    isLoadingMore,
+    models.length,
+    onScrollPositionChange,
+    scrollRestoreKey,
+    scrollRestorePosition,
+    tableMinWidth,
+  ])
 
   const schedulePullReset = useCallback(() => {
     if (pullResetTimerRef.current) clearTimeout(pullResetTimerRef.current)
@@ -241,6 +349,7 @@ export function ModelTable({
 
   const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
     const container = e.currentTarget
+    queueScrollPositionSave(container)
     const remaining = container.scrollHeight - container.scrollTop - container.clientHeight
     if (remaining > 24 && pullDistanceRef.current > 0 && !isLoadingMore) {
       bottomPullEventsRef.current = 0
@@ -248,7 +357,7 @@ export function ModelTable({
     } else if (remaining > 24) {
       bottomPullEventsRef.current = 0
     }
-  }, [isLoadingMore, setPullDistance])
+  }, [isLoadingMore, queueScrollPositionSave, setPullDistance])
 
   const handleWheel = useCallback((e: React.WheelEvent<HTMLDivElement>) => {
     const container = e.currentTarget
@@ -535,7 +644,10 @@ export function ModelTable({
                               <Link
                                 to={model.id?.includes("/") ? `/${model.id.split("/")[0]}/${model.id.split("/")[1]}` : "#"}
                                 className="flex min-w-0 items-center gap-2 hover:text-primary hover:underline transition-colors"
-                                onClick={(e) => e.stopPropagation()}
+                                onClick={(e) => {
+                                  saveCurrentScrollPosition()
+                                  e.stopPropagation()
+                                }}
                               >
                                 <ModelBrandIcon model={model.id} className="shrink-0" />
                                 <span className="truncate">{formatValue(model[column.key], column.type)}</span>
@@ -557,7 +669,10 @@ export function ModelTable({
                             <Link
                               to={`/${providerSlug(String(model[column.key] ?? ""))}`}
                               className="inline-flex max-w-full items-center gap-2 hover:text-primary hover:underline transition-colors"
-                              onClick={e => e.stopPropagation()}
+                              onClick={e => {
+                                saveCurrentScrollPosition()
+                                e.stopPropagation()
+                              }}
                             >
                               <ProviderBrandIcon provider={String(model[column.key] ?? "")} />
                               <span className="truncate">{formatValue(model[column.key], column.type)}</span>
@@ -566,7 +681,10 @@ export function ModelTable({
                             <Link
                               to={`/arch/${encodeURIComponent(model.architecture)}`}
                               className="inline-flex max-w-full items-center rounded-md border border-transparent px-1.5 py-0.5 font-mono text-xs text-foreground/80 transition-colors hover:border-primary/25 hover:bg-primary/5 hover:text-primary"
-                              onClick={e => e.stopPropagation()}
+                              onClick={e => {
+                                saveCurrentScrollPosition()
+                                e.stopPropagation()
+                              }}
                             >
                               <span className="truncate">{model.architecture}</span>
                             </Link>

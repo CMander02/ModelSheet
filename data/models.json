@@ -76938,5 +76938,49 @@
     "parameterConfidence": "official",
     "parameterSource": "Microsoft AI MAI-Code-1-Flash model card",
     "parameterSourceUrl": "https://microsoft.ai/pdf/MAI-Code-1-Flash-Model-Card.PDF"
+  },
+  {
+    "id": "zai-org/GLM-5.2",
+    "name": "GLM-5.2",
+    "provider": "Zhipu AI",
+    "huggingfaceUrl": "https://huggingface.co/zai-org/GLM-5.2",
+    "techReport": "",
+    "modelscopeUrl": "https://modelscope.cn/models/ZhipuAI/GLM-5.2",
+    "arxivUrl": "https://arxiv.org/abs/2602.15763",
+    "totalParameters": 753329940480,
+    "activeParameters": 39228801024,
+    "embeddingParameters": 951582720,
+    "nonEmbeddingParameters": 752378357760,
+    "contextLength": 1048576,
+    "embeddingDim": 6144,
+    "vocabSize": 154880,
+    "architecture": "glm_moe_dsa",
+    "numLayers": 78,
+    "numHeads": 64,
+    "numKvHeads": 64,
+    "hiddenSize": 6144,
+    "intermediateSize": 12288,
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-05,
+    "attentionDropout": 0.0,
+    "mlpFactor": 2.0,
+    "gqaRatio": 1.0,
+    "torchDtype": "bfloat16",
+    "numExperts": 256,
+    "numSharedExperts": 1,
+    "numExpertsPerToken": 8,
+    "numActivatedExperts": 9,
+    "moeIntermediateSize": 2048,
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "task": "Text Generation",
+    "createdAt": "2026-06-16T07:39:20.000Z",
+    "openness": "open-weight",
+    "isMoe": true
   }
 ]

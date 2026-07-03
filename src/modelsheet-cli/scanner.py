@@ -248,6 +248,7 @@ def scan_orgs(
     orgs: list[tuple[str, str]],   # list of (source, org) — source: "hf" or "ms"
     apply_filters: bool = True,
     show_skipped: bool = False,
+    timeout: int = 15,
 ) -> dict:
     """Scan orgs, diff against snapshot, and return new model candidates.
 
@@ -273,8 +274,8 @@ def scan_orgs(
     if token:
         headers["Authorization"] = f"Bearer {token}"
 
-    with httpx.Client(timeout=5, follow_redirects=True) as hf_client:
-        with httpx.Client(timeout=5, follow_redirects=True) as ms_client:
+    with httpx.Client(timeout=timeout, follow_redirects=True) as hf_client:
+        with httpx.Client(timeout=timeout, follow_redirects=True) as ms_client:
 
             def fetch_org(source_org):
                 source, org = source_org

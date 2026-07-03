@@ -5,6 +5,10 @@ from typing import Optional
 from .base import ConfigContext, get_first_of
 
 
+def _int_or_zero(value) -> int:
+    return value if isinstance(value, int) else 0
+
+
 def extract_is_moe(ctx: ConfigContext) -> bool:
     """Check if model uses MoE architecture.
 
@@ -13,9 +17,9 @@ def extract_is_moe(ctx: ConfigContext) -> bool:
            OR model_type contains 'moe'
     """
     return (
-        ctx.config.get("num_local_experts", 0) > 1
-        or ctx.config.get("num_experts", 0) > 1
-        or ctx.config.get("n_routed_experts", 0) > 1
+        _int_or_zero(ctx.config.get("num_local_experts")) > 1
+        or _int_or_zero(ctx.config.get("num_experts")) > 1
+        or _int_or_zero(ctx.config.get("n_routed_experts")) > 1
         or "moe" in ctx.config.get("model_type", "").lower()
     )
 

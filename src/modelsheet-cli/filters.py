@@ -26,6 +26,7 @@ _DEFAULT_RULES = [
     {"pattern": r"\bW\d+A\d+\b", "reason": "weight-only quantized"},
     {"pattern": r"\bINT[248]\b", "reason": "INT quantized"},
     {"pattern": r"\bFP[48]\b", "reason": "FP quantized"},
+    {"pattern": r"MXFP[48]", "reason": "MXFP quantized"},
     {"pattern": r"NVFP4", "reason": "NVFP4 quantized"},
     {"pattern": r"\bNF4\b", "reason": "NF4 quantized"},
     {"pattern": r"\bBNB\b", "reason": "bitsandbytes quantized"},
@@ -35,8 +36,10 @@ _DEFAULT_RULES = [
     {"pattern": r"\bSQ\b", "reason": "SmoothQuant quantized"},
     # Speculative decoding draft heads (not base LLMs)
     {"pattern": r"\beagle\d*(?:\.\d+)?", "reason": "speculative decoding draft head (EAGLE)"},
+    {"pattern": r"(?:^|[-_])(?:dspark|dflash)(?:[-_]|$)", "reason": "speculative decoding / acceleration variant"},
     # ASR / TTS
     {"pattern": r"\b(whisper|asr|tts|speech|vocoder)\b", "reason": "ASR/TTS model"},
+    {"pattern": r"forced-?aligner", "reason": "forced alignment model"},
     # Embedding / Rerank
     {"pattern": r"\b(embed(?:ding)?s?|rerank(?:er)?|retriev(?:al|er))\b", "reason": "embedding/rerank model"},
     {"pattern": r"\b(bge|e5|gte|nomic-embed|sentence-?transformers?)\b", "reason": "embedding model"},
@@ -49,10 +52,14 @@ _DEFAULT_RULES = [
     {"pattern": r"\b(nllb|m2m100|mbart|opus-mt)\b", "reason": "translation model"},
     # Diffusion (image gen)
     {"pattern": r"\b(stable-?diffusion|sdxl|sd-?v\d|sd\d|flux|kandinsky|dall-?e|midjourney|imagen|pixart|cogvideox)\b", "reason": "diffusion (image gen, not LM)"},
+    {"pattern": r"\bernie-image\b", "reason": "image generation model"},
     # Classifier
     {"pattern": r"\b(classifier|discriminator)\b", "reason": "classifier/discriminator model"},
     # OCR (not MLLM) — expanded to catch PaddleOCR, olmOCR, HunyuanOCR, GLM-OCR, etc.
-    {"pattern": r"(?:ocr-vl|paddleocr|olmocr|hunyuanocr|glm-ocr|dots\.ocr|qianfan-ocr|deepseek-ocr|pp-ocr)", "reason": "OCR model (not MLLM)"},
+    {"pattern": r"(?:\bocr\b|[-_.]ocr(?:[-_.]|$)|ocr-vl|paddleocr|olmocr|hunyuanocr|glm-ocr|dots\.ocr|qianfan-ocr|deepseek-ocr|pp-ocr)", "reason": "OCR model (not MLLM)"},
+    # Non-LM vision / domain-specific checkpoints
+    {"pattern": r"\b(circularnet|autopartgen|meshflow|lamp)\b", "reason": "non-LM vision/domain model"},
+    {"pattern": r"(?:docbee|doclayout|docblocklayout|chart2table|formula|layout(?:[-_]\d+cls)?|(?:^|[-_])table(?:[-_]cell)?(?:[-_]|$)|picodet|rt-?detr|slanet|slanext|lcnet|uvdoc|unimernet|svtr|repsvtr)", "reason": "document/layout/OCR utility model"},
     # Baidu 2-bit quantized (not at end of name, so no $ anchor)
     {"pattern": r"-2bits", "reason": "2-bit quantized (Baidu ERNIE)"},
     # Tensor parallelism variant (not at end of name, so no $ anchor)
@@ -182,6 +189,7 @@ _SKIP_PIPELINE_TAGS = {
     "depth-estimation",
     "image-feature-extraction",
     "text-to-image",              # diffusion image (not LM)
+    "text-to-image-synthesis",
     "image-to-image",
     "image-to-3d",
     "unconditional-image-generation",

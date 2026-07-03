@@ -352,9 +352,9 @@ export function HomePage() {
       <header className="shrink-0 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         {/* Desktop header */}
         <div className="container hidden md:flex h-14 items-center gap-3">
-          <div className="flex shrink-0 items-baseline gap-2">
+          <div className="flex shrink-0 items-center gap-2">
             <h1 className="text-xl font-bold leading-none">{t.nav.title}</h1>
-            <span className="rounded border bg-muted/40 px-2 py-0.5 text-xs text-muted-foreground">
+            <span className="inline-flex h-6 items-center rounded border bg-muted/40 px-2 text-xs leading-none text-muted-foreground">
               {language === "zh" ? `${totalCount} 个` : `${totalCount}`}
             </span>
           </div>
@@ -369,7 +369,7 @@ export function HomePage() {
             />
           </div>
 
-          <div className="flex shrink-0 items-center gap-1.5">
+          <div className="ml-auto flex shrink-0 items-center gap-1.5">
             {renderComplexityMenu()}
             <div className="mx-1 h-5 w-px bg-border" />
             <Link to="/providers">

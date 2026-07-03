@@ -765,6 +765,7 @@ def scan(
         orgs=orgs_to_scan,
         apply_filters=True,
         show_skipped=show_skipped,
+        timeout=timeout,
     )
 
     new_models = result["new_models"]

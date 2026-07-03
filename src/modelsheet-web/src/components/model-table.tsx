@@ -553,20 +553,20 @@ export function ModelTable({
                   return (
                     <th
                       key={column.key}
-                      className={`h-10 px-2 text-left align-middle font-medium text-muted-foreground whitespace-nowrap ${
+                      className={`h-10 px-3 text-left align-middle font-medium text-muted-foreground whitespace-nowrap ${
                         isPinned ? `sticky z-30 bg-card` : ''
                       }`}
                       style={getColumnStyle(column)}
                       onContextMenu={(event) => openHeaderMenu(event, column)}
                       title={t.rightClickColumn}
                     >
-                      <div className="flex items-center gap-1">
+                      <div className="flex h-full items-center gap-1">
                         {isPinned && <Pin className="h-3 w-3 shrink-0 fill-current text-primary/80" />}
                         {column.sortable ? (
                           <Button
                             variant="ghost"
                             size="sm"
-                            className="h-7 min-w-0 flex-1 justify-start px-2 text-xs data-[state=open]:bg-accent"
+                            className="h-7 min-w-0 flex-1 justify-start px-0 text-xs data-[state=open]:bg-accent hover:bg-transparent"
                             onClick={() => handleSort(column)}
                           >
                             <span className="truncate">{column.label}</span>
@@ -581,7 +581,7 @@ export function ModelTable({
                             )}
                           </Button>
                         ) : (
-                          <span className="min-w-0 flex-1 truncate px-2">{column.label}</span>
+                          <span className="min-w-0 flex-1 truncate px-0">{column.label}</span>
                         )}
                       </div>
                     </th>

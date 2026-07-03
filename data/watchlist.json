@@ -1,21 +1,25 @@
 {
   "orgs": [
     "mistralai",
-    "qwen",
+    "Qwen",
     "deepseek-ai",
-    "meta",
+    "facebook",
     "google",
-    "mimo",
-    "kimi",
-    "glm",
-    "minimax",
-    "baidu"
+    "XiaomiMiMo",
+    "moonshotai",
+    "moonshot-ai",
+    "THUDM",
+    "zai-org",
+    "ZhipuAI",
+    "MiniMaxAI",
+    "baidu",
+    "PaddlePaddle"
   ],
   "sources": {
     "mistralai": [
       "hf"
     ],
-    "qwen": [
+    "Qwen": [
       "hf",
       "ms"
     ],
@@ -23,37 +27,43 @@
       "hf",
       "ms"
     ],
-    "meta": [
+    "facebook": [
       "hf"
     ],
     "google": [
       "hf"
     ],
-    "mimo": [
+    "XiaomiMiMo": [
       "hf",
       "ms"
     ],
-    "kimi": [
-      "hf",
+    "moonshotai": [
+      "hf"
+    ],
+    "moonshot-ai": [
       "ms"
     ],
-    "glm": [
-      "hf",
+    "THUDM": [
+      "hf"
+    ],
+    "zai-org": [
+      "hf"
+    ],
+    "ZhipuAI": [
       "ms"
     ],
-    "minimax": [
+    "MiniMaxAI": [
       "hf",
       "ms"
     ],
     "baidu": [
       "hf"
+    ],
+    "PaddlePaddle": [
+      "ms"
     ]
   },
   "snapshots": {
-    "mimo": [],
-    "kimi": [],
-    "glm": [],
-    "minimax": [],
     "baidu": []
   }
 }

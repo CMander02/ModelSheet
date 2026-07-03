@@ -19,6 +19,35 @@ defaultParams:
   numHeads: 28
   numKvHeads: 4
   hiddenSize: 3584
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/
+    type: reference
+  - label: HuggingFace config
+    url: https://huggingface.co/Qwen/Qwen2.5-7B/blob/main/config.json
+    type: hf-config
+features:
+  attention: GQA
+  positionEncoding: RoPE
+  norm: RMSNorm
+  ffn: SwiGLU
+  qkvBias: true
+variants:
+  - id: qwen2-moe
+    name: Qwen2 MoE
+    aliases: [qwen2_moe]
+    descriptionZh: "共享 Qwen2 模块谱系，FFN 替换为 MoE 路由专家。"
+    descriptionEn: "Shares the Qwen2 module lineage and replaces dense FFN with routed MoE experts."
+  - id: qwen2-vl
+    name: Qwen2 VL / Omni
+    aliases: [qwen2_vl, qwen2_5_vl, qwen2_5_omni]
+    descriptionZh: "多模态变体保留文本解码器主干，视觉或音频模块作为外部编码器接入。"
+    descriptionEn: "Multimodal variants keep the text decoder backbone and attach vision or audio encoders."
+evidence:
+  - source: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/
+    noteZh: "用于核对 Qwen 系列与现代 GQA/RoPE/SwiGLU 图示风格。"
+    noteEn: "Used to align Qwen-family diagrams with the modern GQA/RoPE/SwiGLU presentation."
 diagram:
   subtitle: "hidden: {{hiddenSize}} · Q:{{numHeads}} KV:{{numKvHeads}}"
   nodes:

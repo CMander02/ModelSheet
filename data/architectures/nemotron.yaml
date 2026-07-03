@@ -1,0 +1,85 @@
+id: nemotron
+family: Nemotron / Nemotron-H
+era: "2025"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Nemotron 3 图库条目覆盖 GQA 与 Mamba-2 混合 MoE 变体，强调少量注意力层配合状态空间层。"
+  en: "Nemotron 3 gallery entries cover GQA and Mamba-2 hybrid MoE variants, emphasizing a small number of attention layers alongside state-space layers."
+hfOrg: nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16
+aliases: [nemotron, nemotron_h, nemotron_nas]
+defaultParams:
+  numLayers: 52
+  numHeads: 32
+  numKvHeads: 8
+  numExperts: 64
+  numExpertsPerToken: 6
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-nemotron-3-nano-30b-a3b
+    type: reference
+features:
+  attention: few GQA layers
+  tokenMixer: mostly Mamba-2
+  moe: hybrid MoE
+variants:
+  - id: nemotron-3-nano
+    name: Nemotron 3 Nano
+    aliases: [nemotron]
+    descriptionZh: "包含 4B dense hybrid 与 30B-A3B hybrid MoE 图库变体。"
+    descriptionEn: "Includes 4B dense hybrid and 30B-A3B hybrid MoE gallery variants."
+  - id: nemotron-3-super-ultra
+    name: Nemotron 3 Super / Ultra
+    aliases: [nemotron_h]
+    descriptionZh: "更大规模 hybrid MoE 图库变体。"
+    descriptionEn: "Larger hybrid MoE gallery variants."
+diagram:
+  subtitle: "Mamba-2 + GQA · MoE variants"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Nemotron Hybrid Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: mixer
+          type: row
+          children:
+            - id: mamba
+              type: leaf
+              label: Mamba-2 mixer
+              color: teal
+            - id: attn
+              type: leaf
+              label: Sparse GQA layers
+              color: attn
+        - id: moe
+          type: group
+          label: MoE FFN
+          color: moe
+          children:
+            - id: router
+              type: leaf
+              label: "Router top-{{numExpertsPerToken}}"
+              color: teal
+            - id: experts
+              type: leaf
+              label: "Experts x{{numExperts}}"
+              color: ffn
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

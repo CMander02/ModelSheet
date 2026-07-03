@@ -1,0 +1,84 @@
+id: qwen3-next
+family: Qwen3 Next
+era: "2025"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Qwen3 Next 是稀疏混合解码器，交替使用 Gated DeltaNet 与 Gated Attention，并结合 MoE FFN。"
+  en: "Qwen3 Next is a sparse hybrid decoder alternating Gated DeltaNet and Gated Attention with MoE FFNs."
+hfOrg: Qwen/Qwen3-Next-80B-A3B-Instruct
+aliases: [qwen3_next]
+defaultParams:
+  numLayers: 48
+  numExperts: 512
+  numExpertsPerToken: 10
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-qwen3-next-80b-a3b
+    type: reference
+features:
+  attention: gated attention
+  tokenMixer: Gated DeltaNet
+  moe: sparse MoE
+  layerMix: 3:1 DeltaNet and attention
+variants:
+  - id: qwen3-next-80b-a3b
+    name: Qwen3 Next 80B-A3B
+    aliases: [qwen3_next]
+    descriptionZh: "图库条目中的 80B total / 3B active 混合 MoE 代表。"
+    descriptionEn: "The 80B total / 3B active hybrid MoE representative in the gallery."
+diagram:
+  subtitle: "Gated DeltaNet + Attention · MoE"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Hybrid Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: mixer
+          type: row
+          children:
+            - id: delta
+              type: leaf
+              label: Gated DeltaNet
+              sub: recurrent/linear path
+              color: teal
+            - id: gattn
+              type: leaf
+              label: Gated Attention
+              color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: moe
+          type: group
+          label: MoE FFN
+          color: moe
+          children:
+            - id: router
+              type: leaf
+              label: "Router top-{{numExpertsPerToken}}"
+              color: teal
+            - id: experts
+              type: leaf
+              label: "Experts x{{numExperts}}"
+              color: ffn
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

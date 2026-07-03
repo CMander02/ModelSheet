@@ -1,0 +1,68 @@
+id: t5
+family: T5 / FLAN-T5
+era: "2020"
+type: encoder-decoder
+normPlacement: pre
+description:
+  zh: "T5 是 encoder-decoder 架构，使用相对位置偏置、RMSNorm 和无 bias 投影，T5 v1.1 引入 gated FFN。"
+  en: "T5 is an encoder-decoder architecture with relative position bias, RMSNorm, bias-free projections, and gated FFNs in T5 v1.1."
+paperUrl: https://arxiv.org/abs/1910.10683
+hfOrg: google/flan-t5-xl
+aliases: [t5, longt5]
+defaultParams:
+  numLayers: 24
+  numHeads: 32
+  hiddenSize: 2048
+features:
+  block: encoder-decoder
+  attention: self-attention plus cross-attention
+  positionEncoding: relative attention bias
+  norm: RMSNorm
+diagram:
+  subtitle: "encoder-decoder · layers: {{numLayers}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: enc
+      type: group
+      label: Encoder Stack
+      badge: "x{{numLayers}}"
+      color: blue
+      children:
+        - id: encnorm
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: encattn
+          type: leaf
+          label: Self-Attention
+          sub: relative position bias
+          color: attn
+        - id: encffn
+          type: leaf
+          label: Gated FFN
+          color: ffn
+    - id: dec
+      type: group
+      label: Decoder Stack
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: decself
+          type: leaf
+          label: Causal Self-Attention
+          color: attn
+        - id: cross
+          type: leaf
+          label: Cross-Attention
+          color: sky
+        - id: decffn
+          type: leaf
+          label: Gated FFN
+          color: ffn
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

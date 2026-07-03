@@ -1,0 +1,93 @@
+id: deepseek-v4
+family: DeepSeek V4
+era: "2026"
+type: decoder
+normPlacement: pre
+description:
+  zh: "DeepSeek V4 图库条目延续 MLA/MoE 谱系，并加入 CSA/HCA 与 mHC 等新型注意力压缩路径。"
+  en: "DeepSeek V4 gallery entries continue the MLA/MoE lineage and add CSA/HCA plus mHC-style attention compression paths."
+hfOrg: deepseek-ai/DeepSeek-V4-Flash
+aliases: [deepseek_v4]
+defaultParams:
+  numLayers: 61
+  numExperts: 384
+  numExpertsPerToken: 8
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-deepseek-v4-flash
+    type: reference
+features:
+  attention: MLA-style CSA/HCA
+  moe: sparse MoE
+  routing: top-k expert routing
+variants:
+  - id: deepseek-v4-flash
+    name: DeepSeek V4-Flash
+    aliases: [deepseek_v4]
+    descriptionZh: "284B 图库变体，强调 Flash 服务效率。"
+    descriptionEn: "284B gallery variant focused on serving efficiency."
+  - id: deepseek-v4-pro
+    name: DeepSeek V4-Pro
+    aliases: [deepseek_v4]
+    descriptionZh: "1.6T 图库变体，扩大总参数规模。"
+    descriptionEn: "1.6T gallery variant with a larger total parameter scale."
+diagram:
+  subtitle: "MLA-style compression · MoE top-{{numExpertsPerToken}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: DeepSeek V4 Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attn
+          type: group
+          label: CSA / HCA Attention
+          color: attn
+          children:
+            - id: latent
+              type: leaf
+              label: Latent cache path
+              color: sky
+            - id: mhc
+              type: leaf
+              label: mHC compression
+              color: purple
+            - id: out
+              type: leaf
+              label: Attention output
+              color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: moe
+          type: group
+          label: MoE FFN
+          color: moe
+          children:
+            - id: router
+              type: leaf
+              label: "Router top-{{numExpertsPerToken}}"
+              color: teal
+            - id: expert
+              type: leaf
+              label: SwiGLU Experts
+              color: ffn
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

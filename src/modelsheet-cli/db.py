@@ -120,6 +120,10 @@ CREATE TABLE IF NOT EXISTS architectures (
   paper_url TEXT,
   hf_org TEXT,
   default_params_json TEXT NOT NULL DEFAULT '{}',
+  source_links_json TEXT NOT NULL DEFAULT '[]',
+  variants_json TEXT NOT NULL DEFAULT '[]',
+  evidence_json TEXT NOT NULL DEFAULT '[]',
+  features_json TEXT NOT NULL DEFAULT '{}',
   diagram_subtitle TEXT,
   diagram_nodes_json TEXT NOT NULL DEFAULT '[]',
   raw_yaml TEXT NOT NULL
@@ -162,6 +166,10 @@ class ArchitectureSpec:
     hf_org: str | None
     aliases: list[str]
     default_params: dict[str, Any]
+    source_links: list[Any]
+    variants: list[Any]
+    evidence: list[Any]
+    features: dict[str, Any]
     diagram_subtitle: str | None
     diagram_nodes: list[dict[str, Any]]
     raw_yaml: str
@@ -286,6 +294,20 @@ def _validate_node(node: Any, path: str) -> dict[str, Any]:
     return out
 
 
+def _optional_list(data: dict[str, Any], key: str, path: Path) -> list[Any]:
+    value = data.get(key) or []
+    if not isinstance(value, list):
+        raise ValueError(f"{path}: {key} must be a list")
+    return value
+
+
+def _optional_dict(data: dict[str, Any], key: str, path: Path) -> dict[str, Any]:
+    value = data.get(key) or {}
+    if not isinstance(value, dict):
+        raise ValueError(f"{path}: {key} must be an object")
+    return value
+
+
 def load_architectures(
     architectures_dir: Path = ARCHITECTURES_DIR,
 ) -> list[ArchitectureSpec]:
@@ -363,6 +385,10 @@ def load_architectures(
                 hf_org=data.get("hfOrg"),
                 aliases=aliases,
                 default_params=default_params,
+                source_links=_optional_list(data, "sourceLinks", path),
+                variants=_optional_list(data, "variants", path),
+                evidence=_optional_list(data, "evidence", path),
+                features=_optional_dict(data, "features", path),
                 diagram_subtitle=diagram.get("subtitle"),
                 diagram_nodes=diagram_nodes,
                 raw_yaml=raw_yaml,
@@ -532,9 +558,10 @@ def build_sqlite(
             """
             INSERT INTO architectures (
               id, family, era, type, norm_placement, description_zh, description_en,
-              paper_url, hf_org, default_params_json, diagram_subtitle,
+              paper_url, hf_org, default_params_json, source_links_json,
+              variants_json, evidence_json, features_json, diagram_subtitle,
               diagram_nodes_json, raw_yaml
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             [
                 (
@@ -548,6 +575,10 @@ def build_sqlite(
                     a.paper_url,
                     a.hf_org,
                     _json_text(a.default_params),
+                    _json_text(a.source_links),
+                    _json_text(a.variants),
+                    _json_text(a.evidence),
+                    _json_text(a.features),
                     a.diagram_subtitle,
                     _json_text(a.diagram_nodes),
                     a.raw_yaml,

@@ -1,0 +1,65 @@
+id: bert
+family: BERT
+era: "2018"
+type: encoder
+normPlacement: post
+description:
+  zh: "双向 Transformer 编码器，Post-Norm，使用 Masked LM 预训练和 Token-Type Embedding 支持句对任务。"
+  en: "Bidirectional Transformer encoder with post-norm, Masked LM pretraining, and token-type embeddings for sentence-pair tasks."
+paperUrl: https://arxiv.org/abs/1810.04805
+hfOrg: google-bert/bert-base-uncased
+aliases: [bert]
+defaultParams:
+  numLayers: 12
+  numHeads: 12
+  hiddenSize: 768
+sourceLinks:
+  - label: HuggingFace config
+    url: https://huggingface.co/google-bert/bert-base-uncased/blob/main/config.json
+    type: hf-config
+features:
+  block: encoder
+  attention: bidirectional MHA
+  positionEncoding: learned absolute
+  norm: LayerNorm post-norm
+  objective: masked language modeling
+diagram:
+  subtitle: "encoder layers: {{numLayers}} · heads: {{numHeads}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token + Position + Segment Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Encoder Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: attn
+          type: leaf
+          label: Bidirectional MHA
+          sub: learned absolute positions
+          color: attn
+        - id: addnorm1
+          type: leaf
+          label: Add + LayerNorm
+          sub: post-norm
+          color: norm
+        - id: ffn
+          type: leaf
+          label: GELU FFN
+          color: ffn
+        - id: addnorm2
+          type: leaf
+          label: Add + LayerNorm
+          sub: post-norm
+          color: norm
+    - id: pooled
+      type: leaf
+      label: MLM / pooled heads
+      color: out

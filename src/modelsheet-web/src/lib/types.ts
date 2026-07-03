@@ -107,6 +107,30 @@ export interface DiagramParams {
   [key: string]: string | number | boolean | null | undefined
 }
 
+export interface ArchitectureSourceLink {
+  label?: string
+  url: string
+  type?: string
+  [key: string]: unknown
+}
+
+export interface ArchitectureVariant {
+  id?: string
+  name?: string
+  aliases?: string[]
+  descriptionZh?: string
+  descriptionEn?: string
+  [key: string]: unknown
+}
+
+export interface ArchitectureEvidence {
+  source?: string
+  url?: string
+  noteZh?: string
+  noteEn?: string
+  [key: string]: unknown
+}
+
 export interface ArchitectureSpec {
   id: string
   family: string
@@ -118,6 +142,10 @@ export interface ArchitectureSpec {
   paperUrl?: string
   hfOrg?: string
   defaultParams: DiagramParams
+  sourceLinks?: ArchitectureSourceLink[]
+  variants?: ArchitectureVariant[]
+  evidence?: ArchitectureEvidence[]
+  features?: Record<string, string | number | boolean | null>
   diagramSubtitle?: string
   diagramNodes: TreeNode[]
   modelTypeAliases?: string[]

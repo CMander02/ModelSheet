@@ -1,0 +1,80 @@
+id: command-a
+family: Command A+
+era: "2026"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Command A+ 图库条目是 Cohere 稀疏 MoE 解码器，使用 GQA，并采用 3:1 滑动窗口/全局注意力层混合。"
+  en: "Command A+ is a Cohere sparse MoE decoder in the gallery, using GQA with a 3:1 sliding-window/global attention layer mix."
+hfOrg: CohereLabs/command-a-plus-05-2026-w4a4
+aliases: [command_a, command_a_plus, cohere2]
+defaultParams:
+  numLayers: 64
+  numHeads: 64
+  numKvHeads: 4
+  numExperts: 128
+  numExpertsPerToken: 8
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-command-a-218b-a25b
+    type: reference
+features:
+  attention: 16:1 GQA
+  layerMix: 3:1 sliding-window and global attention
+  moe: sparse MoE
+variants:
+  - id: command-a-plus
+    name: Command A+
+    aliases: [command_a_plus]
+    descriptionZh: "218B total / 25B active 稀疏 MoE 条目。"
+    descriptionEn: "218B total / 25B active sparse MoE entry."
+diagram:
+  subtitle: "16:1 GQA · SWA/global mix · MoE"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Command A+ Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attnrow
+          type: row
+          children:
+            - id: swa
+              type: leaf
+              label: Sliding-window GQA
+              color: attn
+            - id: global
+              type: leaf
+              label: Global GQA
+              color: sky
+        - id: moe
+          type: group
+          label: MoE FFN
+          color: moe
+          children:
+            - id: router
+              type: leaf
+              label: "Router top-{{numExpertsPerToken}}"
+              color: teal
+            - id: experts
+              type: leaf
+              label: "Experts x{{numExperts}}"
+              color: ffn
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

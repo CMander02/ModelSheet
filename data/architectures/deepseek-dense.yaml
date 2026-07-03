@@ -1,0 +1,67 @@
+id: deepseek-dense
+family: DeepSeek dense
+era: "2024"
+type: decoder
+normPlacement: pre
+description:
+  zh: "DeepSeek 早期密集解码器基座，RMSNorm、RoPE、SwiGLU，注意力为 MHA 或 GQA。"
+  en: "Early dense DeepSeek decoder backbone with RMSNorm, RoPE, SwiGLU, and MHA or GQA attention."
+paperUrl: https://arxiv.org/abs/2401.02954
+hfOrg: deepseek-ai/deepseek-llm-7b-base
+aliases: [deepseek]
+defaultParams:
+  numLayers: 30
+  numHeads: 32
+  numKvHeads: 32
+  hiddenSize: 4096
+features:
+  attention: MHA or GQA
+  positionEncoding: RoPE
+  norm: RMSNorm
+  ffn: SwiGLU
+diagram:
+  subtitle: "dense decoder · hidden: {{hiddenSize}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Dense Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: ln1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attn
+          type: leaf
+          label: "Attention Q:{{numHeads}} KV:{{numKvHeads}}"
+          sub: RoPE
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: ln2
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: ffn
+          type: leaf
+          label: SwiGLU FFN
+          color: ffn
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

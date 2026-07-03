@@ -1,0 +1,99 @@
+id: kimi-k2
+family: Kimi K2 / Kimi Linear
+era: "2025"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Kimi K2 使用 MLA 风格低秩 KV 压缩和大规模 MoE；Kimi Linear 变体加入线性注意力路径。"
+  en: "Kimi K2 uses MLA-style low-rank KV compression and large sparse MoE; Kimi Linear variants add a linear attention path."
+paperUrl: https://arxiv.org/abs/2505.11143
+hfOrg: moonshotai/Kimi-K2-Base
+aliases: [kimi_k2, kimi_k25, kimi_vl, kimi_linear]
+defaultParams:
+  numLayers: 61
+  numExperts: 384
+  numSharedExperts: 1
+  numExpertsPerToken: 8
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-kimi-k2
+    type: reference
+features:
+  attention: MLA or Kimi Delta Attention
+  moe: large sparse MoE
+  routing: sigmoid top-k
+  layerMix: dense prefix then MoE
+variants:
+  - id: kimi-k2
+    name: Kimi K2
+    aliases: [kimi_k2]
+    descriptionZh: "1T 规模 MLA + MoE 架构。"
+    descriptionEn: "1T-scale MLA + MoE architecture."
+  - id: kimi-linear
+    name: Kimi Linear
+    aliases: [kimi_linear]
+    descriptionZh: "混合 Kimi Delta Attention 与 MLA 的线性变体。"
+    descriptionEn: "Hybrid linear variant combining Kimi Delta Attention and MLA."
+diagram:
+  subtitle: "{{numExperts}} experts · top-{{numExpertsPerToken}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Kimi Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attn
+          type: row
+          children:
+            - id: mla
+              type: leaf
+              label: MLA
+              sub: low-rank KV cache
+              color: attn
+            - id: linear
+              type: leaf
+              label: Delta Attention
+              sub: Kimi Linear variant
+              color: teal
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: moe
+          type: group
+          label: MoE FFN
+          color: moe
+          children:
+            - id: router
+              type: leaf
+              label: "Router top-{{numExpertsPerToken}}"
+              color: teal
+            - id: experts
+              type: row
+              children:
+                - id: routed
+                  type: leaf
+                  label: Routed experts
+                  color: moe
+                - id: shared
+                  type: leaf
+                  label: "Shared x{{numSharedExperts}}"
+                  color: amber
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

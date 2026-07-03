@@ -1,0 +1,67 @@
+id: phi
+family: Phi-3 / Phi-4
+era: "2024"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Phi-3/4 使用 GQA、RoPE、RMSNorm、SwiGLU，QKV 与输出投影常带 bias。"
+  en: "Phi-3/4 use GQA, RoPE, RMSNorm, SwiGLU, and commonly include bias on QKV and output projections."
+paperUrl: https://arxiv.org/abs/2404.14219
+hfOrg: microsoft/phi-4
+aliases: [phi, phi3, phi3_v, phi3small, phi4mm, phimoe, phi4flash]
+defaultParams:
+  numLayers: 40
+  numHeads: 40
+  numKvHeads: 10
+  hiddenSize: 5120
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-phi-4
+    type: reference
+features:
+  attention: GQA
+  positionEncoding: RoPE
+  norm: RMSNorm
+  ffn: SwiGLU
+diagram:
+  subtitle: "GQA · hidden: {{hiddenSize}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Phi Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attn
+          type: leaf
+          label: "GQA Q:{{numHeads}} KV:{{numKvHeads}}"
+          sub: RoPE · projection bias
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: ffn
+          type: leaf
+          label: SwiGLU FFN
+          color: ffn
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

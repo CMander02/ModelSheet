@@ -1,0 +1,67 @@
+id: granite
+family: Granite / GraniteMoE
+era: "2024"
+type: decoder
+normPlacement: pre
+description:
+  zh: "IBM Granite 系列包含密集、MoE 与混合架构变体，常见主干为 RMSNorm、RoPE、GQA 与 SwiGLU。"
+  en: "IBM Granite includes dense, MoE, and hybrid variants, commonly using RMSNorm, RoPE, GQA, and SwiGLU."
+paperUrl: https://arxiv.org/abs/2405.04324
+hfOrg: ibm-granite/granite-4.1-30b
+aliases: [granite, granitemoe, granitemoehybrid, granite_switch]
+defaultParams:
+  numLayers: 40
+  numHeads: 32
+  numKvHeads: 8
+  hiddenSize: 4096
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-granite-4-1-30b
+    type: reference
+features:
+  attention: GQA
+  positionEncoding: RoPE
+  moe: GraniteMoE variants
+  tokenMixer: hybrid variants
+diagram:
+  subtitle: "GQA · dense/MoE/hybrid variants"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Granite Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attn
+          type: leaf
+          label: "GQA Q:{{numHeads}} KV:{{numKvHeads}}"
+          sub: RoPE
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: ffn
+          type: leaf
+          label: SwiGLU FFN / MoE
+          color: ffn
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

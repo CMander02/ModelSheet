@@ -1,0 +1,83 @@
+id: olmo
+family: OLMo / OLMoE / OLMo 3
+era: "2024"
+type: decoder
+normPlacement: pre
+description:
+  zh: "OLMo 系列强调开放训练链路，使用 RMSNorm、RoPE、SwiGLU；OLMo 2/3 引入 QK-Norm 与局部/全局注意力混合。"
+  en: "OLMo emphasizes open training artifacts and uses RMSNorm, RoPE, and SwiGLU; OLMo 2/3 add QK-Norm and local/global attention mixes."
+paperUrl: https://arxiv.org/abs/2402.00838
+hfOrg: allenai/OLMo-2-1124-7B-Instruct
+aliases: [olmo, olmo2, olmo3, olmoe]
+defaultParams:
+  numLayers: 32
+  numHeads: 32
+  numKvHeads: 8
+  hiddenSize: 4096
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-olmo-2-7b
+    type: reference
+features:
+  attention: MHA or GQA with QK-Norm
+  norm: RMSNorm
+  ffn: SwiGLU
+  openness: open data and training artifacts
+variants:
+  - id: olmo-2
+    name: OLMo 2
+    aliases: [olmo2]
+    descriptionZh: "图库条目强调 inside-residual post-norm 稳定性设计。"
+    descriptionEn: "The gallery entry highlights an inside-residual post-norm stability design."
+  - id: olmo-3
+    name: OLMo 3
+    aliases: [olmo3]
+    descriptionZh: "加入滑动窗口/全局注意力混合。"
+    descriptionEn: "Adds a sliding-window/global attention mix."
+diagram:
+  subtitle: "QK-Norm · open training lineage"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: OLMo Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: attn
+          type: leaf
+          label: MHA / GQA
+          sub: QK-Norm
+          color: attn
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          sub: inside residual variants
+          color: norm
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: ffn
+          type: leaf
+          label: SwiGLU FFN
+          color: ffn
+        - id: norm2
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

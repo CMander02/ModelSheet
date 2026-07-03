@@ -1,0 +1,61 @@
+id: falcon
+family: Falcon
+era: "2023"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Falcon 使用 MQA/GQA 风格注意力、RoPE 与 LayerNorm，部分版本采用并行 attention + FFN 布局。"
+  en: "Falcon uses MQA/GQA-style attention, RoPE, and LayerNorm, with parallel attention + FFN layout in some versions."
+paperUrl: https://arxiv.org/abs/2311.16867
+hfOrg: tiiuae/falcon-7b
+aliases: [falcon, falcon_h1]
+defaultParams:
+  numLayers: 32
+  numHeads: 71
+  numKvHeads: 1
+  hiddenSize: 4544
+features:
+  attention: MQA
+  positionEncoding: RoPE
+  layout: parallel attention and FFN variants
+diagram:
+  subtitle: "MQA · heads: {{numHeads}} KV:{{numKvHeads}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Falcon Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm
+          type: leaf
+          label: LayerNorm
+          color: norm
+        - id: parallel
+          type: row
+          children:
+            - id: attn
+              type: leaf
+              label: "MQA Q:{{numHeads}} KV:{{numKvHeads}}"
+              color: attn
+            - id: ffn
+              type: leaf
+              label: MLP
+              color: ffn
+        - id: r
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

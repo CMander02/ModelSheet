@@ -1,0 +1,93 @@
+id: deepseek-v2
+family: DeepSeek-V2
+era: "2024"
+type: decoder
+normPlacement: pre
+description:
+  zh: "DeepSeek-V2 引入 MLA 压缩 KV Cache，MoE 使用共享专家和 softmax 路由。"
+  en: "DeepSeek-V2 introduces MLA for KV cache compression and uses MoE with shared experts and softmax routing."
+paperUrl: https://arxiv.org/abs/2405.04434
+hfOrg: deepseek-ai/DeepSeek-V2
+aliases: [deepseek_v2, deepseek_vl_v2]
+defaultParams:
+  numLayers: 60
+  numExperts: 160
+  numSharedExperts: 2
+  numExpertsPerToken: 6
+features:
+  attention: MLA
+  moe: shared expert MoE
+  routing: softmax top-k
+  positionEncoding: decoupled RoPE
+diagram:
+  subtitle: "{{numExperts}} routed · {{numSharedExperts}} shared · top-{{numExpertsPerToken}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: DeepSeek-V2 Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: ln1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: mla
+          type: group
+          label: MLA
+          color: attn
+          children:
+            - id: q
+              type: leaf
+              label: Q path
+              color: attn
+            - id: kv
+              type: leaf
+              label: KV latent path
+              sub: compressed cache
+              color: sky
+            - id: rope
+              type: leaf
+              label: Decoupled RoPE
+              color: norm
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: moe
+          type: group
+          label: MoE FFN
+          color: moe
+          children:
+            - id: router
+              type: leaf
+              label: "Router top-{{numExpertsPerToken}}"
+              color: teal
+            - id: experts
+              type: row
+              children:
+                - id: routed
+                  type: leaf
+                  label: "Routed experts"
+                  color: moe
+                - id: shared
+                  type: leaf
+                  label: "Shared x{{numSharedExperts}}"
+                  color: amber
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

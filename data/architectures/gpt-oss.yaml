@@ -1,0 +1,83 @@
+id: gpt-oss
+family: GPT-OSS
+era: "2025"
+type: decoder
+normPlacement: pre
+description:
+  zh: "GPT-OSS 图库条目是稀疏 MoE 解码器，使用 GQA，并交替滑动窗口与全局注意力层。"
+  en: "GPT-OSS gallery entries are sparse MoE decoders with GQA and alternating sliding-window/global attention layers."
+hfOrg: openai/gpt-oss-120b
+aliases: [gpt_oss]
+defaultParams:
+  numLayers: 36
+  numExperts: 128
+  numExpertsPerToken: 4
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-gpt-oss-120b
+    type: reference
+features:
+  attention: GQA
+  layerMix: alternating sliding-window and global attention
+  moe: sparse MoE
+variants:
+  - id: gpt-oss-120b
+    name: GPT-OSS 120B
+    aliases: [gpt_oss]
+    descriptionZh: "120B total 的大规模变体。"
+    descriptionEn: "Large 120B total variant."
+  - id: gpt-oss-20b
+    name: GPT-OSS 20B
+    aliases: [gpt_oss]
+    descriptionZh: "20B total 的小型变体。"
+    descriptionEn: "Smaller 20B total variant."
+diagram:
+  subtitle: "GQA · alternating SWA/global · MoE"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: GPT-OSS Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attnrow
+          type: row
+          children:
+            - id: swa
+              type: leaf
+              label: Sliding-window GQA
+              color: attn
+            - id: global
+              type: leaf
+              label: Global GQA
+              color: sky
+        - id: moe
+          type: group
+          label: MoE FFN
+          color: moe
+          children:
+            - id: router
+              type: leaf
+              label: "Router top-{{numExpertsPerToken}}"
+              color: teal
+            - id: experts
+              type: leaf
+              label: "Experts x{{numExperts}}"
+              color: ffn
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

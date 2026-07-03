@@ -1,0 +1,82 @@
+id: mistral
+family: Mistral / Mixtral / Mistral Small
+era: "2023"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Mistral 系列使用 RMSNorm、RoPE、SwiGLU 与 GQA，早期模型强调滑动窗口注意力，Mixtral 与后续大模型提供 MoE 变体。"
+  en: "Mistral models use RMSNorm, RoPE, SwiGLU, and GQA; early models emphasize sliding-window attention, while Mixtral and later large variants add MoE."
+paperUrl: https://arxiv.org/abs/2310.06825
+hfOrg: mistralai/Mistral-Small-3.1-24B-Base-2503
+aliases: [mistral, mistral3, mixtral, voxtral]
+defaultParams:
+  numLayers: 40
+  numHeads: 32
+  numKvHeads: 8
+  hiddenSize: 5120
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-mistral-small-3-1-24b
+    type: reference
+features:
+  attention: GQA
+  positionEncoding: RoPE
+  ffn: SwiGLU
+  variants: dense and sparse MoE
+variants:
+  - id: mistral-small
+    name: Mistral Small
+    aliases: [mistral3]
+    descriptionZh: "Raschka 图库中的 24B 密集低延迟变体。"
+    descriptionEn: "The 24B dense low-latency variant in the gallery."
+  - id: mixtral
+    name: Mixtral
+    aliases: [mixtral]
+    descriptionZh: "早期 top-2 MoE 变体。"
+    descriptionEn: "Early top-2 MoE variant."
+diagram:
+  subtitle: "GQA · dense/MoE variants"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Mistral Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attn
+          type: leaf
+          label: "GQA Q:{{numHeads}} KV:{{numKvHeads}}"
+          sub: RoPE · sliding window in early models
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: norm2
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: ffn
+          type: leaf
+          label: SwiGLU FFN / MoE
+          color: ffn
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

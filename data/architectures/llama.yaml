@@ -1,0 +1,93 @@
+id: llama
+family: LLaMA 2 / Llama 3 / Llama 3.2
+era: "2023"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Llama 系列 Pre-Norm 解码器主干，RMSNorm、RoPE、SwiGLU，Llama 3 引入 GQA 和更大词表。"
+  en: "Llama-family pre-norm decoder backbone with RMSNorm, RoPE, SwiGLU, and GQA in Llama 3 with a larger vocabulary."
+paperUrl: https://arxiv.org/abs/2302.13971
+hfOrg: meta-llama/Meta-Llama-3-8B
+aliases: [llama, llama_swiftkv]
+defaultParams:
+  numLayers: 32
+  numHeads: 32
+  numKvHeads: 8
+  hiddenSize: 4096
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-llama-3-8b
+    type: reference
+features:
+  attention: GQA
+  positionEncoding: RoPE
+  norm: RMSNorm
+  ffn: SwiGLU
+variants:
+  - id: llama-3
+    name: Llama 3
+    aliases: [llama]
+    descriptionZh: "8B 等密集模型使用 GQA 与 RoPE。"
+    descriptionEn: "Dense models such as 8B use GQA with RoPE."
+  - id: llama-3-2
+    name: Llama 3.2
+    aliases: [llama]
+    descriptionZh: "小型文本模型沿用相同解码器主干并扩展上下文。"
+    descriptionEn: "Small text models keep the same decoder backbone with extended context."
+evidence:
+  - source: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-llama-3-8b
+    noteZh: "卡片标注 GQA with RoPE 和 32 层。"
+    noteEn: "The card records GQA with RoPE and 32 layers."
+diagram:
+  subtitle: "hidden: {{hiddenSize}} · Q:{{numHeads}} KV:{{numKvHeads}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Transformer Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: ln1
+          type: leaf
+          label: RMSNorm
+          sub: pre-norm
+          color: norm
+        - id: attn
+          type: leaf
+          label: "GQA Q:{{numHeads}} KV:{{numKvHeads}}"
+          sub: RoPE · no bias
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: ln2
+          type: leaf
+          label: RMSNorm
+          sub: pre-norm
+          color: norm
+        - id: ffn
+          type: leaf
+          label: SwiGLU FFN
+          color: ffn
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: lnf
+      type: leaf
+      label: Final RMSNorm
+      color: norm
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

@@ -1,0 +1,95 @@
+id: llama4
+family: Llama 4
+era: "2025"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Llama 4 使用稀疏 MoE 解码器，交替全局/局部注意力，路由专家按 token 激活。"
+  en: "Llama 4 uses a sparse MoE decoder with alternating global/local attention and token-routed experts."
+paperUrl: https://arxiv.org/abs/2504.05423
+hfOrg: meta-llama/Llama-4-Maverick-17B-128E-Instruct
+aliases: [llama4]
+defaultParams:
+  numLayers: 48
+  numExperts: 128
+  numExpertsPerToken: 1
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-llama-4-maverick
+    type: reference
+features:
+  attention: GQA
+  moe: sparse MoE
+  routing: top-1 expert routing
+  layerMix: alternating dense and MoE blocks
+variants:
+  - id: llama-4-maverick
+    name: Llama 4 Maverick
+    aliases: [llama4]
+    descriptionZh: "Raschka 图库中的 400B total / 17B active 稀疏 MoE 代表。"
+    descriptionEn: "The 400B total / 17B active sparse MoE representative in the gallery."
+diagram:
+  subtitle: "{{numExperts}} experts · top-{{numExpertsPerToken}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Llama 4 Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: ln1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attnrow
+          type: row
+          children:
+            - id: full
+              type: leaf
+              label: Full GQA
+              sub: NoPE/global layers
+              color: attn
+            - id: local
+              type: leaf
+              label: Local GQA
+              sub: iRoPE/chunked layers
+              color: sky
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: ln2
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: moe
+          type: group
+          label: MoE FFN
+          color: moe
+          children:
+            - id: router
+              type: leaf
+              label: "Router top-{{numExpertsPerToken}}"
+              sub: "{{numExperts}} experts"
+              color: teal
+            - id: expert
+              type: leaf
+              label: SwiGLU Expert
+              color: ffn
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

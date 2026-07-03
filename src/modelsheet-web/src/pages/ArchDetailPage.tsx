@@ -11,6 +11,128 @@ import { loadArchitecture, loadArchitectures } from "@/lib/architecture-data"
 import { getTranslations, type Language } from "@/lib/i18n"
 import HuggingFaceIcon from "@lobehub/icons/es/HuggingFace"
 
+function displayValue(value: unknown): string {
+  if (value === null || value === undefined) return ""
+  if (typeof value === "boolean") return value ? "yes" : "no"
+  if (Array.isArray(value)) return value.map(displayValue).filter(Boolean).join(", ")
+  if (typeof value === "object") {
+    const record = value as Record<string, unknown>
+    const label = record.label ?? record.name ?? record.kind ?? record.type
+    return typeof label === "string" ? label : JSON.stringify(value)
+  }
+  return String(value)
+}
+
+function MetadataSection({
+  arch,
+  isZh,
+}: {
+  arch: ArchitectureSpec
+  isZh: boolean
+}) {
+  const featureEntries = Object.entries(arch.features ?? {})
+    .map(([key, value]) => [key, displayValue(value)] as const)
+    .filter(([, value]) => value)
+  const variants = arch.variants ?? []
+  const sourceLinks = arch.sourceLinks ?? []
+  const evidence = arch.evidence ?? []
+
+  if (!featureEntries.length && !variants.length && !sourceLinks.length && !evidence.length) {
+    return null
+  }
+
+  return (
+    <>
+      {featureEntries.length > 0 && (
+        <div>
+          <p className="text-xs text-muted-foreground mb-2 font-medium uppercase tracking-wider">
+            {isZh ? "结构特征" : "Features"}
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {featureEntries.map(([key, value]) => (
+              <span key={key} className="rounded-md border bg-muted/40 px-2 py-1 text-xs">
+                <span className="font-mono text-muted-foreground">{key}: </span>
+                {value}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {variants.length > 0 && (
+        <div>
+          <p className="text-xs text-muted-foreground mb-2 font-medium uppercase tracking-wider">
+            {isZh ? "变体" : "Variants"}
+          </p>
+          <div className="space-y-2">
+            {variants.map((variant, index) => {
+              const desc = isZh ? variant.descriptionZh : variant.descriptionEn
+              return (
+                <div key={variant.id ?? variant.name ?? index} className="rounded-lg border p-3">
+                  <p className="text-sm font-medium">{variant.name ?? variant.id}</p>
+                  {desc && <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{desc}</p>}
+                  {variant.aliases?.length ? (
+                    <p className="mt-2 text-xs font-mono text-muted-foreground">
+                      {variant.aliases.join(", ")}
+                    </p>
+                  ) : null}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {sourceLinks.length > 0 && (
+        <div>
+          <p className="text-xs text-muted-foreground mb-2 font-medium uppercase tracking-wider">
+            {isZh ? "来源" : "Sources"}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {sourceLinks.map((link, index) => (
+              <a
+                key={`${link.url}-${index}`}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-xs transition-colors hover:bg-muted"
+              >
+                <ExternalLink className="h-3 w-3 shrink-0" />
+                {link.label ?? link.type ?? link.url}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {evidence.length > 0 && (
+        <div>
+          <p className="text-xs text-muted-foreground mb-2 font-medium uppercase tracking-wider">
+            {isZh ? "证据" : "Evidence"}
+          </p>
+          <div className="space-y-2 text-xs leading-relaxed text-muted-foreground">
+            {evidence.map((item, index) => {
+              const note = isZh ? item.noteZh : item.noteEn
+              return (
+                <p key={`${item.url ?? item.source ?? index}`}>
+                  {item.url ? (
+                    <a href={item.url} target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">
+                      {item.source ?? item.url}
+                    </a>
+                  ) : (
+                    item.source
+                  )}
+                  {note ? ` - ${note}` : ""}
+                </p>
+              )
+            })}
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
+
 export function ArchDetailPage() {
   const { archId } = useParams<{ archId: string }>()
   const navigate = useNavigate()
@@ -215,6 +337,8 @@ export function ArchDetailPage() {
 
             <div className="h-px bg-border" />
             <p className="text-sm text-foreground/80 leading-relaxed">{desc}</p>
+
+            <MetadataSection arch={arch} isZh={isZh} />
 
             {arch.modelTypeAliases && arch.modelTypeAliases.length > 0 && (
               <div>

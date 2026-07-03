@@ -1,0 +1,61 @@
+id: bloom
+family: BLOOM
+era: "2022"
+type: decoder
+normPlacement: pre
+description:
+  zh: "BLOOM 是多语言密集解码器，使用 ALiBi 位置偏置、LayerNorm 和 GELU MLP。"
+  en: "BLOOM is a multilingual dense decoder using ALiBi positional bias, LayerNorm, and GELU MLP."
+paperUrl: https://arxiv.org/abs/2211.05100
+hfOrg: bigscience/bloom
+aliases: [bloom]
+defaultParams:
+  numLayers: 70
+  numHeads: 112
+  hiddenSize: 14336
+features:
+  attention: MHA
+  positionEncoding: ALiBi
+  norm: LayerNorm
+  ffn: GELU MLP
+diagram:
+  subtitle: "ALiBi · heads: {{numHeads}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: BLOOM Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: norm1
+          type: leaf
+          label: LayerNorm
+          color: norm
+        - id: attn
+          type: leaf
+          label: MHA + ALiBi
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: norm2
+          type: leaf
+          label: LayerNorm
+          color: norm
+        - id: ffn
+          type: leaf
+          label: GELU MLP
+          color: ffn
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

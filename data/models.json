@@ -77277,5 +77277,43 @@
     "createdAt": "2026-05-23T02:43:54.000Z",
     "openness": "open-weight",
     "isMoe": false
+  },
+  {
+    "id": "qwen/qwen3.7-max",
+    "name": "Qwen3.7-Max",
+    "provider": "Qwen",
+    "techReport": "https://qwen.ai/blog?id=qwen3.7",
+    "contextLength": 1000000,
+    "architecture": "qwen3_7_max",
+    "architectureFamily": "Qwen3.7",
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "task": "Text Generation",
+    "createdAt": "2026-05-19T00:00:00Z",
+    "openness": "closed"
+  },
+  {
+    "id": "qwen/qwen3.7-plus",
+    "name": "Qwen3.7-Plus",
+    "provider": "Qwen",
+    "techReport": "https://qwen.ai/blog?id=qwen3.7-plus",
+    "contextLength": 1000000,
+    "architecture": "qwen3_7_plus",
+    "architectureFamily": "Qwen3.7",
+    "inputModalities": [
+      "text",
+      "image",
+      "video"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "task": "Image-Text-to-Text",
+    "createdAt": "2026-05-31T00:00:00Z",
+    "openness": "closed"
   }
 ]

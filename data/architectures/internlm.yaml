@@ -1,0 +1,59 @@
+id: internlm
+family: InternLM 2 / 3
+era: "2024"
+type: decoder
+normPlacement: pre
+description:
+  zh: "InternLM 2/3 使用 GQA、RoPE、RMSNorm、SwiGLU，InternLM 2 的 QKV 投影带 bias。"
+  en: "InternLM 2/3 use GQA, RoPE, RMSNorm, and SwiGLU, with QKV bias in InternLM 2."
+paperUrl: https://arxiv.org/abs/2403.17297
+hfOrg: internlm/internlm2-7b
+aliases: [internlm, internlm2, internlm3]
+defaultParams:
+  numLayers: 32
+  numHeads: 32
+  numKvHeads: 8
+  hiddenSize: 4096
+features:
+  attention: GQA
+  positionEncoding: RoPE
+  norm: RMSNorm
+  ffn: SwiGLU
+diagram:
+  subtitle: "GQA · hidden: {{hiddenSize}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: InternLM Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attn
+          type: leaf
+          label: "GQA Q:{{numHeads}} KV:{{numKvHeads}}"
+          sub: RoPE · QKV bias variants
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: ffn
+          type: leaf
+          label: SwiGLU FFN
+          color: ffn
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

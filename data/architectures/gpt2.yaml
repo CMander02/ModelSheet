@@ -1,0 +1,92 @@
+id: gpt2
+family: GPT-2
+era: "2019"
+type: decoder
+normPlacement: pre
+description:
+  zh: "经典仅解码器因果 LM，学习式绝对位置编码，MHA，GELU MLP，Block 前置 LayerNorm。"
+  en: "Classic decoder-only causal LM with learned absolute positions, MHA, GELU MLP, and pre-norm Transformer blocks."
+paperUrl: https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf
+hfOrg: openai-community/gpt2-xl
+aliases: [gpt2]
+defaultParams:
+  numLayers: 48
+  numHeads: 25
+  hiddenSize: 1600
+  vocabSize: 50257
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-gpt-2-xl-1-5b
+    type: reference
+  - label: HuggingFace config
+    url: https://huggingface.co/openai-community/gpt2-xl/blob/main/config.json
+    type: hf-config
+features:
+  attention: MHA
+  positionEncoding: learned absolute
+  norm: LayerNorm
+  ffn: GELU MLP
+variants:
+  - id: gpt2-xl
+    name: GPT-2 XL
+    aliases: [gpt2]
+    descriptionZh: "Raschka 图库中的 1.5B 参考基线。"
+    descriptionEn: "The 1.5B reference baseline in Raschka's gallery."
+evidence:
+  - source: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-gpt-2-xl-1-5b
+    noteZh: "卡片标注 MHA、学习式绝对位置编码、48 层。"
+    noteEn: "The card records MHA, learned absolute positions, and 48 layers."
+diagram:
+  subtitle: "hidden: {{hiddenSize}} · heads: {{numHeads}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token + Learned Position Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Transformer Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: ln1
+          type: leaf
+          label: LayerNorm
+          sub: pre-norm
+          color: norm
+        - id: attn
+          type: leaf
+          label: MHA
+          sub: fused QKV Conv1D
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: ln2
+          type: leaf
+          label: LayerNorm
+          sub: pre-norm
+          color: norm
+        - id: ffn
+          type: leaf
+          label: GELU MLP
+          color: ffn
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: lnf
+      type: leaf
+      label: Final LayerNorm
+      color: norm
+    - id: head
+      type: leaf
+      label: LM Head
+      sub: tied token embedding
+      color: out

@@ -1,0 +1,85 @@
+id: lfm2
+family: LFM2 / LFM2.5
+era: "2026"
+type: decoder
+normPlacement: pre
+description:
+  zh: "LFM2.5 是 Liquid AI 混合解码器，图库条目使用 LIV convolution blocks、GQA 与可选 MoE。"
+  en: "LFM2.5 is a Liquid AI hybrid decoder using LIV convolution blocks, GQA, and optional MoE according to the gallery entries."
+hfOrg: LiquidAI/LFM2.5-1.2B-Thinking
+aliases: [lfm2, lfm2_vl, lfm2_moe]
+defaultParams:
+  numLayers: 32
+  numHeads: 32
+  numKvHeads: 8
+  numExperts: 64
+  numExpertsPerToken: 2
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-lfm2-5-1-2b
+    type: reference
+features:
+  tokenMixer: LIV convolution blocks
+  attention: GQA
+  moe: optional sparse MoE
+variants:
+  - id: lfm2-5-dense
+    name: LFM2.5 dense
+    aliases: [lfm2]
+    descriptionZh: "350M 和 1.2B 图库条目使用 dense hybrid 主干。"
+    descriptionEn: "350M and 1.2B gallery entries use a dense hybrid backbone."
+  - id: lfm2-5-moe
+    name: LFM2.5 MoE
+    aliases: [lfm2_moe]
+    descriptionZh: "8B-A1B 图库条目加入 MoE。"
+    descriptionEn: "The 8B-A1B gallery entry adds MoE."
+diagram:
+  subtitle: "LIV conv + GQA · MoE variants"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: LFM Hybrid Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: mixer
+          type: row
+          children:
+            - id: liv
+              type: leaf
+              label: LIV convolution
+              color: teal
+            - id: attn
+              type: leaf
+              label: "GQA Q:{{numHeads}} KV:{{numKvHeads}}"
+              color: attn
+        - id: ffn
+          type: group
+          label: FFN / MoE
+          color: moe
+          children:
+            - id: dense
+              type: leaf
+              label: Dense FFN
+              color: ffn
+            - id: moe
+              type: leaf
+              label: "MoE top-{{numExpertsPerToken}}"
+              color: moe
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

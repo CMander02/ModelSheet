@@ -1,0 +1,82 @@
+id: glm4
+family: GLM4 / GLM-4.5 / GLM-5
+era: "2024"
+type: decoder
+normPlacement: pre
+description:
+  zh: "GLM 系列包含密集和 MoE 解码器变体，使用 RMSNorm、GQA/QK-Norm，GLM-5 谱系加入 MLA 与稀疏注意力。"
+  en: "GLM models include dense and MoE decoder variants with RMSNorm, GQA/QK-Norm, and GLM-5 lineage additions such as MLA and sparse attention."
+paperUrl: https://arxiv.org/abs/2406.12793
+hfOrg: zai-org/GLM-4.5
+aliases: [glm, glm4, chatglm, glm4_moe, glm4v, glm4v_moe, glm_moe_dsa, glm5]
+defaultParams:
+  numLayers: 46
+  numHeads: 96
+  numKvHeads: 8
+  hiddenSize: 5120
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-glm-4-5-355b
+    type: reference
+features:
+  attention: GQA or MLA
+  moe: sparse MoE variants
+  norm: RMSNorm and QK-Norm
+  positionEncoding: RoPE
+variants:
+  - id: glm-4-5
+    name: GLM-4.5
+    aliases: [glm4_moe]
+    descriptionZh: "Raschka 图库中的 355B 稀疏 MoE 条目。"
+    descriptionEn: "The 355B sparse MoE entry in the gallery."
+  - id: glm-5
+    name: GLM-5
+    aliases: [glm5]
+    descriptionZh: "MLA 与稀疏注意力增强的后续谱系。"
+    descriptionEn: "Later lineage with MLA and sparse attention enhancements."
+diagram:
+  subtitle: "GQA/MLA · dense and MoE variants"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: GLM Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attn
+          type: leaf
+          label: GQA / MLA
+          sub: QK-Norm variants
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: norm2
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: ffn
+          type: leaf
+          label: SwiGLU FFN / MoE
+          color: ffn
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

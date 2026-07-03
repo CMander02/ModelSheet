@@ -1,0 +1,84 @@
+id: minimax
+family: MiniMax M2 / M3
+era: "2025"
+type: decoder
+normPlacement: pre
+description:
+  zh: "MiniMax M2/M3 图库条目为稀疏 MoE 解码器，使用 GQA、QK-Norm、部分 RoPE 或稀疏注意力扩展。"
+  en: "MiniMax M2/M3 gallery entries are sparse MoE decoders with GQA, QK-Norm, partial RoPE, or sparse attention extensions."
+hfOrg: MiniMaxAI/MiniMax-M2
+aliases: [minimax, minimax_text_01, minimax_vl_01, minimax_m1, minimax_m2, minimax_m3_vl]
+defaultParams:
+  numLayers: 62
+  numHeads: 64
+  numKvHeads: 8
+  numExperts: 256
+  numExpertsPerToken: 8
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-minimax-m2-230b
+    type: reference
+features:
+  attention: GQA with QK-Norm
+  positionEncoding: partial RoPE variants
+  moe: sparse MoE
+  routing: top-k expert routing
+variants:
+  - id: minimax-m2
+    name: MiniMax M2
+    aliases: [minimax_m2]
+    descriptionZh: "230B total 稀疏 MoE 谱系。"
+    descriptionEn: "230B total sparse MoE lineage."
+  - id: minimax-m3
+    name: MiniMax M3
+    aliases: [minimax_m3_vl]
+    descriptionZh: "加入 MiniMax Sparse Attention 的后续图谱条目。"
+    descriptionEn: "Later gallery entry with MiniMax Sparse Attention."
+diagram:
+  subtitle: "GQA + QK-Norm · MoE"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: MiniMax Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: qknorm
+          type: leaf
+          label: QK-Norm
+          color: norm
+        - id: attn
+          type: leaf
+          label: "GQA Q:{{numHeads}} KV:{{numKvHeads}}"
+          sub: partial RoPE / sparse attention variants
+          color: attn
+        - id: moe
+          type: group
+          label: MoE FFN
+          color: moe
+          children:
+            - id: router
+              type: leaf
+              label: "Router top-{{numExpertsPerToken}}"
+              color: teal
+            - id: experts
+              type: leaf
+              label: "Experts x{{numExperts}}"
+              color: ffn
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

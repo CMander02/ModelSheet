@@ -1,0 +1,54 @@
+id: exaone
+family: EXAONE
+era: "2024"
+type: decoder
+normPlacement: pre
+description:
+  zh: "EXAONE 是 LG AI Research 解码器系列，使用 GQA、RoPE、RMSNorm 与 SwiGLU。"
+  en: "EXAONE is an LG AI Research decoder family using GQA, RoPE, RMSNorm, and SwiGLU."
+paperUrl: https://arxiv.org/abs/2408.03541
+hfOrg: LGAI-EXAONE/EXAONE-3.5-7.8B-Instruct
+aliases: [exaone, exaone4]
+defaultParams:
+  numLayers: 32
+  numHeads: 32
+  numKvHeads: 8
+  hiddenSize: 4096
+features:
+  attention: GQA
+  positionEncoding: RoPE
+  norm: RMSNorm
+  ffn: SwiGLU
+diagram:
+  subtitle: "GQA · hidden: {{hiddenSize}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: EXAONE Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attn
+          type: leaf
+          label: "GQA Q:{{numHeads}} KV:{{numKvHeads}}"
+          color: attn
+        - id: ffn
+          type: leaf
+          label: SwiGLU FFN
+          color: ffn
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

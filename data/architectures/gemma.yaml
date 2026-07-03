@@ -1,0 +1,91 @@
+id: gemma
+family: Gemma / Gemma 2 / Gemma 3 / Gemma 4
+era: "2024"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Gemma 系列使用 RMSNorm、GeGLU/SwiGLU 风格 FFN、RoPE，后续版本加入 QK-Norm、局部/全局注意力混合与 logit soft-capping。"
+  en: "Gemma models use RMSNorm, GeGLU/SwiGLU-style FFNs, RoPE, and later variants add QK-Norm, local/global attention mixes, and logit soft-capping."
+paperUrl: https://arxiv.org/abs/2408.00118
+hfOrg: google/gemma-3-27b-it
+aliases: [gemma, gemma2, gemma3, gemma3_text, gemma3n, gemma4, gemma4_unified]
+defaultParams:
+  numLayers: 46
+  numHeads: 32
+  numKvHeads: 16
+  hiddenSize: 5376
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-gemma-3-27b
+    type: reference
+features:
+  attention: GQA or MQA with QK-Norm
+  layerMix: sliding-window and global attention
+  norm: RMSNorm
+  ffn: GeGLU/SwiGLU
+variants:
+  - id: gemma-3
+    name: Gemma 3
+    aliases: [gemma3, gemma3_text]
+    descriptionZh: "文本主干强调本地注意力与大词表。"
+    descriptionEn: "Text backbone emphasizing local attention and a large vocabulary."
+  - id: gemma-4
+    name: Gemma 4
+    aliases: [gemma4, gemma4_unified]
+    descriptionZh: "图库变体加入 unified K/V、p-RoPE 与 dense/MoE 分支。"
+    descriptionEn: "Gallery variants add unified K/V, p-RoPE, and dense/MoE branches."
+diagram:
+  subtitle: "local/global attention · hidden: {{hiddenSize}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Gemma Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: pre
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: qknorm
+          type: leaf
+          label: QK-Norm
+          color: norm
+        - id: attnrow
+          type: row
+          children:
+            - id: local
+              type: leaf
+              label: Sliding-window GQA
+              color: attn
+            - id: global
+              type: leaf
+              label: Global GQA
+              sub: periodic layers
+              color: sky
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: ffn
+          type: leaf
+          label: GeGLU FFN
+          sub: soft-capping variants
+          color: ffn
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

@@ -1,0 +1,61 @@
+id: mamba
+family: Mamba / Mamba-2
+era: "2023"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Mamba 是状态空间序列模型，使用选择性扫描替代 self-attention，推理复杂度随序列长度近似线性增长。"
+  en: "Mamba is a state-space sequence model using selective scan instead of self-attention, with near-linear inference scaling in sequence length."
+paperUrl: https://arxiv.org/abs/2312.00752
+hfOrg: state-spaces/mamba-2.8b
+aliases: [mamba, mamba2, falcon_mamba]
+defaultParams:
+  numLayers: 64
+  hiddenSize: 2560
+features:
+  tokenMixer: selective state-space scan
+  attention: no self-attention
+  complexity: linear-time sequence mixer
+diagram:
+  subtitle: "SSM layers: {{numLayers}} · hidden: {{hiddenSize}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Mamba Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: proj
+          type: leaf
+          label: Input projection
+          color: emb
+        - id: conv
+          type: leaf
+          label: Local convolution
+          color: teal
+        - id: ssm
+          type: leaf
+          label: Selective SSM scan
+          sub: no attention
+          color: attn
+        - id: out
+          type: leaf
+          label: Output projection
+          color: out
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

@@ -1,0 +1,70 @@
+id: xlstm
+family: xLSTM
+era: "2025"
+type: decoder
+normPlacement: pre
+description:
+  zh: "xLSTM 使用 mLSTM/sLSTM 风格循环状态混合替代 self-attention，图库条目强调矩阵记忆和线性序列扩展。"
+  en: "xLSTM replaces self-attention with mLSTM/sLSTM-style recurrent state mixing; the gallery entry emphasizes matrix memory and linear sequence scaling."
+hfOrg: NX-AI/xLSTM-7b
+aliases: [xlstm]
+defaultParams:
+  numLayers: 32
+  hiddenSize: 4096
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-xlstm-7b
+    type: reference
+features:
+  tokenMixer: mLSTM recurrent matrix memory
+  attention: no self-attention
+  complexity: recurrent linear-time path
+variants:
+  - id: xlstm-7b
+    name: xLSTM 7B
+    aliases: [xlstm]
+    descriptionZh: "图库条目中的 7B recurrent decoder 代表。"
+    descriptionEn: "The 7B recurrent decoder representative in the gallery."
+diagram:
+  subtitle: "recurrent token mixer · hidden: {{hiddenSize}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: xLSTM Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: gates
+          type: leaf
+          label: Gate projections
+          color: emb
+        - id: memory
+          type: leaf
+          label: mLSTM matrix memory
+          sub: recurrent token mixing
+          color: teal
+        - id: ffn
+          type: leaf
+          label: FFN
+          color: ffn
+        - id: residual
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

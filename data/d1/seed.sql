@@ -2192,7 +2192,2167 @@ INSERT INTO models (id, name, provider_id, provider, huggingface_url, modelscope
 INSERT INTO models (id, name, provider_id, provider, huggingface_url, modelscope_url, arxiv_url, tech_report, total_parameters, active_parameters, embedding_parameters, non_embedding_parameters, context_length, embedding_dim, vocab_size, architecture, architecture_family, num_layers, num_heads, num_kv_heads, hidden_size, intermediate_size, position_encoding, activation, norm_type, norm_eps, attention_dropout, mlp_factor, gqa_ratio, torch_dtype, is_moe, num_experts, num_shared_experts, num_experts_per_token, num_activated_experts, moe_intermediate_size_json, input_modalities_json, output_modalities_json, openness, task, knowledge_cutoff, parameter_confidence, parameter_source, parameter_source_url, name_note, created_at, updated_at, raw_json) VALUES ('google/gemma-4-12B-it-assistant', 'gemma-4-12B-it-assistant', 'google-deepmind', 'Google DeepMind', 'https://huggingface.co/google/gemma-4-12B-it-assistant', NULL, NULL, '', 422856964, 422856964, 268435456, 154421508, 262144, 1024, 262144, 'gemma4_unified_assistant', NULL, 4, 16, 8, 1024, 8192, NULL, NULL, 'RMSNorm', 1e-06, 0.0, 8.0, 2.0, 'bfloat16', 0, NULL, NULL, NULL, NULL, NULL, '["text","image","audio","video"]', '["text","image","audio","video"]', 'open-weight', 'Any-to-Any', NULL, NULL, NULL, NULL, NULL, '2026-05-23T01:17:47.000Z', NULL, '{"id":"google/gemma-4-12B-it-assistant","name":"gemma-4-12B-it-assistant","provider":"Google DeepMind","huggingfaceUrl":"https://huggingface.co/google/gemma-4-12B-it-assistant","techReport":"","totalParameters":422856964,"activeParameters":422856964,"embeddingParameters":268435456,"nonEmbeddingParameters":154421508,"contextLength":262144,"embeddingDim":1024,"vocabSize":262144,"architecture":"gemma4_unified_assistant","numLayers":4,"numHeads":16,"numKvHeads":8,"hiddenSize":1024,"intermediateSize":8192,"normType":"RMSNorm","normEps":1e-06,"attentionDropout":0.0,"mlpFactor":8.0,"gqaRatio":2.0,"torchDtype":"bfloat16","inputModalities":["text","image","audio","video"],"outputModalities":["text","image","audio","video"],"task":"Any-to-Any","createdAt":"2026-05-23T01:17:47.000Z","openness":"open-weight","isMoe":false}');
 INSERT INTO models (id, name, provider_id, provider, huggingface_url, modelscope_url, arxiv_url, tech_report, total_parameters, active_parameters, embedding_parameters, non_embedding_parameters, context_length, embedding_dim, vocab_size, architecture, architecture_family, num_layers, num_heads, num_kv_heads, hidden_size, intermediate_size, position_encoding, activation, norm_type, norm_eps, attention_dropout, mlp_factor, gqa_ratio, torch_dtype, is_moe, num_experts, num_shared_experts, num_experts_per_token, num_activated_experts, moe_intermediate_size_json, input_modalities_json, output_modalities_json, openness, task, knowledge_cutoff, parameter_confidence, parameter_source, parameter_source_url, name_note, created_at, updated_at, raw_json) VALUES ('google/gemma-4-12B-it', 'gemma-4-12B-it', 'google-deepmind', 'Google DeepMind', 'https://huggingface.co/google/gemma-4-12B-it', NULL, NULL, '', 11959730224, 11959730224, 1006632960, 10953097264, 262144, 3840, 262144, 'gemma4_unified', NULL, 48, 16, 8, 3840, 15360, NULL, NULL, 'RMSNorm', 1e-06, 0.0, 4.0, 2.0, 'bfloat16', 0, NULL, NULL, NULL, NULL, NULL, '["text","image","audio","video"]', '["text","image","audio","video"]', 'open-weight', 'Any-to-Any', NULL, NULL, NULL, NULL, NULL, '2026-05-23T01:17:15.000Z', NULL, '{"id":"google/gemma-4-12B-it","name":"gemma-4-12B-it","provider":"Google DeepMind","huggingfaceUrl":"https://huggingface.co/google/gemma-4-12B-it","techReport":"","totalParameters":11959730224,"activeParameters":11959730224,"embeddingParameters":1006632960,"nonEmbeddingParameters":10953097264,"contextLength":262144,"embeddingDim":3840,"vocabSize":262144,"architecture":"gemma4_unified","numLayers":48,"numHeads":16,"numKvHeads":8,"hiddenSize":3840,"intermediateSize":15360,"normType":"RMSNorm","normEps":1e-06,"attentionDropout":0.0,"mlpFactor":4.0,"gqaRatio":2.0,"torchDtype":"bfloat16","inputModalities":["text","image","audio","video"],"outputModalities":["text","image","audio","video"],"task":"Any-to-Any","createdAt":"2026-05-23T01:17:15.000Z","openness":"open-weight","isMoe":false}');
 INSERT INTO models (id, name, provider_id, provider, huggingface_url, modelscope_url, arxiv_url, tech_report, total_parameters, active_parameters, embedding_parameters, non_embedding_parameters, context_length, embedding_dim, vocab_size, architecture, architecture_family, num_layers, num_heads, num_kv_heads, hidden_size, intermediate_size, position_encoding, activation, norm_type, norm_eps, attention_dropout, mlp_factor, gqa_ratio, torch_dtype, is_moe, num_experts, num_shared_experts, num_experts_per_token, num_activated_experts, moe_intermediate_size_json, input_modalities_json, output_modalities_json, openness, task, knowledge_cutoff, parameter_confidence, parameter_source, parameter_source_url, name_note, created_at, updated_at, raw_json) VALUES ('google/gemma-4-12B', 'gemma-4-12B', 'google-deepmind', 'Google DeepMind', 'https://huggingface.co/google/gemma-4-12B', NULL, NULL, '', 11959730224, 11959730224, 1006632960, 10953097264, 262144, 3840, 262144, 'gemma4_unified', NULL, 48, 16, 8, 3840, 15360, NULL, NULL, 'RMSNorm', 1e-06, 0.0, 4.0, 2.0, 'bfloat16', 0, NULL, NULL, NULL, NULL, NULL, '["text","image","audio","video"]', '["text","image","audio","video"]', 'open-weight', 'Any-to-Any', NULL, NULL, NULL, NULL, NULL, '2026-05-23T02:43:54.000Z', NULL, '{"id":"google/gemma-4-12B","name":"gemma-4-12B","provider":"Google DeepMind","huggingfaceUrl":"https://huggingface.co/google/gemma-4-12B","techReport":"","totalParameters":11959730224,"activeParameters":11959730224,"embeddingParameters":1006632960,"nonEmbeddingParameters":10953097264,"contextLength":262144,"embeddingDim":3840,"vocabSize":262144,"architecture":"gemma4_unified","numLayers":48,"numHeads":16,"numKvHeads":8,"hiddenSize":3840,"intermediateSize":15360,"normType":"RMSNorm","normEps":1e-06,"attentionDropout":0.0,"mlpFactor":4.0,"gqaRatio":2.0,"torchDtype":"bfloat16","inputModalities":["text","image","audio","video"],"outputModalities":["text","image","audio","video"],"task":"Any-to-Any","createdAt":"2026-05-23T02:43:54.000Z","openness":"open-weight","isMoe":false}');
-INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('qwen2', 'Qwen2 / Qwen2.5', '2024', 'decoder', 'pre', '引入 GQA，移除 LogN/动态 NTK，部分层支持 Sliding Window Attention。SwiGLU FFN，QKV 带 bias。', 'Introduces GQA, removes LogN/NTK tricks, and supports optional sliding-window attention in some layers. SwiGLU FFN with QKV bias.', 'https://arxiv.org/abs/2407.10671', 'Qwen/Qwen2.5-7B', '{"numLayers":28,"numHeads":28,"numKvHeads":4,"hiddenSize":3584}', 'hidden: {{hiddenSize}} · Q:{{numHeads}} KV:{{numKvHeads}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"Transformer Block","color":"steel","sub":"{{numLayers}} identical layers","badge":"x{{numLayers}}","children":[{"id":"ln1","type":"leaf","label":"RMSNorm","color":"norm","sub":"pre-norm"},{"id":"attn","type":"leaf","label":"GQA Q:{{numHeads}} KV:{{numKvHeads}}","color":"attn","sub":"RoPE · QKV bias · optional sliding window"},{"id":"r1","type":"leaf","label":"+ residual","color":"resid"},{"id":"ln2","type":"leaf","label":"RMSNorm","color":"norm","sub":"pre-norm"},{"id":"ffn","type":"leaf","label":"SwiGLU FFN","color":"ffn","sub":"gate · up -> SiLU -> down"},{"id":"r2","type":"leaf","label":"+ residual","color":"resid"}]},{"id":"lnf","type":"leaf","label":"Final RMSNorm","color":"norm"},{"id":"lmh","type":"leaf","label":"LM Head","color":"out","sub":"tied to token emb"}]', 'id: qwen2
+INSERT INTO models (id, name, provider_id, provider, huggingface_url, modelscope_url, arxiv_url, tech_report, total_parameters, active_parameters, embedding_parameters, non_embedding_parameters, context_length, embedding_dim, vocab_size, architecture, architecture_family, num_layers, num_heads, num_kv_heads, hidden_size, intermediate_size, position_encoding, activation, norm_type, norm_eps, attention_dropout, mlp_factor, gqa_ratio, torch_dtype, is_moe, num_experts, num_shared_experts, num_experts_per_token, num_activated_experts, moe_intermediate_size_json, input_modalities_json, output_modalities_json, openness, task, knowledge_cutoff, parameter_confidence, parameter_source, parameter_source_url, name_note, created_at, updated_at, raw_json) VALUES ('qwen/qwen3.7-max', 'Qwen3.7-Max', 'qwen', 'Qwen', NULL, NULL, NULL, 'https://qwen.ai/blog?id=qwen3.7', NULL, NULL, NULL, NULL, 1000000, NULL, NULL, 'qwen3_7_max', 'Qwen3.7', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '["text"]', '["text"]', 'closed', 'Text Generation', NULL, NULL, NULL, NULL, NULL, '2026-05-19T00:00:00Z', NULL, '{"id":"qwen/qwen3.7-max","name":"Qwen3.7-Max","provider":"Qwen","techReport":"https://qwen.ai/blog?id=qwen3.7","contextLength":1000000,"architecture":"qwen3_7_max","architectureFamily":"Qwen3.7","inputModalities":["text"],"outputModalities":["text"],"task":"Text Generation","createdAt":"2026-05-19T00:00:00Z","openness":"closed"}');
+INSERT INTO models (id, name, provider_id, provider, huggingface_url, modelscope_url, arxiv_url, tech_report, total_parameters, active_parameters, embedding_parameters, non_embedding_parameters, context_length, embedding_dim, vocab_size, architecture, architecture_family, num_layers, num_heads, num_kv_heads, hidden_size, intermediate_size, position_encoding, activation, norm_type, norm_eps, attention_dropout, mlp_factor, gqa_ratio, torch_dtype, is_moe, num_experts, num_shared_experts, num_experts_per_token, num_activated_experts, moe_intermediate_size_json, input_modalities_json, output_modalities_json, openness, task, knowledge_cutoff, parameter_confidence, parameter_source, parameter_source_url, name_note, created_at, updated_at, raw_json) VALUES ('qwen/qwen3.7-plus', 'Qwen3.7-Plus', 'qwen', 'Qwen', NULL, NULL, NULL, 'https://qwen.ai/blog?id=qwen3.7-plus', NULL, NULL, NULL, NULL, 1000000, NULL, NULL, 'qwen3_7_plus', 'Qwen3.7', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '["text","image","video"]', '["text"]', 'closed', 'Image-Text-to-Text', NULL, NULL, NULL, NULL, NULL, '2026-05-31T00:00:00Z', NULL, '{"id":"qwen/qwen3.7-plus","name":"Qwen3.7-Plus","provider":"Qwen","techReport":"https://qwen.ai/blog?id=qwen3.7-plus","contextLength":1000000,"architecture":"qwen3_7_plus","architectureFamily":"Qwen3.7","inputModalities":["text","image","video"],"outputModalities":["text"],"task":"Image-Text-to-Text","createdAt":"2026-05-31T00:00:00Z","openness":"closed"}');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('baichuan', 'Baichuan 2', '2023', 'decoder', 'pre', 'Baichuan 2 使用 RMSNorm、SwiGLU 与无 bias 投影，7B 使用 RoPE，13B 采用 ALiBi。', 'Baichuan 2 uses RMSNorm, SwiGLU, and bias-free projections; 7B uses RoPE while 13B uses ALiBi.', 'https://arxiv.org/abs/2309.10305', 'baichuan-inc/Baichuan2-7B-Base', '{"numLayers":32,"numHeads":32,"hiddenSize":4096}', '[]', '[]', '[]', '{"attention":"MHA","positionEncoding":"RoPE or ALiBi","norm":"RMSNorm","ffn":"SwiGLU"}', 'RoPE/ALiBi variants · heads: {{numHeads}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"Baichuan Block","color":"steel","badge":"x{{numLayers}}","children":[{"id":"norm1","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"attn","type":"leaf","label":"MHA","color":"attn","sub":"RoPE 7B · ALiBi 13B"},{"id":"ffn","type":"leaf","label":"SwiGLU FFN","color":"ffn"}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: baichuan
+family: Baichuan 2
+era: "2023"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Baichuan 2 使用 RMSNorm、SwiGLU 与无 bias 投影，7B 使用 RoPE，13B 采用 ALiBi。"
+  en: "Baichuan 2 uses RMSNorm, SwiGLU, and bias-free projections; 7B uses RoPE while 13B uses ALiBi."
+paperUrl: https://arxiv.org/abs/2309.10305
+hfOrg: baichuan-inc/Baichuan2-7B-Base
+aliases: [baichuan, baichuan_m1]
+defaultParams:
+  numLayers: 32
+  numHeads: 32
+  hiddenSize: 4096
+features:
+  attention: MHA
+  positionEncoding: RoPE or ALiBi
+  norm: RMSNorm
+  ffn: SwiGLU
+diagram:
+  subtitle: "RoPE/ALiBi variants · heads: {{numHeads}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Baichuan Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attn
+          type: leaf
+          label: MHA
+          sub: RoPE 7B · ALiBi 13B
+          color: attn
+        - id: ffn
+          type: leaf
+          label: SwiGLU FFN
+          color: ffn
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('bert', 'BERT', '2018', 'encoder', 'post', '双向 Transformer 编码器，Post-Norm，使用 Masked LM 预训练和 Token-Type Embedding 支持句对任务。', 'Bidirectional Transformer encoder with post-norm, Masked LM pretraining, and token-type embeddings for sentence-pair tasks.', 'https://arxiv.org/abs/1810.04805', 'google-bert/bert-base-uncased', '{"numLayers":12,"numHeads":12,"hiddenSize":768}', '[{"label":"HuggingFace config","url":"https://huggingface.co/google-bert/bert-base-uncased/blob/main/config.json","type":"hf-config"}]', '[]', '[]', '{"block":"encoder","attention":"bidirectional MHA","positionEncoding":"learned absolute","norm":"LayerNorm post-norm","objective":"masked language modeling"}', 'encoder layers: {{numLayers}} · heads: {{numHeads}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token + Position + Segment Embedding","color":"emb"},{"id":"block","type":"group","label":"Encoder Block","color":"steel","badge":"x{{numLayers}}","children":[{"id":"attn","type":"leaf","label":"Bidirectional MHA","color":"attn","sub":"learned absolute positions"},{"id":"addnorm1","type":"leaf","label":"Add + LayerNorm","color":"norm","sub":"post-norm"},{"id":"ffn","type":"leaf","label":"GELU FFN","color":"ffn"},{"id":"addnorm2","type":"leaf","label":"Add + LayerNorm","color":"norm","sub":"post-norm"}]},{"id":"pooled","type":"leaf","label":"MLM / pooled heads","color":"out"}]', 'id: bert
+family: BERT
+era: "2018"
+type: encoder
+normPlacement: post
+description:
+  zh: "双向 Transformer 编码器，Post-Norm，使用 Masked LM 预训练和 Token-Type Embedding 支持句对任务。"
+  en: "Bidirectional Transformer encoder with post-norm, Masked LM pretraining, and token-type embeddings for sentence-pair tasks."
+paperUrl: https://arxiv.org/abs/1810.04805
+hfOrg: google-bert/bert-base-uncased
+aliases: [bert]
+defaultParams:
+  numLayers: 12
+  numHeads: 12
+  hiddenSize: 768
+sourceLinks:
+  - label: HuggingFace config
+    url: https://huggingface.co/google-bert/bert-base-uncased/blob/main/config.json
+    type: hf-config
+features:
+  block: encoder
+  attention: bidirectional MHA
+  positionEncoding: learned absolute
+  norm: LayerNorm post-norm
+  objective: masked language modeling
+diagram:
+  subtitle: "encoder layers: {{numLayers}} · heads: {{numHeads}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token + Position + Segment Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Encoder Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: attn
+          type: leaf
+          label: Bidirectional MHA
+          sub: learned absolute positions
+          color: attn
+        - id: addnorm1
+          type: leaf
+          label: Add + LayerNorm
+          sub: post-norm
+          color: norm
+        - id: ffn
+          type: leaf
+          label: GELU FFN
+          color: ffn
+        - id: addnorm2
+          type: leaf
+          label: Add + LayerNorm
+          sub: post-norm
+          color: norm
+    - id: pooled
+      type: leaf
+      label: MLM / pooled heads
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('bloom', 'BLOOM', '2022', 'decoder', 'pre', 'BLOOM 是多语言密集解码器，使用 ALiBi 位置偏置、LayerNorm 和 GELU MLP。', 'BLOOM is a multilingual dense decoder using ALiBi positional bias, LayerNorm, and GELU MLP.', 'https://arxiv.org/abs/2211.05100', 'bigscience/bloom', '{"numLayers":70,"numHeads":112,"hiddenSize":14336}', '[]', '[]', '[]', '{"attention":"MHA","positionEncoding":"ALiBi","norm":"LayerNorm","ffn":"GELU MLP"}', 'ALiBi · heads: {{numHeads}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"BLOOM Block","color":"steel","badge":"x{{numLayers}}","children":[{"id":"norm1","type":"leaf","label":"LayerNorm","color":"norm"},{"id":"attn","type":"leaf","label":"MHA + ALiBi","color":"attn"},{"id":"r1","type":"leaf","label":"+ residual","color":"resid"},{"id":"norm2","type":"leaf","label":"LayerNorm","color":"norm"},{"id":"ffn","type":"leaf","label":"GELU MLP","color":"ffn"}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: bloom
+family: BLOOM
+era: "2022"
+type: decoder
+normPlacement: pre
+description:
+  zh: "BLOOM 是多语言密集解码器，使用 ALiBi 位置偏置、LayerNorm 和 GELU MLP。"
+  en: "BLOOM is a multilingual dense decoder using ALiBi positional bias, LayerNorm, and GELU MLP."
+paperUrl: https://arxiv.org/abs/2211.05100
+hfOrg: bigscience/bloom
+aliases: [bloom]
+defaultParams:
+  numLayers: 70
+  numHeads: 112
+  hiddenSize: 14336
+features:
+  attention: MHA
+  positionEncoding: ALiBi
+  norm: LayerNorm
+  ffn: GELU MLP
+diagram:
+  subtitle: "ALiBi · heads: {{numHeads}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: BLOOM Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: norm1
+          type: leaf
+          label: LayerNorm
+          color: norm
+        - id: attn
+          type: leaf
+          label: MHA + ALiBi
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: norm2
+          type: leaf
+          label: LayerNorm
+          color: norm
+        - id: ffn
+          type: leaf
+          label: GELU MLP
+          color: ffn
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('command-a', 'Command A+', '2026', 'decoder', 'pre', 'Command A+ 图库条目是 Cohere 稀疏 MoE 解码器，使用 GQA，并采用 3:1 滑动窗口/全局注意力层混合。', 'Command A+ is a Cohere sparse MoE decoder in the gallery, using GQA with a 3:1 sliding-window/global attention layer mix.', NULL, 'CohereLabs/command-a-plus-05-2026-w4a4', '{"numLayers":64,"numHeads":64,"numKvHeads":4,"numExperts":128,"numExpertsPerToken":8}', '[{"label":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-command-a-218b-a25b","type":"reference"}]', '[{"id":"command-a-plus","name":"Command A+","aliases":["command_a_plus"],"descriptionZh":"218B total / 25B active 稀疏 MoE 条目。","descriptionEn":"218B total / 25B active sparse MoE entry."}]', '[]', '{"attention":"16:1 GQA","layerMix":"3:1 sliding-window and global attention","moe":"sparse MoE"}', '16:1 GQA · SWA/global mix · MoE', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"Command A+ Block","color":"steel","badge":"x{{numLayers}}","defaultExpanded":true,"children":[{"id":"norm1","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"attnrow","type":"row","children":[{"id":"swa","type":"leaf","label":"Sliding-window GQA","color":"attn"},{"id":"global","type":"leaf","label":"Global GQA","color":"sky"}]},{"id":"moe","type":"group","label":"MoE FFN","color":"moe","children":[{"id":"router","type":"leaf","label":"Router top-{{numExpertsPerToken}}","color":"teal"},{"id":"experts","type":"leaf","label":"Experts x{{numExperts}}","color":"ffn"}]}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: command-a
+family: Command A+
+era: "2026"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Command A+ 图库条目是 Cohere 稀疏 MoE 解码器，使用 GQA，并采用 3:1 滑动窗口/全局注意力层混合。"
+  en: "Command A+ is a Cohere sparse MoE decoder in the gallery, using GQA with a 3:1 sliding-window/global attention layer mix."
+hfOrg: CohereLabs/command-a-plus-05-2026-w4a4
+aliases: [command_a, command_a_plus, cohere2]
+defaultParams:
+  numLayers: 64
+  numHeads: 64
+  numKvHeads: 4
+  numExperts: 128
+  numExpertsPerToken: 8
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-command-a-218b-a25b
+    type: reference
+features:
+  attention: 16:1 GQA
+  layerMix: 3:1 sliding-window and global attention
+  moe: sparse MoE
+variants:
+  - id: command-a-plus
+    name: Command A+
+    aliases: [command_a_plus]
+    descriptionZh: "218B total / 25B active 稀疏 MoE 条目。"
+    descriptionEn: "218B total / 25B active sparse MoE entry."
+diagram:
+  subtitle: "16:1 GQA · SWA/global mix · MoE"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Command A+ Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attnrow
+          type: row
+          children:
+            - id: swa
+              type: leaf
+              label: Sliding-window GQA
+              color: attn
+            - id: global
+              type: leaf
+              label: Global GQA
+              color: sky
+        - id: moe
+          type: group
+          label: MoE FFN
+          color: moe
+          children:
+            - id: router
+              type: leaf
+              label: "Router top-{{numExpertsPerToken}}"
+              color: teal
+            - id: experts
+              type: leaf
+              label: "Experts x{{numExperts}}"
+              color: ffn
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('deepseek-dense', 'DeepSeek dense', '2024', 'decoder', 'pre', 'DeepSeek 早期密集解码器基座，RMSNorm、RoPE、SwiGLU，注意力为 MHA 或 GQA。', 'Early dense DeepSeek decoder backbone with RMSNorm, RoPE, SwiGLU, and MHA or GQA attention.', 'https://arxiv.org/abs/2401.02954', 'deepseek-ai/deepseek-llm-7b-base', '{"numLayers":30,"numHeads":32,"numKvHeads":32,"hiddenSize":4096}', '[]', '[]', '[]', '{"attention":"MHA or GQA","positionEncoding":"RoPE","norm":"RMSNorm","ffn":"SwiGLU"}', 'dense decoder · hidden: {{hiddenSize}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"Dense Block","color":"steel","badge":"x{{numLayers}}","children":[{"id":"ln1","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"attn","type":"leaf","label":"Attention Q:{{numHeads}} KV:{{numKvHeads}}","color":"attn","sub":"RoPE"},{"id":"r1","type":"leaf","label":"+ residual","color":"resid"},{"id":"ln2","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"ffn","type":"leaf","label":"SwiGLU FFN","color":"ffn"},{"id":"r2","type":"leaf","label":"+ residual","color":"resid"}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: deepseek-dense
+family: DeepSeek dense
+era: "2024"
+type: decoder
+normPlacement: pre
+description:
+  zh: "DeepSeek 早期密集解码器基座，RMSNorm、RoPE、SwiGLU，注意力为 MHA 或 GQA。"
+  en: "Early dense DeepSeek decoder backbone with RMSNorm, RoPE, SwiGLU, and MHA or GQA attention."
+paperUrl: https://arxiv.org/abs/2401.02954
+hfOrg: deepseek-ai/deepseek-llm-7b-base
+aliases: [deepseek]
+defaultParams:
+  numLayers: 30
+  numHeads: 32
+  numKvHeads: 32
+  hiddenSize: 4096
+features:
+  attention: MHA or GQA
+  positionEncoding: RoPE
+  norm: RMSNorm
+  ffn: SwiGLU
+diagram:
+  subtitle: "dense decoder · hidden: {{hiddenSize}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Dense Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: ln1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attn
+          type: leaf
+          label: "Attention Q:{{numHeads}} KV:{{numKvHeads}}"
+          sub: RoPE
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: ln2
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: ffn
+          type: leaf
+          label: SwiGLU FFN
+          color: ffn
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('deepseek-v2', 'DeepSeek-V2', '2024', 'decoder', 'pre', 'DeepSeek-V2 引入 MLA 压缩 KV Cache，MoE 使用共享专家和 softmax 路由。', 'DeepSeek-V2 introduces MLA for KV cache compression and uses MoE with shared experts and softmax routing.', 'https://arxiv.org/abs/2405.04434', 'deepseek-ai/DeepSeek-V2', '{"numLayers":60,"numExperts":160,"numSharedExperts":2,"numExpertsPerToken":6}', '[]', '[]', '[]', '{"attention":"MLA","moe":"shared expert MoE","routing":"softmax top-k","positionEncoding":"decoupled RoPE"}', '{{numExperts}} routed · {{numSharedExperts}} shared · top-{{numExpertsPerToken}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"DeepSeek-V2 Block","color":"steel","badge":"x{{numLayers}}","defaultExpanded":true,"children":[{"id":"ln1","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"mla","type":"group","label":"MLA","color":"attn","children":[{"id":"q","type":"leaf","label":"Q path","color":"attn"},{"id":"kv","type":"leaf","label":"KV latent path","color":"sky","sub":"compressed cache"},{"id":"rope","type":"leaf","label":"Decoupled RoPE","color":"norm"}]},{"id":"r1","type":"leaf","label":"+ residual","color":"resid"},{"id":"moe","type":"group","label":"MoE FFN","color":"moe","children":[{"id":"router","type":"leaf","label":"Router top-{{numExpertsPerToken}}","color":"teal"},{"id":"experts","type":"row","children":[{"id":"routed","type":"leaf","label":"Routed experts","color":"moe"},{"id":"shared","type":"leaf","label":"Shared x{{numSharedExperts}}","color":"amber"}]}]},{"id":"r2","type":"leaf","label":"+ residual","color":"resid"}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: deepseek-v2
+family: DeepSeek-V2
+era: "2024"
+type: decoder
+normPlacement: pre
+description:
+  zh: "DeepSeek-V2 引入 MLA 压缩 KV Cache，MoE 使用共享专家和 softmax 路由。"
+  en: "DeepSeek-V2 introduces MLA for KV cache compression and uses MoE with shared experts and softmax routing."
+paperUrl: https://arxiv.org/abs/2405.04434
+hfOrg: deepseek-ai/DeepSeek-V2
+aliases: [deepseek_v2, deepseek_vl_v2]
+defaultParams:
+  numLayers: 60
+  numExperts: 160
+  numSharedExperts: 2
+  numExpertsPerToken: 6
+features:
+  attention: MLA
+  moe: shared expert MoE
+  routing: softmax top-k
+  positionEncoding: decoupled RoPE
+diagram:
+  subtitle: "{{numExperts}} routed · {{numSharedExperts}} shared · top-{{numExpertsPerToken}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: DeepSeek-V2 Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: ln1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: mla
+          type: group
+          label: MLA
+          color: attn
+          children:
+            - id: q
+              type: leaf
+              label: Q path
+              color: attn
+            - id: kv
+              type: leaf
+              label: KV latent path
+              sub: compressed cache
+              color: sky
+            - id: rope
+              type: leaf
+              label: Decoupled RoPE
+              color: norm
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: moe
+          type: group
+          label: MoE FFN
+          color: moe
+          children:
+            - id: router
+              type: leaf
+              label: "Router top-{{numExpertsPerToken}}"
+              color: teal
+            - id: experts
+              type: row
+              children:
+                - id: routed
+                  type: leaf
+                  label: "Routed experts"
+                  color: moe
+                - id: shared
+                  type: leaf
+                  label: "Shared x{{numSharedExperts}}"
+                  color: amber
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('deepseek-v3', 'DeepSeek-V3 / R1 / V3.2', '2024', 'decoder', 'pre', '继承 MLA，MoE 使用 sigmoid 路由和可学习负载均衡偏置，前若干层保持 Dense FFN。', 'Inherits MLA and uses sigmoid MoE routing with learnable load-balancing bias, while keeping an initial dense FFN prefix.', 'https://arxiv.org/abs/2412.19437', 'deepseek-ai/DeepSeek-V3', '{"numLayers":61,"numExperts":256,"numSharedExperts":1,"numExpertsPerToken":8}', '[{"label":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-deepseek-v3","type":"reference"}]', '[{"id":"deepseek-v3","name":"DeepSeek V3","aliases":["deepseek_v3"],"descriptionZh":"671B total / 37B active 的 MLA + MoE 模板。","descriptionEn":"The 671B total / 37B active MLA + MoE template."},{"id":"deepseek-r1","name":"DeepSeek R1","aliases":["deepseek_r1"],"descriptionZh":"推理训练变体，基础架构沿用 V3。","descriptionEn":"Reasoning-trained variant that keeps the V3 base architecture."},{"id":"deepseek-v3-2","name":"DeepSeek V3.2","aliases":["deepseek_v32"],"descriptionZh":"在 V3 谱系上加入稀疏注意力扩展。","descriptionEn":"Extends the V3 lineage with sparse attention."}]', '[{"source":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-deepseek-v3","noteZh":"卡片标注 MLA、Dense prefix、shared expert 和 MTP。","noteEn":"The card records MLA, dense prefix, shared expert, and MTP."}]', '{"attention":"MLA","moe":"shared expert sparse MoE","routing":"sigmoid with correction bias","layerMix":"dense prefix then MoE"}', '{{numExperts}} routed · top-{{numExpertsPerToken}} · {{numSharedExperts}} shared', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"denseprefix","type":"leaf","label":"First layers: Dense FFN","color":"steel","sub":"later layers use MoE"},{"id":"block","type":"group","label":"DeepSeek Block","color":"steel","badge":"x{{numLayers}}","defaultExpanded":true,"children":[{"id":"ln1","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"mla","type":"group","label":"MLA","color":"attn","children":[{"id":"qpath","type":"leaf","label":"Q projection","color":"attn","sub":"split RoPE / NoPE"},{"id":"kvpath","type":"leaf","label":"KV latent cache","color":"sky","sub":"low-rank compression"},{"id":"sdpa","type":"leaf","label":"Attention output","color":"attn"}]},{"id":"r1","type":"leaf","label":"+ residual","color":"resid"},{"id":"ln2","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"moe","type":"group","label":"MoE FFN","color":"moe","children":[{"id":"router","type":"leaf","label":"Router top-{{numExpertsPerToken}}","color":"teal","sub":"sigmoid + correction bias"},{"id":"experts","type":"row","children":[{"id":"routed","type":"leaf","label":"Routed experts","color":"moe"},{"id":"shared","type":"leaf","label":"Shared x{{numSharedExperts}}","color":"amber"}]}]},{"id":"r2","type":"leaf","label":"+ residual","color":"resid"}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: deepseek-v3
+family: DeepSeek-V3 / R1 / V3.2
+era: "2024"
+type: decoder
+normPlacement: pre
+description:
+  zh: "继承 MLA，MoE 使用 sigmoid 路由和可学习负载均衡偏置，前若干层保持 Dense FFN。"
+  en: "Inherits MLA and uses sigmoid MoE routing with learnable load-balancing bias, while keeping an initial dense FFN prefix."
+paperUrl: https://arxiv.org/abs/2412.19437
+hfOrg: deepseek-ai/DeepSeek-V3
+aliases: [deepseek_v3, deepseek_v32, deepseek_r1]
+defaultParams:
+  numLayers: 61
+  numExperts: 256
+  numSharedExperts: 1
+  numExpertsPerToken: 8
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-deepseek-v3
+    type: reference
+features:
+  attention: MLA
+  moe: shared expert sparse MoE
+  routing: sigmoid with correction bias
+  layerMix: dense prefix then MoE
+variants:
+  - id: deepseek-v3
+    name: DeepSeek V3
+    aliases: [deepseek_v3]
+    descriptionZh: "671B total / 37B active 的 MLA + MoE 模板。"
+    descriptionEn: "The 671B total / 37B active MLA + MoE template."
+  - id: deepseek-r1
+    name: DeepSeek R1
+    aliases: [deepseek_r1]
+    descriptionZh: "推理训练变体，基础架构沿用 V3。"
+    descriptionEn: "Reasoning-trained variant that keeps the V3 base architecture."
+  - id: deepseek-v3-2
+    name: DeepSeek V3.2
+    aliases: [deepseek_v32]
+    descriptionZh: "在 V3 谱系上加入稀疏注意力扩展。"
+    descriptionEn: "Extends the V3 lineage with sparse attention."
+evidence:
+  - source: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-deepseek-v3
+    noteZh: "卡片标注 MLA、Dense prefix、shared expert 和 MTP。"
+    noteEn: "The card records MLA, dense prefix, shared expert, and MTP."
+diagram:
+  subtitle: "{{numExperts}} routed · top-{{numExpertsPerToken}} · {{numSharedExperts}} shared"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: denseprefix
+      type: leaf
+      label: "First layers: Dense FFN"
+      sub: later layers use MoE
+      color: steel
+    - id: block
+      type: group
+      label: DeepSeek Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: ln1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: mla
+          type: group
+          label: MLA
+          color: attn
+          children:
+            - id: qpath
+              type: leaf
+              label: Q projection
+              sub: split RoPE / NoPE
+              color: attn
+            - id: kvpath
+              type: leaf
+              label: KV latent cache
+              sub: low-rank compression
+              color: sky
+            - id: sdpa
+              type: leaf
+              label: Attention output
+              color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: ln2
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: moe
+          type: group
+          label: MoE FFN
+          color: moe
+          children:
+            - id: router
+              type: leaf
+              label: "Router top-{{numExpertsPerToken}}"
+              sub: sigmoid + correction bias
+              color: teal
+            - id: experts
+              type: row
+              children:
+                - id: routed
+                  type: leaf
+                  label: Routed experts
+                  color: moe
+                - id: shared
+                  type: leaf
+                  label: "Shared x{{numSharedExperts}}"
+                  color: amber
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('deepseek-v4', 'DeepSeek V4', '2026', 'decoder', 'pre', 'DeepSeek V4 图库条目延续 MLA/MoE 谱系，并加入 CSA/HCA 与 mHC 等新型注意力压缩路径。', 'DeepSeek V4 gallery entries continue the MLA/MoE lineage and add CSA/HCA plus mHC-style attention compression paths.', NULL, 'deepseek-ai/DeepSeek-V4-Flash', '{"numLayers":61,"numExperts":384,"numExpertsPerToken":8}', '[{"label":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-deepseek-v4-flash","type":"reference"}]', '[{"id":"deepseek-v4-flash","name":"DeepSeek V4-Flash","aliases":["deepseek_v4"],"descriptionZh":"284B 图库变体，强调 Flash 服务效率。","descriptionEn":"284B gallery variant focused on serving efficiency."},{"id":"deepseek-v4-pro","name":"DeepSeek V4-Pro","aliases":["deepseek_v4"],"descriptionZh":"1.6T 图库变体，扩大总参数规模。","descriptionEn":"1.6T gallery variant with a larger total parameter scale."}]', '[]', '{"attention":"MLA-style CSA/HCA","moe":"sparse MoE","routing":"top-k expert routing"}', 'MLA-style compression · MoE top-{{numExpertsPerToken}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"DeepSeek V4 Block","color":"steel","badge":"x{{numLayers}}","defaultExpanded":true,"children":[{"id":"norm","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"attn","type":"group","label":"CSA / HCA Attention","color":"attn","children":[{"id":"latent","type":"leaf","label":"Latent cache path","color":"sky"},{"id":"mhc","type":"leaf","label":"mHC compression","color":"purple"},{"id":"out","type":"leaf","label":"Attention output","color":"attn"}]},{"id":"r1","type":"leaf","label":"+ residual","color":"resid"},{"id":"moe","type":"group","label":"MoE FFN","color":"moe","children":[{"id":"router","type":"leaf","label":"Router top-{{numExpertsPerToken}}","color":"teal"},{"id":"expert","type":"leaf","label":"SwiGLU Experts","color":"ffn"}]}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: deepseek-v4
+family: DeepSeek V4
+era: "2026"
+type: decoder
+normPlacement: pre
+description:
+  zh: "DeepSeek V4 图库条目延续 MLA/MoE 谱系，并加入 CSA/HCA 与 mHC 等新型注意力压缩路径。"
+  en: "DeepSeek V4 gallery entries continue the MLA/MoE lineage and add CSA/HCA plus mHC-style attention compression paths."
+hfOrg: deepseek-ai/DeepSeek-V4-Flash
+aliases: [deepseek_v4]
+defaultParams:
+  numLayers: 61
+  numExperts: 384
+  numExpertsPerToken: 8
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-deepseek-v4-flash
+    type: reference
+features:
+  attention: MLA-style CSA/HCA
+  moe: sparse MoE
+  routing: top-k expert routing
+variants:
+  - id: deepseek-v4-flash
+    name: DeepSeek V4-Flash
+    aliases: [deepseek_v4]
+    descriptionZh: "284B 图库变体，强调 Flash 服务效率。"
+    descriptionEn: "284B gallery variant focused on serving efficiency."
+  - id: deepseek-v4-pro
+    name: DeepSeek V4-Pro
+    aliases: [deepseek_v4]
+    descriptionZh: "1.6T 图库变体，扩大总参数规模。"
+    descriptionEn: "1.6T gallery variant with a larger total parameter scale."
+diagram:
+  subtitle: "MLA-style compression · MoE top-{{numExpertsPerToken}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: DeepSeek V4 Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attn
+          type: group
+          label: CSA / HCA Attention
+          color: attn
+          children:
+            - id: latent
+              type: leaf
+              label: Latent cache path
+              color: sky
+            - id: mhc
+              type: leaf
+              label: mHC compression
+              color: purple
+            - id: out
+              type: leaf
+              label: Attention output
+              color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: moe
+          type: group
+          label: MoE FFN
+          color: moe
+          children:
+            - id: router
+              type: leaf
+              label: "Router top-{{numExpertsPerToken}}"
+              color: teal
+            - id: expert
+              type: leaf
+              label: SwiGLU Experts
+              color: ffn
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('exaone', 'EXAONE', '2024', 'decoder', 'pre', 'EXAONE 是 LG AI Research 解码器系列，使用 GQA、RoPE、RMSNorm 与 SwiGLU。', 'EXAONE is an LG AI Research decoder family using GQA, RoPE, RMSNorm, and SwiGLU.', 'https://arxiv.org/abs/2408.03541', 'LGAI-EXAONE/EXAONE-3.5-7.8B-Instruct', '{"numLayers":32,"numHeads":32,"numKvHeads":8,"hiddenSize":4096}', '[]', '[]', '[]', '{"attention":"GQA","positionEncoding":"RoPE","norm":"RMSNorm","ffn":"SwiGLU"}', 'GQA · hidden: {{hiddenSize}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"EXAONE Block","color":"steel","badge":"x{{numLayers}}","children":[{"id":"norm1","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"attn","type":"leaf","label":"GQA Q:{{numHeads}} KV:{{numKvHeads}}","color":"attn"},{"id":"ffn","type":"leaf","label":"SwiGLU FFN","color":"ffn"}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: exaone
+family: EXAONE
+era: "2024"
+type: decoder
+normPlacement: pre
+description:
+  zh: "EXAONE 是 LG AI Research 解码器系列，使用 GQA、RoPE、RMSNorm 与 SwiGLU。"
+  en: "EXAONE is an LG AI Research decoder family using GQA, RoPE, RMSNorm, and SwiGLU."
+paperUrl: https://arxiv.org/abs/2408.03541
+hfOrg: LGAI-EXAONE/EXAONE-3.5-7.8B-Instruct
+aliases: [exaone, exaone4]
+defaultParams:
+  numLayers: 32
+  numHeads: 32
+  numKvHeads: 8
+  hiddenSize: 4096
+features:
+  attention: GQA
+  positionEncoding: RoPE
+  norm: RMSNorm
+  ffn: SwiGLU
+diagram:
+  subtitle: "GQA · hidden: {{hiddenSize}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: EXAONE Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attn
+          type: leaf
+          label: "GQA Q:{{numHeads}} KV:{{numKvHeads}}"
+          color: attn
+        - id: ffn
+          type: leaf
+          label: SwiGLU FFN
+          color: ffn
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('falcon', 'Falcon', '2023', 'decoder', 'pre', 'Falcon 使用 MQA/GQA 风格注意力、RoPE 与 LayerNorm，部分版本采用并行 attention + FFN 布局。', 'Falcon uses MQA/GQA-style attention, RoPE, and LayerNorm, with parallel attention + FFN layout in some versions.', 'https://arxiv.org/abs/2311.16867', 'tiiuae/falcon-7b', '{"numLayers":32,"numHeads":71,"numKvHeads":1,"hiddenSize":4544}', '[]', '[]', '[]', '{"attention":"MQA","positionEncoding":"RoPE","layout":"parallel attention and FFN variants"}', 'MQA · heads: {{numHeads}} KV:{{numKvHeads}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"Falcon Block","color":"steel","badge":"x{{numLayers}}","defaultExpanded":true,"children":[{"id":"norm","type":"leaf","label":"LayerNorm","color":"norm"},{"id":"parallel","type":"row","children":[{"id":"attn","type":"leaf","label":"MQA Q:{{numHeads}} KV:{{numKvHeads}}","color":"attn"},{"id":"ffn","type":"leaf","label":"MLP","color":"ffn"}]},{"id":"r","type":"leaf","label":"+ residual","color":"resid"}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: falcon
+family: Falcon
+era: "2023"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Falcon 使用 MQA/GQA 风格注意力、RoPE 与 LayerNorm，部分版本采用并行 attention + FFN 布局。"
+  en: "Falcon uses MQA/GQA-style attention, RoPE, and LayerNorm, with parallel attention + FFN layout in some versions."
+paperUrl: https://arxiv.org/abs/2311.16867
+hfOrg: tiiuae/falcon-7b
+aliases: [falcon, falcon_h1]
+defaultParams:
+  numLayers: 32
+  numHeads: 71
+  numKvHeads: 1
+  hiddenSize: 4544
+features:
+  attention: MQA
+  positionEncoding: RoPE
+  layout: parallel attention and FFN variants
+diagram:
+  subtitle: "MQA · heads: {{numHeads}} KV:{{numKvHeads}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Falcon Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm
+          type: leaf
+          label: LayerNorm
+          color: norm
+        - id: parallel
+          type: row
+          children:
+            - id: attn
+              type: leaf
+              label: "MQA Q:{{numHeads}} KV:{{numKvHeads}}"
+              color: attn
+            - id: ffn
+              type: leaf
+              label: MLP
+              color: ffn
+        - id: r
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('gemma', 'Gemma / Gemma 2 / Gemma 3 / Gemma 4', '2024', 'decoder', 'pre', 'Gemma 系列使用 RMSNorm、GeGLU/SwiGLU 风格 FFN、RoPE，后续版本加入 QK-Norm、局部/全局注意力混合与 logit soft-capping。', 'Gemma models use RMSNorm, GeGLU/SwiGLU-style FFNs, RoPE, and later variants add QK-Norm, local/global attention mixes, and logit soft-capping.', 'https://arxiv.org/abs/2408.00118', 'google/gemma-3-27b-it', '{"numLayers":46,"numHeads":32,"numKvHeads":16,"hiddenSize":5376}', '[{"label":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-gemma-3-27b","type":"reference"}]', '[{"id":"gemma-3","name":"Gemma 3","aliases":["gemma3","gemma3_text"],"descriptionZh":"文本主干强调本地注意力与大词表。","descriptionEn":"Text backbone emphasizing local attention and a large vocabulary."},{"id":"gemma-4","name":"Gemma 4","aliases":["gemma4","gemma4_unified"],"descriptionZh":"图库变体加入 unified K/V、p-RoPE 与 dense/MoE 分支。","descriptionEn":"Gallery variants add unified K/V, p-RoPE, and dense/MoE branches."}]', '[]', '{"attention":"GQA or MQA with QK-Norm","layerMix":"sliding-window and global attention","norm":"RMSNorm","ffn":"GeGLU/SwiGLU"}', 'local/global attention · hidden: {{hiddenSize}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"Gemma Block","color":"steel","badge":"x{{numLayers}}","defaultExpanded":true,"children":[{"id":"pre","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"qknorm","type":"leaf","label":"QK-Norm","color":"norm"},{"id":"attnrow","type":"row","children":[{"id":"local","type":"leaf","label":"Sliding-window GQA","color":"attn"},{"id":"global","type":"leaf","label":"Global GQA","color":"sky","sub":"periodic layers"}]},{"id":"r1","type":"leaf","label":"+ residual","color":"resid"},{"id":"ffn","type":"leaf","label":"GeGLU FFN","color":"ffn","sub":"soft-capping variants"},{"id":"r2","type":"leaf","label":"+ residual","color":"resid"}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: gemma
+family: Gemma / Gemma 2 / Gemma 3 / Gemma 4
+era: "2024"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Gemma 系列使用 RMSNorm、GeGLU/SwiGLU 风格 FFN、RoPE，后续版本加入 QK-Norm、局部/全局注意力混合与 logit soft-capping。"
+  en: "Gemma models use RMSNorm, GeGLU/SwiGLU-style FFNs, RoPE, and later variants add QK-Norm, local/global attention mixes, and logit soft-capping."
+paperUrl: https://arxiv.org/abs/2408.00118
+hfOrg: google/gemma-3-27b-it
+aliases: [gemma, gemma2, gemma3, gemma3_text, gemma3n, gemma4, gemma4_unified]
+defaultParams:
+  numLayers: 46
+  numHeads: 32
+  numKvHeads: 16
+  hiddenSize: 5376
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-gemma-3-27b
+    type: reference
+features:
+  attention: GQA or MQA with QK-Norm
+  layerMix: sliding-window and global attention
+  norm: RMSNorm
+  ffn: GeGLU/SwiGLU
+variants:
+  - id: gemma-3
+    name: Gemma 3
+    aliases: [gemma3, gemma3_text]
+    descriptionZh: "文本主干强调本地注意力与大词表。"
+    descriptionEn: "Text backbone emphasizing local attention and a large vocabulary."
+  - id: gemma-4
+    name: Gemma 4
+    aliases: [gemma4, gemma4_unified]
+    descriptionZh: "图库变体加入 unified K/V、p-RoPE 与 dense/MoE 分支。"
+    descriptionEn: "Gallery variants add unified K/V, p-RoPE, and dense/MoE branches."
+diagram:
+  subtitle: "local/global attention · hidden: {{hiddenSize}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Gemma Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: pre
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: qknorm
+          type: leaf
+          label: QK-Norm
+          color: norm
+        - id: attnrow
+          type: row
+          children:
+            - id: local
+              type: leaf
+              label: Sliding-window GQA
+              color: attn
+            - id: global
+              type: leaf
+              label: Global GQA
+              sub: periodic layers
+              color: sky
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: ffn
+          type: leaf
+          label: GeGLU FFN
+          sub: soft-capping variants
+          color: ffn
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('glm4', 'GLM4 / GLM-4.5 / GLM-5', '2024', 'decoder', 'pre', 'GLM 系列包含密集和 MoE 解码器变体，使用 RMSNorm、GQA/QK-Norm，GLM-5 谱系加入 MLA 与稀疏注意力。', 'GLM models include dense and MoE decoder variants with RMSNorm, GQA/QK-Norm, and GLM-5 lineage additions such as MLA and sparse attention.', 'https://arxiv.org/abs/2406.12793', 'zai-org/GLM-4.5', '{"numLayers":46,"numHeads":96,"numKvHeads":8,"hiddenSize":5120}', '[{"label":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-glm-4-5-355b","type":"reference"}]', '[{"id":"glm-4-5","name":"GLM-4.5","aliases":["glm4_moe"],"descriptionZh":"Raschka 图库中的 355B 稀疏 MoE 条目。","descriptionEn":"The 355B sparse MoE entry in the gallery."},{"id":"glm-5","name":"GLM-5","aliases":["glm5"],"descriptionZh":"MLA 与稀疏注意力增强的后续谱系。","descriptionEn":"Later lineage with MLA and sparse attention enhancements."}]', '[]', '{"attention":"GQA or MLA","moe":"sparse MoE variants","norm":"RMSNorm and QK-Norm","positionEncoding":"RoPE"}', 'GQA/MLA · dense and MoE variants', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"GLM Block","color":"steel","badge":"x{{numLayers}}","children":[{"id":"norm1","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"attn","type":"leaf","label":"GQA / MLA","color":"attn","sub":"QK-Norm variants"},{"id":"r1","type":"leaf","label":"+ residual","color":"resid"},{"id":"norm2","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"ffn","type":"leaf","label":"SwiGLU FFN / MoE","color":"ffn"},{"id":"r2","type":"leaf","label":"+ residual","color":"resid"}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: glm4
+family: GLM4 / GLM-4.5 / GLM-5
+era: "2024"
+type: decoder
+normPlacement: pre
+description:
+  zh: "GLM 系列包含密集和 MoE 解码器变体，使用 RMSNorm、GQA/QK-Norm，GLM-5 谱系加入 MLA 与稀疏注意力。"
+  en: "GLM models include dense and MoE decoder variants with RMSNorm, GQA/QK-Norm, and GLM-5 lineage additions such as MLA and sparse attention."
+paperUrl: https://arxiv.org/abs/2406.12793
+hfOrg: zai-org/GLM-4.5
+aliases: [glm, glm4, chatglm, glm4_moe, glm4v, glm4v_moe, glm_moe_dsa, glm5]
+defaultParams:
+  numLayers: 46
+  numHeads: 96
+  numKvHeads: 8
+  hiddenSize: 5120
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-glm-4-5-355b
+    type: reference
+features:
+  attention: GQA or MLA
+  moe: sparse MoE variants
+  norm: RMSNorm and QK-Norm
+  positionEncoding: RoPE
+variants:
+  - id: glm-4-5
+    name: GLM-4.5
+    aliases: [glm4_moe]
+    descriptionZh: "Raschka 图库中的 355B 稀疏 MoE 条目。"
+    descriptionEn: "The 355B sparse MoE entry in the gallery."
+  - id: glm-5
+    name: GLM-5
+    aliases: [glm5]
+    descriptionZh: "MLA 与稀疏注意力增强的后续谱系。"
+    descriptionEn: "Later lineage with MLA and sparse attention enhancements."
+diagram:
+  subtitle: "GQA/MLA · dense and MoE variants"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: GLM Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attn
+          type: leaf
+          label: GQA / MLA
+          sub: QK-Norm variants
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: norm2
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: ffn
+          type: leaf
+          label: SwiGLU FFN / MoE
+          color: ffn
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('gpt-oss', 'GPT-OSS', '2025', 'decoder', 'pre', 'GPT-OSS 图库条目是稀疏 MoE 解码器，使用 GQA，并交替滑动窗口与全局注意力层。', 'GPT-OSS gallery entries are sparse MoE decoders with GQA and alternating sliding-window/global attention layers.', NULL, 'openai/gpt-oss-120b', '{"numLayers":36,"numExperts":128,"numExpertsPerToken":4}', '[{"label":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-gpt-oss-120b","type":"reference"}]', '[{"id":"gpt-oss-120b","name":"GPT-OSS 120B","aliases":["gpt_oss"],"descriptionZh":"120B total 的大规模变体。","descriptionEn":"Large 120B total variant."},{"id":"gpt-oss-20b","name":"GPT-OSS 20B","aliases":["gpt_oss"],"descriptionZh":"20B total 的小型变体。","descriptionEn":"Smaller 20B total variant."}]', '[]', '{"attention":"GQA","layerMix":"alternating sliding-window and global attention","moe":"sparse MoE"}', 'GQA · alternating SWA/global · MoE', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"GPT-OSS Block","color":"steel","badge":"x{{numLayers}}","defaultExpanded":true,"children":[{"id":"norm1","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"attnrow","type":"row","children":[{"id":"swa","type":"leaf","label":"Sliding-window GQA","color":"attn"},{"id":"global","type":"leaf","label":"Global GQA","color":"sky"}]},{"id":"moe","type":"group","label":"MoE FFN","color":"moe","children":[{"id":"router","type":"leaf","label":"Router top-{{numExpertsPerToken}}","color":"teal"},{"id":"experts","type":"leaf","label":"Experts x{{numExperts}}","color":"ffn"}]}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: gpt-oss
+family: GPT-OSS
+era: "2025"
+type: decoder
+normPlacement: pre
+description:
+  zh: "GPT-OSS 图库条目是稀疏 MoE 解码器，使用 GQA，并交替滑动窗口与全局注意力层。"
+  en: "GPT-OSS gallery entries are sparse MoE decoders with GQA and alternating sliding-window/global attention layers."
+hfOrg: openai/gpt-oss-120b
+aliases: [gpt_oss]
+defaultParams:
+  numLayers: 36
+  numExperts: 128
+  numExpertsPerToken: 4
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-gpt-oss-120b
+    type: reference
+features:
+  attention: GQA
+  layerMix: alternating sliding-window and global attention
+  moe: sparse MoE
+variants:
+  - id: gpt-oss-120b
+    name: GPT-OSS 120B
+    aliases: [gpt_oss]
+    descriptionZh: "120B total 的大规模变体。"
+    descriptionEn: "Large 120B total variant."
+  - id: gpt-oss-20b
+    name: GPT-OSS 20B
+    aliases: [gpt_oss]
+    descriptionZh: "20B total 的小型变体。"
+    descriptionEn: "Smaller 20B total variant."
+diagram:
+  subtitle: "GQA · alternating SWA/global · MoE"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: GPT-OSS Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attnrow
+          type: row
+          children:
+            - id: swa
+              type: leaf
+              label: Sliding-window GQA
+              color: attn
+            - id: global
+              type: leaf
+              label: Global GQA
+              color: sky
+        - id: moe
+          type: group
+          label: MoE FFN
+          color: moe
+          children:
+            - id: router
+              type: leaf
+              label: "Router top-{{numExpertsPerToken}}"
+              color: teal
+            - id: experts
+              type: leaf
+              label: "Experts x{{numExperts}}"
+              color: ffn
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('gpt2', 'GPT-2', '2019', 'decoder', 'pre', '经典仅解码器因果 LM，学习式绝对位置编码，MHA，GELU MLP，Block 前置 LayerNorm。', 'Classic decoder-only causal LM with learned absolute positions, MHA, GELU MLP, and pre-norm Transformer blocks.', 'https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf', 'openai-community/gpt2-xl', '{"numLayers":48,"numHeads":25,"hiddenSize":1600,"vocabSize":50257}', '[{"label":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-gpt-2-xl-1-5b","type":"reference"},{"label":"HuggingFace config","url":"https://huggingface.co/openai-community/gpt2-xl/blob/main/config.json","type":"hf-config"}]', '[{"id":"gpt2-xl","name":"GPT-2 XL","aliases":["gpt2"],"descriptionZh":"Raschka 图库中的 1.5B 参考基线。","descriptionEn":"The 1.5B reference baseline in Raschka''s gallery."}]', '[{"source":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-gpt-2-xl-1-5b","noteZh":"卡片标注 MHA、学习式绝对位置编码、48 层。","noteEn":"The card records MHA, learned absolute positions, and 48 layers."}]', '{"attention":"MHA","positionEncoding":"learned absolute","norm":"LayerNorm","ffn":"GELU MLP"}', 'hidden: {{hiddenSize}} · heads: {{numHeads}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token + Learned Position Embedding","color":"emb"},{"id":"block","type":"group","label":"Transformer Block","color":"steel","badge":"x{{numLayers}}","children":[{"id":"ln1","type":"leaf","label":"LayerNorm","color":"norm","sub":"pre-norm"},{"id":"attn","type":"leaf","label":"MHA","color":"attn","sub":"fused QKV Conv1D"},{"id":"r1","type":"leaf","label":"+ residual","color":"resid"},{"id":"ln2","type":"leaf","label":"LayerNorm","color":"norm","sub":"pre-norm"},{"id":"ffn","type":"leaf","label":"GELU MLP","color":"ffn"},{"id":"r2","type":"leaf","label":"+ residual","color":"resid"}]},{"id":"lnf","type":"leaf","label":"Final LayerNorm","color":"norm"},{"id":"head","type":"leaf","label":"LM Head","color":"out","sub":"tied token embedding"}]', 'id: gpt2
+family: GPT-2
+era: "2019"
+type: decoder
+normPlacement: pre
+description:
+  zh: "经典仅解码器因果 LM，学习式绝对位置编码，MHA，GELU MLP，Block 前置 LayerNorm。"
+  en: "Classic decoder-only causal LM with learned absolute positions, MHA, GELU MLP, and pre-norm Transformer blocks."
+paperUrl: https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf
+hfOrg: openai-community/gpt2-xl
+aliases: [gpt2]
+defaultParams:
+  numLayers: 48
+  numHeads: 25
+  hiddenSize: 1600
+  vocabSize: 50257
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-gpt-2-xl-1-5b
+    type: reference
+  - label: HuggingFace config
+    url: https://huggingface.co/openai-community/gpt2-xl/blob/main/config.json
+    type: hf-config
+features:
+  attention: MHA
+  positionEncoding: learned absolute
+  norm: LayerNorm
+  ffn: GELU MLP
+variants:
+  - id: gpt2-xl
+    name: GPT-2 XL
+    aliases: [gpt2]
+    descriptionZh: "Raschka 图库中的 1.5B 参考基线。"
+    descriptionEn: "The 1.5B reference baseline in Raschka''s gallery."
+evidence:
+  - source: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-gpt-2-xl-1-5b
+    noteZh: "卡片标注 MHA、学习式绝对位置编码、48 层。"
+    noteEn: "The card records MHA, learned absolute positions, and 48 layers."
+diagram:
+  subtitle: "hidden: {{hiddenSize}} · heads: {{numHeads}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token + Learned Position Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Transformer Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: ln1
+          type: leaf
+          label: LayerNorm
+          sub: pre-norm
+          color: norm
+        - id: attn
+          type: leaf
+          label: MHA
+          sub: fused QKV Conv1D
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: ln2
+          type: leaf
+          label: LayerNorm
+          sub: pre-norm
+          color: norm
+        - id: ffn
+          type: leaf
+          label: GELU MLP
+          color: ffn
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: lnf
+      type: leaf
+      label: Final LayerNorm
+      color: norm
+    - id: head
+      type: leaf
+      label: LM Head
+      sub: tied token embedding
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('granite', 'Granite / GraniteMoE', '2024', 'decoder', 'pre', 'IBM Granite 系列包含密集、MoE 与混合架构变体，常见主干为 RMSNorm、RoPE、GQA 与 SwiGLU。', 'IBM Granite includes dense, MoE, and hybrid variants, commonly using RMSNorm, RoPE, GQA, and SwiGLU.', 'https://arxiv.org/abs/2405.04324', 'ibm-granite/granite-4.1-30b', '{"numLayers":40,"numHeads":32,"numKvHeads":8,"hiddenSize":4096}', '[{"label":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-granite-4-1-30b","type":"reference"}]', '[]', '[]', '{"attention":"GQA","positionEncoding":"RoPE","moe":"GraniteMoE variants","tokenMixer":"hybrid variants"}', 'GQA · dense/MoE/hybrid variants', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"Granite Block","color":"steel","badge":"x{{numLayers}}","children":[{"id":"norm1","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"attn","type":"leaf","label":"GQA Q:{{numHeads}} KV:{{numKvHeads}}","color":"attn","sub":"RoPE"},{"id":"r1","type":"leaf","label":"+ residual","color":"resid"},{"id":"ffn","type":"leaf","label":"SwiGLU FFN / MoE","color":"ffn"},{"id":"r2","type":"leaf","label":"+ residual","color":"resid"}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: granite
+family: Granite / GraniteMoE
+era: "2024"
+type: decoder
+normPlacement: pre
+description:
+  zh: "IBM Granite 系列包含密集、MoE 与混合架构变体，常见主干为 RMSNorm、RoPE、GQA 与 SwiGLU。"
+  en: "IBM Granite includes dense, MoE, and hybrid variants, commonly using RMSNorm, RoPE, GQA, and SwiGLU."
+paperUrl: https://arxiv.org/abs/2405.04324
+hfOrg: ibm-granite/granite-4.1-30b
+aliases: [granite, granitemoe, granitemoehybrid, granite_switch]
+defaultParams:
+  numLayers: 40
+  numHeads: 32
+  numKvHeads: 8
+  hiddenSize: 4096
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-granite-4-1-30b
+    type: reference
+features:
+  attention: GQA
+  positionEncoding: RoPE
+  moe: GraniteMoE variants
+  tokenMixer: hybrid variants
+diagram:
+  subtitle: "GQA · dense/MoE/hybrid variants"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Granite Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attn
+          type: leaf
+          label: "GQA Q:{{numHeads}} KV:{{numKvHeads}}"
+          sub: RoPE
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: ffn
+          type: leaf
+          label: SwiGLU FFN / MoE
+          color: ffn
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('internlm', 'InternLM 2 / 3', '2024', 'decoder', 'pre', 'InternLM 2/3 使用 GQA、RoPE、RMSNorm、SwiGLU，InternLM 2 的 QKV 投影带 bias。', 'InternLM 2/3 use GQA, RoPE, RMSNorm, and SwiGLU, with QKV bias in InternLM 2.', 'https://arxiv.org/abs/2403.17297', 'internlm/internlm2-7b', '{"numLayers":32,"numHeads":32,"numKvHeads":8,"hiddenSize":4096}', '[]', '[]', '[]', '{"attention":"GQA","positionEncoding":"RoPE","norm":"RMSNorm","ffn":"SwiGLU"}', 'GQA · hidden: {{hiddenSize}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"InternLM Block","color":"steel","badge":"x{{numLayers}}","children":[{"id":"norm1","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"attn","type":"leaf","label":"GQA Q:{{numHeads}} KV:{{numKvHeads}}","color":"attn","sub":"RoPE · QKV bias variants"},{"id":"r1","type":"leaf","label":"+ residual","color":"resid"},{"id":"ffn","type":"leaf","label":"SwiGLU FFN","color":"ffn"}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: internlm
+family: InternLM 2 / 3
+era: "2024"
+type: decoder
+normPlacement: pre
+description:
+  zh: "InternLM 2/3 使用 GQA、RoPE、RMSNorm、SwiGLU，InternLM 2 的 QKV 投影带 bias。"
+  en: "InternLM 2/3 use GQA, RoPE, RMSNorm, and SwiGLU, with QKV bias in InternLM 2."
+paperUrl: https://arxiv.org/abs/2403.17297
+hfOrg: internlm/internlm2-7b
+aliases: [internlm, internlm2, internlm3]
+defaultParams:
+  numLayers: 32
+  numHeads: 32
+  numKvHeads: 8
+  hiddenSize: 4096
+features:
+  attention: GQA
+  positionEncoding: RoPE
+  norm: RMSNorm
+  ffn: SwiGLU
+diagram:
+  subtitle: "GQA · hidden: {{hiddenSize}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: InternLM Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attn
+          type: leaf
+          label: "GQA Q:{{numHeads}} KV:{{numKvHeads}}"
+          sub: RoPE · QKV bias variants
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: ffn
+          type: leaf
+          label: SwiGLU FFN
+          color: ffn
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('kimi-k2', 'Kimi K2 / Kimi Linear', '2025', 'decoder', 'pre', 'Kimi K2 使用 MLA 风格低秩 KV 压缩和大规模 MoE；Kimi Linear 变体加入线性注意力路径。', 'Kimi K2 uses MLA-style low-rank KV compression and large sparse MoE; Kimi Linear variants add a linear attention path.', 'https://arxiv.org/abs/2505.11143', 'moonshotai/Kimi-K2-Base', '{"numLayers":61,"numExperts":384,"numSharedExperts":1,"numExpertsPerToken":8}', '[{"label":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-kimi-k2","type":"reference"}]', '[{"id":"kimi-k2","name":"Kimi K2","aliases":["kimi_k2"],"descriptionZh":"1T 规模 MLA + MoE 架构。","descriptionEn":"1T-scale MLA + MoE architecture."},{"id":"kimi-linear","name":"Kimi Linear","aliases":["kimi_linear"],"descriptionZh":"混合 Kimi Delta Attention 与 MLA 的线性变体。","descriptionEn":"Hybrid linear variant combining Kimi Delta Attention and MLA."}]', '[]', '{"attention":"MLA or Kimi Delta Attention","moe":"large sparse MoE","routing":"sigmoid top-k","layerMix":"dense prefix then MoE"}', '{{numExperts}} experts · top-{{numExpertsPerToken}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"Kimi Block","color":"steel","badge":"x{{numLayers}}","defaultExpanded":true,"children":[{"id":"norm1","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"attn","type":"row","children":[{"id":"mla","type":"leaf","label":"MLA","color":"attn","sub":"low-rank KV cache"},{"id":"linear","type":"leaf","label":"Delta Attention","color":"teal","sub":"Kimi Linear variant"}]},{"id":"r1","type":"leaf","label":"+ residual","color":"resid"},{"id":"moe","type":"group","label":"MoE FFN","color":"moe","children":[{"id":"router","type":"leaf","label":"Router top-{{numExpertsPerToken}}","color":"teal"},{"id":"experts","type":"row","children":[{"id":"routed","type":"leaf","label":"Routed experts","color":"moe"},{"id":"shared","type":"leaf","label":"Shared x{{numSharedExperts}}","color":"amber"}]}]}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: kimi-k2
+family: Kimi K2 / Kimi Linear
+era: "2025"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Kimi K2 使用 MLA 风格低秩 KV 压缩和大规模 MoE；Kimi Linear 变体加入线性注意力路径。"
+  en: "Kimi K2 uses MLA-style low-rank KV compression and large sparse MoE; Kimi Linear variants add a linear attention path."
+paperUrl: https://arxiv.org/abs/2505.11143
+hfOrg: moonshotai/Kimi-K2-Base
+aliases: [kimi_k2, kimi_k25, kimi_vl, kimi_linear]
+defaultParams:
+  numLayers: 61
+  numExperts: 384
+  numSharedExperts: 1
+  numExpertsPerToken: 8
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-kimi-k2
+    type: reference
+features:
+  attention: MLA or Kimi Delta Attention
+  moe: large sparse MoE
+  routing: sigmoid top-k
+  layerMix: dense prefix then MoE
+variants:
+  - id: kimi-k2
+    name: Kimi K2
+    aliases: [kimi_k2]
+    descriptionZh: "1T 规模 MLA + MoE 架构。"
+    descriptionEn: "1T-scale MLA + MoE architecture."
+  - id: kimi-linear
+    name: Kimi Linear
+    aliases: [kimi_linear]
+    descriptionZh: "混合 Kimi Delta Attention 与 MLA 的线性变体。"
+    descriptionEn: "Hybrid linear variant combining Kimi Delta Attention and MLA."
+diagram:
+  subtitle: "{{numExperts}} experts · top-{{numExpertsPerToken}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Kimi Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attn
+          type: row
+          children:
+            - id: mla
+              type: leaf
+              label: MLA
+              sub: low-rank KV cache
+              color: attn
+            - id: linear
+              type: leaf
+              label: Delta Attention
+              sub: Kimi Linear variant
+              color: teal
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: moe
+          type: group
+          label: MoE FFN
+          color: moe
+          children:
+            - id: router
+              type: leaf
+              label: "Router top-{{numExpertsPerToken}}"
+              color: teal
+            - id: experts
+              type: row
+              children:
+                - id: routed
+                  type: leaf
+                  label: Routed experts
+                  color: moe
+                - id: shared
+                  type: leaf
+                  label: "Shared x{{numSharedExperts}}"
+                  color: amber
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('lfm2', 'LFM2 / LFM2.5', '2026', 'decoder', 'pre', 'LFM2.5 是 Liquid AI 混合解码器，图库条目使用 LIV convolution blocks、GQA 与可选 MoE。', 'LFM2.5 is a Liquid AI hybrid decoder using LIV convolution blocks, GQA, and optional MoE according to the gallery entries.', NULL, 'LiquidAI/LFM2.5-1.2B-Thinking', '{"numLayers":32,"numHeads":32,"numKvHeads":8,"numExperts":64,"numExpertsPerToken":2}', '[{"label":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-lfm2-5-1-2b","type":"reference"}]', '[{"id":"lfm2-5-dense","name":"LFM2.5 dense","aliases":["lfm2"],"descriptionZh":"350M 和 1.2B 图库条目使用 dense hybrid 主干。","descriptionEn":"350M and 1.2B gallery entries use a dense hybrid backbone."},{"id":"lfm2-5-moe","name":"LFM2.5 MoE","aliases":["lfm2_moe"],"descriptionZh":"8B-A1B 图库条目加入 MoE。","descriptionEn":"The 8B-A1B gallery entry adds MoE."}]', '[]', '{"tokenMixer":"LIV convolution blocks","attention":"GQA","moe":"optional sparse MoE"}', 'LIV conv + GQA · MoE variants', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"LFM Hybrid Block","color":"steel","badge":"x{{numLayers}}","defaultExpanded":true,"children":[{"id":"norm","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"mixer","type":"row","children":[{"id":"liv","type":"leaf","label":"LIV convolution","color":"teal"},{"id":"attn","type":"leaf","label":"GQA Q:{{numHeads}} KV:{{numKvHeads}}","color":"attn"}]},{"id":"ffn","type":"group","label":"FFN / MoE","color":"moe","children":[{"id":"dense","type":"leaf","label":"Dense FFN","color":"ffn"},{"id":"moe","type":"leaf","label":"MoE top-{{numExpertsPerToken}}","color":"moe"}]}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: lfm2
+family: LFM2 / LFM2.5
+era: "2026"
+type: decoder
+normPlacement: pre
+description:
+  zh: "LFM2.5 是 Liquid AI 混合解码器，图库条目使用 LIV convolution blocks、GQA 与可选 MoE。"
+  en: "LFM2.5 is a Liquid AI hybrid decoder using LIV convolution blocks, GQA, and optional MoE according to the gallery entries."
+hfOrg: LiquidAI/LFM2.5-1.2B-Thinking
+aliases: [lfm2, lfm2_vl, lfm2_moe]
+defaultParams:
+  numLayers: 32
+  numHeads: 32
+  numKvHeads: 8
+  numExperts: 64
+  numExpertsPerToken: 2
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-lfm2-5-1-2b
+    type: reference
+features:
+  tokenMixer: LIV convolution blocks
+  attention: GQA
+  moe: optional sparse MoE
+variants:
+  - id: lfm2-5-dense
+    name: LFM2.5 dense
+    aliases: [lfm2]
+    descriptionZh: "350M 和 1.2B 图库条目使用 dense hybrid 主干。"
+    descriptionEn: "350M and 1.2B gallery entries use a dense hybrid backbone."
+  - id: lfm2-5-moe
+    name: LFM2.5 MoE
+    aliases: [lfm2_moe]
+    descriptionZh: "8B-A1B 图库条目加入 MoE。"
+    descriptionEn: "The 8B-A1B gallery entry adds MoE."
+diagram:
+  subtitle: "LIV conv + GQA · MoE variants"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: LFM Hybrid Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: mixer
+          type: row
+          children:
+            - id: liv
+              type: leaf
+              label: LIV convolution
+              color: teal
+            - id: attn
+              type: leaf
+              label: "GQA Q:{{numHeads}} KV:{{numKvHeads}}"
+              color: attn
+        - id: ffn
+          type: group
+          label: FFN / MoE
+          color: moe
+          children:
+            - id: dense
+              type: leaf
+              label: Dense FFN
+              color: ffn
+            - id: moe
+              type: leaf
+              label: "MoE top-{{numExpertsPerToken}}"
+              color: moe
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('llama', 'LLaMA 2 / Llama 3 / Llama 3.2', '2023', 'decoder', 'pre', 'Llama 系列 Pre-Norm 解码器主干，RMSNorm、RoPE、SwiGLU，Llama 3 引入 GQA 和更大词表。', 'Llama-family pre-norm decoder backbone with RMSNorm, RoPE, SwiGLU, and GQA in Llama 3 with a larger vocabulary.', 'https://arxiv.org/abs/2302.13971', 'meta-llama/Meta-Llama-3-8B', '{"numLayers":32,"numHeads":32,"numKvHeads":8,"hiddenSize":4096}', '[{"label":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-llama-3-8b","type":"reference"}]', '[{"id":"llama-3","name":"Llama 3","aliases":["llama"],"descriptionZh":"8B 等密集模型使用 GQA 与 RoPE。","descriptionEn":"Dense models such as 8B use GQA with RoPE."},{"id":"llama-3-2","name":"Llama 3.2","aliases":["llama"],"descriptionZh":"小型文本模型沿用相同解码器主干并扩展上下文。","descriptionEn":"Small text models keep the same decoder backbone with extended context."}]', '[{"source":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-llama-3-8b","noteZh":"卡片标注 GQA with RoPE 和 32 层。","noteEn":"The card records GQA with RoPE and 32 layers."}]', '{"attention":"GQA","positionEncoding":"RoPE","norm":"RMSNorm","ffn":"SwiGLU"}', 'hidden: {{hiddenSize}} · Q:{{numHeads}} KV:{{numKvHeads}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"Transformer Block","color":"steel","badge":"x{{numLayers}}","children":[{"id":"ln1","type":"leaf","label":"RMSNorm","color":"norm","sub":"pre-norm"},{"id":"attn","type":"leaf","label":"GQA Q:{{numHeads}} KV:{{numKvHeads}}","color":"attn","sub":"RoPE · no bias"},{"id":"r1","type":"leaf","label":"+ residual","color":"resid"},{"id":"ln2","type":"leaf","label":"RMSNorm","color":"norm","sub":"pre-norm"},{"id":"ffn","type":"leaf","label":"SwiGLU FFN","color":"ffn"},{"id":"r2","type":"leaf","label":"+ residual","color":"resid"}]},{"id":"lnf","type":"leaf","label":"Final RMSNorm","color":"norm"},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: llama
+family: LLaMA 2 / Llama 3 / Llama 3.2
+era: "2023"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Llama 系列 Pre-Norm 解码器主干，RMSNorm、RoPE、SwiGLU，Llama 3 引入 GQA 和更大词表。"
+  en: "Llama-family pre-norm decoder backbone with RMSNorm, RoPE, SwiGLU, and GQA in Llama 3 with a larger vocabulary."
+paperUrl: https://arxiv.org/abs/2302.13971
+hfOrg: meta-llama/Meta-Llama-3-8B
+aliases: [llama, llama_swiftkv]
+defaultParams:
+  numLayers: 32
+  numHeads: 32
+  numKvHeads: 8
+  hiddenSize: 4096
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-llama-3-8b
+    type: reference
+features:
+  attention: GQA
+  positionEncoding: RoPE
+  norm: RMSNorm
+  ffn: SwiGLU
+variants:
+  - id: llama-3
+    name: Llama 3
+    aliases: [llama]
+    descriptionZh: "8B 等密集模型使用 GQA 与 RoPE。"
+    descriptionEn: "Dense models such as 8B use GQA with RoPE."
+  - id: llama-3-2
+    name: Llama 3.2
+    aliases: [llama]
+    descriptionZh: "小型文本模型沿用相同解码器主干并扩展上下文。"
+    descriptionEn: "Small text models keep the same decoder backbone with extended context."
+evidence:
+  - source: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-llama-3-8b
+    noteZh: "卡片标注 GQA with RoPE 和 32 层。"
+    noteEn: "The card records GQA with RoPE and 32 layers."
+diagram:
+  subtitle: "hidden: {{hiddenSize}} · Q:{{numHeads}} KV:{{numKvHeads}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Transformer Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: ln1
+          type: leaf
+          label: RMSNorm
+          sub: pre-norm
+          color: norm
+        - id: attn
+          type: leaf
+          label: "GQA Q:{{numHeads}} KV:{{numKvHeads}}"
+          sub: RoPE · no bias
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: ln2
+          type: leaf
+          label: RMSNorm
+          sub: pre-norm
+          color: norm
+        - id: ffn
+          type: leaf
+          label: SwiGLU FFN
+          color: ffn
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: lnf
+      type: leaf
+      label: Final RMSNorm
+      color: norm
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('llama4', 'Llama 4', '2025', 'decoder', 'pre', 'Llama 4 使用稀疏 MoE 解码器，交替全局/局部注意力，路由专家按 token 激活。', 'Llama 4 uses a sparse MoE decoder with alternating global/local attention and token-routed experts.', 'https://arxiv.org/abs/2504.05423', 'meta-llama/Llama-4-Maverick-17B-128E-Instruct', '{"numLayers":48,"numExperts":128,"numExpertsPerToken":1}', '[{"label":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-llama-4-maverick","type":"reference"}]', '[{"id":"llama-4-maverick","name":"Llama 4 Maverick","aliases":["llama4"],"descriptionZh":"Raschka 图库中的 400B total / 17B active 稀疏 MoE 代表。","descriptionEn":"The 400B total / 17B active sparse MoE representative in the gallery."}]', '[]', '{"attention":"GQA","moe":"sparse MoE","routing":"top-1 expert routing","layerMix":"alternating dense and MoE blocks"}', '{{numExperts}} experts · top-{{numExpertsPerToken}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"Llama 4 Block","color":"steel","badge":"x{{numLayers}}","defaultExpanded":true,"children":[{"id":"ln1","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"attnrow","type":"row","children":[{"id":"full","type":"leaf","label":"Full GQA","color":"attn","sub":"NoPE/global layers"},{"id":"local","type":"leaf","label":"Local GQA","color":"sky","sub":"iRoPE/chunked layers"}]},{"id":"r1","type":"leaf","label":"+ residual","color":"resid"},{"id":"ln2","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"moe","type":"group","label":"MoE FFN","color":"moe","children":[{"id":"router","type":"leaf","label":"Router top-{{numExpertsPerToken}}","color":"teal","sub":"{{numExperts}} experts"},{"id":"expert","type":"leaf","label":"SwiGLU Expert","color":"ffn"}]},{"id":"r2","type":"leaf","label":"+ residual","color":"resid"}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: llama4
+family: Llama 4
+era: "2025"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Llama 4 使用稀疏 MoE 解码器，交替全局/局部注意力，路由专家按 token 激活。"
+  en: "Llama 4 uses a sparse MoE decoder with alternating global/local attention and token-routed experts."
+paperUrl: https://arxiv.org/abs/2504.05423
+hfOrg: meta-llama/Llama-4-Maverick-17B-128E-Instruct
+aliases: [llama4]
+defaultParams:
+  numLayers: 48
+  numExperts: 128
+  numExpertsPerToken: 1
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-llama-4-maverick
+    type: reference
+features:
+  attention: GQA
+  moe: sparse MoE
+  routing: top-1 expert routing
+  layerMix: alternating dense and MoE blocks
+variants:
+  - id: llama-4-maverick
+    name: Llama 4 Maverick
+    aliases: [llama4]
+    descriptionZh: "Raschka 图库中的 400B total / 17B active 稀疏 MoE 代表。"
+    descriptionEn: "The 400B total / 17B active sparse MoE representative in the gallery."
+diagram:
+  subtitle: "{{numExperts}} experts · top-{{numExpertsPerToken}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Llama 4 Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: ln1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attnrow
+          type: row
+          children:
+            - id: full
+              type: leaf
+              label: Full GQA
+              sub: NoPE/global layers
+              color: attn
+            - id: local
+              type: leaf
+              label: Local GQA
+              sub: iRoPE/chunked layers
+              color: sky
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: ln2
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: moe
+          type: group
+          label: MoE FFN
+          color: moe
+          children:
+            - id: router
+              type: leaf
+              label: "Router top-{{numExpertsPerToken}}"
+              sub: "{{numExperts}} experts"
+              color: teal
+            - id: expert
+              type: leaf
+              label: SwiGLU Expert
+              color: ffn
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('mamba', 'Mamba / Mamba-2', '2023', 'decoder', 'pre', 'Mamba 是状态空间序列模型，使用选择性扫描替代 self-attention，推理复杂度随序列长度近似线性增长。', 'Mamba is a state-space sequence model using selective scan instead of self-attention, with near-linear inference scaling in sequence length.', 'https://arxiv.org/abs/2312.00752', 'state-spaces/mamba-2.8b', '{"numLayers":64,"hiddenSize":2560}', '[]', '[]', '[]', '{"tokenMixer":"selective state-space scan","attention":"no self-attention","complexity":"linear-time sequence mixer"}', 'SSM layers: {{numLayers}} · hidden: {{hiddenSize}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"Mamba Block","color":"steel","badge":"x{{numLayers}}","defaultExpanded":true,"children":[{"id":"norm","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"proj","type":"leaf","label":"Input projection","color":"emb"},{"id":"conv","type":"leaf","label":"Local convolution","color":"teal"},{"id":"ssm","type":"leaf","label":"Selective SSM scan","color":"attn","sub":"no attention"},{"id":"out","type":"leaf","label":"Output projection","color":"out"}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: mamba
+family: Mamba / Mamba-2
+era: "2023"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Mamba 是状态空间序列模型，使用选择性扫描替代 self-attention，推理复杂度随序列长度近似线性增长。"
+  en: "Mamba is a state-space sequence model using selective scan instead of self-attention, with near-linear inference scaling in sequence length."
+paperUrl: https://arxiv.org/abs/2312.00752
+hfOrg: state-spaces/mamba-2.8b
+aliases: [mamba, mamba2, falcon_mamba]
+defaultParams:
+  numLayers: 64
+  hiddenSize: 2560
+features:
+  tokenMixer: selective state-space scan
+  attention: no self-attention
+  complexity: linear-time sequence mixer
+diagram:
+  subtitle: "SSM layers: {{numLayers}} · hidden: {{hiddenSize}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Mamba Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: proj
+          type: leaf
+          label: Input projection
+          color: emb
+        - id: conv
+          type: leaf
+          label: Local convolution
+          color: teal
+        - id: ssm
+          type: leaf
+          label: Selective SSM scan
+          sub: no attention
+          color: attn
+        - id: out
+          type: leaf
+          label: Output projection
+          color: out
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('minimax', 'MiniMax M2 / M3', '2025', 'decoder', 'pre', 'MiniMax M2/M3 图库条目为稀疏 MoE 解码器，使用 GQA、QK-Norm、部分 RoPE 或稀疏注意力扩展。', 'MiniMax M2/M3 gallery entries are sparse MoE decoders with GQA, QK-Norm, partial RoPE, or sparse attention extensions.', NULL, 'MiniMaxAI/MiniMax-M2', '{"numLayers":62,"numHeads":64,"numKvHeads":8,"numExperts":256,"numExpertsPerToken":8}', '[{"label":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-minimax-m2-230b","type":"reference"}]', '[{"id":"minimax-m2","name":"MiniMax M2","aliases":["minimax_m2"],"descriptionZh":"230B total 稀疏 MoE 谱系。","descriptionEn":"230B total sparse MoE lineage."},{"id":"minimax-m3","name":"MiniMax M3","aliases":["minimax_m3_vl"],"descriptionZh":"加入 MiniMax Sparse Attention 的后续图谱条目。","descriptionEn":"Later gallery entry with MiniMax Sparse Attention."}]', '[]', '{"attention":"GQA with QK-Norm","positionEncoding":"partial RoPE variants","moe":"sparse MoE","routing":"top-k expert routing"}', 'GQA + QK-Norm · MoE', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"MiniMax Block","color":"steel","badge":"x{{numLayers}}","defaultExpanded":true,"children":[{"id":"norm1","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"qknorm","type":"leaf","label":"QK-Norm","color":"norm"},{"id":"attn","type":"leaf","label":"GQA Q:{{numHeads}} KV:{{numKvHeads}}","color":"attn","sub":"partial RoPE / sparse attention variants"},{"id":"moe","type":"group","label":"MoE FFN","color":"moe","children":[{"id":"router","type":"leaf","label":"Router top-{{numExpertsPerToken}}","color":"teal"},{"id":"experts","type":"leaf","label":"Experts x{{numExperts}}","color":"ffn"}]}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: minimax
+family: MiniMax M2 / M3
+era: "2025"
+type: decoder
+normPlacement: pre
+description:
+  zh: "MiniMax M2/M3 图库条目为稀疏 MoE 解码器，使用 GQA、QK-Norm、部分 RoPE 或稀疏注意力扩展。"
+  en: "MiniMax M2/M3 gallery entries are sparse MoE decoders with GQA, QK-Norm, partial RoPE, or sparse attention extensions."
+hfOrg: MiniMaxAI/MiniMax-M2
+aliases: [minimax, minimax_text_01, minimax_vl_01, minimax_m1, minimax_m2, minimax_m3_vl]
+defaultParams:
+  numLayers: 62
+  numHeads: 64
+  numKvHeads: 8
+  numExperts: 256
+  numExpertsPerToken: 8
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-minimax-m2-230b
+    type: reference
+features:
+  attention: GQA with QK-Norm
+  positionEncoding: partial RoPE variants
+  moe: sparse MoE
+  routing: top-k expert routing
+variants:
+  - id: minimax-m2
+    name: MiniMax M2
+    aliases: [minimax_m2]
+    descriptionZh: "230B total 稀疏 MoE 谱系。"
+    descriptionEn: "230B total sparse MoE lineage."
+  - id: minimax-m3
+    name: MiniMax M3
+    aliases: [minimax_m3_vl]
+    descriptionZh: "加入 MiniMax Sparse Attention 的后续图谱条目。"
+    descriptionEn: "Later gallery entry with MiniMax Sparse Attention."
+diagram:
+  subtitle: "GQA + QK-Norm · MoE"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: MiniMax Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: qknorm
+          type: leaf
+          label: QK-Norm
+          color: norm
+        - id: attn
+          type: leaf
+          label: "GQA Q:{{numHeads}} KV:{{numKvHeads}}"
+          sub: partial RoPE / sparse attention variants
+          color: attn
+        - id: moe
+          type: group
+          label: MoE FFN
+          color: moe
+          children:
+            - id: router
+              type: leaf
+              label: "Router top-{{numExpertsPerToken}}"
+              color: teal
+            - id: experts
+              type: leaf
+              label: "Experts x{{numExperts}}"
+              color: ffn
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('mistral', 'Mistral / Mixtral / Mistral Small', '2023', 'decoder', 'pre', 'Mistral 系列使用 RMSNorm、RoPE、SwiGLU 与 GQA，早期模型强调滑动窗口注意力，Mixtral 与后续大模型提供 MoE 变体。', 'Mistral models use RMSNorm, RoPE, SwiGLU, and GQA; early models emphasize sliding-window attention, while Mixtral and later large variants add MoE.', 'https://arxiv.org/abs/2310.06825', 'mistralai/Mistral-Small-3.1-24B-Base-2503', '{"numLayers":40,"numHeads":32,"numKvHeads":8,"hiddenSize":5120}', '[{"label":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-mistral-small-3-1-24b","type":"reference"}]', '[{"id":"mistral-small","name":"Mistral Small","aliases":["mistral3"],"descriptionZh":"Raschka 图库中的 24B 密集低延迟变体。","descriptionEn":"The 24B dense low-latency variant in the gallery."},{"id":"mixtral","name":"Mixtral","aliases":["mixtral"],"descriptionZh":"早期 top-2 MoE 变体。","descriptionEn":"Early top-2 MoE variant."}]', '[]', '{"attention":"GQA","positionEncoding":"RoPE","ffn":"SwiGLU","variants":"dense and sparse MoE"}', 'GQA · dense/MoE variants', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"Mistral Block","color":"steel","badge":"x{{numLayers}}","children":[{"id":"norm1","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"attn","type":"leaf","label":"GQA Q:{{numHeads}} KV:{{numKvHeads}}","color":"attn","sub":"RoPE · sliding window in early models"},{"id":"r1","type":"leaf","label":"+ residual","color":"resid"},{"id":"norm2","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"ffn","type":"leaf","label":"SwiGLU FFN / MoE","color":"ffn"},{"id":"r2","type":"leaf","label":"+ residual","color":"resid"}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: mistral
+family: Mistral / Mixtral / Mistral Small
+era: "2023"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Mistral 系列使用 RMSNorm、RoPE、SwiGLU 与 GQA，早期模型强调滑动窗口注意力，Mixtral 与后续大模型提供 MoE 变体。"
+  en: "Mistral models use RMSNorm, RoPE, SwiGLU, and GQA; early models emphasize sliding-window attention, while Mixtral and later large variants add MoE."
+paperUrl: https://arxiv.org/abs/2310.06825
+hfOrg: mistralai/Mistral-Small-3.1-24B-Base-2503
+aliases: [mistral, mistral3, mixtral, voxtral]
+defaultParams:
+  numLayers: 40
+  numHeads: 32
+  numKvHeads: 8
+  hiddenSize: 5120
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-mistral-small-3-1-24b
+    type: reference
+features:
+  attention: GQA
+  positionEncoding: RoPE
+  ffn: SwiGLU
+  variants: dense and sparse MoE
+variants:
+  - id: mistral-small
+    name: Mistral Small
+    aliases: [mistral3]
+    descriptionZh: "Raschka 图库中的 24B 密集低延迟变体。"
+    descriptionEn: "The 24B dense low-latency variant in the gallery."
+  - id: mixtral
+    name: Mixtral
+    aliases: [mixtral]
+    descriptionZh: "早期 top-2 MoE 变体。"
+    descriptionEn: "Early top-2 MoE variant."
+diagram:
+  subtitle: "GQA · dense/MoE variants"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Mistral Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attn
+          type: leaf
+          label: "GQA Q:{{numHeads}} KV:{{numKvHeads}}"
+          sub: RoPE · sliding window in early models
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: norm2
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: ffn
+          type: leaf
+          label: SwiGLU FFN / MoE
+          color: ffn
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('nemotron', 'Nemotron / Nemotron-H', '2025', 'decoder', 'pre', 'Nemotron 3 图库条目覆盖 GQA 与 Mamba-2 混合 MoE 变体，强调少量注意力层配合状态空间层。', 'Nemotron 3 gallery entries cover GQA and Mamba-2 hybrid MoE variants, emphasizing a small number of attention layers alongside state-space layers.', NULL, 'nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16', '{"numLayers":52,"numHeads":32,"numKvHeads":8,"numExperts":64,"numExpertsPerToken":6}', '[{"label":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-nemotron-3-nano-30b-a3b","type":"reference"}]', '[{"id":"nemotron-3-nano","name":"Nemotron 3 Nano","aliases":["nemotron"],"descriptionZh":"包含 4B dense hybrid 与 30B-A3B hybrid MoE 图库变体。","descriptionEn":"Includes 4B dense hybrid and 30B-A3B hybrid MoE gallery variants."},{"id":"nemotron-3-super-ultra","name":"Nemotron 3 Super / Ultra","aliases":["nemotron_h"],"descriptionZh":"更大规模 hybrid MoE 图库变体。","descriptionEn":"Larger hybrid MoE gallery variants."}]', '[]', '{"attention":"few GQA layers","tokenMixer":"mostly Mamba-2","moe":"hybrid MoE"}', 'Mamba-2 + GQA · MoE variants', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"Nemotron Hybrid Block","color":"steel","badge":"x{{numLayers}}","defaultExpanded":true,"children":[{"id":"norm","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"mixer","type":"row","children":[{"id":"mamba","type":"leaf","label":"Mamba-2 mixer","color":"teal"},{"id":"attn","type":"leaf","label":"Sparse GQA layers","color":"attn"}]},{"id":"moe","type":"group","label":"MoE FFN","color":"moe","children":[{"id":"router","type":"leaf","label":"Router top-{{numExpertsPerToken}}","color":"teal"},{"id":"experts","type":"leaf","label":"Experts x{{numExperts}}","color":"ffn"}]}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: nemotron
+family: Nemotron / Nemotron-H
+era: "2025"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Nemotron 3 图库条目覆盖 GQA 与 Mamba-2 混合 MoE 变体，强调少量注意力层配合状态空间层。"
+  en: "Nemotron 3 gallery entries cover GQA and Mamba-2 hybrid MoE variants, emphasizing a small number of attention layers alongside state-space layers."
+hfOrg: nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16
+aliases: [nemotron, nemotron_h, nemotron_nas]
+defaultParams:
+  numLayers: 52
+  numHeads: 32
+  numKvHeads: 8
+  numExperts: 64
+  numExpertsPerToken: 6
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-nemotron-3-nano-30b-a3b
+    type: reference
+features:
+  attention: few GQA layers
+  tokenMixer: mostly Mamba-2
+  moe: hybrid MoE
+variants:
+  - id: nemotron-3-nano
+    name: Nemotron 3 Nano
+    aliases: [nemotron]
+    descriptionZh: "包含 4B dense hybrid 与 30B-A3B hybrid MoE 图库变体。"
+    descriptionEn: "Includes 4B dense hybrid and 30B-A3B hybrid MoE gallery variants."
+  - id: nemotron-3-super-ultra
+    name: Nemotron 3 Super / Ultra
+    aliases: [nemotron_h]
+    descriptionZh: "更大规模 hybrid MoE 图库变体。"
+    descriptionEn: "Larger hybrid MoE gallery variants."
+diagram:
+  subtitle: "Mamba-2 + GQA · MoE variants"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Nemotron Hybrid Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: mixer
+          type: row
+          children:
+            - id: mamba
+              type: leaf
+              label: Mamba-2 mixer
+              color: teal
+            - id: attn
+              type: leaf
+              label: Sparse GQA layers
+              color: attn
+        - id: moe
+          type: group
+          label: MoE FFN
+          color: moe
+          children:
+            - id: router
+              type: leaf
+              label: "Router top-{{numExpertsPerToken}}"
+              color: teal
+            - id: experts
+              type: leaf
+              label: "Experts x{{numExperts}}"
+              color: ffn
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('olmo', 'OLMo / OLMoE / OLMo 3', '2024', 'decoder', 'pre', 'OLMo 系列强调开放训练链路，使用 RMSNorm、RoPE、SwiGLU；OLMo 2/3 引入 QK-Norm 与局部/全局注意力混合。', 'OLMo emphasizes open training artifacts and uses RMSNorm, RoPE, and SwiGLU; OLMo 2/3 add QK-Norm and local/global attention mixes.', 'https://arxiv.org/abs/2402.00838', 'allenai/OLMo-2-1124-7B-Instruct', '{"numLayers":32,"numHeads":32,"numKvHeads":8,"hiddenSize":4096}', '[{"label":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-olmo-2-7b","type":"reference"}]', '[{"id":"olmo-2","name":"OLMo 2","aliases":["olmo2"],"descriptionZh":"图库条目强调 inside-residual post-norm 稳定性设计。","descriptionEn":"The gallery entry highlights an inside-residual post-norm stability design."},{"id":"olmo-3","name":"OLMo 3","aliases":["olmo3"],"descriptionZh":"加入滑动窗口/全局注意力混合。","descriptionEn":"Adds a sliding-window/global attention mix."}]', '[]', '{"attention":"MHA or GQA with QK-Norm","norm":"RMSNorm","ffn":"SwiGLU","openness":"open data and training artifacts"}', 'QK-Norm · open training lineage', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"OLMo Block","color":"steel","badge":"x{{numLayers}}","children":[{"id":"attn","type":"leaf","label":"MHA / GQA","color":"attn","sub":"QK-Norm"},{"id":"norm1","type":"leaf","label":"RMSNorm","color":"norm","sub":"inside residual variants"},{"id":"r1","type":"leaf","label":"+ residual","color":"resid"},{"id":"ffn","type":"leaf","label":"SwiGLU FFN","color":"ffn"},{"id":"norm2","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"r2","type":"leaf","label":"+ residual","color":"resid"}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: olmo
+family: OLMo / OLMoE / OLMo 3
+era: "2024"
+type: decoder
+normPlacement: pre
+description:
+  zh: "OLMo 系列强调开放训练链路，使用 RMSNorm、RoPE、SwiGLU；OLMo 2/3 引入 QK-Norm 与局部/全局注意力混合。"
+  en: "OLMo emphasizes open training artifacts and uses RMSNorm, RoPE, and SwiGLU; OLMo 2/3 add QK-Norm and local/global attention mixes."
+paperUrl: https://arxiv.org/abs/2402.00838
+hfOrg: allenai/OLMo-2-1124-7B-Instruct
+aliases: [olmo, olmo2, olmo3, olmoe]
+defaultParams:
+  numLayers: 32
+  numHeads: 32
+  numKvHeads: 8
+  hiddenSize: 4096
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-olmo-2-7b
+    type: reference
+features:
+  attention: MHA or GQA with QK-Norm
+  norm: RMSNorm
+  ffn: SwiGLU
+  openness: open data and training artifacts
+variants:
+  - id: olmo-2
+    name: OLMo 2
+    aliases: [olmo2]
+    descriptionZh: "图库条目强调 inside-residual post-norm 稳定性设计。"
+    descriptionEn: "The gallery entry highlights an inside-residual post-norm stability design."
+  - id: olmo-3
+    name: OLMo 3
+    aliases: [olmo3]
+    descriptionZh: "加入滑动窗口/全局注意力混合。"
+    descriptionEn: "Adds a sliding-window/global attention mix."
+diagram:
+  subtitle: "QK-Norm · open training lineage"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: OLMo Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: attn
+          type: leaf
+          label: MHA / GQA
+          sub: QK-Norm
+          color: attn
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          sub: inside residual variants
+          color: norm
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: ffn
+          type: leaf
+          label: SwiGLU FFN
+          color: ffn
+        - id: norm2
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('phi', 'Phi-3 / Phi-4', '2024', 'decoder', 'pre', 'Phi-3/4 使用 GQA、RoPE、RMSNorm、SwiGLU，QKV 与输出投影常带 bias。', 'Phi-3/4 use GQA, RoPE, RMSNorm, SwiGLU, and commonly include bias on QKV and output projections.', 'https://arxiv.org/abs/2404.14219', 'microsoft/phi-4', '{"numLayers":40,"numHeads":40,"numKvHeads":10,"hiddenSize":5120}', '[{"label":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-phi-4","type":"reference"}]', '[]', '[]', '{"attention":"GQA","positionEncoding":"RoPE","norm":"RMSNorm","ffn":"SwiGLU"}', 'GQA · hidden: {{hiddenSize}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"Phi Block","color":"steel","badge":"x{{numLayers}}","children":[{"id":"norm1","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"attn","type":"leaf","label":"GQA Q:{{numHeads}} KV:{{numKvHeads}}","color":"attn","sub":"RoPE · projection bias"},{"id":"r1","type":"leaf","label":"+ residual","color":"resid"},{"id":"ffn","type":"leaf","label":"SwiGLU FFN","color":"ffn"},{"id":"r2","type":"leaf","label":"+ residual","color":"resid"}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: phi
+family: Phi-3 / Phi-4
+era: "2024"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Phi-3/4 使用 GQA、RoPE、RMSNorm、SwiGLU，QKV 与输出投影常带 bias。"
+  en: "Phi-3/4 use GQA, RoPE, RMSNorm, SwiGLU, and commonly include bias on QKV and output projections."
+paperUrl: https://arxiv.org/abs/2404.14219
+hfOrg: microsoft/phi-4
+aliases: [phi, phi3, phi3_v, phi3small, phi4mm, phimoe, phi4flash]
+defaultParams:
+  numLayers: 40
+  numHeads: 40
+  numKvHeads: 10
+  hiddenSize: 5120
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-phi-4
+    type: reference
+features:
+  attention: GQA
+  positionEncoding: RoPE
+  norm: RMSNorm
+  ffn: SwiGLU
+diagram:
+  subtitle: "GQA · hidden: {{hiddenSize}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Phi Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attn
+          type: leaf
+          label: "GQA Q:{{numHeads}} KV:{{numKvHeads}}"
+          sub: RoPE · projection bias
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: ffn
+          type: leaf
+          label: SwiGLU FFN
+          color: ffn
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('qwen1', 'Qwen1', '2023', 'decoder', 'pre', 'Qwen1 使用 MHA、RMSNorm、SwiGLU、RoPE，并包含 LogN 与动态 NTK 等长上下文技巧，QKV 带 bias。', 'Qwen1 uses MHA, RMSNorm, SwiGLU, RoPE, and long-context tricks such as LogN and dynamic NTK, with QKV bias.', 'https://arxiv.org/abs/2309.16609', 'Qwen/Qwen-7B', '{"numLayers":32,"numHeads":32,"hiddenSize":4096}', '[]', '[]', '[]', '{"attention":"MHA","positionEncoding":"RoPE with LogN and dynamic NTK","norm":"RMSNorm","ffn":"SwiGLU"}', 'MHA · hidden: {{hiddenSize}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"Qwen1 Block","color":"steel","badge":"x{{numLayers}}","children":[{"id":"norm1","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"attn","type":"leaf","label":"MHA Q:{{numHeads}}","color":"attn","sub":"RoPE · LogN · dynamic NTK · QKV bias"},{"id":"r1","type":"leaf","label":"+ residual","color":"resid"},{"id":"norm2","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"ffn","type":"leaf","label":"SwiGLU FFN","color":"ffn"},{"id":"r2","type":"leaf","label":"+ residual","color":"resid"}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: qwen1
+family: Qwen1
+era: "2023"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Qwen1 使用 MHA、RMSNorm、SwiGLU、RoPE，并包含 LogN 与动态 NTK 等长上下文技巧，QKV 带 bias。"
+  en: "Qwen1 uses MHA, RMSNorm, SwiGLU, RoPE, and long-context tricks such as LogN and dynamic NTK, with QKV bias."
+paperUrl: https://arxiv.org/abs/2309.16609
+hfOrg: Qwen/Qwen-7B
+aliases: [qwen]
+defaultParams:
+  numLayers: 32
+  numHeads: 32
+  hiddenSize: 4096
+features:
+  attention: MHA
+  positionEncoding: RoPE with LogN and dynamic NTK
+  norm: RMSNorm
+  ffn: SwiGLU
+diagram:
+  subtitle: "MHA · hidden: {{hiddenSize}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Qwen1 Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attn
+          type: leaf
+          label: "MHA Q:{{numHeads}}"
+          sub: RoPE · LogN · dynamic NTK · QKV bias
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: norm2
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: ffn
+          type: leaf
+          label: SwiGLU FFN
+          color: ffn
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('qwen2', 'Qwen2 / Qwen2.5', '2024', 'decoder', 'pre', '引入 GQA，移除 LogN/动态 NTK，部分层支持 Sliding Window Attention。SwiGLU FFN，QKV 带 bias。', 'Introduces GQA, removes LogN/NTK tricks, and supports optional sliding-window attention in some layers. SwiGLU FFN with QKV bias.', 'https://arxiv.org/abs/2407.10671', 'Qwen/Qwen2.5-7B', '{"numLayers":28,"numHeads":28,"numKvHeads":4,"hiddenSize":3584}', '[{"label":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/","type":"reference"},{"label":"HuggingFace config","url":"https://huggingface.co/Qwen/Qwen2.5-7B/blob/main/config.json","type":"hf-config"}]', '[{"id":"qwen2-moe","name":"Qwen2 MoE","aliases":["qwen2_moe"],"descriptionZh":"共享 Qwen2 模块谱系，FFN 替换为 MoE 路由专家。","descriptionEn":"Shares the Qwen2 module lineage and replaces dense FFN with routed MoE experts."},{"id":"qwen2-vl","name":"Qwen2 VL / Omni","aliases":["qwen2_vl","qwen2_5_vl","qwen2_5_omni"],"descriptionZh":"多模态变体保留文本解码器主干，视觉或音频模块作为外部编码器接入。","descriptionEn":"Multimodal variants keep the text decoder backbone and attach vision or audio encoders."}]', '[{"source":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/","noteZh":"用于核对 Qwen 系列与现代 GQA/RoPE/SwiGLU 图示风格。","noteEn":"Used to align Qwen-family diagrams with the modern GQA/RoPE/SwiGLU presentation."}]', '{"attention":"GQA","positionEncoding":"RoPE","norm":"RMSNorm","ffn":"SwiGLU","qkvBias":true}', 'hidden: {{hiddenSize}} · Q:{{numHeads}} KV:{{numKvHeads}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"Transformer Block","color":"steel","sub":"{{numLayers}} identical layers","badge":"x{{numLayers}}","children":[{"id":"ln1","type":"leaf","label":"RMSNorm","color":"norm","sub":"pre-norm"},{"id":"attn","type":"leaf","label":"GQA Q:{{numHeads}} KV:{{numKvHeads}}","color":"attn","sub":"RoPE · QKV bias · optional sliding window"},{"id":"r1","type":"leaf","label":"+ residual","color":"resid"},{"id":"ln2","type":"leaf","label":"RMSNorm","color":"norm","sub":"pre-norm"},{"id":"ffn","type":"leaf","label":"SwiGLU FFN","color":"ffn","sub":"gate · up -> SiLU -> down"},{"id":"r2","type":"leaf","label":"+ residual","color":"resid"}]},{"id":"lnf","type":"leaf","label":"Final RMSNorm","color":"norm"},{"id":"lmh","type":"leaf","label":"LM Head","color":"out","sub":"tied to token emb"}]', 'id: qwen2
 family: Qwen2 / Qwen2.5
 era: "2024"
 type: decoder
@@ -2213,6 +4373,35 @@ defaultParams:
   numHeads: 28
   numKvHeads: 4
   hiddenSize: 3584
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/
+    type: reference
+  - label: HuggingFace config
+    url: https://huggingface.co/Qwen/Qwen2.5-7B/blob/main/config.json
+    type: hf-config
+features:
+  attention: GQA
+  positionEncoding: RoPE
+  norm: RMSNorm
+  ffn: SwiGLU
+  qkvBias: true
+variants:
+  - id: qwen2-moe
+    name: Qwen2 MoE
+    aliases: [qwen2_moe]
+    descriptionZh: "共享 Qwen2 模块谱系，FFN 替换为 MoE 路由专家。"
+    descriptionEn: "Shares the Qwen2 module lineage and replaces dense FFN with routed MoE experts."
+  - id: qwen2-vl
+    name: Qwen2 VL / Omni
+    aliases: [qwen2_vl, qwen2_5_vl, qwen2_5_omni]
+    descriptionZh: "多模态变体保留文本解码器主干，视觉或音频模块作为外部编码器接入。"
+    descriptionEn: "Multimodal variants keep the text decoder backbone and attach vision or audio encoders."
+evidence:
+  - source: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/
+    noteZh: "用于核对 Qwen 系列与现代 GQA/RoPE/SwiGLU 图示风格。"
+    noteEn: "Used to align Qwen-family diagrams with the modern GQA/RoPE/SwiGLU presentation."
 diagram:
   subtitle: "hidden: {{hiddenSize}} · Q:{{numHeads}} KV:{{numKvHeads}}"
   nodes:
@@ -2269,11 +4458,426 @@ diagram:
       sub: tied to token emb
       color: out
 ');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('qwen3-next', 'Qwen3 Next', '2025', 'decoder', 'pre', 'Qwen3 Next 是稀疏混合解码器，交替使用 Gated DeltaNet 与 Gated Attention，并结合 MoE FFN。', 'Qwen3 Next is a sparse hybrid decoder alternating Gated DeltaNet and Gated Attention with MoE FFNs.', NULL, 'Qwen/Qwen3-Next-80B-A3B-Instruct', '{"numLayers":48,"numExperts":512,"numExpertsPerToken":10}', '[{"label":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-qwen3-next-80b-a3b","type":"reference"}]', '[{"id":"qwen3-next-80b-a3b","name":"Qwen3 Next 80B-A3B","aliases":["qwen3_next"],"descriptionZh":"图库条目中的 80B total / 3B active 混合 MoE 代表。","descriptionEn":"The 80B total / 3B active hybrid MoE representative in the gallery."}]', '[]', '{"attention":"gated attention","tokenMixer":"Gated DeltaNet","moe":"sparse MoE","layerMix":"3:1 DeltaNet and attention"}', 'Gated DeltaNet + Attention · MoE', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"Hybrid Block","color":"steel","badge":"x{{numLayers}}","defaultExpanded":true,"children":[{"id":"norm1","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"mixer","type":"row","children":[{"id":"delta","type":"leaf","label":"Gated DeltaNet","color":"teal","sub":"recurrent/linear path"},{"id":"gattn","type":"leaf","label":"Gated Attention","color":"attn"}]},{"id":"r1","type":"leaf","label":"+ residual","color":"resid"},{"id":"moe","type":"group","label":"MoE FFN","color":"moe","children":[{"id":"router","type":"leaf","label":"Router top-{{numExpertsPerToken}}","color":"teal"},{"id":"experts","type":"leaf","label":"Experts x{{numExperts}}","color":"ffn"}]}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: qwen3-next
+family: Qwen3 Next
+era: "2025"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Qwen3 Next 是稀疏混合解码器，交替使用 Gated DeltaNet 与 Gated Attention，并结合 MoE FFN。"
+  en: "Qwen3 Next is a sparse hybrid decoder alternating Gated DeltaNet and Gated Attention with MoE FFNs."
+hfOrg: Qwen/Qwen3-Next-80B-A3B-Instruct
+aliases: [qwen3_next]
+defaultParams:
+  numLayers: 48
+  numExperts: 512
+  numExpertsPerToken: 10
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-qwen3-next-80b-a3b
+    type: reference
+features:
+  attention: gated attention
+  tokenMixer: Gated DeltaNet
+  moe: sparse MoE
+  layerMix: 3:1 DeltaNet and attention
+variants:
+  - id: qwen3-next-80b-a3b
+    name: Qwen3 Next 80B-A3B
+    aliases: [qwen3_next]
+    descriptionZh: "图库条目中的 80B total / 3B active 混合 MoE 代表。"
+    descriptionEn: "The 80B total / 3B active hybrid MoE representative in the gallery."
+diagram:
+  subtitle: "Gated DeltaNet + Attention · MoE"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Hybrid Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: mixer
+          type: row
+          children:
+            - id: delta
+              type: leaf
+              label: Gated DeltaNet
+              sub: recurrent/linear path
+              color: teal
+            - id: gattn
+              type: leaf
+              label: Gated Attention
+              color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: moe
+          type: group
+          label: MoE FFN
+          color: moe
+          children:
+            - id: router
+              type: leaf
+              label: "Router top-{{numExpertsPerToken}}"
+              color: teal
+            - id: experts
+              type: leaf
+              label: "Experts x{{numExperts}}"
+              color: ffn
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('qwen3', 'Qwen3 / Qwen3.5 / Qwen3.6', '2025', 'decoder', 'pre', 'Qwen3 延续 Qwen2 解码器并加入 per-head QK-RMSNorm；密集和 MoE 变体共享 GQA、RoPE、SwiGLU 主干。', 'Qwen3 extends the Qwen2 decoder with per-head QK-RMSNorm; dense and MoE variants share the GQA, RoPE, and SwiGLU backbone.', 'https://arxiv.org/abs/2505.09388', 'Qwen/Qwen3-8B', '{"numLayers":36,"numHeads":32,"numKvHeads":8,"hiddenSize":4096}', '[{"label":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-qwen3-8b","type":"reference"}]', '[{"id":"qwen3-dense","name":"Qwen3 dense","aliases":["qwen3"],"descriptionZh":"密集模型用于 0.6B、4B、8B、32B 等尺寸。","descriptionEn":"Dense models cover sizes such as 0.6B, 4B, 8B, and 32B."},{"id":"qwen3-moe","name":"Qwen3 MoE","aliases":["qwen3_moe","qwen3_5_moe"],"descriptionZh":"MoE 变体保持注意力模块一致，FFN 替换为路由专家。","descriptionEn":"MoE variants keep the attention module and replace dense FFNs with routed experts."}]', '[]', '{"attention":"GQA with QK-RMSNorm","positionEncoding":"RoPE","norm":"RMSNorm","ffn":"SwiGLU or MoE experts"}', 'hidden: {{hiddenSize}} · QK-RMSNorm · Q:{{numHeads}} KV:{{numKvHeads}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"Qwen3 Block","color":"steel","badge":"x{{numLayers}}","children":[{"id":"norm1","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"qk","type":"leaf","label":"QK-RMSNorm","color":"norm","sub":"per-head before RoPE"},{"id":"attn","type":"leaf","label":"GQA Q:{{numHeads}} KV:{{numKvHeads}}","color":"attn","sub":"RoPE"},{"id":"r1","type":"leaf","label":"+ residual","color":"resid"},{"id":"norm2","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"ffn","type":"leaf","label":"SwiGLU FFN / MoE","color":"ffn"},{"id":"r2","type":"leaf","label":"+ residual","color":"resid"}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: qwen3
+family: Qwen3 / Qwen3.5 / Qwen3.6
+era: "2025"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Qwen3 延续 Qwen2 解码器并加入 per-head QK-RMSNorm；密集和 MoE 变体共享 GQA、RoPE、SwiGLU 主干。"
+  en: "Qwen3 extends the Qwen2 decoder with per-head QK-RMSNorm; dense and MoE variants share the GQA, RoPE, and SwiGLU backbone."
+paperUrl: https://arxiv.org/abs/2505.09388
+hfOrg: Qwen/Qwen3-8B
+aliases: [qwen3, qwen3_moe, qwen3_5, qwen3_5_moe, qwen3_6, qwen3_vl, qwen3_vl_moe, qwen3_omni_moe, qwen3_coder]
+defaultParams:
+  numLayers: 36
+  numHeads: 32
+  numKvHeads: 8
+  hiddenSize: 4096
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-qwen3-8b
+    type: reference
+features:
+  attention: GQA with QK-RMSNorm
+  positionEncoding: RoPE
+  norm: RMSNorm
+  ffn: SwiGLU or MoE experts
+variants:
+  - id: qwen3-dense
+    name: Qwen3 dense
+    aliases: [qwen3]
+    descriptionZh: "密集模型用于 0.6B、4B、8B、32B 等尺寸。"
+    descriptionEn: "Dense models cover sizes such as 0.6B, 4B, 8B, and 32B."
+  - id: qwen3-moe
+    name: Qwen3 MoE
+    aliases: [qwen3_moe, qwen3_5_moe]
+    descriptionZh: "MoE 变体保持注意力模块一致，FFN 替换为路由专家。"
+    descriptionEn: "MoE variants keep the attention module and replace dense FFNs with routed experts."
+diagram:
+  subtitle: "hidden: {{hiddenSize}} · QK-RMSNorm · Q:{{numHeads}} KV:{{numKvHeads}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: Qwen3 Block
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: qk
+          type: leaf
+          label: QK-RMSNorm
+          sub: per-head before RoPE
+          color: norm
+        - id: attn
+          type: leaf
+          label: "GQA Q:{{numHeads}} KV:{{numKvHeads}}"
+          sub: RoPE
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: norm2
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: ffn
+          type: leaf
+          label: SwiGLU FFN / MoE
+          color: ffn
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('t5', 'T5 / FLAN-T5', '2020', 'encoder-decoder', 'pre', 'T5 是 encoder-decoder 架构，使用相对位置偏置、RMSNorm 和无 bias 投影，T5 v1.1 引入 gated FFN。', 'T5 is an encoder-decoder architecture with relative position bias, RMSNorm, bias-free projections, and gated FFNs in T5 v1.1.', 'https://arxiv.org/abs/1910.10683', 'google/flan-t5-xl', '{"numLayers":24,"numHeads":32,"hiddenSize":2048}', '[]', '[]', '[]', '{"block":"encoder-decoder","attention":"self-attention plus cross-attention","positionEncoding":"relative attention bias","norm":"RMSNorm"}', 'encoder-decoder · layers: {{numLayers}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"enc","type":"group","label":"Encoder Stack","color":"blue","badge":"x{{numLayers}}","children":[{"id":"encnorm","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"encattn","type":"leaf","label":"Self-Attention","color":"attn","sub":"relative position bias"},{"id":"encffn","type":"leaf","label":"Gated FFN","color":"ffn"}]},{"id":"dec","type":"group","label":"Decoder Stack","color":"steel","badge":"x{{numLayers}}","children":[{"id":"decself","type":"leaf","label":"Causal Self-Attention","color":"attn"},{"id":"cross","type":"leaf","label":"Cross-Attention","color":"sky"},{"id":"decffn","type":"leaf","label":"Gated FFN","color":"ffn"}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: t5
+family: T5 / FLAN-T5
+era: "2020"
+type: encoder-decoder
+normPlacement: pre
+description:
+  zh: "T5 是 encoder-decoder 架构，使用相对位置偏置、RMSNorm 和无 bias 投影，T5 v1.1 引入 gated FFN。"
+  en: "T5 is an encoder-decoder architecture with relative position bias, RMSNorm, bias-free projections, and gated FFNs in T5 v1.1."
+paperUrl: https://arxiv.org/abs/1910.10683
+hfOrg: google/flan-t5-xl
+aliases: [t5, longt5]
+defaultParams:
+  numLayers: 24
+  numHeads: 32
+  hiddenSize: 2048
+features:
+  block: encoder-decoder
+  attention: self-attention plus cross-attention
+  positionEncoding: relative attention bias
+  norm: RMSNorm
+diagram:
+  subtitle: "encoder-decoder · layers: {{numLayers}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: enc
+      type: group
+      label: Encoder Stack
+      badge: "x{{numLayers}}"
+      color: blue
+      children:
+        - id: encnorm
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: encattn
+          type: leaf
+          label: Self-Attention
+          sub: relative position bias
+          color: attn
+        - id: encffn
+          type: leaf
+          label: Gated FFN
+          color: ffn
+    - id: dec
+      type: group
+      label: Decoder Stack
+      badge: "x{{numLayers}}"
+      color: steel
+      children:
+        - id: decself
+          type: leaf
+          label: Causal Self-Attention
+          color: attn
+        - id: cross
+          type: leaf
+          label: Cross-Attention
+          color: sky
+        - id: decffn
+          type: leaf
+          label: Gated FFN
+          color: ffn
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('xlstm', 'xLSTM', '2025', 'decoder', 'pre', 'xLSTM 使用 mLSTM/sLSTM 风格循环状态混合替代 self-attention，图库条目强调矩阵记忆和线性序列扩展。', 'xLSTM replaces self-attention with mLSTM/sLSTM-style recurrent state mixing; the gallery entry emphasizes matrix memory and linear sequence scaling.', NULL, 'NX-AI/xLSTM-7b', '{"numLayers":32,"hiddenSize":4096}', '[{"label":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-xlstm-7b","type":"reference"}]', '[{"id":"xlstm-7b","name":"xLSTM 7B","aliases":["xlstm"],"descriptionZh":"图库条目中的 7B recurrent decoder 代表。","descriptionEn":"The 7B recurrent decoder representative in the gallery."}]', '[]', '{"tokenMixer":"mLSTM recurrent matrix memory","attention":"no self-attention","complexity":"recurrent linear-time path"}', 'recurrent token mixer · hidden: {{hiddenSize}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"xLSTM Block","color":"steel","badge":"x{{numLayers}}","defaultExpanded":true,"children":[{"id":"norm","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"gates","type":"leaf","label":"Gate projections","color":"emb"},{"id":"memory","type":"leaf","label":"mLSTM matrix memory","color":"teal","sub":"recurrent token mixing"},{"id":"ffn","type":"leaf","label":"FFN","color":"ffn"},{"id":"residual","type":"leaf","label":"+ residual","color":"resid"}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: xlstm
+family: xLSTM
+era: "2025"
+type: decoder
+normPlacement: pre
+description:
+  zh: "xLSTM 使用 mLSTM/sLSTM 风格循环状态混合替代 self-attention，图库条目强调矩阵记忆和线性序列扩展。"
+  en: "xLSTM replaces self-attention with mLSTM/sLSTM-style recurrent state mixing; the gallery entry emphasizes matrix memory and linear sequence scaling."
+hfOrg: NX-AI/xLSTM-7b
+aliases: [xlstm]
+defaultParams:
+  numLayers: 32
+  hiddenSize: 4096
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-xlstm-7b
+    type: reference
+features:
+  tokenMixer: mLSTM recurrent matrix memory
+  attention: no self-attention
+  complexity: recurrent linear-time path
+variants:
+  - id: xlstm-7b
+    name: xLSTM 7B
+    aliases: [xlstm]
+    descriptionZh: "图库条目中的 7B recurrent decoder 代表。"
+    descriptionEn: "The 7B recurrent decoder representative in the gallery."
+diagram:
+  subtitle: "recurrent token mixer · hidden: {{hiddenSize}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: xLSTM Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: gates
+          type: leaf
+          label: Gate projections
+          color: emb
+        - id: memory
+          type: leaf
+          label: mLSTM matrix memory
+          sub: recurrent token mixing
+          color: teal
+        - id: ffn
+          type: leaf
+          label: FFN
+          color: ffn
+        - id: residual
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out
+');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('baichuan', 'baichuan');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('baichuan_m1', 'baichuan');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('bert', 'bert');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('bloom', 'bloom');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('command-a', 'command-a');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('command_a', 'command-a');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('command_a_plus', 'command-a');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('cohere2', 'command-a');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('deepseek-dense', 'deepseek-dense');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('deepseek', 'deepseek-dense');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('deepseek-v2', 'deepseek-v2');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('deepseek_v2', 'deepseek-v2');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('deepseek_vl_v2', 'deepseek-v2');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('deepseek-v3', 'deepseek-v3');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('deepseek_v3', 'deepseek-v3');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('deepseek_v32', 'deepseek-v3');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('deepseek_r1', 'deepseek-v3');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('deepseek-v4', 'deepseek-v4');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('deepseek_v4', 'deepseek-v4');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('exaone', 'exaone');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('exaone4', 'exaone');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('falcon', 'falcon');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('falcon_h1', 'falcon');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('gemma', 'gemma');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('gemma2', 'gemma');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('gemma3', 'gemma');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('gemma3_text', 'gemma');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('gemma3n', 'gemma');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('gemma4', 'gemma');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('gemma4_unified', 'gemma');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('glm4', 'glm4');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('glm', 'glm4');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('chatglm', 'glm4');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('glm4_moe', 'glm4');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('glm4v', 'glm4');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('glm4v_moe', 'glm4');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('glm_moe_dsa', 'glm4');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('glm5', 'glm4');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('gpt-oss', 'gpt-oss');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('gpt_oss', 'gpt-oss');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('gpt2', 'gpt2');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('granite', 'granite');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('granitemoe', 'granite');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('granitemoehybrid', 'granite');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('granite_switch', 'granite');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('internlm', 'internlm');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('internlm2', 'internlm');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('internlm3', 'internlm');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('kimi-k2', 'kimi-k2');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('kimi_k2', 'kimi-k2');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('kimi_k25', 'kimi-k2');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('kimi_vl', 'kimi-k2');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('kimi_linear', 'kimi-k2');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('lfm2', 'lfm2');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('lfm2_vl', 'lfm2');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('lfm2_moe', 'lfm2');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('llama', 'llama');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('llama_swiftkv', 'llama');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('llama4', 'llama4');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('mamba', 'mamba');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('mamba2', 'mamba');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('falcon_mamba', 'mamba');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('minimax', 'minimax');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('minimax_text_01', 'minimax');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('minimax_vl_01', 'minimax');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('minimax_m1', 'minimax');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('minimax_m2', 'minimax');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('minimax_m3_vl', 'minimax');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('mistral', 'mistral');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('mistral3', 'mistral');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('mixtral', 'mistral');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('voxtral', 'mistral');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('nemotron', 'nemotron');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('nemotron_h', 'nemotron');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('nemotron_nas', 'nemotron');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('olmo', 'olmo');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('olmo2', 'olmo');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('olmo3', 'olmo');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('olmoe', 'olmo');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('phi', 'phi');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('phi3', 'phi');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('phi3_v', 'phi');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('phi3small', 'phi');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('phi4mm', 'phi');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('phimoe', 'phi');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('phi4flash', 'phi');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen1', 'qwen1');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen', 'qwen1');
 INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen2', 'qwen2');
 INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen2_moe', 'qwen2');
 INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen2_vl', 'qwen2');
 INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen2_5_vl', 'qwen2');
 INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen2_5_omni', 'qwen2');
-INSERT INTO sync_runs (id, source_hash, model_count, architecture_count, synced_at) VALUES (1, '50ec09780d8cdc1a2b9952eb230bee07363fe637446c11fcb6bce163c853a329', 2067, 1, '2026-07-03 10:11:41');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3-next', 'qwen3-next');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3_next', 'qwen3-next');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3', 'qwen3');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3_moe', 'qwen3');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3_5', 'qwen3');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3_5_moe', 'qwen3');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3_6', 'qwen3');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3_vl', 'qwen3');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3_vl_moe', 'qwen3');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3_omni_moe', 'qwen3');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3_coder', 'qwen3');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('t5', 't5');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('longt5', 't5');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('xlstm', 'xlstm');
+INSERT INTO sync_runs (id, source_hash, model_count, architecture_count, synced_at) VALUES (1, 'fa10c85311d56b7bc7ed52ed5db447f06b9cfb17692188b2591d14503a931e36', 2069, 32, '2026-07-03 10:51:21');
 COMMIT;
 PRAGMA foreign_keys=ON;

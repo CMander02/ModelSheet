@@ -193,7 +193,10 @@
     "contextLength": 200000,
     "knowledgeCutoff": "2024-06-01",
     "createdAt": "2026-04-16T00:00:00.000Z",
-    "openness": "closed"
+    "openness": "closed",
+    "url": "https://platform.openai.com/docs/models/o4-mini",
+    "parameterSource": "OpenAI API docs; reasoning model parameter count not disclosed.",
+    "parameterSourceUrl": "https://platform.openai.com/docs/models/o4-mini"
   },
   {
     "id": "tiiuae/Falcon-H1-34B-Base",
@@ -29212,7 +29215,9 @@
     "createdAt": "2026-01-01T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2025-08-31",
-    "openness": "closed"
+    "openness": "closed",
+    "parameterSource": "OpenAI/API release notes; parameter count not disclosed.",
+    "parameterSourceUrl": "https://platform.openai.com/docs/models"
   },
   {
     "id": "moonshotai/Kimi-K2.5",
@@ -29263,7 +29268,7 @@
     "id": "anthropic/claude-opus-4.6",
     "name": "Claude Opus 4.6",
     "provider": "Anthropic",
-    "techReport": "https://anthropic.com/claude-opus-4-6-system-card",
+    "techReport": "https://docs.anthropic.com/en/docs/about-claude/models/all-models",
     "contextLength": 1048576,
     "architecture": "claude",
     "inputModalities": [
@@ -29276,7 +29281,12 @@
     "createdAt": "2026-02-01T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Claude",
-    "openness": "closed"
+    "openness": "closed",
+    "url": "https://docs.anthropic.com/en/docs/about-claude/models/all-models",
+    "totalParameters": 5000000000000,
+    "parameterConfidence": "rumored",
+    "parameterSource": "Unverified industry rumor (~5T parameters for Opus-class Claude 4.x); original source not located. Anthropic has not disclosed parameter counts.",
+    "parameterSourceUrl": "https://docs.anthropic.com/en/docs/about-claude/models/all-models"
   },
   {
     "id": "anthropic/claude-sonnet-4.6",
@@ -29909,7 +29919,7 @@
     "id": "openai/gpt-5.4",
     "name": "GPT-5.4",
     "provider": "OpenAI",
-    "techReport": "https://developers.openai.com/api/docs/models/gpt-5.4",
+    "techReport": "https://platform.openai.com/docs/guides/latest-model",
     "contextLength": 1050000,
     "architecture": "gpt5",
     "architectureFamily": "GPT",
@@ -29923,13 +29933,16 @@
     "createdAt": "2026-03-05T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2025-08-31",
-    "openness": "closed"
+    "openness": "closed",
+    "url": "https://platform.openai.com/docs/models/gpt-5.4",
+    "parameterSource": "OpenAI API docs; parameter count not disclosed.",
+    "parameterSourceUrl": "https://platform.openai.com/docs/models/gpt-5.4"
   },
   {
     "id": "openai/gpt-5.4-mini",
     "name": "GPT-5.4 mini",
     "provider": "OpenAI",
-    "techReport": "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+    "techReport": "https://platform.openai.com/docs/guides/latest-model",
     "contextLength": 400000,
     "architecture": "gpt5",
     "architectureFamily": "GPT",
@@ -29943,13 +29956,16 @@
     "createdAt": "2026-03-05T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2025-08-31",
-    "openness": "closed"
+    "openness": "closed",
+    "url": "https://platform.openai.com/docs/models/gpt-5.4-mini",
+    "parameterSource": "OpenAI API docs; parameter count not disclosed.",
+    "parameterSourceUrl": "https://platform.openai.com/docs/models/gpt-5.4-mini"
   },
   {
     "id": "openai/gpt-5.4-nano",
     "name": "GPT-5.4 nano",
     "provider": "OpenAI",
-    "techReport": "https://developers.openai.com/api/docs/models/gpt-5.4-nano",
+    "techReport": "https://platform.openai.com/docs/guides/latest-model",
     "contextLength": 400000,
     "architecture": "gpt5",
     "architectureFamily": "GPT",
@@ -29963,13 +29979,16 @@
     "createdAt": "2026-03-05T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2025-08-31",
-    "openness": "closed"
+    "openness": "closed",
+    "url": "https://platform.openai.com/docs/models/gpt-5.4-nano",
+    "parameterSource": "OpenAI API docs; parameter count not disclosed.",
+    "parameterSourceUrl": "https://platform.openai.com/docs/models/gpt-5.4-nano"
   },
   {
     "id": "openai/gpt-5.4-pro",
     "name": "GPT-5.4 pro",
     "provider": "OpenAI",
-    "techReport": "https://developers.openai.com/api/docs/models/gpt-5.4-pro",
+    "techReport": "https://platform.openai.com/docs/guides/latest-model",
     "contextLength": 1050000,
     "architecture": "gpt5",
     "architectureFamily": "GPT",
@@ -29983,13 +30002,16 @@
     "createdAt": "2026-03-05T00:00:00.000Z",
     "isMoe": false,
     "knowledgeCutoff": "2025-08-31",
-    "openness": "closed"
+    "openness": "closed",
+    "url": "https://platform.openai.com/docs/models/gpt-5.4-pro",
+    "parameterSource": "OpenAI API docs; parameter count not disclosed.",
+    "parameterSourceUrl": "https://platform.openai.com/docs/models/gpt-5.4-pro"
   },
   {
     "id": "openai/gpt-5.5",
     "name": "GPT-5.5",
     "provider": "OpenAI",
-    "techReport": "https://platform.openai.com/docs/models/gpt-5.5",
+    "techReport": "https://platform.openai.com/docs/guides/latest-model",
     "contextLength": 400000,
     "architecture": "gpt5",
     "architectureFamily": "GPT",
@@ -30004,7 +30026,12 @@
     "isMoe": false,
     "knowledgeCutoff": "2025-08-31",
     "updatedAt": "2026-04-25T03:16:49.201910Z",
-    "openness": "closed"
+    "openness": "closed",
+    "url": "https://platform.openai.com/docs/models/gpt-5.5",
+    "totalParameters": 4800000000000,
+    "parameterConfidence": "rumored",
+    "parameterSource": "OpenAI API docs; parameter count not disclosed. Industry upper-bound rumor places GPT-5.5 below 5T parameters; shown as ~4.8T for comparison only.",
+    "parameterSourceUrl": "https://platform.openai.com/docs/models/gpt-5.5"
   },
   {
     "id": "anthropic/claude-mythos-preview",
@@ -30029,7 +30056,7 @@
     "id": "anthropic/claude-opus-4.7",
     "name": "Claude Opus 4.7",
     "provider": "Anthropic",
-    "techReport": "https://anthropic.com/claude-opus-4-7-system-card",
+    "techReport": "https://docs.anthropic.com/en/docs/about-claude/models/all-models",
     "contextLength": 1048576,
     "architecture": "claude",
     "inputModalities": [
@@ -30042,7 +30069,12 @@
     "createdAt": "2026-04-01T00:00:00.000Z",
     "isMoe": false,
     "architectureFamily": "Claude",
-    "openness": "closed"
+    "openness": "closed",
+    "url": "https://docs.anthropic.com/en/docs/about-claude/models/all-models",
+    "totalParameters": 5000000000000,
+    "parameterConfidence": "rumored",
+    "parameterSource": "Unverified industry rumor (~5T parameters for Opus-class Claude 4.x); original source not located. Anthropic has not disclosed parameter counts.",
+    "parameterSourceUrl": "https://docs.anthropic.com/en/docs/about-claude/models/all-models"
   },
   {
     "id": "zai-org/GLM-5.1",
@@ -77315,5 +77347,89 @@
     "task": "Image-Text-to-Text",
     "createdAt": "2026-05-31T00:00:00Z",
     "openness": "closed"
+  },
+  {
+    "id": "openai/gpt-5.6-sol",
+    "name": "GPT-5.6 Sol",
+    "provider": "OpenAI",
+    "url": "https://openai.com/index/previewing-gpt-5-6-sol/",
+    "techReport": "https://openai.com/index/previewing-gpt-5-6-sol/",
+    "parameterSource": "OpenAI models page describes GPT-5.6 as a trusted-partner preview; parameter count not disclosed.",
+    "parameterSourceUrl": "https://platform.openai.com/docs/models",
+    "openness": "closed",
+    "architecture": "gpt5",
+    "architectureFamily": "GPT",
+    "createdAt": "2026-07-01T00:00:00.000Z"
+  },
+  {
+    "id": "openai/gpt-image-2",
+    "name": "GPT Image 2",
+    "provider": "OpenAI",
+    "url": "https://platform.openai.com/docs/models/gpt-image-2",
+    "techReport": "https://platform.openai.com/docs/models/gpt-image-2",
+    "parameterSource": "OpenAI API docs; image-generation model, parameter count not disclosed.",
+    "parameterSourceUrl": "https://platform.openai.com/docs/models/gpt-image-2",
+    "openness": "closed",
+    "architecture": "gpt-image",
+    "architectureFamily": "GPT Image",
+    "createdAt": "2026-07-01T00:00:00.000Z"
+  },
+  {
+    "id": "anthropic/claude-opus-4.8",
+    "name": "Claude Opus 4.8",
+    "provider": "Anthropic",
+    "url": "https://docs.anthropic.com/en/docs/about-claude/models/all-models",
+    "techReport": "https://docs.anthropic.com/en/docs/about-claude/models/all-models",
+    "totalParameters": 5000000000000,
+    "parameterConfidence": "rumored",
+    "parameterSource": "Unverified industry rumor (~5T parameters for Opus-class Claude 4.x); original source not located. Anthropic has not disclosed parameter counts.",
+    "parameterSourceUrl": "https://docs.anthropic.com/en/docs/about-claude/models/all-models",
+    "openness": "closed",
+    "architecture": "claude",
+    "architectureFamily": "Claude",
+    "createdAt": "2026-06-09T00:00:00.000Z"
+  },
+  {
+    "id": "anthropic/claude-fable-5",
+    "name": "Claude Fable 5",
+    "provider": "Anthropic",
+    "url": "https://docs.anthropic.com/en/docs/about-claude/models/introducing-claude-fable-5-and-claude-mythos-5",
+    "techReport": "https://www.anthropic.com/news/redeploying-fable-5",
+    "totalParameters": 10000000000000,
+    "parameterConfidence": "rumored",
+    "parameterSource": "Unverified industry rumor (~10T parameters), discussed alongside Fable/Mythos-class capability claims; original Musk/Cursor-CEO source not located. Anthropic has not disclosed parameter counts.",
+    "parameterSourceUrl": "https://docs.anthropic.com/en/docs/about-claude/models/introducing-claude-fable-5-and-claude-mythos-5",
+    "openness": "closed",
+    "architecture": "claude",
+    "architectureFamily": "Claude",
+    "createdAt": "2026-06-09T00:00:00.000Z"
+  },
+  {
+    "id": "anthropic/claude-mythos-5",
+    "name": "Claude Mythos 5",
+    "provider": "Anthropic",
+    "url": "https://docs.anthropic.com/en/docs/about-claude/models/introducing-claude-fable-5-and-claude-mythos-5",
+    "techReport": "https://www.anthropic.com/news/redeploying-fable-5",
+    "totalParameters": 10000000000000,
+    "parameterConfidence": "rumored",
+    "parameterSource": "Unverified industry rumor (~10T parameters), discussed alongside Fable/Mythos-class capability claims; original Musk/Cursor-CEO source not located. Anthropic has not disclosed parameter counts.",
+    "parameterSourceUrl": "https://docs.anthropic.com/en/docs/about-claude/models/introducing-claude-fable-5-and-claude-mythos-5",
+    "openness": "closed",
+    "architecture": "claude",
+    "architectureFamily": "Claude",
+    "createdAt": "2026-06-09T00:00:00.000Z"
+  },
+  {
+    "id": "anthropic/claude-sonnet-5",
+    "name": "Claude Sonnet 5",
+    "provider": "Anthropic",
+    "url": "https://www.anthropic.com/news/claude-sonnet-5",
+    "techReport": "https://www.anthropic.com/news/claude-sonnet-5",
+    "parameterSource": "Anthropic launch blog and model docs; parameter count not disclosed.",
+    "parameterSourceUrl": "https://www.anthropic.com/news/claude-sonnet-5",
+    "openness": "closed",
+    "architecture": "claude",
+    "architectureFamily": "Claude",
+    "createdAt": "2026-06-30T00:00:00.000Z"
   }
 ]

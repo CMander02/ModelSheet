@@ -1,19 +1,26 @@
 id: qwen3
-family: Qwen3 / Qwen3.5 / Qwen3.6
+family: Qwen3 Dense
 era: "2025"
 type: decoder
 normPlacement: pre
 description:
-  zh: "Qwen3 延续 Qwen2 解码器并加入 per-head QK-RMSNorm；密集和 MoE 变体共享 GQA、RoPE、SwiGLU 主干。"
-  en: "Qwen3 extends the Qwen2 decoder with per-head QK-RMSNorm; dense and MoE variants share the GQA, RoPE, and SwiGLU backbone."
+  zh: "Qwen3 密集解码器使用 Pre-RMSNorm、GQA、RoPE、per-head QK-RMSNorm 和 SwiGLU FFN。"
+  en: "Qwen3 dense decoders use Pre-RMSNorm, GQA, RoPE, per-head QK-RMSNorm, and a SwiGLU FFN."
 paperUrl: https://arxiv.org/abs/2505.09388
 hfOrg: Qwen/Qwen3-8B
-aliases: [qwen3, qwen3_moe, qwen3_5, qwen3_5_moe, qwen3_6, qwen3_vl, qwen3_vl_moe, qwen3_omni_moe, qwen3_coder]
+aliases: [qwen3, qwen3_5, qwen3_6, qwen3_vl, qwen3_scale_seq, qwen3ts, penguinvl_qwen3]
 defaultParams:
   numLayers: 36
   numHeads: 32
   numKvHeads: 8
   hiddenSize: 4096
+  hiddenSizeLabel: 4.1K
+  intermediateSize: 12288
+  intermediateSizeLabel: 12.3K
+  contextLength: 40960
+  contextLengthLabel: 41K
+  vocabSize: 151936
+  vocabSizeLabel: 151.9K
 sourceLinks:
   - label: Raschka gallery
     url: https://sebastianraschka.com/llm-architecture-gallery/#card-qwen3-8b
@@ -21,67 +28,79 @@ sourceLinks:
 features:
   attention: GQA with QK-RMSNorm
   positionEncoding: RoPE
-  norm: RMSNorm
-  ffn: SwiGLU or MoE experts
+  norm: Pre-RMSNorm
+  ffn: SwiGLU dense FFN
 variants:
   - id: qwen3-dense
     name: Qwen3 dense
-    aliases: [qwen3]
-    descriptionZh: "密集模型用于 0.6B、4B、8B、32B 等尺寸。"
-    descriptionEn: "Dense models cover sizes such as 0.6B, 4B, 8B, and 32B."
-  - id: qwen3-moe
-    name: Qwen3 MoE
-    aliases: [qwen3_moe, qwen3_5_moe]
-    descriptionZh: "MoE 变体保持注意力模块一致，FFN 替换为路由专家。"
-    descriptionEn: "MoE variants keep the attention module and replace dense FFNs with routed experts."
+    aliases: [qwen3, qwen3_5, qwen3_vl]
+    descriptionZh: "密集模型覆盖 0.6B、1.7B、4B、8B、14B、32B 和 Qwen3.5/Qwen3-VL 的 dense 尺寸。"
+    descriptionEn: "Dense models cover 0.6B, 1.7B, 4B, 8B, 14B, 32B, and dense Qwen3.5/Qwen3-VL sizes."
 diagram:
-  subtitle: "hidden: {{hiddenSize}} · QK-RMSNorm · Q:{{numHeads}} KV:{{numKvHeads}}"
+  subtitle: "Pre-RMSNorm · RoPE · hidden {{hiddenSizeLabel}} · vocab {{vocabSizeLabel}}"
   nodes:
     - id: input
       type: leaf
       label: Input tokens
+      sub: "context {{contextLengthLabel}}"
       color: input
     - id: emb
       type: leaf
       label: Token Embedding
+      sub: "vocab {{vocabSizeLabel}} · dim {{hiddenSizeLabel}}"
       color: emb
     - id: block
       type: group
-      label: Qwen3 Block
+      label: Qwen3 Dense Block
       badge: "x{{numLayers}}"
+      sub: "Pre-RMSNorm before attention and FFN"
       color: steel
+      defaultExpanded: true
       children:
         - id: norm1
           type: leaf
-          label: RMSNorm
+          label: Pre-RMSNorm 1
+          sub: before attention
           color: norm
         - id: qk
           type: leaf
           label: QK-RMSNorm
-          sub: per-head before RoPE
+          sub: per-head Q/K normalization
           color: norm
+        - id: rope
+          type: leaf
+          label: RoPE
+          sub: rotary position embedding
+          color: orange
         - id: attn
           type: leaf
-          label: "GQA Q:{{numHeads}} KV:{{numKvHeads}}"
-          sub: RoPE
+          label: GQA Attention
+          sub: "Q heads {{numHeads}} · KV heads {{numKvHeads}}"
           color: attn
         - id: r1
-          type: leaf
-          label: "+ residual"
-          color: resid
+          type: add
+          from: norm1
+          label: residual add
         - id: norm2
           type: leaf
-          label: RMSNorm
+          label: Pre-RMSNorm 2
+          sub: before FFN
           color: norm
         - id: ffn
           type: leaf
-          label: SwiGLU FFN / MoE
+          label: SwiGLU FFN
+          sub: "intermediate {{intermediateSizeLabel}}"
           color: ffn
         - id: r2
-          type: leaf
-          label: "+ residual"
-          color: resid
+          type: add
+          from: norm2
+          label: residual add
+    - id: final_norm
+      type: leaf
+      label: Final RMSNorm
+      color: norm
     - id: head
       type: leaf
       label: LM Head
+      sub: "vocab {{vocabSizeLabel}}"
       color: out

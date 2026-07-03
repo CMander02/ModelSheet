@@ -21,7 +21,7 @@ ARCHITECTURES_DIR = DATA_DIR / "architectures"
 
 ALLOWED_ARCH_TYPES = {"encoder", "decoder", "encoder-decoder"}
 ALLOWED_NORM_PLACEMENTS = {"pre", "post"}
-ALLOWED_NODE_TYPES = {"leaf", "group", "row"}
+ALLOWED_NODE_TYPES = {"leaf", "group", "row", "add"}
 ALLOWED_TREE_COLORS = {
     "attn",
     "ffn",
@@ -257,14 +257,32 @@ def _validate_node(node: Any, path: str) -> dict[str, Any]:
         children = node.get("children")
         if not isinstance(children, list) or not children:
             raise ValueError(f"{path}: row.children must be a non-empty list")
+        validated_children = [
+            _validate_node(child, f"{path}.children[{i}]")
+            for i, child in enumerate(children)
+        ]
+        for i, child in enumerate(validated_children):
+            if child["type"] == "add":
+                raise ValueError(f"{path}.children[{i}]: row children cannot be add nodes")
         return {
             "id": str(node["id"]),
             "type": "row",
-            "children": [
-                _validate_node(child, f"{path}.children[{i}]")
-                for i, child in enumerate(children)
-            ],
+            "children": validated_children,
         }
+
+    if node_type == "add":
+        source_id = str(node.get("from") or "").strip()
+        if not source_id:
+            raise ValueError(f"{path}: add.from is required")
+        out = {
+            "id": str(node["id"]),
+            "type": "add",
+            "from": source_id,
+        }
+        for key in ("label", "sub"):
+            if key in node:
+                out[key] = str(node[key])
+        return out
 
     color = node.get("color")
     if color not in ALLOWED_TREE_COLORS:
@@ -281,6 +299,8 @@ def _validate_node(node: Any, path: str) -> dict[str, Any]:
     for key in ("sub", "badge", "defaultExpanded"):
         if key in node:
             out[key] = node[key]
+    if "residualFrom" in node:
+        out["residualFrom"] = str(node["residualFrom"])
 
     if node_type == "group":
         children = node.get("children")
@@ -292,6 +312,46 @@ def _validate_node(node: Any, path: str) -> dict[str, Any]:
         ]
 
     return out
+
+
+def _validate_node_references(nodes: list[dict[str, Any]], path: str) -> None:
+    seen_ids: set[str] = set()
+    for i, node in enumerate(nodes):
+        node_path = f"{path}[{i}]"
+        node_id = node["id"]
+        if node_id in seen_ids:
+            raise ValueError(f"{node_path}: duplicate sibling node id {node_id!r}")
+
+        node_type = node["type"]
+        if node_type == "add":
+            source_id = node["from"]
+            if source_id not in seen_ids:
+                raise ValueError(
+                    f"{node_path}: add.from {source_id!r} must reference an earlier sibling"
+                )
+        elif node_type == "leaf" and "residualFrom" in node:
+            source_id = node["residualFrom"]
+            if source_id not in seen_ids:
+                raise ValueError(
+                    f"{node_path}: residualFrom {source_id!r} must reference an earlier sibling"
+                )
+        elif node_type == "group":
+            _validate_node_references(node["children"], f"{node_path}.children")
+        elif node_type == "row":
+            row_ids: set[str] = set()
+            for child_index, child in enumerate(node["children"]):
+                child_id = child["id"]
+                if child_id in row_ids:
+                    raise ValueError(
+                        f"{node_path}.children[{child_index}]: duplicate row child id {child_id!r}"
+                    )
+                row_ids.add(child_id)
+                if child["type"] == "group":
+                    _validate_node_references(
+                        child["children"], f"{node_path}.children[{child_index}].children"
+                    )
+
+        seen_ids.add(node_id)
 
 
 def _optional_list(data: dict[str, Any], key: str, path: Path) -> list[Any]:
@@ -361,6 +421,7 @@ def load_architectures(
             _validate_node(node, f"{path}:diagram.nodes[{i}]")
             for i, node in enumerate(nodes)
         ]
+        _validate_node_references(diagram_nodes, f"{path}:diagram.nodes")
 
         aliases = [arch_id, *[str(a) for a in data.get("aliases", [])]]
         aliases = list(dict.fromkeys(alias.lower() for alias in aliases if alias))

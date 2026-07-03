@@ -1,4 +1,5 @@
 import type { ArchitectureSpec, DiagramParams, ModelInfo, TreeNode } from "./types"
+import { formatContextLength, formatNumber, formatParameters } from "./formatters"
 
 function applyTemplate(value: unknown, params: DiagramParams): unknown {
   if (typeof value !== "string") return value
@@ -27,6 +28,14 @@ function renderNode(node: TreeNode, params: DiagramParams): TreeNode {
     }
   }
 
+  if (node.type === "add") {
+    return {
+      ...node,
+      label: applyTemplate(node.label, params) as string | undefined,
+      sub: applyTemplate(node.sub, params) as string | undefined,
+    }
+  }
+
   return {
     ...node,
     label: applyTemplate(node.label, params) as string,
@@ -37,16 +46,32 @@ function renderNode(node: TreeNode, params: DiagramParams): TreeNode {
 export function modelDiagramParams(model?: ModelInfo | null): DiagramParams {
   if (!model) return {}
   return {
+    totalParameters: model.totalParameters,
+    totalParametersLabel: formatParameters(model.totalParameters),
+    activeParameters: model.activeParameters,
+    activeParametersLabel: formatParameters(model.activeParameters),
     numLayers: model.numLayers,
     numHeads: model.numHeads,
     numKvHeads: model.numKvHeads,
     hiddenSize: model.hiddenSize,
+    hiddenSizeLabel: formatNumber(model.hiddenSize),
+    embeddingDim: model.embeddingDim,
+    embeddingDimLabel: formatNumber(model.embeddingDim),
     contextLength: model.contextLength,
+    contextLengthLabel: formatContextLength(model.contextLength),
     vocabSize: model.vocabSize,
+    vocabSizeLabel: formatNumber(model.vocabSize),
     intermediateSize: model.intermediateSize,
+    intermediateSizeLabel: formatNumber(model.intermediateSize),
     numExperts: model.numExperts,
     numSharedExperts: model.numSharedExperts,
     numExpertsPerToken: model.numExpertsPerToken,
+    numActivatedExperts: model.numActivatedExperts,
+    moeIntermediateSize: model.moeIntermediateSize,
+    moeIntermediateSizeLabel: formatNumber(model.moeIntermediateSize),
+    mlpFactor: model.mlpFactor,
+    gqaRatio: model.gqaRatio,
+    normEps: model.normEps,
   }
 }
 

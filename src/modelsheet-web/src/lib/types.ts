@@ -72,6 +72,15 @@ export interface LeafNode {
   label: string
   sub?: string
   color: TreeColor
+  residualFrom?: string
+}
+
+export interface AddNode {
+  id: string
+  type: "add"
+  from: string
+  label?: string
+  sub?: string
 }
 
 export interface GroupNode {
@@ -91,19 +100,27 @@ export interface RowNode {
   children: Array<LeafNode | GroupNode>
 }
 
-export type TreeNode = LeafNode | GroupNode | RowNode
+export type TreeNode = LeafNode | AddNode | GroupNode | RowNode
 
 export interface DiagramParams {
+  totalParameters?: number
+  activeParameters?: number
   numLayers?: number
   numHeads?: number
   numKvHeads?: number
   hiddenSize?: number
+  embeddingDim?: number
   contextLength?: number
   vocabSize?: number
   intermediateSize?: number
   numExperts?: number
   numSharedExperts?: number
   numExpertsPerToken?: number
+  numActivatedExperts?: number
+  moeIntermediateSize?: number
+  mlpFactor?: number
+  gqaRatio?: number
+  normEps?: number
   [key: string]: string | number | boolean | null | undefined
 }
 

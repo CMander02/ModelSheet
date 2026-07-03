@@ -4,7 +4,7 @@
  * Supports light/dark theme via class on <html>.
  */
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useLayoutEffect, useCallback, useRef } from "react"
 
 // ─── Theme detection ──────────────────────────────────────────────────────────
 
@@ -30,6 +30,46 @@ export type TreeColor =
   | "indigo" | "teal" | "amber" | "pink" | "violet"
 
 interface ColorToken { border: string; bg: string; text: string }
+
+const TOP_NODE_MAX_WIDTH = 170
+const TOP_GROUP_BODY_MAX_WIDTH = 320
+const INNER_NODE_MAX_WIDTH = 170
+const DEEP_NODE_MAX_WIDTH = 145
+const RESIDUAL_LANE_WIDTH = 48
+const GROUP_PADDING_X = 14
+const GROUP_MAX_WIDTH = TOP_GROUP_BODY_MAX_WIDTH + RESIDUAL_LANE_WIDTH + GROUP_PADDING_X * 2
+const DIAGRAM_MAX_WIDTH = GROUP_MAX_WIDTH
+const CONNECTOR_HEIGHT = 32
+const ADD_NODE_SIZE = 24
+const ADD_NODE_PLUS_LENGTH = ADD_NODE_SIZE - 2
+const ADD_NODE_PLUS_STROKE = 3
+const ADD_NODE_HEIGHT = 28
+const RESIDUAL_BRANCH_GAP = 18
+
+function nodeMaxWidth(level: number) {
+  if (level <= 0) return TOP_NODE_MAX_WIDTH
+  if (level === 1) return INNER_NODE_MAX_WIDTH
+  return DEEP_NODE_MAX_WIDTH
+}
+
+function groupBodyMaxWidth(level: number) {
+  if (level <= 0) return TOP_GROUP_BODY_MAX_WIDTH
+  return nodeMaxWidth(level)
+}
+
+function groupMaxWidth(level: number) {
+  return groupBodyMaxWidth(level) + RESIDUAL_LANE_WIDTH + GROUP_PADDING_X * 2
+}
+
+function nodeVisualWidth(node: TreeNode, level: number, colWidth: number) {
+  const maxWidth = node.type === "group"
+    ? groupMaxWidth(level)
+    : node.type === "add" || isLegacyResidualAdd(node)
+      ? ADD_NODE_SIZE
+      : nodeMaxWidth(level)
+
+  return Math.min(maxWidth, Math.max(colWidth - 16, ADD_NODE_SIZE))
+}
 
 const DARK: Record<TreeColor, ColorToken> = {
   attn:   { border: "#60a5fa", bg: "#071224", text: "#bfdbfe" },
@@ -86,6 +126,15 @@ export interface LeafNode {
   label: string
   sub?: string
   color: TreeColor
+  residualFrom?: string
+}
+
+export interface AddNode {
+  id: string
+  type: "add"
+  from: string
+  label?: string
+  sub?: string
 }
 
 export interface GroupNode {
@@ -105,7 +154,25 @@ export interface RowNode {
   children: Array<LeafNode | GroupNode>
 }
 
-export type TreeNode = LeafNode | GroupNode | RowNode
+export type TreeNode = LeafNode | AddNode | GroupNode | RowNode
+
+function hasResidualLabel(node: LeafNode) {
+  return node.color === "resid" && /^\+\s*residual/i.test(node.label)
+}
+
+function isLegacyResidualAdd(node: TreeNode): node is LeafNode {
+  return node.type === "leaf" && hasResidualLabel(node)
+}
+
+function residualLabel(label: string) {
+  return label.replace(/^\+\s*/, "+ ")
+}
+
+function residualSourceId(node: TreeNode, index: number, nodes: TreeNode[]) {
+  if (node.type === "add") return node.from
+  if (isLegacyResidualAdd(node)) return node.residualFrom || nodes[index - 1]?.id || null
+  return null
+}
 
 // ─── State helpers ────────────────────────────────────────────────────────────
 
@@ -153,22 +220,28 @@ function collectDefaults(nodes: TreeNode[]): Record<string, boolean> {
 
 function Conn({ color }: { color: string }) {
   return (
-    <div style={{ display: "flex", justifyContent: "center", height: 10 }}>
+    <div style={{ display: "flex", justifyContent: "center", height: CONNECTOR_HEIGHT }}>
       <div style={{ width: 2, background: color, opacity: 0.35, borderRadius: 1 }} />
     </div>
   )
 }
 
+interface ResidualPath {
+  id: string
+  d: string
+}
+
 // ─── Leaf node ────────────────────────────────────────────────────────────────
 
-function Leaf({ node, compact, palette }: { node: LeafNode; compact?: boolean; palette: typeof DARK }) {
+function Leaf({ node, compact, level, palette }: { node: LeafNode; compact?: boolean; level: number; palette: typeof DARK }) {
   const [hov, setHov] = useState(false)
   const [showTip, setShowTip] = useState(false)
   const col = palette[node.color] ?? palette.steel
+  const label = hasResidualLabel(node) ? residualLabel(node.label) : node.label
 
   return (
     <div
-      style={{ position: "relative", flex: compact ? 1 : undefined, minWidth: compact ? 60 : undefined }}
+      style={{ position: "relative", flex: compact ? 1 : undefined, minWidth: compact ? 60 : undefined, zIndex: 1 }}
       onMouseEnter={() => { setHov(true); setShowTip(true) }}
       onMouseLeave={() => { setHov(false); setShowTip(false) }}
     >
@@ -183,27 +256,28 @@ function Leaf({ node, compact, palette }: { node: LeafNode; compact?: boolean; p
         boxShadow: hov ? `0 0 10px ${col.border}33` : "none",
         cursor: "default",
         width: "100%",
-        maxWidth: compact ? undefined : 400,
+        maxWidth: compact ? undefined : nodeMaxWidth(level),
         margin: compact ? undefined : "0 auto",
         boxSizing: "border-box",
       }}>
         <div style={{ fontWeight: 700, fontSize: compact ? 11 : 13, letterSpacing: "0.02em" }}>
-          {node.label}
+          {label}
         </div>
       </div>
       {showTip && node.sub && (
         <div style={{
           position: "absolute",
-          bottom: "calc(100% + 6px)",
-          left: "50%",
-          transform: "translateX(-50%)",
+          left: "calc(100% + 10px)",
+          top: "50%",
+          transform: "translateY(-50%)",
           background: "#0b1422",
           border: `1px solid ${col.border}66`,
           borderRadius: 5,
           padding: "4px 10px",
           fontSize: 10,
           color: "#94a3b8",
-          whiteSpace: "nowrap",
+          whiteSpace: "normal",
+          maxWidth: 220,
           zIndex: 9999,
           pointerEvents: "none",
           boxShadow: "0 6px 24px rgba(0,0,0,0.75)",
@@ -212,9 +286,9 @@ function Leaf({ node, compact, palette }: { node: LeafNode; compact?: boolean; p
         }}>
           {node.sub}
           <div style={{
-            position: "absolute", top: "100%", left: "50%", transform: "translateX(-50%)",
-            borderLeft: "4px solid transparent", borderRight: "4px solid transparent",
-            borderTop: `4px solid ${col.border}55`,
+            position: "absolute", top: "50%", right: "100%", transform: "translateY(-50%)",
+            borderTop: "4px solid transparent", borderBottom: "4px solid transparent",
+            borderRight: `4px solid ${col.border}55`,
           }} />
         </div>
       )}
@@ -222,15 +296,73 @@ function Leaf({ node, compact, palette }: { node: LeafNode; compact?: boolean; p
   )
 }
 
+function AddNodeRenderer({ node, palette }: { node: AddNode | LeafNode; palette: typeof DARK }) {
+  const col = palette.resid
+  const label = node.type === "add" ? node.label || "residual add" : residualLabel(node.label)
+  const title = node.sub ? `${label}: ${node.sub}` : label
+
+  return (
+    <div
+      aria-label={title}
+      title={title}
+      style={{
+        height: ADD_NODE_HEIGHT,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        position: "relative",
+        zIndex: 3,
+      }}
+    >
+      <div style={{
+        width: ADD_NODE_SIZE,
+        height: ADD_NODE_SIZE,
+        borderRadius: 999,
+        border: `1.5px solid ${col.border}`,
+        background: col.bg,
+        color: col.text,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        position: "relative",
+        boxShadow: `0 0 0 4px ${col.bg}`,
+        boxSizing: "border-box",
+      }}>
+        <span
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            width: ADD_NODE_PLUS_LENGTH,
+            height: ADD_NODE_PLUS_STROKE,
+            borderRadius: ADD_NODE_PLUS_STROKE / 2,
+            background: col.text,
+          }}
+        />
+        <span
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            width: ADD_NODE_PLUS_STROKE,
+            height: ADD_NODE_PLUS_LENGTH,
+            borderRadius: ADD_NODE_PLUS_STROKE / 2,
+            background: col.text,
+          }}
+        />
+      </div>
+    </div>
+  )
+}
+
 // ─── Group node ───────────────────────────────────────────────────────────────
 
 function GroupNodeRenderer({
-  node, expanded, onToggle, onCollapseDesc, palette,
+  node, expanded, onToggle, onCollapseDesc, level, palette,
 }: {
   node: GroupNode
   expanded: Record<string, boolean>
   onToggle: (id: string) => void
   onCollapseDesc: (id: string) => void
+  level: number
   palette: typeof DARK
 }) {
   const [hov, setHov] = useState(false)
@@ -246,6 +378,8 @@ function GroupNodeRenderer({
       borderRadius: 10,
       background: isExp ? col.bg : col.bg + "22",
       width: "100%",
+      maxWidth: groupMaxWidth(level),
+      margin: "0 auto",
       boxSizing: "border-box",
       transition: "border-color 0.2s, background 0.2s",
     }}>
@@ -270,18 +404,18 @@ function GroupNodeRenderer({
 
         {showTip && node.sub && (
           <div style={{
-            position: "absolute", bottom: "calc(100% + 6px)", left: "50%",
-            transform: "translateX(-50%)",
+            position: "absolute", left: "calc(100% + 10px)", top: "50%",
+            transform: "translateY(-50%)",
             background: "#0b1422", border: `1px solid ${col.border}55`, borderRadius: 5,
             padding: "4px 10px", fontSize: 10, color: "#94a3b8",
-            whiteSpace: "nowrap", zIndex: 9999, pointerEvents: "none",
+            whiteSpace: "normal", maxWidth: 220, zIndex: 9999, pointerEvents: "none",
             boxShadow: "0 6px 24px rgba(0,0,0,0.75)",
           }}>
             {node.sub}
             <div style={{
-              position: "absolute", top: "100%", left: "50%", transform: "translateX(-50%)",
-              borderLeft: "4px solid transparent", borderRight: "4px solid transparent",
-              borderTop: `4px solid ${col.border}55`,
+              position: "absolute", top: "50%", right: "100%", transform: "translateY(-50%)",
+              borderTop: "4px solid transparent", borderBottom: "4px solid transparent",
+              borderRight: `4px solid ${col.border}55`,
             }} />
           </div>
         )}
@@ -306,13 +440,14 @@ function GroupNodeRenderer({
       </div>
 
       {isExp && (
-        <div style={{ padding: "6px 8px 8px", borderTop: `1px solid ${col.border}20` }}>
+        <div style={{ padding: `${CONNECTOR_HEIGHT}px ${GROUP_PADDING_X}px 12px`, borderTop: `1px solid ${col.border}20` }}>
           <Col
             nodes={node.children}
             expanded={expanded}
             onToggle={onToggle}
             onCollapseDesc={onCollapseDesc}
             lineColor={col.border}
+            level={level + 1}
             palette={palette}
           />
         </div>
@@ -324,52 +459,160 @@ function GroupNodeRenderer({
 // ─── Dispatcher ───────────────────────────────────────────────────────────────
 
 function NodeRenderer({
-  node, expanded, onToggle, onCollapseDesc, compact, palette,
+  node, expanded, onToggle, onCollapseDesc, compact, level, palette,
 }: {
   node: TreeNode
   expanded: Record<string, boolean>
   onToggle: (id: string) => void
   onCollapseDesc: (id: string) => void
   compact?: boolean
+  level: number
   palette: typeof DARK
 }) {
   if (node.type === "row") {
     return (
       <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
         {node.children.map(n => (
-          <NodeRenderer key={n.id} node={n} expanded={expanded} onToggle={onToggle} onCollapseDesc={onCollapseDesc} compact palette={palette} />
+          <NodeRenderer key={n.id} node={n} expanded={expanded} onToggle={onToggle} onCollapseDesc={onCollapseDesc} compact level={level} palette={palette} />
         ))}
       </div>
     )
   }
-  if (node.type === "leaf") return <Leaf node={node} compact={compact} palette={palette} />
+  if (node.type === "add") return <AddNodeRenderer node={node} palette={palette} />
+  if (node.type === "leaf") {
+    if (hasResidualLabel(node)) return <AddNodeRenderer node={node} palette={palette} />
+    return <Leaf node={node} compact={compact} level={level} palette={palette} />
+  }
   return (
     <GroupNodeRenderer
       node={node}
       expanded={expanded}
       onToggle={onToggle}
       onCollapseDesc={onCollapseDesc}
+      level={level}
       palette={palette}
     />
   )
 }
 
 function Col({
-  nodes, expanded, onToggle, onCollapseDesc, lineColor = "#334155", palette,
+  nodes, expanded, onToggle, onCollapseDesc, lineColor = "#334155", level = 0, palette,
 }: {
   nodes: TreeNode[]
   expanded: Record<string, boolean>
   onToggle: (id: string) => void
   onCollapseDesc: (id: string) => void
   lineColor?: string
+  level?: number
   palette: typeof DARK
 }) {
+  const colRef = useRef<HTMLDivElement | null>(null)
+  const nodeRefs = useRef<Record<string, HTMLDivElement | null>>({})
+  const [residualPaths, setResidualPaths] = useState<ResidualPath[]>([])
+
+  const measureResidualPaths = useCallback(() => {
+    const colEl = colRef.current
+    if (!colEl) return
+
+    const colRect = colEl.getBoundingClientRect()
+    const centerX = colRect.width / 2
+
+    const nextPaths: ResidualPath[] = []
+    nodes.forEach((node, index) => {
+      const sourceId = residualSourceId(node, index, nodes)
+      if (!sourceId) return
+
+      const sourceEl = nodeRefs.current[sourceId]
+      const targetEl = nodeRefs.current[node.id]
+      if (!sourceEl || !targetEl) return
+
+      const sourceRect = sourceEl.getBoundingClientRect()
+      const targetRect = targetEl.getBoundingClientRect()
+      const sourceIndex = nodes.findIndex(candidate => candidate.id === sourceId)
+      if (sourceIndex < 0 || sourceIndex >= index) return
+
+      const targetConnectorOffset = index > 0 ? CONNECTOR_HEIGHT : 0
+      const blockerRightX = nodes
+        .slice(sourceIndex, index)
+        .reduce((rightX, candidate) => {
+          const visualWidth = nodeVisualWidth(candidate, level, colRect.width)
+          return Math.max(rightX, centerX + visualWidth / 2)
+        }, centerX + ADD_NODE_SIZE / 2)
+      const branchX = Math.max(
+        centerX + ADD_NODE_SIZE,
+        Math.min(colRect.width - 8, blockerRightX + RESIDUAL_BRANCH_GAP),
+      )
+      const sourceY = sourceRect.top - colRect.top
+        + (sourceIndex > 0 ? CONNECTOR_HEIGHT / 2 : -CONNECTOR_HEIGHT / 2)
+      const targetY = targetRect.top - colRect.top
+        + targetConnectorOffset
+        + ADD_NODE_SIZE / 2
+
+      nextPaths.push({
+        id: node.id,
+        d: `M ${centerX.toFixed(1)} ${sourceY.toFixed(1)} H ${branchX.toFixed(1)} V ${targetY.toFixed(1)} H ${centerX.toFixed(1)}`,
+      })
+    })
+
+    setResidualPaths(prev => {
+      const prevJson = JSON.stringify(prev)
+      const nextJson = JSON.stringify(nextPaths)
+      return prevJson === nextJson ? prev : nextPaths
+    })
+  }, [level, nodes])
+
+  useLayoutEffect(() => {
+    measureResidualPaths()
+    const colEl = colRef.current
+    if (!colEl || typeof ResizeObserver === "undefined") return
+
+    const resizeObserver = new ResizeObserver(measureResidualPaths)
+    resizeObserver.observe(colEl)
+    nodes.forEach(node => {
+      const nodeEl = nodeRefs.current[node.id]
+      if (nodeEl) resizeObserver.observe(nodeEl)
+    })
+    return () => resizeObserver.disconnect()
+  }, [expanded, measureResidualPaths, nodes])
+
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <div ref={colRef} style={{ display: "flex", flexDirection: "column", position: "relative", overflow: "visible", isolation: "isolate" }}>
+      {residualPaths.length > 0 && (
+        <svg
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            overflow: "visible",
+            pointerEvents: "none",
+            zIndex: 0,
+          }}
+        >
+          {residualPaths.map(path => (
+            <g key={path.id}>
+              <path
+                d={path.d}
+                fill="none"
+                stroke={palette.resid.border}
+                strokeWidth={1.7}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                opacity={0.72}
+              />
+            </g>
+          ))}
+        </svg>
+      )}
       {nodes.map((n, i) => (
-        <div key={n.id}>
+        <div
+          key={n.id}
+          ref={el => { nodeRefs.current[n.id] = el }}
+          style={{ position: "relative", overflow: "visible", zIndex: 1 }}
+        >
           {i > 0 && <Conn color={lineColor} />}
-          <NodeRenderer node={n} expanded={expanded} onToggle={onToggle} onCollapseDesc={onCollapseDesc} palette={palette} />
+          <NodeRenderer node={n} expanded={expanded} onToggle={onToggle} onCollapseDesc={onCollapseDesc} level={level} palette={palette} />
         </div>
       ))}
     </div>
@@ -408,11 +651,12 @@ export function ArchTreeDiagram({ nodes, title, subtitle, configEntries }: ArchT
   const chromeBg    = dark ? "#060c18" : "#f8fafc"
   const subtitleClr = dark ? "#475569"  : "#94a3b8"
   const connClr     = dark ? "#1e3a4a"  : "#cbd5e1"
-  const cfgBg       = dark ? "#070e1c"  : "#f1f5f9"
-  const cfgBorder   = dark ? "#1a2535"  : "#e2e8f0"
-  const cfgKey      = dark ? "#475569"  : "#94a3b8"
-  const cfgVal      = dark ? "#94a3b8"  : "#475569"
-  const cfgTitle    = dark ? "#38bdf8"  : "#0ea5e9"
+  const cfgBg       = dark ? "#07111f"  : "#f8fafc"
+  const cfgBorder   = dark ? "#1e2d42"  : "#dbe4ef"
+  const cfgKey      = dark ? "#64748b"  : "#7890ae"
+  const cfgVal      = dark ? "#dbeafe"  : "#334155"
+  const cfgTitle    = dark ? "#7dd3fc"  : "#0284c7"
+  const cfgGridBg   = dark ? "#0b1628"  : "#ffffff"
   const btnExpBg    = dark ? "#071828"  : "#eff6ff"
   const btnExpBd    = dark ? "#38bdf8"  : "#0ea5e9"
   const btnExpClr   = dark ? "#7dd3fc"  : "#0369a1"
@@ -452,24 +696,61 @@ export function ArchTreeDiagram({ nodes, title, subtitle, configEntries }: ArchT
         </div>
       </div>
 
-      <div style={{ maxWidth: 460, margin: "0 auto" }}>
+      <div style={{ maxWidth: DIAGRAM_MAX_WIDTH, margin: "0 auto" }}>
         <Col nodes={nodes} expanded={expanded} onToggle={toggle} onCollapseDesc={collapseDesc} lineColor={connClr} palette={palette} />
       </div>
 
       {configEntries && configEntries.length > 0 && (
         <div style={{
-          maxWidth: 460, margin: "18px auto 0",
-          border: `1px solid ${cfgBorder}`, borderRadius: 8,
-          background: cfgBg, padding: "8px 12px",
-          fontSize: 9.5, lineHeight: 2,
+          maxWidth: 400, margin: "20px auto 0",
+          border: `1px solid ${cfgBorder}`, borderRadius: 10,
+          background: cfgBg,
+          padding: "12px",
+          fontSize: 10,
+          lineHeight: 1.4,
+          boxShadow: dark ? "0 18px 48px rgba(0,0,0,0.25)" : "0 12px 32px rgba(15,23,42,0.06)",
         }}>
-          <div style={{ color: cfgTitle, marginBottom: 3, fontWeight: 700, fontSize: 10 }}>config.json</div>
-          {configEntries.map(([k, v]) => (
-            <span key={k} style={{ marginRight: 12, display: "inline-block" }}>
-              <span style={{ color: cfgKey }}>{k}: </span>
-              <span style={{ color: cfgVal }}>{v}</span>
-            </span>
-          ))}
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 8,
+            marginBottom: 10,
+          }}>
+            <div style={{ color: cfgTitle, fontWeight: 800, fontSize: 12, letterSpacing: 0 }}>
+              config.json
+            </div>
+            <div style={{
+              color: cfgKey,
+              border: `1px solid ${cfgBorder}`,
+              borderRadius: 999,
+              padding: "2px 7px",
+              fontSize: 9,
+            }}>
+              selected model
+            </div>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 8 }}>
+            {configEntries.map(([k, v]) => (
+              <div
+                key={k}
+                style={{
+                  minWidth: 0,
+                  border: `1px solid ${cfgBorder}`,
+                  borderRadius: 8,
+                  background: cfgGridBg,
+                  padding: "7px 8px",
+                }}
+              >
+                <div style={{ color: cfgKey, fontSize: 9, marginBottom: 3, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  {k}
+                </div>
+                <div style={{ color: cfgVal, fontSize: 11, fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  {v}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

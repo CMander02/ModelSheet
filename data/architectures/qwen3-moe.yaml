@@ -1,0 +1,147 @@
+id: qwen3-moe
+family: Qwen3 MoE
+era: "2025"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Qwen3 MoE 在 Qwen3 的 Pre-RMSNorm、GQA、RoPE 和 QK-RMSNorm 主干上使用路由专家 FFN。"
+  en: "Qwen3 MoE uses routed expert FFNs on the Qwen3 Pre-RMSNorm, GQA, RoPE, and QK-RMSNorm backbone."
+paperUrl: https://arxiv.org/abs/2505.09388
+hfOrg: Qwen/Qwen3-235B-A22B
+aliases: [qwen3_moe, qwen3_5_moe, qwen3_vl_moe, qwen3_omni_moe, qwen3_coder]
+defaultParams:
+  numLayers: 94
+  numHeads: 64
+  numKvHeads: 4
+  hiddenSize: 4096
+  hiddenSizeLabel: 4.1K
+  intermediateSize: 12288
+  intermediateSizeLabel: 12.3K
+  contextLength: 40960
+  contextLengthLabel: 41K
+  vocabSize: 151936
+  vocabSizeLabel: 151.9K
+  numExperts: 128
+  numExpertsPerToken: 8
+  numActivatedExperts: 8
+  moeIntermediateSize: 1536
+  moeIntermediateSizeLabel: 1.5K
+  totalParameters: 235093634560
+  totalParametersLabel: 235.1B
+  activeParameters: 21124087808
+  activeParametersLabel: 21.1B
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-qwen3-235b-a22b
+    type: reference
+  - label: Qwen3 paper
+    url: https://arxiv.org/abs/2505.09388
+    type: paper
+features:
+  attention: GQA with QK-RMSNorm
+  positionEncoding: RoPE
+  norm: Pre-RMSNorm
+  moe: routed sparse FFN
+  routing: top-k experts per token
+variants:
+  - id: qwen3-30b-a3b
+    name: Qwen3 30B-A3B
+    aliases: [qwen3_moe]
+    descriptionZh: "48 层、128 个专家、每 token 激活 8 个专家，约 30B total / 3B active。"
+    descriptionEn: "48 layers, 128 experts, 8 active experts per token, roughly 30B total / 3B active."
+  - id: qwen3-235b-a22b
+    name: Qwen3 235B-A22B
+    aliases: [qwen3_moe]
+    descriptionZh: "94 层、128 个专家、每 token 激活 8 个专家，约 235B total / 22B active。"
+    descriptionEn: "94 layers, 128 experts, 8 active experts per token, roughly 235B total / 22B active."
+  - id: qwen3-5-moe
+    name: Qwen3.5 MoE
+    aliases: [qwen3_5_moe]
+    descriptionZh: "Qwen3.5 MoE 使用更大的词表和 256/512 专家配置。"
+    descriptionEn: "Qwen3.5 MoE uses a larger vocabulary and 256/512 expert configurations."
+  - id: qwen3-vl-moe
+    name: Qwen3-VL / Omni MoE
+    aliases: [qwen3_vl_moe, qwen3_omni_moe]
+    descriptionZh: "多模态 MoE 变体保留 Qwen3 MoE 文本解码器主干。"
+    descriptionEn: "Multimodal MoE variants keep the Qwen3 MoE text decoder backbone."
+diagram:
+  subtitle: "Pre-RMSNorm · RoPE · MoE top-{{numExpertsPerToken}}/{{numExperts}} · active {{activeParametersLabel}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      sub: "context {{contextLengthLabel}}"
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      sub: "vocab {{vocabSizeLabel}} · dim {{hiddenSizeLabel}}"
+      color: emb
+    - id: block
+      type: group
+      label: Qwen3 MoE Block
+      badge: "x{{numLayers}}"
+      sub: "Pre-RMSNorm before attention and routed FFN"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm1
+          type: leaf
+          label: Pre-RMSNorm 1
+          sub: before attention
+          color: norm
+        - id: qk
+          type: leaf
+          label: QK-RMSNorm
+          sub: per-head Q/K normalization
+          color: norm
+        - id: rope
+          type: leaf
+          label: RoPE
+          sub: rotary position embedding
+          color: orange
+        - id: attn
+          type: leaf
+          label: GQA Attention
+          sub: "Q heads {{numHeads}} · KV heads {{numKvHeads}}"
+          color: attn
+        - id: r1
+          type: add
+          from: norm1
+          label: residual add
+        - id: norm2
+          type: leaf
+          label: Pre-RMSNorm 2
+          sub: before MoE FFN
+          color: norm
+        - id: moe
+          type: group
+          label: MoE SwiGLU FFN
+          badge: "top-{{numExpertsPerToken}}"
+          sub: "expert FFN {{moeIntermediateSizeLabel}}"
+          color: moe
+          defaultExpanded: true
+          children:
+            - id: router
+              type: leaf
+              label: Router
+              sub: "activates {{numActivatedExperts}} experts"
+              color: teal
+            - id: experts
+              type: leaf
+              label: "Experts x{{numExperts}}"
+              sub: "expert FFN {{moeIntermediateSizeLabel}}"
+              color: ffn
+        - id: r2
+          type: add
+          from: norm2
+          label: residual add
+    - id: final_norm
+      type: leaf
+      label: Final RMSNorm
+      color: norm
+    - id: head
+      type: leaf
+      label: LM Head
+      sub: "vocab {{vocabSizeLabel}}"
+      color: out

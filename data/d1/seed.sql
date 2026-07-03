@@ -4458,6 +4458,154 @@ diagram:
       sub: tied to token emb
       color: out
 ');
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('qwen3-moe', 'Qwen3 MoE', '2025', 'decoder', 'pre', 'Qwen3 MoE 在 Qwen3 的 Pre-RMSNorm、GQA、RoPE 和 QK-RMSNorm 主干上使用路由专家 FFN。', 'Qwen3 MoE uses routed expert FFNs on the Qwen3 Pre-RMSNorm, GQA, RoPE, and QK-RMSNorm backbone.', 'https://arxiv.org/abs/2505.09388', 'Qwen/Qwen3-235B-A22B', '{"numLayers":94,"numHeads":64,"numKvHeads":4,"hiddenSize":4096,"hiddenSizeLabel":"4.1K","intermediateSize":12288,"intermediateSizeLabel":"12.3K","contextLength":40960,"contextLengthLabel":"41K","vocabSize":151936,"vocabSizeLabel":"151.9K","numExperts":128,"numExpertsPerToken":8,"numActivatedExperts":8,"moeIntermediateSize":1536,"moeIntermediateSizeLabel":"1.5K","totalParameters":235093634560,"totalParametersLabel":"235.1B","activeParameters":21124087808,"activeParametersLabel":"21.1B"}', '[{"label":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-qwen3-235b-a22b","type":"reference"},{"label":"Qwen3 paper","url":"https://arxiv.org/abs/2505.09388","type":"paper"}]', '[{"id":"qwen3-30b-a3b","name":"Qwen3 30B-A3B","aliases":["qwen3_moe"],"descriptionZh":"48 层、128 个专家、每 token 激活 8 个专家，约 30B total / 3B active。","descriptionEn":"48 layers, 128 experts, 8 active experts per token, roughly 30B total / 3B active."},{"id":"qwen3-235b-a22b","name":"Qwen3 235B-A22B","aliases":["qwen3_moe"],"descriptionZh":"94 层、128 个专家、每 token 激活 8 个专家，约 235B total / 22B active。","descriptionEn":"94 layers, 128 experts, 8 active experts per token, roughly 235B total / 22B active."},{"id":"qwen3-5-moe","name":"Qwen3.5 MoE","aliases":["qwen3_5_moe"],"descriptionZh":"Qwen3.5 MoE 使用更大的词表和 256/512 专家配置。","descriptionEn":"Qwen3.5 MoE uses a larger vocabulary and 256/512 expert configurations."},{"id":"qwen3-vl-moe","name":"Qwen3-VL / Omni MoE","aliases":["qwen3_vl_moe","qwen3_omni_moe"],"descriptionZh":"多模态 MoE 变体保留 Qwen3 MoE 文本解码器主干。","descriptionEn":"Multimodal MoE variants keep the Qwen3 MoE text decoder backbone."}]', '[]', '{"attention":"GQA with QK-RMSNorm","positionEncoding":"RoPE","norm":"Pre-RMSNorm","moe":"routed sparse FFN","routing":"top-k experts per token"}', 'Pre-RMSNorm · RoPE · MoE top-{{numExpertsPerToken}}/{{numExperts}} · active {{activeParametersLabel}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input","sub":"context {{contextLengthLabel}}"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb","sub":"vocab {{vocabSizeLabel}} · dim {{hiddenSizeLabel}}"},{"id":"block","type":"group","label":"Qwen3 MoE Block","color":"steel","sub":"Pre-RMSNorm before attention and routed FFN","badge":"x{{numLayers}}","defaultExpanded":true,"children":[{"id":"norm1","type":"leaf","label":"Pre-RMSNorm 1","color":"norm","sub":"before attention"},{"id":"qk","type":"leaf","label":"QK-RMSNorm","color":"norm","sub":"per-head Q/K normalization"},{"id":"rope","type":"leaf","label":"RoPE","color":"orange","sub":"rotary position embedding"},{"id":"attn","type":"leaf","label":"GQA Attention","color":"attn","sub":"Q heads {{numHeads}} · KV heads {{numKvHeads}}"},{"id":"r1","type":"add","from":"norm1","label":"residual add"},{"id":"norm2","type":"leaf","label":"Pre-RMSNorm 2","color":"norm","sub":"before MoE FFN"},{"id":"moe","type":"group","label":"MoE SwiGLU FFN","color":"moe","sub":"expert FFN {{moeIntermediateSizeLabel}}","badge":"top-{{numExpertsPerToken}}","defaultExpanded":true,"children":[{"id":"router","type":"leaf","label":"Router","color":"teal","sub":"activates {{numActivatedExperts}} experts"},{"id":"experts","type":"leaf","label":"Experts x{{numExperts}}","color":"ffn","sub":"expert FFN {{moeIntermediateSizeLabel}}"}]},{"id":"r2","type":"add","from":"norm2","label":"residual add"}]},{"id":"final_norm","type":"leaf","label":"Final RMSNorm","color":"norm"},{"id":"head","type":"leaf","label":"LM Head","color":"out","sub":"vocab {{vocabSizeLabel}}"}]', 'id: qwen3-moe
+family: Qwen3 MoE
+era: "2025"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Qwen3 MoE 在 Qwen3 的 Pre-RMSNorm、GQA、RoPE 和 QK-RMSNorm 主干上使用路由专家 FFN。"
+  en: "Qwen3 MoE uses routed expert FFNs on the Qwen3 Pre-RMSNorm, GQA, RoPE, and QK-RMSNorm backbone."
+paperUrl: https://arxiv.org/abs/2505.09388
+hfOrg: Qwen/Qwen3-235B-A22B
+aliases: [qwen3_moe, qwen3_5_moe, qwen3_vl_moe, qwen3_omni_moe, qwen3_coder]
+defaultParams:
+  numLayers: 94
+  numHeads: 64
+  numKvHeads: 4
+  hiddenSize: 4096
+  hiddenSizeLabel: 4.1K
+  intermediateSize: 12288
+  intermediateSizeLabel: 12.3K
+  contextLength: 40960
+  contextLengthLabel: 41K
+  vocabSize: 151936
+  vocabSizeLabel: 151.9K
+  numExperts: 128
+  numExpertsPerToken: 8
+  numActivatedExperts: 8
+  moeIntermediateSize: 1536
+  moeIntermediateSizeLabel: 1.5K
+  totalParameters: 235093634560
+  totalParametersLabel: 235.1B
+  activeParameters: 21124087808
+  activeParametersLabel: 21.1B
+sourceLinks:
+  - label: Raschka gallery
+    url: https://sebastianraschka.com/llm-architecture-gallery/#card-qwen3-235b-a22b
+    type: reference
+  - label: Qwen3 paper
+    url: https://arxiv.org/abs/2505.09388
+    type: paper
+features:
+  attention: GQA with QK-RMSNorm
+  positionEncoding: RoPE
+  norm: Pre-RMSNorm
+  moe: routed sparse FFN
+  routing: top-k experts per token
+variants:
+  - id: qwen3-30b-a3b
+    name: Qwen3 30B-A3B
+    aliases: [qwen3_moe]
+    descriptionZh: "48 层、128 个专家、每 token 激活 8 个专家，约 30B total / 3B active。"
+    descriptionEn: "48 layers, 128 experts, 8 active experts per token, roughly 30B total / 3B active."
+  - id: qwen3-235b-a22b
+    name: Qwen3 235B-A22B
+    aliases: [qwen3_moe]
+    descriptionZh: "94 层、128 个专家、每 token 激活 8 个专家，约 235B total / 22B active。"
+    descriptionEn: "94 layers, 128 experts, 8 active experts per token, roughly 235B total / 22B active."
+  - id: qwen3-5-moe
+    name: Qwen3.5 MoE
+    aliases: [qwen3_5_moe]
+    descriptionZh: "Qwen3.5 MoE 使用更大的词表和 256/512 专家配置。"
+    descriptionEn: "Qwen3.5 MoE uses a larger vocabulary and 256/512 expert configurations."
+  - id: qwen3-vl-moe
+    name: Qwen3-VL / Omni MoE
+    aliases: [qwen3_vl_moe, qwen3_omni_moe]
+    descriptionZh: "多模态 MoE 变体保留 Qwen3 MoE 文本解码器主干。"
+    descriptionEn: "Multimodal MoE variants keep the Qwen3 MoE text decoder backbone."
+diagram:
+  subtitle: "Pre-RMSNorm · RoPE · MoE top-{{numExpertsPerToken}}/{{numExperts}} · active {{activeParametersLabel}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      sub: "context {{contextLengthLabel}}"
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      sub: "vocab {{vocabSizeLabel}} · dim {{hiddenSizeLabel}}"
+      color: emb
+    - id: block
+      type: group
+      label: Qwen3 MoE Block
+      badge: "x{{numLayers}}"
+      sub: "Pre-RMSNorm before attention and routed FFN"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm1
+          type: leaf
+          label: Pre-RMSNorm 1
+          sub: before attention
+          color: norm
+        - id: qk
+          type: leaf
+          label: QK-RMSNorm
+          sub: per-head Q/K normalization
+          color: norm
+        - id: rope
+          type: leaf
+          label: RoPE
+          sub: rotary position embedding
+          color: orange
+        - id: attn
+          type: leaf
+          label: GQA Attention
+          sub: "Q heads {{numHeads}} · KV heads {{numKvHeads}}"
+          color: attn
+        - id: r1
+          type: add
+          from: norm1
+          label: residual add
+        - id: norm2
+          type: leaf
+          label: Pre-RMSNorm 2
+          sub: before MoE FFN
+          color: norm
+        - id: moe
+          type: group
+          label: MoE SwiGLU FFN
+          badge: "top-{{numExpertsPerToken}}"
+          sub: "expert FFN {{moeIntermediateSizeLabel}}"
+          color: moe
+          defaultExpanded: true
+          children:
+            - id: router
+              type: leaf
+              label: Router
+              sub: "activates {{numActivatedExperts}} experts"
+              color: teal
+            - id: experts
+              type: leaf
+              label: "Experts x{{numExperts}}"
+              sub: "expert FFN {{moeIntermediateSizeLabel}}"
+              color: ffn
+        - id: r2
+          type: add
+          from: norm2
+          label: residual add
+    - id: final_norm
+      type: leaf
+      label: Final RMSNorm
+      color: norm
+    - id: head
+      type: leaf
+      label: LM Head
+      sub: "vocab {{vocabSizeLabel}}"
+      color: out
+');
 INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('qwen3-next', 'Qwen3 Next', '2025', 'decoder', 'pre', 'Qwen3 Next 是稀疏混合解码器，交替使用 Gated DeltaNet 与 Gated Attention，并结合 MoE FFN。', 'Qwen3 Next is a sparse hybrid decoder alternating Gated DeltaNet and Gated Attention with MoE FFNs.', NULL, 'Qwen/Qwen3-Next-80B-A3B-Instruct', '{"numLayers":48,"numExperts":512,"numExpertsPerToken":10}', '[{"label":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-qwen3-next-80b-a3b","type":"reference"}]', '[{"id":"qwen3-next-80b-a3b","name":"Qwen3 Next 80B-A3B","aliases":["qwen3_next"],"descriptionZh":"图库条目中的 80B total / 3B active 混合 MoE 代表。","descriptionEn":"The 80B total / 3B active hybrid MoE representative in the gallery."}]', '[]', '{"attention":"gated attention","tokenMixer":"Gated DeltaNet","moe":"sparse MoE","layerMix":"3:1 DeltaNet and attention"}', 'Gated DeltaNet + Attention · MoE', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"Hybrid Block","color":"steel","badge":"x{{numLayers}}","defaultExpanded":true,"children":[{"id":"norm1","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"mixer","type":"row","children":[{"id":"delta","type":"leaf","label":"Gated DeltaNet","color":"teal","sub":"recurrent/linear path"},{"id":"gattn","type":"leaf","label":"Gated Attention","color":"attn"}]},{"id":"r1","type":"leaf","label":"+ residual","color":"resid"},{"id":"moe","type":"group","label":"MoE FFN","color":"moe","children":[{"id":"router","type":"leaf","label":"Router top-{{numExpertsPerToken}}","color":"teal"},{"id":"experts","type":"leaf","label":"Experts x{{numExperts}}","color":"ffn"}]}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: qwen3-next
 family: Qwen3 Next
 era: "2025"
@@ -4543,22 +4691,29 @@ diagram:
       label: LM Head
       color: out
 ');
-INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('qwen3', 'Qwen3 / Qwen3.5 / Qwen3.6', '2025', 'decoder', 'pre', 'Qwen3 延续 Qwen2 解码器并加入 per-head QK-RMSNorm；密集和 MoE 变体共享 GQA、RoPE、SwiGLU 主干。', 'Qwen3 extends the Qwen2 decoder with per-head QK-RMSNorm; dense and MoE variants share the GQA, RoPE, and SwiGLU backbone.', 'https://arxiv.org/abs/2505.09388', 'Qwen/Qwen3-8B', '{"numLayers":36,"numHeads":32,"numKvHeads":8,"hiddenSize":4096}', '[{"label":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-qwen3-8b","type":"reference"}]', '[{"id":"qwen3-dense","name":"Qwen3 dense","aliases":["qwen3"],"descriptionZh":"密集模型用于 0.6B、4B、8B、32B 等尺寸。","descriptionEn":"Dense models cover sizes such as 0.6B, 4B, 8B, and 32B."},{"id":"qwen3-moe","name":"Qwen3 MoE","aliases":["qwen3_moe","qwen3_5_moe"],"descriptionZh":"MoE 变体保持注意力模块一致，FFN 替换为路由专家。","descriptionEn":"MoE variants keep the attention module and replace dense FFNs with routed experts."}]', '[]', '{"attention":"GQA with QK-RMSNorm","positionEncoding":"RoPE","norm":"RMSNorm","ffn":"SwiGLU or MoE experts"}', 'hidden: {{hiddenSize}} · QK-RMSNorm · Q:{{numHeads}} KV:{{numKvHeads}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb"},{"id":"block","type":"group","label":"Qwen3 Block","color":"steel","badge":"x{{numLayers}}","children":[{"id":"norm1","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"qk","type":"leaf","label":"QK-RMSNorm","color":"norm","sub":"per-head before RoPE"},{"id":"attn","type":"leaf","label":"GQA Q:{{numHeads}} KV:{{numKvHeads}}","color":"attn","sub":"RoPE"},{"id":"r1","type":"leaf","label":"+ residual","color":"resid"},{"id":"norm2","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"ffn","type":"leaf","label":"SwiGLU FFN / MoE","color":"ffn"},{"id":"r2","type":"leaf","label":"+ residual","color":"resid"}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: qwen3
-family: Qwen3 / Qwen3.5 / Qwen3.6
+INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('qwen3', 'Qwen3 Dense', '2025', 'decoder', 'pre', 'Qwen3 密集解码器使用 Pre-RMSNorm、GQA、RoPE、per-head QK-RMSNorm 和 SwiGLU FFN。', 'Qwen3 dense decoders use Pre-RMSNorm, GQA, RoPE, per-head QK-RMSNorm, and a SwiGLU FFN.', 'https://arxiv.org/abs/2505.09388', 'Qwen/Qwen3-8B', '{"numLayers":36,"numHeads":32,"numKvHeads":8,"hiddenSize":4096,"hiddenSizeLabel":"4.1K","intermediateSize":12288,"intermediateSizeLabel":"12.3K","contextLength":40960,"contextLengthLabel":"41K","vocabSize":151936,"vocabSizeLabel":"151.9K"}', '[{"label":"Raschka gallery","url":"https://sebastianraschka.com/llm-architecture-gallery/#card-qwen3-8b","type":"reference"}]', '[{"id":"qwen3-dense","name":"Qwen3 dense","aliases":["qwen3","qwen3_5","qwen3_vl"],"descriptionZh":"密集模型覆盖 0.6B、1.7B、4B、8B、14B、32B 和 Qwen3.5/Qwen3-VL 的 dense 尺寸。","descriptionEn":"Dense models cover 0.6B, 1.7B, 4B, 8B, 14B, 32B, and dense Qwen3.5/Qwen3-VL sizes."}]', '[]', '{"attention":"GQA with QK-RMSNorm","positionEncoding":"RoPE","norm":"Pre-RMSNorm","ffn":"SwiGLU dense FFN"}', 'Pre-RMSNorm · RoPE · hidden {{hiddenSizeLabel}} · vocab {{vocabSizeLabel}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input","sub":"context {{contextLengthLabel}}"},{"id":"emb","type":"leaf","label":"Token Embedding","color":"emb","sub":"vocab {{vocabSizeLabel}} · dim {{hiddenSizeLabel}}"},{"id":"block","type":"group","label":"Qwen3 Dense Block","color":"steel","sub":"Pre-RMSNorm before attention and FFN","badge":"x{{numLayers}}","defaultExpanded":true,"children":[{"id":"norm1","type":"leaf","label":"Pre-RMSNorm 1","color":"norm","sub":"before attention"},{"id":"qk","type":"leaf","label":"QK-RMSNorm","color":"norm","sub":"per-head Q/K normalization"},{"id":"rope","type":"leaf","label":"RoPE","color":"orange","sub":"rotary position embedding"},{"id":"attn","type":"leaf","label":"GQA Attention","color":"attn","sub":"Q heads {{numHeads}} · KV heads {{numKvHeads}}"},{"id":"r1","type":"add","from":"norm1","label":"residual add"},{"id":"norm2","type":"leaf","label":"Pre-RMSNorm 2","color":"norm","sub":"before FFN"},{"id":"ffn","type":"leaf","label":"SwiGLU FFN","color":"ffn","sub":"intermediate {{intermediateSizeLabel}}"},{"id":"r2","type":"add","from":"norm2","label":"residual add"}]},{"id":"final_norm","type":"leaf","label":"Final RMSNorm","color":"norm"},{"id":"head","type":"leaf","label":"LM Head","color":"out","sub":"vocab {{vocabSizeLabel}}"}]', 'id: qwen3
+family: Qwen3 Dense
 era: "2025"
 type: decoder
 normPlacement: pre
 description:
-  zh: "Qwen3 延续 Qwen2 解码器并加入 per-head QK-RMSNorm；密集和 MoE 变体共享 GQA、RoPE、SwiGLU 主干。"
-  en: "Qwen3 extends the Qwen2 decoder with per-head QK-RMSNorm; dense and MoE variants share the GQA, RoPE, and SwiGLU backbone."
+  zh: "Qwen3 密集解码器使用 Pre-RMSNorm、GQA、RoPE、per-head QK-RMSNorm 和 SwiGLU FFN。"
+  en: "Qwen3 dense decoders use Pre-RMSNorm, GQA, RoPE, per-head QK-RMSNorm, and a SwiGLU FFN."
 paperUrl: https://arxiv.org/abs/2505.09388
 hfOrg: Qwen/Qwen3-8B
-aliases: [qwen3, qwen3_moe, qwen3_5, qwen3_5_moe, qwen3_6, qwen3_vl, qwen3_vl_moe, qwen3_omni_moe, qwen3_coder]
+aliases: [qwen3, qwen3_5, qwen3_6, qwen3_vl, qwen3_scale_seq, qwen3ts, penguinvl_qwen3]
 defaultParams:
   numLayers: 36
   numHeads: 32
   numKvHeads: 8
   hiddenSize: 4096
+  hiddenSizeLabel: 4.1K
+  intermediateSize: 12288
+  intermediateSizeLabel: 12.3K
+  contextLength: 40960
+  contextLengthLabel: 41K
+  vocabSize: 151936
+  vocabSizeLabel: 151.9K
 sourceLinks:
   - label: Raschka gallery
     url: https://sebastianraschka.com/llm-architecture-gallery/#card-qwen3-8b
@@ -4566,69 +4721,81 @@ sourceLinks:
 features:
   attention: GQA with QK-RMSNorm
   positionEncoding: RoPE
-  norm: RMSNorm
-  ffn: SwiGLU or MoE experts
+  norm: Pre-RMSNorm
+  ffn: SwiGLU dense FFN
 variants:
   - id: qwen3-dense
     name: Qwen3 dense
-    aliases: [qwen3]
-    descriptionZh: "密集模型用于 0.6B、4B、8B、32B 等尺寸。"
-    descriptionEn: "Dense models cover sizes such as 0.6B, 4B, 8B, and 32B."
-  - id: qwen3-moe
-    name: Qwen3 MoE
-    aliases: [qwen3_moe, qwen3_5_moe]
-    descriptionZh: "MoE 变体保持注意力模块一致，FFN 替换为路由专家。"
-    descriptionEn: "MoE variants keep the attention module and replace dense FFNs with routed experts."
+    aliases: [qwen3, qwen3_5, qwen3_vl]
+    descriptionZh: "密集模型覆盖 0.6B、1.7B、4B、8B、14B、32B 和 Qwen3.5/Qwen3-VL 的 dense 尺寸。"
+    descriptionEn: "Dense models cover 0.6B, 1.7B, 4B, 8B, 14B, 32B, and dense Qwen3.5/Qwen3-VL sizes."
 diagram:
-  subtitle: "hidden: {{hiddenSize}} · QK-RMSNorm · Q:{{numHeads}} KV:{{numKvHeads}}"
+  subtitle: "Pre-RMSNorm · RoPE · hidden {{hiddenSizeLabel}} · vocab {{vocabSizeLabel}}"
   nodes:
     - id: input
       type: leaf
       label: Input tokens
+      sub: "context {{contextLengthLabel}}"
       color: input
     - id: emb
       type: leaf
       label: Token Embedding
+      sub: "vocab {{vocabSizeLabel}} · dim {{hiddenSizeLabel}}"
       color: emb
     - id: block
       type: group
-      label: Qwen3 Block
+      label: Qwen3 Dense Block
       badge: "x{{numLayers}}"
+      sub: "Pre-RMSNorm before attention and FFN"
       color: steel
+      defaultExpanded: true
       children:
         - id: norm1
           type: leaf
-          label: RMSNorm
+          label: Pre-RMSNorm 1
+          sub: before attention
           color: norm
         - id: qk
           type: leaf
           label: QK-RMSNorm
-          sub: per-head before RoPE
+          sub: per-head Q/K normalization
           color: norm
+        - id: rope
+          type: leaf
+          label: RoPE
+          sub: rotary position embedding
+          color: orange
         - id: attn
           type: leaf
-          label: "GQA Q:{{numHeads}} KV:{{numKvHeads}}"
-          sub: RoPE
+          label: GQA Attention
+          sub: "Q heads {{numHeads}} · KV heads {{numKvHeads}}"
           color: attn
         - id: r1
-          type: leaf
-          label: "+ residual"
-          color: resid
+          type: add
+          from: norm1
+          label: residual add
         - id: norm2
           type: leaf
-          label: RMSNorm
+          label: Pre-RMSNorm 2
+          sub: before FFN
           color: norm
         - id: ffn
           type: leaf
-          label: SwiGLU FFN / MoE
+          label: SwiGLU FFN
+          sub: "intermediate {{intermediateSizeLabel}}"
           color: ffn
         - id: r2
-          type: leaf
-          label: "+ residual"
-          color: resid
+          type: add
+          from: norm2
+          label: residual add
+    - id: final_norm
+      type: leaf
+      label: Final RMSNorm
+      color: norm
     - id: head
       type: leaf
       label: LM Head
+      sub: "vocab {{vocabSizeLabel}}"
       color: out
 ');
 INSERT INTO architectures (id, family, era, type, norm_placement, description_zh, description_en, paper_url, hf_org, default_params_json, source_links_json, variants_json, evidence_json, features_json, diagram_subtitle, diagram_nodes_json, raw_yaml) VALUES ('t5', 'T5 / FLAN-T5', '2020', 'encoder-decoder', 'pre', 'T5 是 encoder-decoder 架构，使用相对位置偏置、RMSNorm 和无 bias 投影，T5 v1.1 引入 gated FFN。', 'T5 is an encoder-decoder architecture with relative position bias, RMSNorm, bias-free projections, and gated FFNs in T5 v1.1.', 'https://arxiv.org/abs/1910.10683', 'google/flan-t5-xl', '{"numLayers":24,"numHeads":32,"hiddenSize":2048}', '[]', '[]', '[]', '{"block":"encoder-decoder","attention":"self-attention plus cross-attention","positionEncoding":"relative attention bias","norm":"RMSNorm"}', 'encoder-decoder · layers: {{numLayers}}', '[{"id":"input","type":"leaf","label":"Input tokens","color":"input"},{"id":"enc","type":"group","label":"Encoder Stack","color":"blue","badge":"x{{numLayers}}","children":[{"id":"encnorm","type":"leaf","label":"RMSNorm","color":"norm"},{"id":"encattn","type":"leaf","label":"Self-Attention","color":"attn","sub":"relative position bias"},{"id":"encffn","type":"leaf","label":"Gated FFN","color":"ffn"}]},{"id":"dec","type":"group","label":"Decoder Stack","color":"steel","badge":"x{{numLayers}}","children":[{"id":"decself","type":"leaf","label":"Causal Self-Attention","color":"attn"},{"id":"cross","type":"leaf","label":"Cross-Attention","color":"sky"},{"id":"decffn","type":"leaf","label":"Gated FFN","color":"ffn"}]},{"id":"head","type":"leaf","label":"LM Head","color":"out"}]', 'id: t5
@@ -4864,20 +5031,24 @@ INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen2_moe', '
 INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen2_vl', 'qwen2');
 INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen2_5_vl', 'qwen2');
 INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen2_5_omni', 'qwen2');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3-moe', 'qwen3-moe');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3_moe', 'qwen3-moe');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3_5_moe', 'qwen3-moe');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3_vl_moe', 'qwen3-moe');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3_omni_moe', 'qwen3-moe');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3_coder', 'qwen3-moe');
 INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3-next', 'qwen3-next');
 INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3_next', 'qwen3-next');
 INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3', 'qwen3');
-INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3_moe', 'qwen3');
 INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3_5', 'qwen3');
-INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3_5_moe', 'qwen3');
 INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3_6', 'qwen3');
 INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3_vl', 'qwen3');
-INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3_vl_moe', 'qwen3');
-INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3_omni_moe', 'qwen3');
-INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3_coder', 'qwen3');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3_scale_seq', 'qwen3');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('qwen3ts', 'qwen3');
+INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('penguinvl_qwen3', 'qwen3');
 INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('t5', 't5');
 INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('longt5', 't5');
 INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('xlstm', 'xlstm');
-INSERT INTO sync_runs (id, source_hash, model_count, architecture_count, synced_at) VALUES (1, 'fa10c85311d56b7bc7ed52ed5db447f06b9cfb17692188b2591d14503a931e36', 2069, 32, '2026-07-03 10:51:21');
+INSERT INTO sync_runs (id, source_hash, model_count, architecture_count, synced_at) VALUES (1, 'be97d0b829f62264fcacfe119181520ee084b4c2aff7a6051531f0ed48815db6', 2069, 33, '2026-07-03 18:57:52');
 COMMIT;
 PRAGMA foreign_keys=ON;

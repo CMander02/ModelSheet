@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Link, useParams, useNavigate } from "react-router-dom"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { LanguageToggle } from "@/components/language-toggle"
@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button"
 import { ArchitectureDiagramRenderer } from "@/components/architecture-diagram-renderer"
 import { ArrowLeft, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react"
 import { TYPE_COLORS } from "@/pages/ArchPage"
-import type { ArchitectureSpec } from "@/lib/types"
-import { loadArchitecture, loadArchitectures } from "@/lib/architecture-data"
+import type { ArchitectureSpec, ModelInfo } from "@/lib/types"
+import { loadArchitecture, loadArchitectures, modelDiagramParams } from "@/lib/architecture-data"
+import { loadModelsFromFile } from "@/lib/model-data"
+import { formatContextLength, formatNumber, formatParameters } from "@/lib/formatters"
 import { getTranslations, type Language } from "@/lib/i18n"
 import HuggingFaceIcon from "@lobehub/icons/es/HuggingFace"
 
@@ -21,6 +23,217 @@ function displayValue(value: unknown): string {
     return typeof label === "string" ? label : JSON.stringify(value)
   }
   return String(value)
+}
+
+function hasValue(value: unknown): value is string | number | boolean {
+  return value !== null && value !== undefined && value !== ""
+}
+
+function modelMatchesArchitecture(arch: ArchitectureSpec, model: ModelInfo): boolean {
+  const aliases = new Set([arch.id, ...(arch.modelTypeAliases ?? [])].map(alias => alias.toLowerCase()))
+  const architecture = model.architecture?.toLowerCase()
+  return !!architecture && aliases.has(architecture)
+}
+
+function architectureFamilyToken(arch: ArchitectureSpec): string {
+  return arch.family.split(/[\s/]+/)[0]?.toLowerCase() || arch.id.toLowerCase()
+}
+
+function preferredArchitectureModels(arch: ArchitectureSpec, models: ModelInfo[]): ModelInfo[] {
+  const preferredOrg = arch.hfOrg?.split("/")[0]?.toLowerCase()
+  if (!preferredOrg) return models
+
+  const orgModels = models.filter(model => model.id.split("/")[0]?.toLowerCase() === preferredOrg)
+  if (!orgModels.length) return models
+
+  const familyToken = architectureFamilyToken(arch)
+  const familyModels = orgModels.filter(model => model.name.toLowerCase().startsWith(familyToken))
+  return familyModels.length ? familyModels : orgModels
+}
+
+function sortArchitectureModels(arch: ArchitectureSpec, models: ModelInfo[]): ModelInfo[] {
+  const preferredOrg = arch.hfOrg?.split("/")[0]?.toLowerCase()
+  const familyToken = architectureFamilyToken(arch)
+  return [...models].sort((a, b) => {
+    const aOrg = a.id.split("/")[0]?.toLowerCase()
+    const bOrg = b.id.split("/")[0]?.toLowerCase()
+    const aOfficial = preferredOrg && aOrg === preferredOrg ? 0 : 1
+    const bOfficial = preferredOrg && bOrg === preferredOrg ? 0 : 1
+    if (aOfficial !== bOfficial) return aOfficial - bOfficial
+
+    const aFamily = a.name.toLowerCase().startsWith(familyToken) ? 0 : 1
+    const bFamily = b.name.toLowerCase().startsWith(familyToken) ? 0 : 1
+    if (aFamily !== bFamily) return aFamily - bFamily
+
+    const aParams = a.totalParameters ?? Number.MAX_SAFE_INTEGER
+    const bParams = b.totalParameters ?? Number.MAX_SAFE_INTEGER
+    if (aParams !== bParams) return aParams - bParams
+
+    return a.name.localeCompare(b.name)
+  })
+}
+
+function pickDefaultModel(arch: ArchitectureSpec, models: ModelInfo[]): ModelInfo | null {
+  return models.find(model => model.id === arch.hfOrg) ?? models[0] ?? null
+}
+
+function modelConfigEntries(model: ModelInfo | null): Array<[string, string]> {
+  if (!model) return []
+  const entries: Array<[string, string | number | undefined]> = [
+    ["model", model.name],
+    ["num_hidden_layers", model.numLayers],
+    ["hidden_size", model.hiddenSize],
+    ["intermediate_size", model.intermediateSize],
+    ["num_attention_heads", model.numHeads],
+    ["num_key_value_heads", model.numKvHeads],
+    ["vocab_size", model.vocabSize],
+    ["context_length", model.contextLength],
+    ["num_experts", model.numExperts],
+    ["num_experts_per_tok", model.numExpertsPerToken],
+    ["num_activated_experts", model.numActivatedExperts],
+    ["moe_intermediate_size", model.moeIntermediateSize],
+  ]
+  return entries
+    .filter((entry): entry is [string, string | number] => hasValue(entry[1]))
+    .map(([key, value]) => [key, String(value)])
+}
+
+function ModelStat({
+  label,
+  value,
+}: {
+  label: string
+  value: string | number | null | undefined
+}) {
+  if (!hasValue(value)) return null
+  return (
+    <div className="min-w-0">
+      <dt className="text-[11px] text-muted-foreground">{label}</dt>
+      <dd className="truncate text-sm font-semibold leading-snug">{value}</dd>
+    </div>
+  )
+}
+
+function ModelConfigPanel({
+  entries,
+  isZh,
+}: {
+  entries: Array<[string, string]>
+  isZh: boolean
+}) {
+  const visibleEntries = entries.filter(([key]) => key !== "model")
+  if (!visibleEntries.length) return null
+
+  return (
+    <div className="mt-4 border-t pt-4">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <p className="text-sm font-semibold">config.json</p>
+        <span className="rounded-full border bg-background px-2 py-0.5 text-[11px] text-muted-foreground">
+          {isZh ? "当前模型" : "selected"}
+        </span>
+      </div>
+      <dl className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+        {visibleEntries.map(([key, value]) => (
+          <div key={key} className="min-w-0 rounded-md border bg-background px-2.5 py-2">
+            <dt className="truncate font-mono text-[11px] text-muted-foreground">{key}</dt>
+            <dd className="mt-0.5 truncate font-mono text-sm font-semibold">{value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  )
+}
+
+function ModelSizeSection({
+  arch,
+  models,
+  selectedModel,
+  selectedModelId,
+  configEntries,
+  onSelectModel,
+  isZh,
+}: {
+  arch: ArchitectureSpec
+  models: ModelInfo[]
+  selectedModel: ModelInfo | null
+  selectedModelId: string
+  configEntries: Array<[string, string]>
+  onSelectModel: (modelId: string) => void
+  isZh: boolean
+}) {
+  if (!models.length) return null
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
+          {isZh ? "模型尺寸" : "Model size"}
+        </p>
+        <span className="rounded-md bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">
+          {models.length}
+        </span>
+      </div>
+
+      <select
+        value={selectedModelId}
+        onChange={event => onSelectModel(event.target.value)}
+        className="h-9 w-full rounded-md border bg-background px-3 text-sm outline-none transition-colors focus:border-ring focus:ring-2 focus:ring-ring/30"
+        aria-label={isZh ? "选择模型尺寸" : "Select model size"}
+      >
+        {models.map(model => (
+          <option key={model.id} value={model.id}>
+            {model.name} · {model.totalParameters ? formatParameters(model.totalParameters) : model.id}
+          </option>
+        ))}
+      </select>
+
+      {selectedModel && (
+        <div className="rounded-lg border bg-muted/20 p-3">
+          <div className="mb-3 flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold">{selectedModel.name}</p>
+              <p className="truncate text-xs text-muted-foreground">{selectedModel.id}</p>
+            </div>
+            <Link
+              to={`/${selectedModel.id}`}
+              className="shrink-0 text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+            >
+              {isZh ? "详情" : "Details"}
+            </Link>
+          </div>
+
+          <dl className="grid grid-cols-2 gap-x-4 gap-y-3">
+            <ModelStat label={isZh ? "总参数" : "Total"} value={formatParameters(selectedModel.totalParameters)} />
+            {selectedModel.isMoe && (
+              <ModelStat label={isZh ? "激活参数" : "Active"} value={formatParameters(selectedModel.activeParameters)} />
+            )}
+            <ModelStat label={isZh ? "上下文" : "Context"} value={formatContextLength(selectedModel.contextLength)} />
+            <ModelStat label={isZh ? "词表" : "Vocab"} value={formatNumber(selectedModel.vocabSize)} />
+            <ModelStat label={isZh ? "层数" : "Layers"} value={selectedModel.numLayers} />
+            <ModelStat label={isZh ? "隐藏维度" : "Hidden"} value={formatNumber(selectedModel.hiddenSize)} />
+            <ModelStat label={isZh ? "FFN 维度" : "FFN"} value={formatNumber(selectedModel.intermediateSize)} />
+            <ModelStat label={isZh ? "注意力头" : "Heads"} value={selectedModel.numHeads} />
+            <ModelStat label={isZh ? "KV 头" : "KV heads"} value={selectedModel.numKvHeads} />
+            {selectedModel.isMoe && (
+              <>
+                <ModelStat label={isZh ? "专家数" : "Experts"} value={selectedModel.numExperts} />
+                <ModelStat label={isZh ? "每 token 专家" : "Top-k"} value={selectedModel.numExpertsPerToken} />
+                <ModelStat label={isZh ? "专家 FFN" : "Expert FFN"} value={formatNumber(selectedModel.moeIntermediateSize)} />
+              </>
+            )}
+          </dl>
+
+          {selectedModel.architecture !== arch.id && (
+            <p className="mt-3 text-xs text-muted-foreground">
+              model_type: <span className="font-mono">{selectedModel.architecture}</span>
+            </p>
+          )}
+
+          <ModelConfigPanel entries={configEntries} isZh={isZh} />
+        </div>
+      )}
+    </div>
+  )
 }
 
 function MetadataSection({
@@ -140,6 +353,8 @@ export function ArchDetailPage() {
   const [language, setLanguage] = useState<Language>("zh")
   const [arch, setArch] = useState<ArchitectureSpec | null>(null)
   const [architectures, setArchitectures] = useState<ArchitectureSpec[]>([])
+  const [models, setModels] = useState<ModelInfo[]>([])
+  const [selectedModelId, setSelectedModelId] = useState("")
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -154,10 +369,11 @@ export function ArchDetailPage() {
       return
     }
 
-    Promise.all([loadArchitecture(archId), loadArchitectures()])
-      .then(([item, items]) => {
+    Promise.all([loadArchitecture(archId), loadArchitectures(), loadModelsFromFile()])
+      .then(([item, items, loadedModels]) => {
         setArch(item)
         setArchitectures(items)
+        setModels(loadedModels)
       })
       .finally(() => setIsLoading(false))
   }, [archId])
@@ -179,6 +395,33 @@ export function ArchDetailPage() {
   const currentIdx = arch ? architectures.findIndex(a => a.id === arch.id) : -1
   const prevArch = currentIdx > 0 ? architectures[currentIdx - 1] : null
   const nextArch = currentIdx >= 0 && currentIdx < architectures.length - 1 ? architectures[currentIdx + 1] : null
+
+  const architectureModels = useMemo(() => {
+    if (!arch) return []
+    const matches = models.filter(model => modelMatchesArchitecture(arch, model))
+    return sortArchitectureModels(
+      arch,
+      preferredArchitectureModels(arch, matches),
+    )
+  }, [arch, models])
+
+  useEffect(() => {
+    if (!arch || !architectureModels.length) {
+      setSelectedModelId("")
+      return
+    }
+    setSelectedModelId(current => {
+      if (architectureModels.some(model => model.id === current)) return current
+      return pickDefaultModel(arch, architectureModels)?.id ?? ""
+    })
+  }, [arch, architectureModels])
+
+  const selectedModel = useMemo(
+    () => architectureModels.find(model => model.id === selectedModelId) ?? null,
+    [architectureModels, selectedModelId],
+  )
+  const diagramParams = useMemo(() => modelDiagramParams(selectedModel), [selectedModel])
+  const configEntries = useMemo(() => modelConfigEntries(selectedModel), [selectedModel])
 
   if (isLoading) {
     return (
@@ -310,17 +553,20 @@ export function ArchDetailPage() {
         </div>
       </header>
 
-      <main className="flex-1 flex overflow-hidden">
-        <div className="flex-[3] overflow-auto border-r bg-muted/10">
-          <div className="min-h-full flex items-center justify-center p-8">
-            <div className="w-full [&_svg.flowchart]:!max-w-[640px] [&_svg.flowchart]:!w-full [&_svg.flowchart]:mx-auto [&>div]:flex [&>div]:justify-center">
-              <ArchitectureDiagramRenderer architecture={arch} />
+      <main className="flex-1 flex flex-col overflow-auto lg:flex-row lg:overflow-hidden">
+        <div className="shrink-0 overflow-visible border-b bg-muted/10 lg:flex-[3] lg:overflow-auto lg:border-b-0 lg:border-r">
+          <div className="flex min-h-[560px] items-center justify-center p-4 sm:p-6 lg:min-h-full lg:p-8">
+            <div className="w-full max-w-xl">
+              <ArchitectureDiagramRenderer
+                architecture={arch}
+                params={diagramParams}
+              />
             </div>
           </div>
         </div>
 
-        <div className="flex-[2] flex flex-col overflow-y-auto">
-          <div className="p-8 space-y-6">
+        <div className="shrink-0 overflow-visible lg:flex-[2] lg:overflow-y-auto">
+          <div className="p-5 space-y-6 sm:p-8">
             <div>
               <h1 className="text-3xl font-bold tracking-tight">{arch.family}</h1>
               <p className="text-sm text-muted-foreground font-mono mt-1">{arch.era}</p>
@@ -337,6 +583,16 @@ export function ArchDetailPage() {
 
             <div className="h-px bg-border" />
             <p className="text-sm text-foreground/80 leading-relaxed">{desc}</p>
+
+            <ModelSizeSection
+              arch={arch}
+              models={architectureModels}
+              selectedModel={selectedModel}
+              selectedModelId={selectedModelId}
+              configEntries={configEntries}
+              onSelectModel={setSelectedModelId}
+              isZh={isZh}
+            />
 
             <MetadataSection arch={arch} isZh={isZh} />
 

@@ -1,0 +1,153 @@
+# =============================================================================
+# ModelSheet — Model Filter Rules (managed manually; keep regex in single quotes)
+# =============================================================================
+# Each rule has a case-insensitive regex pattern matching model name and a reason.
+# =============================================================================
+
+rules:
+  - pattern: '\b(AWQ|GPTQ|GGUF|GGML)\b'
+    reason: 'quantized (AWQ/GPTQ/GGUF/GGML)'
+
+  - pattern: '\bQ\d+_K_[SM]\b'
+    reason: 'quantized (Q level)'
+
+  - pattern: '\bW\d+A\d+\b'
+    reason: 'weight-only quantized'
+
+  - pattern: '\bINT[248]\b'
+    reason: 'INT quantized'
+
+  - pattern: '\bFP[48]\b'
+    reason: 'FP quantized'
+
+  - pattern: 'MXFP[48]'
+    reason: 'MXFP quantized'
+
+  - pattern: 'NVFP4'
+    reason: 'NVFP4 quantized'
+
+  - pattern: '\bNF4\b'
+    reason: 'NF4 quantized'
+
+  - pattern: '\bBNB\b'
+    reason: 'bitsandbytes quantized'
+
+  - pattern: '\bAQLM\b'
+    reason: 'AQLM quantized'
+
+  - pattern: '\bEXL2\b'
+    reason: 'EXL2 quantized'
+
+  - pattern: '\b(?:4|8)-?bit(?:s)?\b'
+    reason: 'X-bit quantized'
+
+  - pattern: '\bSQ\b'
+    reason: 'SmoothQuant quantized'
+
+  - pattern: '\beagle\d*(?:\.\d+)?'
+    reason: 'speculative decoding draft head (EAGLE)'
+
+  - pattern: '(?:^|[-_])(?:dspark|dflash)(?:[-_]|$)'
+    reason: 'speculative decoding / acceleration variant'
+
+  - pattern: '\b(whisper|asr|tts|speech|vocoder)\b'
+    reason: 'ASR/TTS model'
+
+  - pattern: 'forced-?aligner'
+    reason: 'forced alignment model'
+
+  - pattern: '\b(embed(?:ding)?s?|rerank(?:er)?|retriev(?:al|er))\b'
+    reason: 'embedding/rerank model'
+
+  - pattern: '\b(bge|e5|gte|nomic-embed|sentence-?transformers?)\b'
+    reason: 'embedding model'
+
+  - pattern: '\b[op]rm\b'
+    reason: 'reward/ORM/PRM model'
+
+  - pattern: '\breward-?model\b'
+    reason: 'reward model'
+
+  - pattern: '\bAnomaly\b'
+    reason: 'anomaly detection model'
+
+  - pattern: '\b(nllb|m2m100|mbart|opus-mt)\b'
+    reason: 'translation model'
+
+  - pattern: '\b(stable-?diffusion|sdxl|sd-?v\d|sd\d|flux|kandinsky|dall-?e|midjourney|imagen|pixart|cogvideox)\b'
+    reason: 'diffusion (image gen, not LM)'
+
+  - pattern: '\bernie-image\b'
+    reason: 'image generation model'
+
+  - pattern: '\b(classifier|discriminator)\b'
+    reason: 'classifier/discriminator model'
+
+  - pattern: '(?:\bocr\b|[-_.]ocr(?:[-_.]|$)|ocr-vl|paddleocr|olmocr|hunyuanocr|glm-ocr|dots\.ocr|qianfan-ocr|deepseek-ocr|pp-ocr)'
+    reason: 'OCR model (not MLLM)'
+
+  - pattern: '\b(circularnet|autopartgen|meshflow|lamp)\b'
+    reason: 'non-LM vision/domain model'
+
+  - pattern: '(?:docbee|doclayout|docblocklayout|chart2table|formula|layout(?:[-_]\d+cls)?|(?:^|[-_])table(?:[-_]cell)?(?:[-_]|$)|picodet|rt-?detr|slanet|slanext|lcnet|uvdoc|unimernet|svtr|repsvtr)'
+    reason: 'document/layout/OCR utility model'
+
+  - pattern: '-2bits'
+    reason: '2-bit quantized (Baidu ERNIE)'
+
+  - pattern: '-tp\d+'
+    reason: 'tensor parallelism variant'
+
+  - pattern: '-w\d+a\d+c\d+'
+    reason: 'weight+activation quantized (e.g. -W4A8C8)'
+
+  - pattern: '\bpaligemma-3b-ft-'
+    reason: 'PaliGemma fine-tune checkpoint'
+
+  - pattern: 'ft-docci'
+    reason: 'PaliGemma2 ft-docci fine-tune checkpoint'
+
+  - pattern: '-(jax|paddle|flax|pytorch|tflite|cpp|sfp-cpp|litert|keras)$'
+    reason: 'deployment backend variant'
+
+  - pattern: '-mlx(-?\w+)?$'
+    reason: 'MLX deployment variant (Apple ecosystem)'
+
+  - pattern: '-qat\b'
+    reason: 'quantization-aware training variant'
+
+  - pattern: '\b(?:.*-)?ONNX$'
+    reason: 'deployment format variant (ONNX)'
+
+  - pattern: '\bSing-Guard-[0-9.]+b\b'
+    reason: 'guardrail/safety moderation model'
+
+  - pattern: '\b(?:Content-Safety|Privasis-Cleaner-[0-9.]+B)\b'
+    reason: 'safety/cleaner utility model'
+
+  - pattern: '\bCUDA-Autocomplete\b'
+    reason: 'narrow autocomplete utility model'
+
+  - pattern: '\bEvoQuality\b'
+    reason: 'narrow quality-evaluation utility model'
+
+  - pattern: '\bHARC-(?:Qwen|Llama)'
+    reason: 'task-specific HARC fine-tune'
+
+  - pattern: '\bGELab-Zero-.*Sico-Evolution\b'
+    reason: 'experimental task-specific VLM fine-tune'
+
+  - pattern: '\bqwen35-9b-(?:openthoughts|terminaltraj|cli-gym|swesmith|endless|termigen)\b'
+    reason: 'terminal-agent ablation/fine-tune variant'
+
+  - pattern: '\btmax-sft-8b\b'
+    reason: 'intermediate SFT checkpoint; keep final TMax series instead'
+
+  - pattern: '\bOpenThinkerAgent-8B-ColdStartSFTForRL\b'
+    reason: 'intermediate cold-start SFT checkpoint; keep final RL checkpoint instead'
+
+  - pattern: '\bOpenThinkerAgent-32B-SFT-(?:100K|31\.6K|10K|3\.16K|1K|316)\b'
+    reason: 'OpenThinkerAgent SFT data-size ablation checkpoint'
+
+  - pattern: '\bLaguna-tiny-per-element\b'
+    reason: 'tiny internal/element-level experiment checkpoint'

@@ -78602,5 +78602,83 @@
     "createdAt": "2026-07-02T13:23:54.000Z",
     "openness": "open-weight",
     "isMoe": true
+  },
+  {
+    "id": "nvidia/NVIDIA-Nemotron-Labs-3-Puzzle-75B-A9B-BF16",
+    "name": "NVIDIA-Nemotron-Labs-3-Puzzle-75B-A9B-BF16",
+    "provider": "NVIDIA",
+    "huggingfaceUrl": "https://huggingface.co/nvidia/NVIDIA-Nemotron-Labs-3-Puzzle-75B-A9B-BF16",
+    "techReport": "",
+    "arxivUrl": "https://arxiv.org/abs/2607.04371",
+    "totalParameters": 75353324544,
+    "activeParameters": 52948893696,
+    "embeddingParameters": 536870912,
+    "nonEmbeddingParameters": 74816453632,
+    "contextLength": 262144,
+    "embeddingDim": 4096,
+    "vocabSize": 131072,
+    "architecture": "nemotron_h_puzzle",
+    "numLayers": 88,
+    "numHeads": 32,
+    "numKvHeads": 2,
+    "hiddenSize": 4096,
+    "intermediateSize": 21504,
+    "activation": "relu2",
+    "normType": "LayerNorm",
+    "normEps": 1e-05,
+    "attentionDropout": 0.0,
+    "mlpFactor": 5.25,
+    "gqaRatio": 16.0,
+    "torchDtype": "bfloat16",
+    "numExperts": 512,
+    "numSharedExperts": 1,
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "task": "Text Generation",
+    "createdAt": "2026-06-24T15:32:34.000Z",
+    "openness": "open-weight",
+    "isMoe": true
+  },
+  {
+    "id": "nvidia/NL-Diffusion-Image",
+    "name": "NL-Diffusion-Image",
+    "provider": "NVIDIA",
+    "huggingfaceUrl": "https://huggingface.co/nvidia/NL-Diffusion-Image",
+    "techReport": "",
+    "arxivUrl": "https://arxiv.org/abs/2606.29814",
+    "totalParameters": 11911248387,
+    "activeParameters": 11911248387,
+    "embeddingParameters": 541085696,
+    "nonEmbeddingParameters": 11370162691,
+    "contextLength": 262144,
+    "embeddingDim": 4096,
+    "vocabSize": 132101,
+    "architecture": "nemotron_labs_diffusion_image",
+    "numLayers": 34,
+    "numHeads": 32,
+    "numKvHeads": 8,
+    "hiddenSize": 4096,
+    "intermediateSize": 14336,
+    "positionEncoding": "RoPE",
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-05,
+    "attentionDropout": 0.0,
+    "mlpFactor": 3.5,
+    "gqaRatio": 4.0,
+    "torchDtype": "bfloat16",
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "createdAt": "2026-06-03T16:44:20.000Z",
+    "openness": "open-weight",
+    "isMoe": false
   }
 ]

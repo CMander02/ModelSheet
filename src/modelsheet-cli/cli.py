@@ -33,7 +33,7 @@ from .filters import (
     save_rules_to_yaml,
     clear_rules_cache,
     get_rules_path,
-    skip_by_name,
+    skip_reason,
 )
 from .scanner import (
     get_scan_orgs_from_providers,
@@ -1308,7 +1308,7 @@ def filter_test(
         raise typer.Exit(1)
 
     name = model_id.split("/")[-1]
-    reason = skip_by_name(name)
+    reason = skip_reason(model_id)
 
     console.print(f"\nTesting: [bold]{model_id}[/bold]")
     console.print(f"  Name part: [dim]{name}[/dim]\n")

@@ -230,6 +230,14 @@ _DIFFUSION_LM_PIPELINE_TAGS = {
 }
 
 
+# Model IDs that represent a notable official release despite a name-based filter.
+# Keep this list narrowly scoped; it is an explicit curation override, not a
+# general permission to retain quantized/deployment variants.
+_ALWAYS_INCLUDE_MODEL_IDS = {
+    "thinkingmachines/inkling-nvfp4",
+}
+
+
 # ── Main skip function ──────────────────────────────────────────────────────
 
 def skip_reason(
@@ -252,6 +260,10 @@ def skip_reason(
     name = model_id.split("/")[-1]
     model_type_lower = (model_type or "").lower()
     org = model_id.split("/")[0].lower() if "/" in model_id else ""
+
+    # Explicit curation exceptions are checked before generic name filters.
+    if model_id.lower() in _ALWAYS_INCLUDE_MODEL_IDS:
+        return None
 
     # 0. Org-level blocklist (entire organizations excluded by user preference)
     _BLOCKED_ORGS = {"ruc-aibox"}

@@ -5108,6 +5108,6 @@ INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('penguinvl_qwe
 INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('t5', 't5');
 INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('longt5', 't5');
 INSERT INTO architecture_aliases (alias, architecture_id) VALUES ('xlstm', 'xlstm');
-INSERT INTO sync_runs (id, source_hash, model_count, architecture_count, synced_at) VALUES (1, '0d4eeb2522b7a0ba129cd585e452a5a6d8f0851b122a13c7bbe905d16df40166', 2128, 33, '2026-07-15 22:02:21');
+INSERT INTO sync_runs (id, source_hash, model_count, architecture_count, synced_at) VALUES (1, '0d4eeb2522b7a0ba129cd585e452a5a6d8f0851b122a13c7bbe905d16df40166', 2128, 33, '2026-07-16 22:01:18');
 COMMIT;
 PRAGMA foreign_keys=ON;

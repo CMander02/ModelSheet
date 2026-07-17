@@ -79460,5 +79460,46 @@
     "createdAt": "2026-07-14T02:40:56.000Z",
     "openness": "open-weight",
     "isMoe": false
+  },
+  {
+    "id": "internlm/Intern-S2-Preview-397B",
+    "name": "Intern-S2-Preview-397B",
+    "provider": "Shanghai AI Lab",
+    "huggingfaceUrl": "https://huggingface.co/internlm/Intern-S2-Preview-397B",
+    "techReport": "",
+    "modelscopeUrl": "https://modelscope.cn/models/Shanghai_AI_Laboratory/Intern-S2-Preview-397B",
+    "totalParameters": 403423094768,
+    "activeParameters": 12605980672,
+    "embeddingParameters": 1029701632,
+    "nonEmbeddingParameters": 402393393136,
+    "contextLength": 262144,
+    "embeddingDim": 4096,
+    "vocabSize": 251392,
+    "architecture": "intern_s2_preview",
+    "numLayers": 60,
+    "numHeads": 32,
+    "numKvHeads": 2,
+    "hiddenSize": 4096,
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-06,
+    "attentionDropout": 0.0,
+    "gqaRatio": 16.0,
+    "torchDtype": "bfloat16",
+    "numExperts": 512,
+    "numExpertsPerToken": 10,
+    "numActivatedExperts": 10,
+    "moeIntermediateSize": 1024,
+    "inputModalities": [
+      "image",
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "task": "Image-Text-to-Text",
+    "createdAt": "2026-07-16T15:01:42.000Z",
+    "openness": "open-weight",
+    "isMoe": true
   }
 ]

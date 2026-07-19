@@ -1,4 +1,5 @@
 import { ModelIcon, ProviderIcon } from "@lobehub/icons"
+import { createElement } from "react"
 import AntGroupIcon    from "@lobehub/icons/es/AntGroup"
 import ArceeIcon       from "@lobehub/icons/es/Arcee"
 import BAAIIcon        from "@lobehub/icons/es/BAAI"
@@ -8,6 +9,7 @@ import DeepCogitoIcon  from "@lobehub/icons/es/DeepCogito"
 import InfinigenceIcon from "@lobehub/icons/es/Infinigence"
 import KimiIcon        from "@lobehub/icons/es/Kimi"
 import LiquidIcon      from "@lobehub/icons/es/Liquid"
+import LongCatIcon     from "@lobehub/icons/es/LongCat"
 import MoonshotIcon    from "@lobehub/icons/es/Moonshot"
 import NousResearchIcon from "@lobehub/icons/es/NousResearch"
 import RwkvIcon        from "@lobehub/icons/es/Rwkv"
@@ -110,6 +112,10 @@ const LOBEHUB_AVATAR_MAP: Record<string, AvatarIconComponent> = {
   "inclusionAI":   AntGroupIcon.Avatar,
 }
 
+const MODEL_AVATAR_MAP: Record<string, AvatarIconComponent> = {
+  "meituan-longcat": LongCatIcon.Avatar,
+}
+
 // ─── Custom local image map ────────────────────────────────────────────────
 // Only for providers NOT in lobehub at all.
 
@@ -192,7 +198,11 @@ const CUSTOM_LOGO_MAP: Record<string, string> = {
   // Meituan
   "Meituan":    "/icons/providers/meituan.png",
   "meituan":    "/icons/providers/meituan.png",
-  "meituan-longcat": "/icons/providers/meituan.png",
+
+  // Thinking Machines Lab
+  "thinkingmachines":      "/icons/providers/thinking-machines.svg",
+  "Thinking Machines":     "/icons/providers/thinking-machines.svg",
+  "Thinking Machines Lab": "/icons/providers/thinking-machines.svg",
 
   // IBM Granite
   "ibm-granite": "/icons/providers/ibm-granite.svg",
@@ -309,17 +319,27 @@ export function ModelBrandIcon({ model, provider, size = ICON_SIZE, className }:
   if (!model) return null
   const org = orgFromModelId(model)
 
-  // 1. Lobehub Avatar by org slug (e.g. moonshotai → Kimi)
-  const AvatarIcon = lookupAvatarIcon([org])
-  if (AvatarIcon) {
+  // 1. Product-specific Lobehub Avatar by org slug
+  const ProductAvatarIcon = org ? MODEL_AVATAR_MAP[org] : undefined
+  if (ProductAvatarIcon) {
     return (
       <span className={className} style={wrapperStyle}>
-        <AvatarIcon size={size} />
+        <ProductAvatarIcon size={size} />
       </span>
     )
   }
 
-  // 2. Local custom image
+  // 2. Lobehub Avatar by org slug (e.g. moonshotai → Kimi)
+  const AvatarIcon = lookupAvatarIcon([org])
+  if (AvatarIcon) {
+    return (
+      <span className={className} style={wrapperStyle}>
+        {createElement(AvatarIcon, { size })}
+      </span>
+    )
+  }
+
+  // 3. Local custom image
   const custom = lookupCustomLogo([org, provider])
   if (custom) {
     return (
@@ -329,7 +349,7 @@ export function ModelBrandIcon({ model, provider, size = ICON_SIZE, className }:
     )
   }
 
-  // 3. Lobehub ModelIcon
+  // 4. Lobehub ModelIcon
   return (
     <span className={className} style={wrapperStyle}>
       <ModelIcon model={model} size={size} type="color" />
@@ -352,7 +372,7 @@ export function ProviderBrandIcon({ provider, orgHint, size = ICON_SIZE, classNa
   if (AvatarIcon) {
     return (
       <span className={className} style={wrapperStyle}>
-        <AvatarIcon size={size} />
+        {createElement(AvatarIcon, { size })}
       </span>
     )
   }

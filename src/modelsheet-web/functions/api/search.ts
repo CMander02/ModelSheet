@@ -14,20 +14,20 @@ interface SearchResponse {
 }
 
 const SORT_COLUMNS: Record<string, string> = {
-  name: "lower(name)",
-  provider: "lower(provider)",
-  totalParameters: "total_parameters",
-  activeParameters: "active_parameters",
-  contextLength: "context_length",
-  architecture: "lower(architecture)",
-  isMoe: "is_moe",
-  numLayers: "num_layers",
-  numHeads: "num_heads",
-  numKvHeads: "num_kv_heads",
-  hiddenSize: "hidden_size",
-  intermediateSize: "intermediate_size",
-  numExperts: "num_experts",
-  releasedAt: "released_at",
+  name: "lower(m.name)",
+  provider: "lower(m.provider)",
+  totalParameters: "m.total_parameters",
+  activeParameters: "m.active_parameters",
+  contextLength: "m.context_length",
+  architecture: "lower(m.architecture)",
+  isMoe: "m.is_moe",
+  numLayers: "m.num_layers",
+  numHeads: "m.num_heads",
+  numKvHeads: "m.num_kv_heads",
+  hiddenSize: "m.hidden_size",
+  intermediateSize: "m.intermediate_size",
+  numExperts: "m.num_experts",
+  releasedAt: "m.released_at",
 }
 
 function sortModels(
@@ -74,23 +74,34 @@ export async function onRequest(context: {
     if (env.DB) {
       const query = q.toLowerCase().trim()
       const where = query
-        ? "WHERE lower(name) LIKE ? OR lower(provider) LIKE ? OR lower(id) LIKE ?"
+        ? `WHERE lower(m.name) LIKE ?
+            OR lower(m.provider) LIKE ?
+            OR lower(m.id) LIKE ?
+            OR lower(COALESCE(p.name_en, '')) LIKE ?
+            OR lower(COALESCE(p.name_zh, '')) LIKE ?
+            OR lower(COALESCE(p.orgs_json, '')) LIKE ?`
         : ""
-      const params = query ? [`%${query}%`, `%${query}%`, `%${query}%`] : []
+      const params = query ? Array(6).fill(`%${query}%`) : []
       const sortColumn = SORT_COLUMNS[sortKey] ?? SORT_COLUMNS.releasedAt
       const sqlDirection = sortDirection === "asc" ? "ASC" : "DESC"
 
       const totalRow = await env.DB
-        .prepare(`SELECT COUNT(*) AS total FROM models ${where}`)
+        .prepare(`
+          SELECT COUNT(*) AS total
+          FROM models m
+          LEFT JOIN providers p ON p.id = m.provider_id
+          ${where}
+        `)
         .bind(...params)
         .first<{ total: number }>()
       const rows = await env.DB
         .prepare(
           `
-          SELECT raw_json
-          FROM models
+          SELECT m.raw_json
+          FROM models m
+          LEFT JOIN providers p ON p.id = m.provider_id
           ${where}
-          ORDER BY ${sortColumn} IS NULL, ${sortColumn} ${sqlDirection}, name ASC
+          ORDER BY ${sortColumn} IS NULL, ${sortColumn} ${sqlDirection}, m.name ASC
           LIMIT ? OFFSET ?
           `,
         )

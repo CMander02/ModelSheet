@@ -1,0 +1,4 @@
+interface:
+  display_name: "ModelSheet"
+  short_description: "Operate and maintain the ModelSheet catalog"
+  default_prompt: "Use $modelsheet to add, update, validate, or troubleshoot ModelSheet catalog data."

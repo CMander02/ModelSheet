@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useParams, useNavigate, Link } from "react-router-dom"
 import type { ModelInfo } from "@/lib/types"
-import type { Language } from "@/lib/i18n"
+import { translateProvider, type Language } from "@/lib/i18n"
 import { loadModelById } from "@/lib/model-data"
 import { loadArchitecture } from "@/lib/architecture-data"
 import { cn, providerSlug } from "@/lib/utils"
@@ -249,7 +249,7 @@ export function ModelCardPage() {
               to={`/${providerSlug(model.provider ?? "")}`}
               className="text-sm text-muted-foreground hover:text-foreground transition-colors shrink-0 max-w-[200px] truncate"
             >
-              {model.id.split("/")[0]}
+              {translateProvider(model.provider, language)}
             </Link>
             <span className="text-muted-foreground shrink-0">/</span>
             <span className="text-sm font-semibold truncate">{model.name}</span>
@@ -278,7 +278,9 @@ export function ModelCardPage() {
                   className="flex items-center gap-1.5 mt-1 hover:text-foreground transition-colors group w-fit"
                 >
                   <ProviderBrandIcon provider={model.provider} size={14} />
-                  <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">{model.provider}</span>
+                  <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
+                    {translateProvider(model.provider, language)}
+                  </span>
                 </Link>
               </div>
             </div>

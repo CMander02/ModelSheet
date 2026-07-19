@@ -23,7 +23,7 @@ import {
 import type { ModelInfo, ColumnConfig, ComplexityLevel, SortConfig } from "@/lib/types"
 import { COMPLEXITY_PRESETS } from "@/lib/model-data"
 import type { HomeScrollPosition } from "@/lib/model-data"
-import type { Language } from "@/lib/i18n"
+import { translateProvider, type Language } from "@/lib/i18n"
 
 const PULL_LOAD_THRESHOLD = 72
 const PULL_MAX = 112
@@ -675,7 +675,7 @@ export function ModelTable({
                               }}
                             >
                               <ProviderBrandIcon provider={String(model[column.key] ?? "")} />
-                              <span className="truncate">{formatValue(model[column.key], column.type)}</span>
+                              <span className="truncate">{translateProvider(String(model[column.key] ?? ""), language)}</span>
                             </Link>
                           ) : column.key === "architecture" && model.architecture ? (
                             <Link

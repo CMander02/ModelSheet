@@ -1,18 +1,46 @@
 // Provider data loaded from providers.json
 import providersData from "../../../../data/providers.json"
 
-// Build provider translations from providers.json
-function buildProviderTranslations(): { en: Record<string, string>; zh: Record<string, string> } {
+interface ProviderConfig {
+  orgs?: string[]
+  scan?: {
+    hf?: string[]
+    ms?: string[]
+  }
+  i18n: {
+    en: string
+    zh: string
+  }
+}
+
+// Build provider translations and source aliases from providers.json.
+function buildProviderTranslations(): {
+  en: Record<string, string>
+  zh: Record<string, string>
+  aliases: Record<string, string>
+} {
   const en: Record<string, string> = {}
   const zh: Record<string, string> = {}
+  const aliases: Record<string, string> = {}
 
   for (const [displayName, config] of Object.entries(providersData.providers)) {
-    const i18n = (config as { i18n: { en: string; zh: string } }).i18n
+    const providerConfig = config as ProviderConfig
+    const { i18n } = providerConfig
     en[displayName] = i18n.en
     zh[displayName] = i18n.zh
+
+    const sourceNames = [
+      displayName,
+      ...(providerConfig.orgs ?? []),
+      ...(providerConfig.scan?.hf ?? []),
+      ...(providerConfig.scan?.ms ?? []),
+    ]
+    for (const sourceName of sourceNames) {
+      aliases[sourceName.trim().toLowerCase()] ??= displayName
+    }
   }
 
-  return { en, zh }
+  return { en, zh, aliases }
 }
 
 const providerTranslations = buildProviderTranslations()
@@ -300,5 +328,6 @@ export function useI18n(lang: Language) {
  */
 export function translateProvider(provider: string, lang: Language): string {
   const t = getTranslations(lang)
-  return t.providers[provider] || provider
+  const canonicalProvider = providerTranslations.aliases[provider.trim().toLowerCase()] ?? provider
+  return t.providers[canonicalProvider] || provider
 }

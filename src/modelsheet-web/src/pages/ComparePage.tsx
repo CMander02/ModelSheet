@@ -9,7 +9,7 @@ import {
   saveColumnConfigToStorage,
   getColumnConfigs,
 } from "@/lib/model-data"
-import { getTranslations } from "@/lib/i18n"
+import { getTranslations, translateProvider } from "@/lib/i18n"
 import { EnhancedComparisonTable } from "@/components/enhanced-comparison-table"
 import { CustomFieldSelector } from "@/components/custom-field-selector"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -105,12 +105,13 @@ export function ComparePage() {
         const searchableText = [
           model.name?.toLowerCase(),
           model.provider?.toLowerCase(),
+          translateProvider(model.provider, language).toLowerCase(),
           ...idParts
         ].filter(Boolean).join(" ")
         return searchableText.includes(searchLower)
       })
       .slice(0, 5)
-  }, [models, searchTerm, selectedModels])
+  }, [models, searchTerm, selectedModels, language])
 
   const handleThemeToggle = () => {
     const newTheme = theme === "dark" ? "light" : "dark"
@@ -233,7 +234,7 @@ export function ComparePage() {
                     <div>
                       <span className="font-medium">{model.name}</span>
                       <span className="text-muted-foreground text-sm ml-2">
-                        {model.provider}
+                        {translateProvider(model.provider, language)}
                       </span>
                     </div>
                   </div>
@@ -317,6 +318,7 @@ export function ComparePage() {
             columns={columns}
             onRemoveModel={handleRemoveModel}
             complexity={complexityLevel}
+            language={language}
           />
         )}
 

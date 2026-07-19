@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom"
 import { providerSlug, isNewThisWeek } from "@/lib/utils"
 import { ArrowUpDown, Check, ChevronDown } from "lucide-react"
 import type { ModelInfo, SortConfig } from "@/lib/types"
-import type { Language } from "@/lib/i18n"
+import { translateProvider, type Language } from "@/lib/i18n"
 import type { HomeScrollPosition } from "@/lib/model-data"
 import { ModelBrandIcon, ProviderBrandIcon } from "@/components/brand-icon"
 import { ModalityIcons } from "@/components/modality-icons"
@@ -187,7 +187,9 @@ function ModelCard({ model, language, selected, onSelect, onNavigate, onBeforeNa
           }}
         >
           <ProviderBrandIcon provider={model.provider} size={13} />
-          <span className="text-xs text-muted-foreground hover:text-foreground transition-colors">{model.provider}</span>
+          <span className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+            {translateProvider(model.provider, language)}
+          </span>
         </Link>
 
         {/* Metrics row */}

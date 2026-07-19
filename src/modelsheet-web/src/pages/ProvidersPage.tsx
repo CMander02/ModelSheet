@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import type { ProviderInfo } from "@/lib/types"
 import type { Language } from "@/lib/i18n"
-import { getTranslations } from "@/lib/i18n"
+import { getTranslations, translateProvider } from "@/lib/i18n"
 import { loadProviders } from "@/lib/model-data"
 import { ProviderBrandIcon } from "@/components/brand-icon"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -50,10 +50,10 @@ export function ProvidersPage() {
     const q = query.trim().toLowerCase()
     if (!q) return providers
     return providers.filter(p => {
-      const localized = t.providers[p.name] ?? p.name
+      const localized = translateProvider(p.name, language)
       return p.name.toLowerCase().includes(q) || localized.toLowerCase().includes(q)
     })
-  }, [providers, query, t.providers])
+  }, [providers, query, language])
 
   const grouped = useMemo(() => {
     const groups: Record<Region, ProviderInfo[]> = { cn: [], global: [], other: [] }
@@ -87,7 +87,7 @@ export function ProvidersPage() {
   }
 
   const renderCard = (p: ProviderInfo) => {
-    const localized = isZh ? (t.providers[p.name] ?? p.name) : p.name
+    const localized = translateProvider(p.name, language)
     return (
       <Link
         key={p.name}

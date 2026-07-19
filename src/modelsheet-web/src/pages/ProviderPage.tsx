@@ -10,7 +10,7 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { LanguageToggle } from "@/components/language-toggle"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft } from "lucide-react"
-import { getTranslations } from "@/lib/i18n"
+import { translateProvider } from "@/lib/i18n"
 
 // ─── Model card ───────────────────────────────────────────────────────────────
 
@@ -112,7 +112,6 @@ export function ProviderPage() {
     localStorage.setItem("language", lang)
   }
 
-  const t = getTranslations(language)
   const isZh = language === "zh"
 
   const canonicalProvider = provider?.name
@@ -195,7 +194,7 @@ export function ProviderPage() {
               ModelSheet
             </Link>
             <span className="text-muted-foreground shrink-0">/</span>
-            <span className="text-sm font-semibold truncate">{canonicalProvider}</span>
+            <span className="text-sm font-semibold truncate">{translateProvider(canonicalProvider, language)}</span>
           </div>
           <div className="flex items-center gap-1 shrink-0">
             <ThemeToggle theme={theme} onToggle={handleThemeToggle} />
@@ -211,7 +210,7 @@ export function ProviderPage() {
           <ProviderBrandIcon provider={canonicalProvider} size={56} />
           <div>
             <h1 className="text-2xl font-bold">
-              {isZh ? (t.providers[canonicalProvider] ?? canonicalProvider) : canonicalProvider}
+              {translateProvider(canonicalProvider, language)}
             </h1>
             <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground flex-wrap">
               <span>{providerModels.length}{isZh ? " 个模型" : ` model${providerModels.length !== 1 ? "s" : ""}`}</span>

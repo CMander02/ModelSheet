@@ -11,12 +11,14 @@ import { COMPLEXITY_PRESETS } from "@/lib/model-data"
 import { formatValue, getHighlightClass } from "@/lib/formatters"
 import { ModelBrandIcon, ProviderBrandIcon } from "@/components/brand-icon"
 import { ParamCell } from "@/components/param-cell"
+import { translateProvider, type Language } from "@/lib/i18n"
 
 interface EnhancedComparisonTableProps {
   models: ModelInfo[]
   columns: ColumnConfig[]
   onRemoveModel: (modelId: string) => void
   complexity: ComplexityLevel
+  language: Language
 }
 
 // ── Field groupings ──────────────────────────────────────────────────────────
@@ -40,6 +42,7 @@ export function EnhancedComparisonTable({
   columns,
   onRemoveModel,
   complexity,
+  language,
 }: EnhancedComparisonTableProps) {
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({
     basic: false,
@@ -97,7 +100,7 @@ export function EnhancedComparisonTable({
                 )}
                 <p className="inline-flex items-center gap-1.5 text-xs text-muted-foreground mt-0.5">
                   <ProviderBrandIcon provider={model.provider} size={12} />
-                  <span>{model.provider}</span>
+                  <span>{translateProvider(model.provider, language)}</span>
                 </p>
               </div>
               <Button

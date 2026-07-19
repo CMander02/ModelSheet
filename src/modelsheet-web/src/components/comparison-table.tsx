@@ -11,12 +11,14 @@ import { Button } from "@/components/ui/button"
 import type { ModelInfo, ColumnConfig, ComplexityLevel } from "@/lib/types"
 import { COMPLEXITY_PRESETS } from "@/lib/model-data"
 import { ModelBrandIcon, ProviderBrandIcon } from "@/components/brand-icon"
+import { translateProvider, type Language } from "@/lib/i18n"
 
 interface ComparisonTableProps {
   models: ModelInfo[]
   columns: ColumnConfig[]
   onRemoveModel: (modelId: string) => void
   complexity: ComplexityLevel
+  language?: Language
 }
 
 export function ComparisonTable({
@@ -24,6 +26,7 @@ export function ComparisonTable({
   columns,
   onRemoveModel,
   complexity,
+  language = "zh",
 }: ComparisonTableProps) {
   const preset = COMPLEXITY_PRESETS[complexity]
   const visibleColumns = columns.filter((col) => preset.columns.includes(col.key))
@@ -98,7 +101,7 @@ export function ComparisonTable({
                     </div>
                     <div className="inline-flex items-center gap-1 text-xs text-muted-foreground truncate mt-0.5">
                       <ProviderBrandIcon provider={model.provider} size={12} />
-                      <span className="truncate">{model.provider}</span>
+                      <span className="truncate">{translateProvider(model.provider, language)}</span>
                     </div>
                   </div>
                   <Button

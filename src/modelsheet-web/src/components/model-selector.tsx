@@ -3,17 +3,20 @@ import { Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import type { ModelInfo } from "@/lib/types"
+import { translateProvider, type Language } from "@/lib/i18n"
 
 interface ModelSelectorProps {
   models: ModelInfo[]
   selectedModels: ModelInfo[]
   onSelectModel: (model: ModelInfo) => void
+  language?: Language
 }
 
 export function ModelSelector({
   models,
   selectedModels,
   onSelectModel,
+  language = "zh",
 }: ModelSelectorProps) {
   const [searchTerm, setSearchTerm] = useState("")
 
@@ -25,6 +28,7 @@ export function ModelSelector({
     const searchableText = [
       model.name?.toLowerCase(),
       model.provider?.toLowerCase(),
+      translateProvider(model.provider, language).toLowerCase(),
       ...idParts
     ].filter(Boolean).join(" ")
     return searchableText.includes(searchLower)
@@ -65,7 +69,7 @@ export function ModelSelector({
               <div className="flex-1 min-w-0">
                 <h3 className="font-medium text-sm truncate">{model.name}</h3>
                 <p className="text-xs text-muted-foreground truncate">
-                  {model.provider}
+                  {translateProvider(model.provider, language)}
                 </p>
               </div>
             </div>

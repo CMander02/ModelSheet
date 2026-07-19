@@ -131,13 +131,20 @@ const CUSTOM_LOGO_MAP: Record<string, string> = {
   "open-thoughts":  "/icons/providers/open-thoughts.png",
   "Open Thoughts":  "/icons/providers/open-thoughts.png",
 
-  // Qwen (Alibaba) — custom color SVG
-  "Qwen":           "/icons/providers/qwen.svg",
-  "通义千问":        "/icons/providers/qwen.svg",
-  "Damo Academy":   "/icons/providers/qwen.svg",
-  "达摩院":          "/icons/providers/qwen.svg",
-  "alibaba-PAI":    "/icons/providers/qwen.svg",
-  "Alibaba-NLP":    "/icons/providers/qwen.svg",
+  // Qwen (Alibaba) — current official favicon
+  "Qwen":           "/icons/providers/qwen.png",
+  "通义千问":        "/icons/providers/qwen.png",
+  "Damo Academy":   "/icons/providers/qwen.png",
+  "达摩院":          "/icons/providers/qwen.png",
+  "alibaba-PAI":    "/icons/providers/qwen.png",
+  "Alibaba-NLP":    "/icons/providers/qwen.png",
+
+  // JD / 京东
+  "JD":             "/icons/providers/jd.png",
+  "JD.com":         "/icons/providers/jd.png",
+  "京东":           "/icons/providers/jd.png",
+  "jd-opensource": "/icons/providers/jd.png",
+  "jdopensource":  "/icons/providers/jd.png",
 
   // moonshotai org → Kimi icon (handled via LOBEHUB_AVATAR_MAP in ModelBrandIcon)
 

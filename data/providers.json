@@ -1009,6 +1009,22 @@
       },
       "region": "cn"
     },
+    "Thinking Machines": {
+      "orgs": ["thinkingmachines"],
+      "i18n": {
+        "en": "Thinking Machines",
+        "zh": "Thinking Machines"
+      },
+      "region": "global"
+    },
+    "Basalt Labs": {
+      "orgs": ["basaltlabsai"],
+      "i18n": {
+        "en": "Basalt Labs",
+        "zh": "Basalt Labs"
+      },
+      "region": "global"
+    },
     "JD.com": {
       "orgs": [
         "JDONE-Research"
@@ -1025,6 +1041,7 @@
       "region": "cn"
     }
   },
+
   "Tilde Research": {
     "orgs": [
       "tilde-research"

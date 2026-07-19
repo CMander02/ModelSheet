@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Building2, ChevronDown, GitCompareArrows, Network, Search, SlidersHorizontal } from "lucide-react"
 
-const DEFAULT_SORT_CONFIG: SortConfig = { key: "createdAt", direction: "desc" }
+const DEFAULT_SORT_CONFIG: SortConfig = { key: "releasedAt", direction: "desc" }
 
 export function HomePage() {
   const navigate = useNavigate()

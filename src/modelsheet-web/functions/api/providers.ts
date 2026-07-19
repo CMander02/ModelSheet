@@ -25,7 +25,7 @@ export async function onRequest(context: {
             p.*,
             COUNT(m.id) AS model_count,
             COUNT(DISTINCT m.architecture) AS arch_count,
-            MAX(m.created_at) AS latest_created_at
+            MAX(m.released_at) AS latest_released_at
           FROM providers p
           LEFT JOIN models m ON m.provider_id = p.id
           GROUP BY p.id
@@ -44,8 +44,8 @@ export async function onRequest(context: {
       const item = acc.get(provider) ?? { archs: new Set<string>(), latest: null, count: 0 }
       item.count += 1
       if (model.architecture) item.archs.add(String(model.architecture))
-      if (typeof model.createdAt === "string" && (!item.latest || model.createdAt > item.latest)) {
-        item.latest = model.createdAt
+      if (typeof model.releasedAt === "string" && (!item.latest || model.releasedAt > item.latest)) {
+        item.latest = model.releasedAt
       }
       acc.set(provider, item)
     }
@@ -62,7 +62,7 @@ export async function onRequest(context: {
           scan: {},
           modelCount: value.count,
           archCount: value.archs.size,
-          latestCreatedAt: value.latest,
+          latestReleasedAt: value.latest,
         }))
         .sort((a, b) => b.modelCount - a.modelCount),
     )

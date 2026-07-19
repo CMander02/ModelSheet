@@ -27,7 +27,7 @@ const SORT_COLUMNS: Record<string, string> = {
   hiddenSize: "hidden_size",
   intermediateSize: "intermediate_size",
   numExperts: "num_experts",
-  createdAt: "created_at",
+  releasedAt: "released_at",
 }
 
 function sortModels(
@@ -46,7 +46,7 @@ function sortModels(
     let result: number
     if (typeof aVal === "number" && typeof bVal === "number") {
       result = aVal - bVal
-    } else if (sortKey === "createdAt") {
+    } else if (sortKey === "releasedAt") {
       result = new Date(String(aVal)).getTime() - new Date(String(bVal)).getTime()
     } else {
       result = String(aVal).toLowerCase().localeCompare(String(bVal).toLowerCase())
@@ -67,7 +67,7 @@ export async function onRequest(context: {
   const page = Math.max(1, parseInt(url.searchParams.get("page") ?? "1", 10) || 1)
   const limit = Math.min(100, Math.max(1, parseInt(url.searchParams.get("limit") ?? "30", 10) || 30))
   const offset = (page - 1) * limit
-  const sortKey = url.searchParams.get("sort") ?? "createdAt"
+  const sortKey = url.searchParams.get("sort") ?? "releasedAt"
   const sortDirection = url.searchParams.get("dir") === "asc" ? "asc" : "desc"
 
   try {
@@ -77,7 +77,7 @@ export async function onRequest(context: {
         ? "WHERE lower(name) LIKE ? OR lower(provider) LIKE ? OR lower(id) LIKE ?"
         : ""
       const params = query ? [`%${query}%`, `%${query}%`, `%${query}%`] : []
-      const sortColumn = SORT_COLUMNS[sortKey] ?? SORT_COLUMNS.createdAt
+      const sortColumn = SORT_COLUMNS[sortKey] ?? SORT_COLUMNS.releasedAt
       const sqlDirection = sortDirection === "asc" ? "ASC" : "DESC"
 
       const totalRow = await env.DB
@@ -121,7 +121,7 @@ export async function onRequest(context: {
       : models
 
     // Paginate
-    const sorted = sortModels(filtered, SORT_COLUMNS[sortKey] ? sortKey : "createdAt", sortDirection)
+    const sorted = sortModels(filtered, SORT_COLUMNS[sortKey] ? sortKey : "releasedAt", sortDirection)
     const total = sorted.length
     const start = offset
     const items = sorted.slice(start, start + limit)

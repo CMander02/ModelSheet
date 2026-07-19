@@ -196,7 +196,7 @@ modelsheet add --help
   "mlpFactor": 5.29,
   "gqaRatio": 7.0,
   "isMoe": false,
-  "createdAt": "2024-09-18T09:53:43.000Z"
+  "releasedAt": "2024-09-18T09:53:43.000Z"
 }
 ```
 
@@ -268,7 +268,7 @@ ModelSheet/
 
 ### 前端
 
-- [ ] 模型发布时间线视图（createdAt 作为 x 轴）
+- [ ] 模型发布时间线视图（releasedAt 作为 x 轴）
 - [ ] 移动端模型详情页布局优化
 - [ ] 可分享的模型对比 URL
 

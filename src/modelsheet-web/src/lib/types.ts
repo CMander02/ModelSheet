@@ -43,7 +43,7 @@ export interface ModelInfo {
   outputModalities?: string[]     // Output modalities
 
   // Metadata
-  createdAt?: string
+  releasedAt?: string
 
   // Openness: closed | open-weight | open-source
   openness?: string
@@ -179,7 +179,7 @@ export interface ProviderInfo {
   scan?: Record<string, unknown>
   modelCount: number
   archCount: number
-  latestCreatedAt: string | null
+  latestReleasedAt: string | null
 }
 
 export interface ProviderDetail {

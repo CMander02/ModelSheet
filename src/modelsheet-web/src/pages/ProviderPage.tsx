@@ -37,8 +37,8 @@ function ModelCard({ model, language }: { model: ModelInfo; language: Language }
               </span>
             )}
           </div>
-          {model.createdAt && (
-            <span className="text-[11px] text-muted-foreground">{formatDate(model.createdAt)}</span>
+          {model.releasedAt && (
+            <span className="text-[11px] text-muted-foreground">{formatDate(model.releasedAt)}</span>
           )}
         </div>
       </div>
@@ -119,10 +119,10 @@ export function ProviderPage() {
   const providerModels = useMemo(() => {
     return models
       .sort((a, b) => {
-        if (!a.createdAt && !b.createdAt) return 0
-        if (!a.createdAt) return 1
-        if (!b.createdAt) return -1
-        return b.createdAt.localeCompare(a.createdAt)
+        if (!a.releasedAt && !b.releasedAt) return 0
+        if (!a.releasedAt) return 1
+        if (!b.releasedAt) return -1
+        return b.releasedAt.localeCompare(a.releasedAt)
       })
   }, [models])
 
@@ -139,7 +139,7 @@ export function ProviderPage() {
   const byYear = useMemo(() => {
     const groups: Record<string, ModelInfo[]> = {}
     for (const m of providerModels) {
-      const year = m.createdAt ? m.createdAt.slice(0, 4) : (isZh ? "未知" : "Unknown")
+      const year = m.releasedAt ? m.releasedAt.slice(0, 4) : (isZh ? "未知" : "Unknown")
       if (!groups[year]) groups[year] = []
       groups[year].push(m)
     }

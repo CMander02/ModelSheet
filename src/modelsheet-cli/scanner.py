@@ -43,7 +43,7 @@ def fetch_hf_org_models(
 ) -> list[dict]:
     """Fetch all model cards for an org from HuggingFace API.
 
-    Returns list of dicts with keys: id, pipeline_tag, tags, createdAt.
+    Returns list of dicts with keys: id, pipeline_tag, tags, released_at.
     """
     models = []
     params = {
@@ -67,7 +67,7 @@ def fetch_hf_org_models(
                     "id": m.get("id", ""),
                     "pipeline_tag": m.get("pipeline_tag"),
                     "tags": m.get("tags", []),
-                    "created_at": m.get("createdAt"),
+                    "released_at": m.get("createdAt"),
                     "source": "huggingface",
                 })
             return models
@@ -131,7 +131,7 @@ def fetch_ms_org_models(
                     "id": ms_id,
                     "pipeline_tag": pipeline_tag,
                     "tags": m.get("Tags", []),
-                    "created_at": m.get("CreatedTime"),
+                    "released_at": m.get("CreatedTime"),
                     "source": "modelscope",
                 })
             total = (data.get("Data", {}) or {}).get("TotalCount", 0)

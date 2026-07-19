@@ -29,7 +29,7 @@ PLACEHOLDERS = [
         "inputModalities": ["text"],
         "outputModalities": ["text"],
         "isMoe": False,
-        "createdAt": "2024-12-03T00:00:00.000Z",
+        "releasedAt": "2024-12-03T00:00:00.000Z",
     },
     {
         "id": "amazon/nova-lite",
@@ -41,7 +41,7 @@ PLACEHOLDERS = [
         "inputModalities": ["text", "image", "video"],
         "outputModalities": ["text"],
         "isMoe": False,
-        "createdAt": "2024-12-03T00:00:00.000Z",
+        "releasedAt": "2024-12-03T00:00:00.000Z",
     },
     {
         "id": "amazon/nova-pro",
@@ -53,7 +53,7 @@ PLACEHOLDERS = [
         "inputModalities": ["text", "image", "video"],
         "outputModalities": ["text"],
         "isMoe": False,
-        "createdAt": "2024-12-03T00:00:00.000Z",
+        "releasedAt": "2024-12-03T00:00:00.000Z",
     },
     {
         "id": "amazon/nova-premier",
@@ -65,7 +65,7 @@ PLACEHOLDERS = [
         "inputModalities": ["text", "image", "video"],
         "outputModalities": ["text"],
         "isMoe": False,
-        "createdAt": "2025-04-30T00:00:00.000Z",
+        "releasedAt": "2025-04-30T00:00:00.000Z",
     },
 
     # --- Amazon Titan family (text / embedding-skipped) ---
@@ -79,7 +79,7 @@ PLACEHOLDERS = [
         "inputModalities": ["text"],
         "outputModalities": ["text"],
         "isMoe": False,
-        "createdAt": "2023-09-28T00:00:00.000Z",
+        "releasedAt": "2023-09-28T00:00:00.000Z",
     },
     {
         "id": "amazon/titan-text-lite",
@@ -91,7 +91,7 @@ PLACEHOLDERS = [
         "inputModalities": ["text"],
         "outputModalities": ["text"],
         "isMoe": False,
-        "createdAt": "2023-09-28T00:00:00.000Z",
+        "releasedAt": "2023-09-28T00:00:00.000Z",
     },
     {
         "id": "amazon/titan-text-premier",
@@ -103,7 +103,7 @@ PLACEHOLDERS = [
         "inputModalities": ["text"],
         "outputModalities": ["text"],
         "isMoe": False,
-        "createdAt": "2024-04-30T00:00:00.000Z",
+        "releasedAt": "2024-04-30T00:00:00.000Z",
     },
 
     # --- Cursor Composer family (closed, IDE-first coding agent models) ---
@@ -117,7 +117,7 @@ PLACEHOLDERS = [
         "inputModalities": ["text"],
         "outputModalities": ["text"],
         "isMoe": True,
-        "createdAt": "2025-10-29T00:00:00.000Z",
+        "releasedAt": "2025-10-29T00:00:00.000Z",
     },
     {
         "id": "cursor/composer-1-mini",
@@ -129,7 +129,7 @@ PLACEHOLDERS = [
         "inputModalities": ["text"],
         "outputModalities": ["text"],
         "isMoe": True,
-        "createdAt": "2025-10-29T00:00:00.000Z",
+        "releasedAt": "2025-10-29T00:00:00.000Z",
     },
 ]
 

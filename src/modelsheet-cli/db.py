@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS models (
   parameter_source TEXT,
   parameter_source_url TEXT,
   name_note TEXT,
-  created_at TEXT,
+  released_at TEXT,
   updated_at TEXT,
   raw_json TEXT NOT NULL,
   FOREIGN KEY (provider_id) REFERENCES providers(id)
@@ -146,7 +146,7 @@ CREATE TABLE IF NOT EXISTS sync_runs (
 CREATE INDEX IF NOT EXISTS idx_models_provider_id ON models(provider_id);
 CREATE INDEX IF NOT EXISTS idx_models_architecture ON models(architecture);
 CREATE INDEX IF NOT EXISTS idx_models_total_parameters ON models(total_parameters);
-CREATE INDEX IF NOT EXISTS idx_models_created_at ON models(created_at);
+CREATE INDEX IF NOT EXISTS idx_models_released_at ON models(released_at);
 CREATE INDEX IF NOT EXISTS idx_models_search ON models(name, provider, id);
 CREATE INDEX IF NOT EXISTS idx_architecture_aliases_architecture_id
   ON architecture_aliases(architecture_id);
@@ -546,7 +546,7 @@ def _model_row(model: dict[str, Any], provider_id_by_name: dict[str, str]) -> tu
         model.get("parameterSource"),
         model.get("parameterSourceUrl"),
         model.get("nameNote"),
-        model.get("createdAt"),
+        model.get("releasedAt"),
         model.get("updatedAt"),
         _json_text(model),
     )
@@ -606,7 +606,7 @@ def build_sqlite(
               num_shared_experts, num_experts_per_token, num_activated_experts,
               moe_intermediate_size_json, input_modalities_json, output_modalities_json,
               openness, task, knowledge_cutoff, parameter_confidence, parameter_source,
-              parameter_source_url, name_note, created_at, updated_at, raw_json
+              parameter_source_url, name_note, released_at, updated_at, raw_json
             ) VALUES (
               ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
               ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,

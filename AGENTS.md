@@ -251,7 +251,7 @@ truth for CLI and frontend provider display names.
 
 Typical model fields:
 
-- Metadata: `id`, `name`, `provider`, URLs, `createdAt`, `openness`.
+- Metadata: `id`, `name`, `provider`, URLs, `releasedAt`, `openness`.
 - Parameters: `totalParameters`, `activeParameters`, `embeddingParameters`, `nonEmbeddingParameters`.
 - Architecture: `architecture`, `architectureFamily`, layers, heads, hidden size, FFN size, RoPE/norm/activation.
 - MoE: `isMoe`, experts, experts per token, active experts, MoE intermediate size.

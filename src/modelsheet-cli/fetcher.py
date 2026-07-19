@@ -3,7 +3,7 @@
 Strategy:
   - CN providers (region=cn in providers.json):
       1. Config files   → ModelScope API
-      2. Metadata       → HuggingFace API (createdAt, safetensors total)
+      2. Metadata       → HuggingFace API (releasedAt, safetensors total)
       3. HF URL         → always constructed as https://huggingface.co/{org}/{model}
       4. Fallback       → HF Mirror if MS fails
 
@@ -112,7 +112,7 @@ class ModelFetcher:
     # ── HuggingFace ────────────────────────────────────────────────────────
 
     def fetch_hf_metadata(self, model_id: str) -> Optional[dict]:
-        """Fetch model metadata from HuggingFace API (createdAt, safetensors, tags)."""
+        """Fetch model metadata from HuggingFace API (release date, safetensors, tags)."""
         urls = [f"{HF_API_URL}/{model_id}", f"{HF_MIRROR_API_URL}/{model_id}"]
         last_error = None
         for i, url in enumerate(urls):
@@ -225,8 +225,8 @@ class ModelFetcher:
 
     def _extract_hf_metadata(self, raw: dict) -> dict:
         meta: dict = {}
-        if created_at := raw.get("createdAt"):
-            meta["createdAt"] = created_at
+        if released_at := raw.get("createdAt"):
+            meta["releasedAt"] = released_at
         if sf := raw.get("safetensors", {}):
             if total := sf.get("total"):
                 meta["totalParameters"] = total
@@ -270,18 +270,18 @@ class ModelFetcher:
         """Build _metadata dict: try HF API first, MS as fallback for CN."""
         meta: dict = {}
 
-        # HF API (primary source for createdAt, totalParameters)
+        # HF API (primary source for releasedAt and totalParameters)
         hf_raw = self.fetch_hf_metadata(model_id)
         if hf_raw:
             meta.update(self._extract_hf_metadata(hf_raw))
 
-        # Fallback to MS metadata for createdAt if HF didn't have it
-        if is_cn and not meta.get("createdAt"):
+        # Fallback to ModelScope release metadata when HF has no date.
+        if is_cn and not meta.get("releasedAt"):
             ms_id = self._ms_model_id(model_id)
             if ms_id:
                 ms_raw = self.fetch_ms_metadata(ms_id)
-                if ms_raw and (created := ms_raw.get("CreatedAt") or ms_raw.get("created_at")):
-                    meta["createdAt"] = created
+                if ms_raw and (released := ms_raw.get("CreatedAt") or ms_raw.get("created_at")):
+                    meta["releasedAt"] = released
 
         # README from whichever source has configs
         readme = None

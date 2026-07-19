@@ -20,7 +20,7 @@ from .extractors import (
     extract_modelscope_url,
     extract_tech_report,
     extract_arxiv_url,
-    extract_created_at,
+    extract_released_at,
     extract_pipeline_tag,
     extract_task,
     extract_input_modalities,
@@ -117,7 +117,7 @@ class ParsedModel:
     task: Optional[str] = None
 
     # Metadata
-    created_at: Optional[str] = None
+    released_at: Optional[str] = None
     openness: str = "open-weight"
 
     def to_dict(self) -> dict:
@@ -204,7 +204,7 @@ class ModelParser:
             pipeline_tag=extract_pipeline_tag(ctx),
             task=extract_task(ctx),
             # Metadata
-            created_at=extract_created_at(ctx),
+            released_at=extract_released_at(ctx),
         )
 
     def _get_model_dir(self, model_id: str) -> Path:

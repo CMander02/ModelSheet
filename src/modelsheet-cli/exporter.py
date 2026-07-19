@@ -99,7 +99,7 @@ class ModelExporter:
             # Pipeline tag (task display name only — raw pipelineTag is internal)
             "task": model.task,
             # Metadata
-            "createdAt": model.created_at,
+            "releasedAt": model.released_at,
             # Openness
             "openness": model.openness,
         }

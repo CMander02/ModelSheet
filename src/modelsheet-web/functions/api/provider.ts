@@ -28,7 +28,7 @@ export async function onRequest(context: {
             p.*,
             COUNT(m.id) AS model_count,
             COUNT(DISTINCT m.architecture) AS arch_count,
-            MAX(m.created_at) AS latest_created_at
+            MAX(m.released_at) AS latest_released_at
           FROM providers p
           LEFT JOIN models m ON m.provider_id = p.id
           WHERE p.id = ? OR lower(p.display_name) = lower(?) OR lower(p.display_name) LIKE lower(?)
@@ -45,7 +45,7 @@ export async function onRequest(context: {
           SELECT raw_json
           FROM models
           WHERE provider_id = ?
-          ORDER BY created_at IS NULL, created_at DESC, name ASC
+          ORDER BY released_at IS NULL, released_at DESC, name ASC
           `,
         )
         .bind(slug)
@@ -69,8 +69,8 @@ export async function onRequest(context: {
         displayName: providerName,
         modelCount: providerModels.length,
         archCount: new Set(providerModels.map((model) => model.architecture)).size,
-        latestCreatedAt: providerModels
-          .map((model) => model.createdAt)
+        latestReleasedAt: providerModels
+          .map((model) => model.releasedAt)
           .filter((value): value is string => typeof value === "string")
           .sort()
           .reverse()[0] ?? null,

@@ -63,7 +63,8 @@
     "Google DeepMind": {
       "orgs": [
         "google",
-        "deepmind"
+        "deepmind",
+        "google-t5"
       ],
       "i18n": {
         "en": "Google DeepMind",
@@ -151,7 +152,9 @@
       "orgs": [
         "internlm",
         "OpenGVLab",
-        "OpenMMLab"
+        "OpenMMLab",
+        "InternScience",
+        "opencompass"
       ],
       "i18n": {
         "en": "Shanghai AI Lab",
@@ -160,7 +163,9 @@
       "scan": {
         "hf": [
           "internlm",
-          "OpenGVLab"
+          "OpenGVLab",
+          "InternScience",
+          "opencompass"
         ],
         "ms": [
           "Shanghai_AI_Laboratory"
@@ -305,13 +310,80 @@
     },
     "Cohere": {
       "orgs": [
-        "CohereForAI"
+        "CohereForAI",
+        "CohereLabs"
       ],
       "i18n": {
         "en": "Cohere",
         "zh": "Cohere"
       },
+      "scan": {
+        "hf": [
+          "CohereForAI",
+          "CohereLabs"
+        ]
+      },
       "region": "global"
+    },
+    "JetBrains": {
+      "orgs": [
+        "JetBrains"
+      ],
+      "i18n": {
+        "en": "JetBrains",
+        "zh": "JetBrains"
+      },
+      "scan": {
+        "hf": [
+          "JetBrains"
+        ]
+      },
+      "region": "global"
+    },
+    "Nex AGI": {
+      "orgs": [
+        "nex-agi"
+      ],
+      "i18n": {
+        "en": "Nex AGI",
+        "zh": "Nex AGI"
+      },
+      "scan": {
+        "hf": [
+          "nex-agi"
+        ]
+      },
+      "region": "global"
+    },
+    "OpenPangu": {
+      "orgs": [
+        "openpangu"
+      ],
+      "i18n": {
+        "en": "OpenPangu",
+        "zh": "OpenPangu"
+      },
+      "scan": {
+        "hf": [
+          "openpangu"
+        ]
+      },
+      "region": "cn"
+    },
+    "Weibo AI": {
+      "orgs": [
+        "WeiboAI"
+      ],
+      "i18n": {
+        "en": "Weibo AI",
+        "zh": "微博 AI"
+      },
+      "scan": {
+        "hf": [
+          "WeiboAI"
+        ]
+      },
+      "region": "cn"
     },
     "NVIDIA": {
       "orgs": [
@@ -381,7 +453,8 @@
     },
     "Moonshot AI": {
       "orgs": [
-        "moonshotai"
+        "moonshotai",
+        "AI-MO"
       ],
       "i18n": {
         "en": "Moonshot AI",
@@ -389,7 +462,8 @@
       },
       "scan": {
         "hf": [
-          "moonshotai"
+          "moonshotai",
+          "AI-MO"
         ],
         "ms": [
           "moonshot-ai"
@@ -1010,12 +1084,75 @@
       "region": "cn"
     },
     "Thinking Machines": {
-      "orgs": ["thinkingmachines"],
+      "orgs": [
+        "thinkingmachines",
+        "Thinking Machines Lab"
+      ],
       "i18n": {
         "en": "Thinking Machines",
         "zh": "Thinking Machines"
       },
       "region": "global"
+    },
+    "HKUST NLP": {
+      "orgs": [
+        "hkust-nlp"
+      ],
+      "i18n": {
+        "en": "HKUST NLP",
+        "zh": "香港科技大学 NLP"
+      },
+      "scan": {
+        "hf": [
+          "hkust-nlp"
+        ]
+      },
+      "region": "cn"
+    },
+    "SIA Lab": {
+      "orgs": [
+        "BytedTsinghua-SIA"
+      ],
+      "i18n": {
+        "en": "Tsinghua AIR × ByteDance Seed Joint Lab",
+        "zh": "清华 AIR × 字节跳动 Seed 联合实验室"
+      },
+      "scan": {
+        "hf": [
+          "BytedTsinghua-SIA"
+        ]
+      },
+      "region": "cn"
+    },
+    "ScienceOne": {
+      "orgs": [
+        "ScienceOne-AI"
+      ],
+      "i18n": {
+        "en": "ScienceOne (CASIA)",
+        "zh": "ScienceOne（中科院自动化所）"
+      },
+      "scan": {
+        "hf": [
+          "ScienceOne-AI"
+        ]
+      },
+      "region": "cn"
+    },
+    "Tsinghua KEG": {
+      "orgs": [
+        "THU-KEG"
+      ],
+      "i18n": {
+        "en": "Tsinghua KEG",
+        "zh": "清华大学 KEG"
+      },
+      "scan": {
+        "hf": [
+          "THU-KEG"
+        ]
+      },
+      "region": "cn"
     },
     "Basalt Labs": {
       "orgs": ["basaltlabsai"],

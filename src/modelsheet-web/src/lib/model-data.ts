@@ -45,7 +45,7 @@ const COLUMN_CONFIGS: Omit<ColumnConfig, "label">[] = [
   { key: "huggingfaceUrl", visible: false, sortable: false, type: "string" },
   { key: "arxivUrl", visible: false, sortable: false, type: "string" },
   { key: "techReport", visible: false, sortable: false, type: "string" },
-  { key: "createdAt", visible: false, sortable: true, type: "date" },
+  { key: "releasedAt", visible: false, sortable: true, type: "date" },
 
   // Openness (not in any preset — visible via custom field selector only)
   { key: "openness", visible: false, sortable: true, type: "string" },
@@ -67,8 +67,8 @@ export const DEFAULT_COLUMNS: ColumnConfig[] = getColumnConfigs("zh")
 export const COMPLEXITY_PRESETS: Record<string, ComplexityPreset> = {
   simple: {
     level: "simple",
-    columns: ["name", "provider", "totalParameters", "contextLength", "arxivUrl", "createdAt"],
-    description: "基础信息：名称、提供商、参数量、上下文长度、ArXiv链接、创建时间",
+    columns: ["name", "provider", "totalParameters", "contextLength", "arxivUrl", "releasedAt"],
+    description: "基础信息：名称、提供商、参数量、上下文长度、ArXiv链接、发布时间",
   },
   enthusiast: {
     level: "enthusiast",
@@ -80,7 +80,7 @@ export const COMPLEXITY_PRESETS: Record<string, ComplexityPreset> = {
       "contextLength",
       "architecture",
       "isMoe",
-      "createdAt",
+      "releasedAt",
     ],
     description: "爱好者级：增加架构、MoE等信息",
   },
@@ -168,13 +168,13 @@ export async function searchModels(
   q: string = "",
   page: number = 1,
   limit: number = 30,
-  sortConfig: SortConfig = { key: "createdAt", direction: "desc" }
+  sortConfig: SortConfig = { key: "releasedAt", direction: "desc" }
 ): Promise<SearchResult> {
   const params = new URLSearchParams({
     q,
     page: String(page),
     limit: String(limit),
-    sort: sortConfig.key ?? "createdAt",
+    sort: sortConfig.key ?? "releasedAt",
     dir: sortConfig.direction,
   })
   const resp = await fetch(`/api/search?${params}`)

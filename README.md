@@ -204,7 +204,7 @@ modelsheet add --help
   "mlpFactor": 5.29,
   "gqaRatio": 7.0,
   "isMoe": false,
-  "createdAt": "2024-09-18T09:53:43.000Z"
+  "releasedAt": "2024-09-18T09:53:43.000Z"
 }
 ```
 
@@ -276,7 +276,7 @@ ModelSheet/
 - [ ] ModelScope fetch parity with HuggingFace fetcher
 
 ### Frontend
-- [ ] Model timeline view (createdAt on x-axis)
+- [ ] Model timeline view (releasedAt on x-axis)
 - [ ] Mobile model card page layout improvements
 - [ ] Shareable comparison URLs
 

@@ -150,12 +150,13 @@ def extract_tech_report(ctx: ConfigContext) -> str:
     return ""
 
 
-def extract_created_at(ctx: ConfigContext) -> Optional[str]:
-    """Extract creation timestamp.
+def extract_released_at(ctx: ConfigContext) -> Optional[str]:
+    """Extract the public release timestamp.
 
-    Source: API metadata createdAt
+    Hugging Face metadata is the preferred source for open models. Closed-model
+    fetchers use the earliest date found in the technical blog or report.
     """
-    return ctx.metadata.get("createdAt")
+    return ctx.metadata.get("releasedAt")
 
 
 # Pipeline tag to modality mapping (loaded from data/pipeline_tags.json)

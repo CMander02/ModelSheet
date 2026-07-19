@@ -89,7 +89,7 @@ export function modelFromRow(row: Record<string, unknown>): Record<string, unkno
     parameterSource: row.parameter_source,
     parameterSourceUrl: row.parameter_source_url,
     nameNote: row.name_note,
-    createdAt: row.created_at,
+    releasedAt: row.released_at,
     updatedAt: row.updated_at,
   }
 }
@@ -131,7 +131,7 @@ export function providerFromRow(row: Record<string, unknown>): Record<string, un
     scan: parseJson(row.scan_json, {}),
     modelCount: row.model_count ?? 0,
     archCount: row.arch_count ?? 0,
-    latestCreatedAt: row.latest_created_at ?? null,
+    latestReleasedAt: row.latest_released_at ?? null,
   }
 }
 

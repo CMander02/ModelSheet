@@ -1850,7 +1850,7 @@ def fetch_openai_cmd(
         - Context window and max output tokens
         - Knowledge cutoff date
         - Input/output modalities (text, image, audio, …)
-        - Snapshot dates (earliest used as createdAt)
+        - Snapshot dates (earliest used as releasedAt)
         - Architecture family (GPT / o-series) inferred from slug
 
     \\b

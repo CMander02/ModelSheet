@@ -367,7 +367,7 @@ export function ModelCardPage() {
               <Field label={isZh ? "上下文长度" : "Context Length"}
                 value={model.contextLength ? formatContextLength(model.contextLength) : null} />
               <Field label={isZh ? "发布时间" : "Released"}
-                value={model.createdAt ? formatDate(model.createdAt) : null} />
+                value={model.releasedAt ? formatDate(model.releasedAt) : null} />
               {model.vocabSize && <Field label={isZh ? "词表大小" : "Vocab Size"} value={formatNumber(model.vocabSize)} />}
               {model.embeddingDim && <Field label={isZh ? "Embedding 维度" : "Emb. Dim"} value={formatNumber(model.embeddingDim)} />}
             </div>

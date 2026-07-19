@@ -22,11 +22,11 @@ function fmtCtx(v: number | null | undefined): string {
 
 // ─── sort config ───────────────────────────────────────────────────────────
 
-type SortField = "createdAt" | "name" | "provider" | "totalParameters" | "activeParameters" | "contextLength"
+type SortField = "releasedAt" | "name" | "provider" | "totalParameters" | "activeParameters" | "contextLength"
 type SortDir = "asc" | "desc"
 
 const SORT_OPTIONS: { field: SortField; labelZh: string; labelEn: string; defaultDir: SortDir }[] = [
-  { field: "createdAt",         labelZh: "发布时间",  labelEn: "Release",       defaultDir: "desc" },
+  { field: "releasedAt",        labelZh: "发布时间",  labelEn: "Release",       defaultDir: "desc" },
   { field: "name",              labelZh: "模型名称",  labelEn: "Name",          defaultDir: "asc"  },
   { field: "provider",          labelZh: "提供商",    labelEn: "Provider",      defaultDir: "asc"  },
   { field: "totalParameters",   labelZh: "总参数",    labelEn: "Params",        defaultDir: "desc" },
@@ -36,7 +36,7 @@ const SORT_OPTIONS: { field: SortField; labelZh: string; labelEn: string; defaul
 
 // ─── card fields config ────────────────────────────────────────────────────
 
-type CardField = "totalParameters" | "activeParameters" | "contextLength" | "inputModalities" | "outputModalities" | "architecture" | "numLayers" | "numExperts" | "createdAt"
+type CardField = "totalParameters" | "activeParameters" | "contextLength" | "inputModalities" | "outputModalities" | "architecture" | "numLayers" | "numExperts" | "releasedAt"
 
 interface CardFieldDef {
   key: CardField
@@ -54,7 +54,7 @@ const CARD_FIELD_DEFS: CardFieldDef[] = [
   { key: "architecture",     labelZh: "架构",     labelEn: "Arch",     group: "属性" },
   { key: "numLayers",        labelZh: "层数",     labelEn: "Layers",   group: "属性" },
   { key: "numExperts",       labelZh: "专家数",   labelEn: "Experts",  group: "属性" },
-  { key: "createdAt",        labelZh: "发布时间", labelEn: "Released", group: "属性" },
+  { key: "releasedAt",       labelZh: "发布时间", labelEn: "Released", group: "属性" },
 ]
 const CARD_FIELD_KEYS = new Set<CardField>(CARD_FIELD_DEFS.map(def => def.key))
 
@@ -138,7 +138,7 @@ function ModelCard({ model, language, selected, onSelect, onNavigate, onBeforeNa
       case "architecture":     return model.architecture ?? "—"
       case "numLayers":        return model.numLayers != null ? String(model.numLayers) : "—"
       case "numExperts":       return model.numExperts != null ? String(model.numExperts) : "—"
-      case "createdAt":        return model.createdAt ? new Date(model.createdAt).toLocaleDateString("zh-CN", { year: "numeric", month: "2-digit" }) : "—"
+      case "releasedAt":       return model.releasedAt ? new Date(model.releasedAt).toLocaleDateString("zh-CN", { year: "numeric", month: "2-digit" }) : "—"
       default: return "—"
     }
   }
@@ -153,7 +153,7 @@ function ModelCard({ model, language, selected, onSelect, onNavigate, onBeforeNa
       {/* Icon */}
       <div className="relative shrink-0 cursor-pointer mt-0.5" onClick={() => onNavigate(model)}>
         <ModelBrandIcon model={model.id} provider={model.provider} size={40} />
-        {isNewThisWeek(model.createdAt) && (
+        {isNewThisWeek(model.releasedAt) && (
           <span className="absolute -top-1 -left-1 w-9 h-9 overflow-hidden pointer-events-none">
             <span className="absolute top-[11px] -left-[10px] w-[52px] text-center text-[7px] font-black leading-none text-white py-[2.5px] rotate-[-45deg] origin-center bg-gradient-to-r from-violet-500 to-pink-500 select-none">
               NEW
@@ -686,7 +686,7 @@ export function MobileModelList({
           {SORT_OPTIONS.map(opt => {
             const isActive = opt.field === sortConfig.key
             const isText = opt.field === "name" || opt.field === "provider"
-            const isDate = opt.field === "createdAt"
+            const isDate = opt.field === "releasedAt"
             const ascLabel  = isText ? "A→Z"  : isDate ? (isZh ? "旧→新" : "Old→New") : (isZh ? "小→大" : "Low→High")
             const descLabel = isText ? "Z→A"  : isDate ? (isZh ? "新→旧" : "New→Old") : (isZh ? "大→小" : "High→Low")
 

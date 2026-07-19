@@ -149,7 +149,7 @@ const translations = {
       inputModalities: "输入模态",
       outputModalities: "输出模态",
       task: "任务类型",
-      createdAt: "创建时间",
+      releasedAt: "发布时间",
       openness: "开源性",
     },
     // Architecture gallery
@@ -278,7 +278,7 @@ const translations = {
       inputModalities: "Input Modalities",
       outputModalities: "Output Modalities",
       task: "Task Type",
-      createdAt: "Created At",
+      releasedAt: "Release Date",
       openness: "Openness",
     },
     // Architecture gallery

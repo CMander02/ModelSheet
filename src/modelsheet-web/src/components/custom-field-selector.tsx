@@ -51,7 +51,7 @@ const FIELD_GROUPS = {
   other: {
     label: "其他信息",
     labelEn: "Other Information",
-    fields: ["huggingfaceUrl", "arxivUrl", "techReport", "createdAt"]
+    fields: ["huggingfaceUrl", "arxivUrl", "techReport", "releasedAt"]
   }
 }
 

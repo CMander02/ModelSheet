@@ -11,7 +11,7 @@
 | `generation_config.json` | P2 部署 | 默认生成参数 |
 | `adapter_config.json` | P1 类型 | LoRA 判断 |
 | `model.safetensors.index.json` | P2 部署 | 精确文件大小 |
-| `_metadata` (API) | P0 核心 | 参数量、创建时间、tags |
+| `_metadata` (API) | P0 核心 | 参数量、发布时间、tags |
 
 ### 1.2 字段来源详细映射
 
@@ -24,7 +24,7 @@
 | HuggingFace URL | `huggingface_url` | `huggingfaceUrl` | 字符串拼接 | 模型页面链接 |
 | 技术报告 | `tech_report` | `techReport` | (待实现) | 技术报告 URL |
 | arXiv URL | `arxiv_url` | `arxivUrl` | API tags 数组 | 匹配 `arxiv:XXXX.XXXXX` |
-| 创建时间 | `created_at` | `createdAt` | API metadata | ISO 格式时间戳 |
+| 发布时间 | `released_at` | `releasedAt` | HF 优先，技术博客/报告取最早日期 | ISO 格式时间戳 |
 
 #### 规模参数 (Parameters)
 | 字段 | Python 名 | JSON 名 | 来源 | 备注 |
@@ -78,7 +78,7 @@ interface ModelInfo {
   huggingfaceUrl?: string       // HuggingFace 链接
   techReport?: string           // 技术报告 URL
   arxivUrl?: string             // arXiv 论文链接
-  createdAt?: string            // 创建时间，ISO 格式
+  releasedAt?: string            // 发布时间，ISO 格式
 
   // === 规模参数 ===
   totalParameters?: number      // 总参数量
@@ -138,7 +138,7 @@ interface ColumnConfig {
 const FIELD_GROUPS = {
   basic: {
     label: '基础信息',
-    fields: ['name', 'provider', 'createdAt', 'totalParameters', 'contextLength']
+    fields: ['name', 'provider', 'releasedAt', 'totalParameters', 'contextLength']
   },
   architecture: {
     label: '架构信息',
@@ -166,7 +166,7 @@ const FIELD_GROUPS = {
 | 等级 | 显示字段 | 适用人群 |
 |------|----------|----------|
 | simple | name, provider, totalParameters, contextLength | 普通用户 |
-| enthusiast | + createdAt, architecture, embeddingDim, isMoe | 爱好者 |
+| enthusiast | + releasedAt, architecture, embeddingDim, isMoe | 爱好者 |
 | developer | + numLayers, numHeads, positionEncoding, vocabSize, activation | 开发者 |
 | custom | 用户自定义 | 高级用户 |
 
@@ -184,7 +184,7 @@ const COMPLEXITY_PRESETS: Record<ComplexityLevel, string[]> = {
   enthusiast: [
     'name',
     'provider',
-    'createdAt',
+    'releasedAt',
     'totalParameters',
     'contextLength',
     'architecture',
@@ -195,7 +195,7 @@ const COMPLEXITY_PRESETS: Record<ComplexityLevel, string[]> = {
   developer: [
     'name',
     'provider',
-    'createdAt',
+    'releasedAt',
     'totalParameters',
     'activeParameters',
     'contextLength',
@@ -330,7 +330,7 @@ function formatBoolean(value: boolean | undefined, locale: string = 'zh'): strin
     "mlpFactor": 4.0,
     "gqaRatio": 4.0,
     "isMoe": false,
-    "createdAt": "2024-09-18T09:53:43.000Z"
+    "releasedAt": "2024-09-18T09:53:43.000Z"
   },
   {
     "id": "deepseek-ai/DeepSeek-V3-Base",
@@ -361,7 +361,7 @@ function formatBoolean(value: boolean | undefined, locale: string = 'zh'): strin
     "numExpertsPerToken": 8,
     "numActivatedExperts": 9,
     "moeIntermediateSize": 2048,
-    "createdAt": "2024-12-26T10:00:00.000Z"
+    "releasedAt": "2024-12-26T10:00:00.000Z"
   }
 ]
 ```

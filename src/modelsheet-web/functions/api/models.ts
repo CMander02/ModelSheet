@@ -25,7 +25,7 @@ export async function onRequest(context: {
           SELECT raw_json
           FROM models
           ${where}
-          ORDER BY created_at IS NULL, created_at DESC, name ASC
+          ORDER BY released_at IS NULL, released_at DESC, name ASC
           `,
         )
         .bind(...ids)

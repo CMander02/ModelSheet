@@ -58,7 +58,7 @@ def _merge_into_db(new_entries: list[dict], dry_run: bool) -> tuple[list[str], l
             added.append(entry["id"])
 
     if not dry_run and added:
-        models.sort(key=lambda m: (m.get("createdAt", ""), m["id"]))
+        models.sort(key=lambda m: (m.get("releasedAt", ""), m["id"]))
         with open(MODELS_FILE, "w", encoding="utf-8") as f:
             json.dump(models, f, ensure_ascii=False, indent=2)
             f.write("\n")
@@ -128,7 +128,7 @@ _OPENAI_EXTRACT_JS = r"""() => {
         }
     }
 
-    // ── Snapshot dates → earliest = createdAt ────────────────────────────────
+    // ── Snapshot dates → earliest = releasedAt ───────────────────────────────
     const snapHdr = allDivs.find(el => el.childElementCount === 0 && el.innerText.trim() === 'Snapshots');
     result.snapshotDates = [];
     if (snapHdr) {
@@ -214,7 +214,7 @@ def _openai_extract_one(page, slug: str) -> dict:
 
     if data.get("snapshotDates"):
         earliest = sorted(data["snapshotDates"])[0]
-        result["createdAt"] = f"{earliest}T00:00:00.000Z"
+        result["releasedAt"] = f"{earliest}T00:00:00.000Z"
     if data.get("contextLength"):
         result["contextLength"] = data["contextLength"]
     if data.get("knowledgeCutoff"):
@@ -407,7 +407,7 @@ def fetch_anthropic(
                     for fmt in ("%B %Y", "%B %d, %Y", "%b %Y", "%b %d, %Y"):
                         d = _parse_date(data["publishedText"], fmt)
                         if d:
-                            entry["createdAt"] = f"{d}T00:00:00.000Z"
+                            entry["releasedAt"] = f"{d}T00:00:00.000Z"
                             break
 
                 results.append(entry)
@@ -579,7 +579,7 @@ def fetch_google(
                     for fmt in ("%B %d, %Y", "%B %Y", "%b %d, %Y", "%b %Y"):
                         d = _parse_date(data["publishedText"], fmt)
                         if d:
-                            entry["createdAt"] = f"{d}T00:00:00.000Z"
+                            entry["releasedAt"] = f"{d}T00:00:00.000Z"
                             break
 
                 results.append(entry)

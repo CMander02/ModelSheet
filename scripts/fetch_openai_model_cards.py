@@ -118,7 +118,7 @@ _EXTRACT_JS = r"""() => {
         }
     }
 
-    // ── Snapshot dates → earliest = createdAt ───────────────────────────────
+    // ── Snapshot dates → earliest = releasedAt ───────────────────────────────
     const snapHdr = allDivs.find(el => el.childElementCount === 0 && el.innerText.trim() === 'Snapshots');
     result.snapshotDates = [];
     if (snapHdr) {
@@ -171,7 +171,7 @@ def extract_model_data(page, slug: str) -> dict:
 
     if data.get("snapshotDates"):
         earliest = sorted(data["snapshotDates"])[0]
-        result["createdAt"] = f"{earliest}T00:00:00.000Z"
+        result["releasedAt"] = f"{earliest}T00:00:00.000Z"
 
     if data.get("contextLength"):
         result["contextLength"] = data["contextLength"]
@@ -255,7 +255,7 @@ def main():
 
     if args.add and new_entries:
         models.extend(new_entries)
-        models.sort(key=lambda m: (m.get("createdAt", ""), m["id"]))
+        models.sort(key=lambda m: (m.get("releasedAt", ""), m["id"]))
         with open(MODELS_FILE, "w", encoding="utf-8") as f:
             json.dump(models, f, ensure_ascii=False, indent=2)
             f.write("\n")

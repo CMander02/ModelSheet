@@ -40,7 +40,7 @@ const COLUMN_MIN_WIDTHS: Record<string, number> = {
   contextLength: 132,
   architecture: 140,
   isMoe: 96,
-  createdAt: 128,
+  releasedAt: 128,
   arxivUrl: 132,
   numLayers: 112,
   numHeads: 112,
@@ -634,7 +634,7 @@ export function ModelTable({
                             <ParamCell value={model[column.key]} model={model} />
                           ) : column.key === "name" ? (
                             <>
-                              {isNewThisWeek(model.createdAt) && (
+                              {isNewThisWeek(model.releasedAt) && (
                                 <span className="absolute top-0 left-0 w-[38px] h-[38px] overflow-hidden pointer-events-none z-10">
                                   <span className="absolute top-[9px] -left-[13px] w-[52px] text-center text-[8px] font-black leading-none text-white py-[3px] rotate-[-45deg] bg-gradient-to-r from-violet-500 to-pink-500 select-none">
                                     NEW

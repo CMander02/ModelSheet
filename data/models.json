@@ -86742,24 +86742,6 @@
     "nameNote": "Placeholder catalog entry: Meta model repository is gated; config.json was not publicly readable in the current environment, so parser-derived parameters are intentionally left unknown."
   },
   {
-    "id": "meta-llama/CodeLlama-34b-Python-hf",
-    "name": "CodeLlama-34b-Python",
-    "provider": "Llama Team",
-    "huggingfaceUrl": "https://huggingface.co/meta-llama/CodeLlama-34b-Python-hf",
-    "techReport": "https://www.llama.com/",
-    "architecture": "llama",
-    "inputModalities": [
-      "text"
-    ],
-    "outputModalities": [
-      "text"
-    ],
-    "task": "Code Generation",
-    "openness": "open-weight",
-    "configStatus": "missing",
-    "nameNote": "Placeholder catalog entry: Meta model repository is gated; config.json was not publicly readable in the current environment, so parser-derived parameters are intentionally left unknown."
-  },
-  {
     "id": "meta-llama/CodeLlama-34b-hf",
     "name": "CodeLlama-34b",
     "provider": "Llama Team",
@@ -86782,24 +86764,6 @@
     "name": "CodeLlama-70b-Instruct",
     "provider": "Llama Team",
     "huggingfaceUrl": "https://huggingface.co/meta-llama/CodeLlama-70b-Instruct-hf",
-    "techReport": "https://www.llama.com/",
-    "architecture": "llama",
-    "inputModalities": [
-      "text"
-    ],
-    "outputModalities": [
-      "text"
-    ],
-    "task": "Code Generation",
-    "openness": "open-weight",
-    "configStatus": "missing",
-    "nameNote": "Placeholder catalog entry: Meta model repository is gated; config.json was not publicly readable in the current environment, so parser-derived parameters are intentionally left unknown."
-  },
-  {
-    "id": "meta-llama/CodeLlama-70b-Python-hf",
-    "name": "CodeLlama-70b-Python",
-    "provider": "Llama Team",
-    "huggingfaceUrl": "https://huggingface.co/meta-llama/CodeLlama-70b-Python-hf",
     "techReport": "https://www.llama.com/",
     "architecture": "llama",
     "inputModalities": [
@@ -86850,24 +86814,6 @@
     "nameNote": "Placeholder catalog entry: Meta model repository is gated; config.json was not publicly readable in the current environment, so parser-derived parameters are intentionally left unknown."
   },
   {
-    "id": "meta-llama/CodeLlama-13b-Python-hf",
-    "name": "CodeLlama-13b-Python",
-    "provider": "Llama Team",
-    "huggingfaceUrl": "https://huggingface.co/meta-llama/CodeLlama-13b-Python-hf",
-    "techReport": "https://www.llama.com/",
-    "architecture": "llama",
-    "inputModalities": [
-      "text"
-    ],
-    "outputModalities": [
-      "text"
-    ],
-    "task": "Code Generation",
-    "openness": "open-weight",
-    "configStatus": "missing",
-    "nameNote": "Placeholder catalog entry: Meta model repository is gated; config.json was not publicly readable in the current environment, so parser-derived parameters are intentionally left unknown."
-  },
-  {
     "id": "meta-llama/CodeLlama-13b-hf",
     "name": "CodeLlama-13b",
     "provider": "Llama Team",
@@ -86890,24 +86836,6 @@
     "name": "CodeLlama-7b-Instruct",
     "provider": "Llama Team",
     "huggingfaceUrl": "https://huggingface.co/meta-llama/CodeLlama-7b-Instruct-hf",
-    "techReport": "https://www.llama.com/",
-    "architecture": "llama",
-    "inputModalities": [
-      "text"
-    ],
-    "outputModalities": [
-      "text"
-    ],
-    "task": "Code Generation",
-    "openness": "open-weight",
-    "configStatus": "missing",
-    "nameNote": "Placeholder catalog entry: Meta model repository is gated; config.json was not publicly readable in the current environment, so parser-derived parameters are intentionally left unknown."
-  },
-  {
-    "id": "meta-llama/CodeLlama-7b-Python-hf",
-    "name": "CodeLlama-7b-Python",
-    "provider": "Llama Team",
-    "huggingfaceUrl": "https://huggingface.co/meta-llama/CodeLlama-7b-Python-hf",
     "techReport": "https://www.llama.com/",
     "architecture": "llama",
     "inputModalities": [
@@ -87046,5 +86974,31 @@
     "openness": "open-weight",
     "configStatus": "missing",
     "nameNote": "Placeholder catalog entry: Meta model repository is gated; config.json was not publicly readable in the current environment, so parser-derived parameters are intentionally left unknown."
+  },
+  {
+    "id": "meta-llama/Llama-4-Behemoth",
+    "name": "Llama-4-Behemoth",
+    "provider": "Llama Team",
+    "url": "https://ai.meta.com/blog/llama-4-multimodal-intelligence/",
+    "techReport": "https://ai.meta.com/blog/llama-4-multimodal-intelligence/",
+    "totalParameters": 2000000000000,
+    "activeParameters": 288000000000,
+    "numExperts": 16,
+    "inputModalities": [
+      "text",
+      "image"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "task": "Text Generation",
+    "architecture": "llama4",
+    "architectureFamily": "Llama 4",
+    "isMoe": true,
+    "parameterConfidence": "official",
+    "parameterSource": "Meta describes Llama 4 Behemoth as a multimodal MoE teacher model with 288B active parameters, 16 experts, and nearly 2T total parameters; the model was still training and had not been released as downloadable weights in the cited announcement.",
+    "parameterSourceUrl": "https://ai.meta.com/blog/llama-4-multimodal-intelligence/",
+    "openness": "research-preview",
+    "nameNote": "Official Meta preview/teacher model. Meta reported nearly 2T total parameters, 288B active parameters, and 16 experts, but explicitly stated that Behemoth was still training and was not yet released as downloadable weights; no official Hugging Face repository was found."
   }
 ]

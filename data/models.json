@@ -86241,9 +86241,9 @@
     "name": "Solar-Open2-250B",
     "provider": "Upstage",
     "huggingfaceUrl": "https://huggingface.co/upstage/Solar-Open2-250B",
-    "techReport": "",
-    "totalParameters": 250287810304,
-    "activeParameters": 10821304320,
+    "techReport": "https://huggingface.co/upstage/Solar-Open2-250B/blob/main/Solar_Open_2_Tech_Report.pdf",
+    "totalParameters": 250287794944,
+    "activeParameters": 15000000000,
     "embeddingParameters": 805306368,
     "nonEmbeddingParameters": 249482503936,
     "contextLength": 1048576,
@@ -86255,7 +86255,7 @@
     "numKvHeads": 8,
     "hiddenSize": 4096,
     "intermediateSize": 10240,
-    "positionEncoding": "RoPE",
+    "positionEncoding": "NoPE",
     "normType": "RMSNorm",
     "normEps": 1e-05,
     "mlpFactor": 2.5,
@@ -86275,7 +86275,10 @@
     "task": "Text Generation",
     "releasedAt": "2026-07-22T02:40:42.000Z",
     "openness": "open-weight",
-    "isMoe": true
+    "isMoe": true,
+    "parameterConfidence": "official",
+    "parameterSource": "Upstage Solar Open 2 model card and technical report; active parameters reported as 15B per token.",
+    "parameterSourceUrl": "https://huggingface.co/upstage/Solar-Open2-250B"
   },
   {
     "id": "inclusionAI/LLaDA2.2-flash",

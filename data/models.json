@@ -87508,5 +87508,45 @@
     "releasedAt": "2026-06-10T00:11:39.000Z",
     "openness": "open-weight",
     "isMoe": false
+  },
+  {
+    "id": "thinkingmachines/Inkling-Small",
+    "name": "Inkling-Small",
+    "provider": "Thinking Machines",
+    "huggingfaceUrl": "https://huggingface.co/thinkingmachines/Inkling-Small",
+    "techReport": "",
+    "totalParameters": 265956439090,
+    "activeParameters": 12097683456,
+    "embeddingParameters": 823394304,
+    "nonEmbeddingParameters": 265133044786,
+    "contextLength": 1048576,
+    "embeddingDim": 4096,
+    "vocabSize": 201024,
+    "architecture": "inkling_mm_model",
+    "numLayers": 42,
+    "numHeads": 32,
+    "numKvHeads": 8,
+    "hiddenSize": 4096,
+    "intermediateSize": 2048,
+    "normType": "RMSNorm",
+    "normEps": 1e-06,
+    "mlpFactor": 0.5,
+    "gqaRatio": 4.0,
+    "torchDtype": "bfloat16",
+    "numExperts": 256,
+    "numSharedExperts": 2,
+    "numExpertsPerToken": 6,
+    "numActivatedExperts": 8,
+    "inputModalities": [
+      "image",
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "task": "Image-Text-to-Text",
+    "releasedAt": "2026-07-27T22:33:44.000Z",
+    "openness": "open-weight",
+    "isMoe": true
   }
 ]

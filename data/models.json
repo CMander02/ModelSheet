@@ -87934,5 +87934,233 @@
     "releasedAt": "2026-07-29T13:07:51.000Z",
     "openness": "open-weight",
     "isMoe": true
+  },
+  {
+    "id": "RWKV/RWKV7-13.3B-20260805",
+    "name": "RWKV7-13.3B-20260805",
+    "provider": "RWKV",
+    "huggingfaceUrl": "https://huggingface.co/RWKV/RWKV7-13.3B-20260805",
+    "techReport": "",
+    "arxivUrl": "https://arxiv.org/abs/2503.14456",
+    "totalParameters": 13270298624,
+    "activeParameters": 13270298624,
+    "embeddingParameters": 268435456,
+    "nonEmbeddingParameters": 13001863168,
+    "embeddingDim": 4096,
+    "vocabSize": 65536,
+    "architecture": "rwkv7",
+    "numLayers": 61,
+    "hiddenSize": 4096,
+    "intermediateSize": 16384,
+    "normEps": 1e-05,
+    "mlpFactor": 4.0,
+    "torchDtype": "bfloat16",
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "task": "Text Generation",
+    "releasedAt": "2026-08-06T10:36:28.000Z",
+    "openness": "open-weight",
+    "isMoe": false
+  },
+  {
+    "id": "RWKV/RWKV7-2.9B-20260805",
+    "name": "RWKV7-2.9B-20260805",
+    "provider": "RWKV",
+    "huggingfaceUrl": "https://huggingface.co/RWKV/RWKV7-2.9B-20260805",
+    "techReport": "",
+    "arxivUrl": "https://arxiv.org/abs/2503.14456",
+    "totalParameters": 2948065280,
+    "activeParameters": 2948065280,
+    "embeddingParameters": 167772160,
+    "nonEmbeddingParameters": 2780293120,
+    "embeddingDim": 2560,
+    "vocabSize": 65536,
+    "architecture": "rwkv7",
+    "numLayers": 32,
+    "hiddenSize": 2560,
+    "intermediateSize": 10240,
+    "normEps": 1e-05,
+    "mlpFactor": 4.0,
+    "torchDtype": "bfloat16",
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "task": "Text Generation",
+    "releasedAt": "2026-08-06T10:34:37.000Z",
+    "openness": "open-weight",
+    "isMoe": false
+  },
+  {
+    "id": "RWKV/RWKV7-7.2B-20260805",
+    "name": "RWKV7-7.2B-20260805",
+    "provider": "RWKV",
+    "huggingfaceUrl": "https://huggingface.co/RWKV/RWKV7-7.2B-20260805",
+    "techReport": "",
+    "arxivUrl": "https://arxiv.org/abs/2503.14456",
+    "totalParameters": 7199932416,
+    "activeParameters": 7199932416,
+    "embeddingParameters": 268435456,
+    "nonEmbeddingParameters": 6931496960,
+    "embeddingDim": 4096,
+    "vocabSize": 65536,
+    "architecture": "rwkv7",
+    "numLayers": 32,
+    "hiddenSize": 4096,
+    "intermediateSize": 16384,
+    "normEps": 1e-05,
+    "mlpFactor": 4.0,
+    "torchDtype": "bfloat16",
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "task": "Text Generation",
+    "releasedAt": "2026-08-06T10:35:14.000Z",
+    "openness": "open-weight",
+    "isMoe": false
+  },
+  {
+    "id": "internlm/Intern-MemDec-4B",
+    "name": "Intern-MemDec-4B",
+    "provider": "Shanghai AI Lab",
+    "huggingfaceUrl": "https://huggingface.co/internlm/Intern-MemDec-4B",
+    "techReport": "",
+    "modelscopeUrl": "https://modelscope.cn/models/Shanghai_AI_Laboratory/Intern-MemDec-4B",
+    "arxivUrl": "https://arxiv.org/abs/2607.25614",
+    "totalParameters": 4547129856,
+    "activeParameters": 4547129856,
+    "embeddingParameters": 643563520,
+    "nonEmbeddingParameters": 3903566336,
+    "contextLength": 262144,
+    "embeddingDim": 2560,
+    "vocabSize": 251392,
+    "architecture": "qwen3_5",
+    "numLayers": 32,
+    "numHeads": 16,
+    "numKvHeads": 4,
+    "hiddenSize": 2560,
+    "intermediateSize": 9216,
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-06,
+    "attentionDropout": 0.0,
+    "mlpFactor": 3.6,
+    "gqaRatio": 4.0,
+    "torchDtype": "bfloat16",
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "releasedAt": "2026-08-06T08:26:30.000Z",
+    "openness": "open-weight",
+    "isMoe": false
+  },
+  {
+    "id": "RWKV/RWKV7-1.5B-20260805",
+    "name": "RWKV7-1.5B-20260805",
+    "provider": "RWKV",
+    "huggingfaceUrl": "https://huggingface.co/RWKV/RWKV7-1.5B-20260805",
+    "techReport": "",
+    "arxivUrl": "https://arxiv.org/abs/2503.14456",
+    "totalParameters": 1527668736,
+    "activeParameters": 1527668736,
+    "embeddingParameters": 134217728,
+    "nonEmbeddingParameters": 1393451008,
+    "embeddingDim": 2048,
+    "vocabSize": 65536,
+    "architecture": "rwkv7",
+    "numLayers": 24,
+    "hiddenSize": 2048,
+    "intermediateSize": 8192,
+    "normEps": 1e-05,
+    "mlpFactor": 4.0,
+    "torchDtype": "bfloat16",
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "task": "Text Generation",
+    "releasedAt": "2026-08-06T10:34:06.000Z",
+    "openness": "open-weight",
+    "isMoe": false
+  },
+  {
+    "id": "LiquidAI/LFM2-2.6B-Longevity",
+    "name": "LFM2-2.6B-Longevity",
+    "provider": "Liquid AI",
+    "huggingfaceUrl": "https://huggingface.co/LiquidAI/LFM2-2.6B-Longevity",
+    "techReport": "",
+    "totalParameters": 2569272320,
+    "activeParameters": 2569272320,
+    "embeddingParameters": 134217728,
+    "nonEmbeddingParameters": 2435054592,
+    "contextLength": 128000,
+    "embeddingDim": 2048,
+    "vocabSize": 65536,
+    "architecture": "lfm2",
+    "numLayers": 30,
+    "numHeads": 32,
+    "numKvHeads": 8,
+    "hiddenSize": 2048,
+    "intermediateSize": 10752,
+    "normEps": 1e-05,
+    "mlpFactor": 5.25,
+    "gqaRatio": 4.0,
+    "torchDtype": "bfloat16",
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "releasedAt": "2026-05-25T20:30:52.000Z",
+    "openness": "open-weight",
+    "isMoe": false
+  },
+  {
+    "id": "LiquidAI/LFM2-1.2B-Longevity",
+    "name": "LFM2-1.2B-Longevity",
+    "provider": "Liquid AI",
+    "huggingfaceUrl": "https://huggingface.co/LiquidAI/LFM2-1.2B-Longevity",
+    "techReport": "",
+    "totalParameters": 1170340608,
+    "activeParameters": 1170340608,
+    "embeddingParameters": 134217728,
+    "nonEmbeddingParameters": 1036122880,
+    "contextLength": 128000,
+    "embeddingDim": 2048,
+    "vocabSize": 65536,
+    "architecture": "lfm2",
+    "numLayers": 16,
+    "numHeads": 32,
+    "numKvHeads": 8,
+    "hiddenSize": 2048,
+    "intermediateSize": 12288,
+    "normEps": 1e-05,
+    "mlpFactor": 6.0,
+    "gqaRatio": 4.0,
+    "torchDtype": "bfloat16",
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "releasedAt": "2026-05-25T20:28:14.000Z",
+    "openness": "open-weight",
+    "isMoe": false
   }
 ]

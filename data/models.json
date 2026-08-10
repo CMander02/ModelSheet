@@ -88162,5 +88162,47 @@
     "releasedAt": "2026-05-25T20:28:14.000Z",
     "openness": "open-weight",
     "isMoe": false
+  },
+  {
+    "id": "inclusionAI/Ling-3.0-tiny",
+    "name": "Ling-3.0-tiny",
+    "provider": "AntGroup",
+    "huggingfaceUrl": "https://huggingface.co/inclusionAI/Ling-3.0-tiny",
+    "techReport": "",
+    "modelscopeUrl": "https://modelscope.cn/models/inclusionAI/Ling-3.0-tiny",
+    "totalParameters": 7893392800,
+    "activeParameters": 920911872,
+    "embeddingParameters": 241434624,
+    "nonEmbeddingParameters": 7651958176,
+    "contextLength": 131072,
+    "embeddingDim": 1536,
+    "vocabSize": 157184,
+    "architecture": "bailing_hybrid",
+    "numLayers": 24,
+    "numHeads": 16,
+    "numKvHeads": 16,
+    "hiddenSize": 1536,
+    "intermediateSize": 4608,
+    "positionEncoding": "RoPE",
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-06,
+    "attentionDropout": 0.0,
+    "mlpFactor": 3.0,
+    "gqaRatio": 1.0,
+    "torchDtype": "bfloat16",
+    "numExperts": 128,
+    "numExpertsPerToken": 8,
+    "numActivatedExperts": 8,
+    "moeIntermediateSize": 512,
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "releasedAt": "2026-08-10T02:44:06.000Z",
+    "openness": "open-weight",
+    "isMoe": true
   }
 ]

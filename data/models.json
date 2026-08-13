@@ -88447,5 +88447,48 @@
     "releasedAt": "2026-08-08T01:50:52.000Z",
     "openness": "open-weight",
     "isMoe": true
+  },
+  {
+    "id": "deepseek-ai/DeepSeek-V4-Pro-0813",
+    "name": "DeepSeek-V4-Pro-0813",
+    "provider": "DeepSeek",
+    "huggingfaceUrl": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813",
+    "techReport": "",
+    "modelscopeUrl": "https://modelscope.cn/models/deepseek-ai/DeepSeek-V4-Pro-0813",
+    "arxivUrl": "https://arxiv.org/abs/2606.19348",
+    "totalParameters": 1563891380224,
+    "activeParameters": 40671510528,
+    "embeddingParameters": 926679040,
+    "nonEmbeddingParameters": 1562964701184,
+    "contextLength": 1048576,
+    "embeddingDim": 7168,
+    "vocabSize": 129280,
+    "architecture": "deepseek_v4",
+    "numLayers": 61,
+    "numHeads": 128,
+    "numKvHeads": 1,
+    "hiddenSize": 7168,
+    "positionEncoding": "RoPE",
+    "activation": "silu",
+    "normType": "RMSNorm",
+    "normEps": 1e-06,
+    "attentionDropout": 0.0,
+    "gqaRatio": 128.0,
+    "torchDtype": "bfloat16",
+    "numExperts": 384,
+    "numSharedExperts": 1,
+    "numExpertsPerToken": 6,
+    "numActivatedExperts": 7,
+    "moeIntermediateSize": 3072,
+    "inputModalities": [
+      "text"
+    ],
+    "outputModalities": [
+      "text"
+    ],
+    "task": "Text Generation",
+    "releasedAt": "2026-08-13T03:05:06.000Z",
+    "openness": "open-weight",
+    "isMoe": true
   }
 ]

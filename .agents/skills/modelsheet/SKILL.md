@@ -42,7 +42,7 @@ Read [references/cli-reference.md](references/cli-reference.md) when command fla
    ```
 
 4. Inspect the resulting `data/models.json` entry. Verify identity, provider, URLs, `releasedAt`, parameter counts, architecture, MoE fields, modalities, and openness.
-5. Add the remaining explicit IDs only after the representative result is sound.
+5. Add the remaining explicit IDs only after the representative result is sound. Complete the [organization SVG workflow](#add-organization-svg-icons) for the affected publishers.
 6. Rebuild and verify generated data:
 
    ```powershell
@@ -102,6 +102,17 @@ Use authoritative, model-specific sources and retain source URLs where the schem
 - Populate both English and Chinese display names with the organization’s established names.
 - Route model and provider icons through `brand-icon.tsx`; use a product icon for a model family and a company icon for its provider when both exist.
 
+### Add Organization SVG Icons
+
+Whenever adding models, check the associated organization's SVG icon as part of ingestion, including CLI, scan, and manual additions. Reuse a correctly mapped SVG when one already exists; seek an SVG replacement when the current icon is a generic fallback or raster logo.
+
+1. Confirm the publisher's identity from its official website or linked Hugging Face / GitHub profile so the icon represents the correct company, lab, joint team, or individual.
+2. Look for the organization or product in the installed `@lobehub/icons` package first. Use its existing SVG component and the project's avatar maps when available.
+3. When LobeHub lacks a suitable icon, actively search for an existing SVG. Inspect the organization's official website, brand assets, and official repositories, including SVGs referenced by page HTML or CSS. Then check established icon collections or repositories with traceable sources. Prefer original vector artwork and verify that it matches the publisher.
+4. Save external SVGs under `src/modelsheet-web/public/icons/providers/` and record the source URL and applicable attribution or license in `SOURCES.md`. Preserve required license files. If a thorough search yields only an official raster logo or personal avatar, use that as a temporary fallback and clearly report the remaining SVG gap; keep the actual file format and publisher identity accurate.
+5. Update `src/modelsheet-web/src/components/brand-icon.tsx` for the canonical provider name, organization slug, and English/Chinese display names. Keep product and organization icon mappings consistent across model rows, model details, and provider pages.
+6. Build the frontend and inspect the affected pages through `localhost`. Verify successful image loading and legibility at the displayed sizes in both light and dark themes.
+
 ## Use the Agent-Assisted Fallback
 
 Follow this workflow when the CLI cannot produce a trustworthy entry.
@@ -142,6 +153,7 @@ Follow this workflow when the CLI cannot produce a trustworthy entry.
 - Confirm JSON and YAML parse successfully.
 - Confirm every model resolves to the intended canonical provider.
 - Confirm localized provider names render in all supported languages.
+- Confirm newly added models have the correct organization SVG mapped, or document the verified temporary fallback after searching for SVG sources.
 - Confirm `releasedAt` represents the model’s public release.
 - Confirm total and active parameters are coherent, especially for MoE and quantized variants.
 - Confirm architecture aliases resolve and diagrams compile.

@@ -170,12 +170,13 @@ def extract_norm_type(ctx: ConfigContext) -> Optional[str]:
         - Contains rms_norm_eps -> RMSNorm
         - Contains layer_norm_eps/layer_norm_epsilon -> LayerNorm
     """
-    if "rms_norm_eps" in ctx.config:
+    model_type = ctx.config.get("model_type", "").lower()
+    # Nemotron-H keeps a legacy LayerNorm epsilon key, but its backbone uses RMSNorm.
+    if model_type == "nemotron_h" or "rms_norm_eps" in ctx.config:
         return "RMSNorm"
     if "layer_norm_eps" in ctx.config or "layer_norm_epsilon" in ctx.config:
         return "LayerNorm"
     # Infer from model type
-    model_type = ctx.config.get("model_type", "").lower()
     if model_type in ["llama", "mistral", "mixtral", "qwen", "qwen2", "deepseek", "gemma"]:
         return "RMSNorm"
     return None
@@ -201,11 +202,15 @@ def extract_position_encoding(ctx: ConfigContext) -> Optional[str]:
 
     Source: config.json (key name detection)
     Logic:
-        - Contains rope_theta/rope_scaling -> RoPE
+        - Contains rope_theta/rope_scaling/rope_parameters -> RoPE
         - Contains alibi/use_alibi -> ALiBi
         - Contains rotary_pct -> RoPE (partial)
     """
-    if ctx.config.get("rope_scaling") or ctx.config.get("rope_theta"):
+    if (
+        ctx.config.get("rope_scaling")
+        or ctx.config.get("rope_theta")
+        or ctx.config.get("rope_parameters")
+    ):
         return "RoPE"
     if ctx.config.get("use_alibi") or ctx.config.get("alibi"):
         return "ALiBi"

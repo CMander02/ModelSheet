@@ -136,9 +136,9 @@ const MODEL_AVATAR_MAP: Record<string, AvatarIconComponent> = {
 
 const CUSTOM_LOGO_MAP: Record<string, string> = {
   // NEX — Shanghai Innovation Institute and partner teams
-  "nex-agi": "/icons/providers/nex-agi.svg",
-  "Nex AGI": "/icons/providers/nex-agi.svg",
-  "Nex AGI（上海创智学院联合团队）": "/icons/providers/nex-agi.svg",
+  "nex-agi": "/icons/providers/nex-agi-mark.svg",
+  "Nex AGI": "/icons/providers/nex-agi-mark.svg",
+  "Nex AGI（上海创智学院联合团队）": "/icons/providers/nex-agi-mark.svg",
 
   // Tsinghua AIR × ByteDance Seed Joint Lab
   "SIA Lab": "/icons/providers/tsinghua.svg",

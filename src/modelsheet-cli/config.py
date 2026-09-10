@@ -67,7 +67,8 @@ def build_hf_org_to_ms_org_map() -> dict[str, list[str]]:
         if not ms_orgs:
             continue
         for hf_org in cfg.get("orgs", []) + cfg.get("scan", {}).get("hf", []):
-            result[hf_org] = ms_orgs
+            # Providers may publish different model families under different orgs.
+            result[hf_org] = sorted(ms_orgs, key=lambda org: org.lower() != hf_org.lower())
     return result
 
 

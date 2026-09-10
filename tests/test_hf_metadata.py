@@ -1,12 +1,25 @@
 """Regression coverage for parameter counts from Hugging Face metadata."""
 
 import unittest
+from unittest.mock import patch
 
 from modelsheet_cli.fetcher import ModelFetcher
 from modelsheet_cli.parser import ModelParser
+from modelsheet_cli.config import build_hf_org_to_ms_org_map
 
 
 class HuggingFaceMetadataTests(unittest.TestCase):
+    def test_iflytek_modelscope_links_match_the_publishing_org(self):
+        providers = {"providers": {"iFlyTek": {
+            "region": "cn",
+            "orgs": ["iFlytek", "XHToken"],
+            "scan": {"ms": ["iFlytek", "XHToken"]},
+        }}}
+        with patch("modelsheet_cli.config.load_providers_data", return_value=providers):
+            mapping = build_hf_org_to_ms_org_map()
+        self.assertEqual(mapping["XHToken"][0], "XHToken")
+        self.assertEqual(mapping["iFlytek"][0], "iFlytek")
+
     def test_ui_venus_uses_tensor_counts_when_summary_is_stale(self):
         raw = {
             "safetensors": {

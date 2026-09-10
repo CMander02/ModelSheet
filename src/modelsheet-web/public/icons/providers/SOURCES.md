@@ -1,0 +1,11 @@
+# Provider artwork sources
+
+- `nex-agi.svg`: [NEX official site](https://nex.sii.edu.cn/n1/en/), [original SVG](https://nex.sii.edu.cn/n1/en/logo/NEX_big.svg). Original white wordmark placed on a dark square for visibility in both themes. The site identifies Shanghai Innovation Institute and its partner teams as joint developers.
+- `tsinghua.svg`: Tsinghua University crest, from [mattandryc/thu-cs-crest-svg](https://github.com/mattandryc/thu-cs-crest-svg/blob/master/thu-crest.svg), which credits the university's former official SVG URL. Distributed with the source repository's GPL-3.0 license in `tsinghua-LICENSE.txt`. See the [university's crest description](https://vi.tsinghua.edu.cn/gk/xxbz/xh/bzjbzsy.htm).
+- `wechat.svg`: [Simple Icons WeChat](https://github.com/simple-icons/simple-icons/blob/develop/icons/wechat.svg), CC0; filled with WeChat green `#07C160`.
+- `openpangu.svg`: [Huawei Cloud openPangu product page](https://www.huaweicloud.com/product/modelarts/studio/maas-openpangu-2-pro.html), [official SVG](https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/yunying/token/0424-1/盘古大模型.svg).
+- `liuhaotian.jpg`: [Haotian Liu's public GitHub avatar](https://avatars.githubusercontent.com/u/6631389?v=4). His [Hugging Face profile](https://huggingface.co/liuhaotian) links to [haotian-liu on GitHub](https://github.com/haotian-liu), identifying the same individual account.
+- LG AI Research, iFLYTEK and Spark: SVG components from the existing MIT-licensed `@lobehub/icons` dependency (`LG`, `IFlyTekCloud`, `Spark`).
+- Tencent and Hunyuan: SVG components from the existing MIT-licensed `@lobehub/icons` dependency (`Tencent.Color`, `Hunyuan.Color`). Tencent uses the blue T on a transparent background, matching the standalone Tencent Icon in the [official media library](https://www.tencent.com/newsroom/media-resources/logos/). Hunyuan's blue circular mark matches the [official Tencent-Hunyuan GitHub organization](https://github.com/Tencent-Hunyuan). Model icons use Hunyuan for `tencent/Hunyuan*`, `tencent/Hy*` (numbered or hyphen/underscore-separated families), and the `Tencent-Hunyuan` organization; the Tencent provider and other Tencent models use the company mark.
+
+Brand marks and portraits identify the respective publishers; ownership remains with their respective owners.

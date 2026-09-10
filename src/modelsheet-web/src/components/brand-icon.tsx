@@ -19,6 +19,9 @@ import TIIIcon         from "@lobehub/icons/es/TII"
 import UpstageIcon     from "@lobehub/icons/es/Upstage"
 import XiaomiMiMoIcon  from "@lobehub/icons/es/XiaomiMiMo"
 import YandexIcon      from "@lobehub/icons/es/Yandex"
+import LGIcon          from "@lobehub/icons/es/LG"
+import IFlyTekCloudIcon from "@lobehub/icons/es/IFlyTekCloud"
+import SparkIcon       from "@lobehub/icons/es/Spark"
 
 const ICON_SIZE = 18
 
@@ -30,6 +33,16 @@ const ICON_SIZE = 18
 type AvatarIconComponent = React.ComponentType<any>
 
 const LOBEHUB_AVATAR_MAP: Record<string, AvatarIconComponent> = {
+  "LG AI":         LGIcon.Avatar,
+  "LG AI Research": LGIcon.Avatar,
+  "LG AI 研究院":    LGIcon.Avatar,
+  "LGAI-EXAONE":    LGIcon.Avatar,
+
+  "iFlyTek":       IFlyTekCloudIcon.Avatar,
+  "科大讯飞":        IFlyTekCloudIcon.Avatar,
+  "iFlytek":       IFlyTekCloudIcon.Avatar,
+  "iFlytekOpenSource": IFlyTekCloudIcon.Avatar,
+  "XHToken":       IFlyTekCloudIcon.Avatar,
   // Kimi — model-level (HF org) uses Kimi product icon
   "moonshotai":    KimiIcon.Avatar,
 
@@ -114,12 +127,32 @@ const LOBEHUB_AVATAR_MAP: Record<string, AvatarIconComponent> = {
 
 const MODEL_AVATAR_MAP: Record<string, AvatarIconComponent> = {
   "meituan-longcat": LongCatIcon.Avatar,
+  "XHToken": SparkIcon.Avatar,
+  "iFlytek": SparkIcon.Avatar,
 }
 
 // ─── Custom local image map ────────────────────────────────────────────────
 // Only for providers NOT in lobehub at all.
 
 const CUSTOM_LOGO_MAP: Record<string, string> = {
+  // NEX — Shanghai Innovation Institute and partner teams
+  "nex-agi": "/icons/providers/nex-agi.svg",
+  "Nex AGI": "/icons/providers/nex-agi.svg",
+  "Nex AGI（上海创智学院联合团队）": "/icons/providers/nex-agi.svg",
+
+  // Tsinghua AIR × ByteDance Seed Joint Lab
+  "SIA Lab": "/icons/providers/tsinghua.svg",
+  "BytedTsinghua-SIA": "/icons/providers/tsinghua.svg",
+  "Tsinghua AIR × ByteDance Seed Joint Lab": "/icons/providers/tsinghua.svg",
+  "清华 AIR × 字节跳动 Seed 联合实验室": "/icons/providers/tsinghua.svg",
+
+  "OpenPangu": "/icons/providers/openpangu.svg",
+  "openpangu": "/icons/providers/openpangu.svg",
+
+  // Haotian Liu's public GitHub avatar, linked from his Hugging Face profile
+  "liuhaotian": "/icons/providers/liuhaotian.jpg",
+  "Haotian Liu (individual developer)": "/icons/providers/liuhaotian.jpg",
+  "Haotian Liu（个人开发者）": "/icons/providers/liuhaotian.jpg",
   // OpenBMB
   "openbmb":      "/icons/providers/openbmb.png",
   "OpenBMB":      "/icons/providers/openbmb.png",
@@ -194,9 +227,9 @@ const CUSTOM_LOGO_MAP: Record<string, string> = {
   "腾讯":       "/icons/providers/tencent.png",
   "Tencent":    "/icons/providers/tencent.png",
   "tencent":    "/icons/providers/tencent.png",
-  "微信":       "/icons/providers/tencent.png",
-  "Weixin":     "/icons/providers/tencent.png",
-  "weixin":     "/icons/providers/tencent.png",
+  "微信":       "/icons/providers/wechat.svg",
+  "Weixin":     "/icons/providers/wechat.svg",
+  "weixin":     "/icons/providers/wechat.svg",
 
   // Meituan
   "Meituan":    "/icons/providers/meituan.png",
@@ -244,8 +277,6 @@ const PROVIDER_KEY_MAP: Record<string, string> = {
   "Tencent":        "tencent",
   "腾讯混元":       "tencent",
   "Tencent Hunyuan": "tencent",
-  "微信":           "tencent",
-  "Weixin":         "tencent",
   "Xiaomi MiMo": "xiaomi",
   "小米 MiMo": "xiaomi",
   "360": "ai360",

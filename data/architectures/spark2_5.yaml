@@ -1,0 +1,102 @@
+id: spark2_5
+family: Spark X2.5 Dense
+era: "2026"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Spark X2.5 端侧密集模型以 3:1 交替使用滑动窗口与全局注意力，结合 GQA、逐头 sigmoid 输出门控、分层 RoPE 和 GeGLU FFN，原生支持 1M 上下文。"
+  en: "Spark X2.5 on-device dense models interleave sliding-window and full attention at 3:1, with GQA, per-head sigmoid output gates, layer-specific RoPE, and GeGLU FFNs for native 1M context."
+hfOrg: XHToken/Spark-X2.5-4B
+aliases: [spark2_5]
+defaultParams:
+  numLayers: 36
+  numHeads: 16
+  numKvHeads: 4
+  hiddenSize: 2560
+  hiddenSizeLabel: 2.6K
+  intermediateSize: 10240
+  intermediateSizeLabel: 10.2K
+  contextLength: 1048576
+  contextLengthLabel: 1M
+  vocabSize: 131072
+  vocabSizeLabel: 131.1K
+sourceLinks:
+  - label: Official model repository
+    url: https://github.com/XHToken/Spark-X2.5
+    type: reference
+  - label: Model config
+    url: https://huggingface.co/XHToken/Spark-X2.5-4B/blob/main/config.json
+    type: reference
+  - label: Official implementation
+    url: https://huggingface.co/XHToken/Spark-X2.5-4B/blob/main/modeling_spark.py
+    type: reference
+features:
+  attention: GQA; 3 sliding-window layers per full-attention layer; sigmoid output gate
+  positionEncoding: "RoPE: SWA theta 10K / full theta 5M; full-attention rotary fraction 0.25"
+  norm: Pre-RMSNorm
+  ffn: GeGLU dense FFN
+diagram:
+  subtitle: "SWA : full = 3 : 1 · window 512 · hidden {{hiddenSizeLabel}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      sub: "context {{contextLengthLabel}}"
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      sub: "vocab {{vocabSizeLabel}} · dim {{hiddenSizeLabel}}"
+      color: emb
+    - id: block
+      type: group
+      label: Spark X2.5 Dense Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm1
+          type: leaf
+          label: Pre-RMSNorm
+          color: norm
+        - id: rope
+          type: leaf
+          label: Layer-specific RoPE
+          sub: "SWA theta 10K · full theta 5M / 25% rotary"
+          color: orange
+        - id: attn
+          type: leaf
+          label: Sliding-window / Full GQA
+          sub: "3:1 · window 512 · Q {{numHeads}} / KV {{numKvHeads}}"
+          color: attn
+        - id: gate
+          type: leaf
+          label: Per-head sigmoid gate
+          sub: attention output gating
+          color: attn
+        - id: r1
+          type: add
+          from: norm1
+          label: residual add
+        - id: norm2
+          type: leaf
+          label: Pre-RMSNorm
+          color: norm
+        - id: ffn
+          type: leaf
+          label: GeGLU FFN
+          sub: "GELU(gate) × up · intermediate {{intermediateSizeLabel}}"
+          color: ffn
+        - id: r2
+          type: add
+          from: norm2
+          label: residual add
+    - id: final_norm
+      type: leaf
+      label: Final RMSNorm
+      color: norm
+    - id: head
+      type: leaf
+      label: LM Head
+      sub: tied token embedding weights
+      color: out

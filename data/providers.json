@@ -346,14 +346,14 @@
       ],
       "i18n": {
         "en": "Nex AGI",
-        "zh": "Nex AGI"
+        "zh": "Nex AGI（上海创智学院联合团队）"
       },
       "scan": {
         "hf": [
           "nex-agi"
         ]
       },
-      "region": "global"
+      "region": "cn"
     },
     "OpenPangu": {
       "orgs": [
@@ -629,7 +629,7 @@
         "LGAI-EXAONE"
       ],
       "i18n": {
-        "en": "LG AI",
+        "en": "LG AI Research",
         "zh": "LG AI 研究院"
       },
       "region": "global"
@@ -1052,15 +1052,22 @@
     },
     "iFlyTek": {
       "orgs": [
-        "iFlytek"
+        "iFlytek",
+        "XHToken",
+        "iFlytekOpenSource"
       ],
       "i18n": {
         "en": "iFlyTek",
         "zh": "科大讯飞"
       },
       "scan": {
+        "hf": [
+          "XHToken",
+          "iFlytekOpenSource"
+        ],
         "ms": [
-          "iFlytek"
+          "iFlytek",
+          "XHToken"
         ]
       },
       "region": "cn"
@@ -1189,6 +1196,16 @@
         ]
       },
       "region": "cn"
+    },
+    "liuhaotian": {
+      "orgs": [
+        "liuhaotian"
+      ],
+      "i18n": {
+        "en": "Haotian Liu (individual developer)",
+        "zh": "Haotian Liu（个人开发者）"
+      },
+      "region": "global"
     }
   },
   "Tilde Research": {

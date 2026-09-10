@@ -228,7 +228,12 @@ class ModelFetcher:
         if released_at := raw.get("createdAt"):
             meta["releasedAt"] = released_at
         if sf := raw.get("safetensors", {}):
-            if total := sf.get("total"):
+            # Use per-dtype tensor counts when the API summaries disagree.
+            # UI-Venus-2-9B, for example, reports 1.5M in total but 9.4B BF16
+            # parameters. Prefer the tensor counts when the API provides them.
+            counts = sf.get("parameters") or {}
+            total = sum(counts.values()) if counts else sf.get("total")
+            if total:
                 meta["totalParameters"] = total
         if tag := raw.get("pipeline_tag"):
             meta["pipelineTag"] = tag

@@ -155,6 +155,7 @@ def extract_activation(ctx: ConfigContext) -> Optional[str]:
     return get_first_of(
         ctx.config,
         "hidden_act",
+        "hidden_activation",
         "activation_function",
         "mlp_hidden_act",
         "mamba_hidden_act",

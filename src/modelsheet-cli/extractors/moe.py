@@ -41,10 +41,20 @@ def extract_num_experts(ctx: ConfigContext) -> Optional[int]:
 def extract_num_shared_experts(ctx: ConfigContext) -> Optional[int]:
     """Extract number of shared experts (always activated).
 
-    Source: config.json n_shared_experts
-    Note: DeepSeek-style models use shared experts that are always active
+    Source: config.json n_shared_experts or num_shared_experts.
+    Qwen and Ling configs can describe one shared FFN by its width instead.
     """
-    return ctx.config.get("n_shared_experts")
+    count = get_first_of(ctx.config, "n_shared_experts", "num_shared_experts")
+    if count is not None:
+        return count
+    width = get_first_of(
+        ctx.config,
+        "shared_expert_intermediate_size",
+        "moe_shared_expert_intermediate_size",
+    )
+    if isinstance(width, int) and width > 0:
+        return 1
+    return None
 
 
 def extract_num_experts_per_token(ctx: ConfigContext) -> Optional[int]:

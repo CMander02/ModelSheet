@@ -199,19 +199,19 @@ def extract_task(ctx: ConfigContext) -> Optional[str]:
 
 
 def extract_input_modalities(ctx: ConfigContext) -> list[str]:
-    """Extract input modalities from pipeline_tag.
+    """Extract input modalities from the pipeline tag and encoder configs.
 
-    Source: API metadata pipelineTag → pipeline_tags.json
-    Returns: List of modalities or ["text"] as default.
+    Some multimodal releases retain the generic text-generation pipeline tag.
+    Their vision/audio encoder configs supply the missing input modalities.
     """
     pipeline_tag = ctx.metadata.get("pipelineTag")
-    if not pipeline_tag:
-        return ["text"]
     data = _get_pipeline_tag_data().get(pipeline_tag)
-    if data:
-        mods = data.get("input", [])
-        return mods if mods else ["text"]
-    return ["text"]
+    mods = list((data or {}).get("input") or ["text"])
+    for key, modality in (("vision_config", "image"), ("audio_config", "audio")):
+        encoder = ctx.raw_config.get(key)
+        if isinstance(encoder, dict) and encoder and modality not in mods:
+            mods.insert(0, modality)
+    return mods
 
 
 def extract_output_modalities(ctx: ConfigContext) -> list[str]:

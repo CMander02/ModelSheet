@@ -102,11 +102,9 @@ def _calc_moe_params(ctx: ConfigContext) -> Tuple[Optional[int], Optional[int]]:
 def _calc_parameters(ctx: ConfigContext) -> Tuple[Optional[int], Optional[int]]:
     """Calculate total and active parameters.
 
-    Priority:
-        1. Arch-specific calculator from arch_params/ (most accurate)
-        2. HuggingFace API safetensors.total for total (with generic active)
-        3. config.json num_parameters for total (with generic active)
-        4. Generic dense / MoE formula fallback
+    Total parameters prefer HuggingFace tensor counts, then config.json
+    num_parameters, then a calculated fallback. Active parameters use an
+    architecture-specific calculator when available, or the generic formula.
 
     Returns:
         Tuple of (total_parameters, active_parameters)
@@ -114,10 +112,13 @@ def _calc_parameters(ctx: ConfigContext) -> Tuple[Optional[int], Optional[int]]:
     model_type = ctx.config.get("model_type", "")
     is_moe = extract_is_moe(ctx)
 
-    # ── Priority 1: arch-specific class-based calculator ──────────────────
+    # Architecture calculations may estimate components such as MTP or omit
+    # a vision encoder. Keep the repository tensor count for the full model.
     arch_calc = get_arch_calculator(model_type, ctx.config, ctx.metadata)
     if arch_calc:
-        return arch_calc.calc()
+        total, active = arch_calc.calc()
+        total = ctx.metadata.get("totalParameters", ctx.config.get("num_parameters", total))
+        return total, active
 
     # ── Priority 2/3: external source for total, generic formula for active
     if is_moe:

@@ -1,0 +1,123 @@
+id: glm5_next
+family: GLM-5 Next
+era: '2026'
+type: decoder
+normPlacement: pre
+description:
+  zh: GLM-5.3-Flash 将线性注意力与 DeepSeek Sparse Attention 交替组合，并使用稀疏 MoE 与原生视觉编码器。
+  en: GLM-5.3-Flash alternates linear attention with DeepSeek Sparse Attention and adds sparse MoE plus a native
+    vision encoder.
+hfOrg: zai-org/GLM-5.3-Flash
+aliases:
+- glm5_next
+defaultParams:
+  numLayers: 45
+  numHeads: 64
+  numKvHeads: 64
+  hiddenSize: 4096
+  contextLength: 1048576
+  vocabSize: 154880
+  numExperts: 288
+  numSharedExperts: 1
+  numExpertsPerToken: 8
+  numActivatedExperts: 9
+  moeIntermediateSize: 2048
+  totalParameters: 321323031390
+  totalParametersLabel: 321B
+  activeParameters: 18000000000
+  activeParametersLabel: 18B
+sourceLinks:
+- label: HuggingFace model card
+  url: https://huggingface.co/zai-org/GLM-5.3-Flash
+  type: hf-card
+- label: GLM-5 technical report
+  url: https://arxiv.org/abs/2602.15763
+  type: paper
+features:
+  attention: DeepSeek Sparse Attention
+  tokenMixer: linear attention and sparse attention
+  positionEncoding: MLA without RoPE
+  norm: RMSNorm with mHC
+  moe: sparse MoE
+  layerMix: first 3 layers use dense FFN, then sparse MoE; attention is 3:1 linear and sparse
+  multimodal: native vision encoder
+variants:
+- id: glm-5-3-flash
+  name: GLM-5.3-Flash
+  aliases:
+  - glm5_next
+  descriptionZh: 45 层混合注意力、288 专家、每 token 8 个路由专家加 1 个共享专家，原生支持图像与 1M 上下文。
+  descriptionEn: A 45-layer hybrid model with 3 dense FFN layers followed by sparse MoE, 288 experts, 8 routed plus
+    1 shared expert per token, native image/video input, and 1M context.
+diagram:
+  subtitle: Linear + DSA · MoE top-{{numExpertsPerToken}} · active {{activeParametersLabel}}
+  nodes:
+  - id: input
+    type: leaf
+    label: Image / video / text input
+    sub: context {{contextLength}}
+    color: input
+  - id: input_encoders
+    type: row
+    children:
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      sub: vocab {{vocabSize}}
+      color: emb
+    - id: vision
+      type: leaf
+      label: Vision encoder
+      sub: visual features projected to hidden size
+      color: sky
+  - id: merge
+    type: leaf
+    label: Combined text and visual embeddings
+    color: emb
+  - id: block
+    type: group
+    label: GLM-5 Next Block
+    badge: x{{numLayers}}
+    sub: 'first 3 layers use dense FFN, then sparse MoE; attention cycles 3 linear : 1 sparse'
+    color: steel
+    defaultExpanded: true
+    children:
+    - id: norm
+      type: leaf
+      label: RMSNorm
+      color: norm
+    - id: mixer
+      type: row
+      children:
+      - id: linear
+        type: leaf
+        label: Linear attention
+        color: teal
+      - id: dsa
+        type: leaf
+        label: DeepSeek Sparse Attention
+        sub: indexer top-k 2048
+        color: attn
+    - id: residual
+      type: leaf
+      label: mHC gated residual
+      color: resid
+    - id: moe
+      type: group
+      label: MoE FFN
+      badge: top-{{numExpertsPerToken}}
+      sub: experts x{{numExperts}} · expert FFN {{moeIntermediateSize}}
+      color: moe
+      children:
+      - id: router
+        type: leaf
+        label: Routed and shared experts
+        color: teal
+      - id: experts
+        type: leaf
+        label: SwiGLU experts
+        color: ffn
+  - id: head
+    type: leaf
+    label: LM Head
+    color: out

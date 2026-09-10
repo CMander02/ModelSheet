@@ -1,0 +1,161 @@
+id: bailing-v3
+family: Bailing v3
+era: '2026'
+type: decoder
+normPlacement: pre
+description:
+  zh: Bailing v3 是使用 KDA 与 Gated MLA 混合 token mixer 的稀疏 MoE 解码器；视觉语言变体在文本解码器旁加入视觉编码器。
+  en: Bailing v3 is a sparse MoE decoder with a KDA and Gated MLA hybrid token mixer; its vision-language variant
+    adds a vision encoder beside the text decoder.
+hfOrg: inclusionAI/Ling-3.0-flash-VL
+aliases:
+- bailing_moe_v3_vl
+- bailing_hybrid
+defaultParams:
+  numLayers: 42
+  numHeads: 32
+  numKvHeads: 32
+  hiddenSize: 2560
+  intermediateSize: 6144
+  contextLength: 131072
+  vocabSize: 157184
+  numExperts: 512
+  numSharedExperts: 1
+  numExpertsPerToken: 8
+  numActivatedExperts: 9
+  moeIntermediateSize: 768
+sourceLinks:
+- label: Ling-3.0-flash-VL config
+  url: https://huggingface.co/inclusionAI/Ling-3.0-flash-VL/blob/main/config.json
+  type: hf-config
+- label: Ling-3.0-flash-Fin config
+  url: https://huggingface.co/inclusionAI/Ling-3.0-flash-Fin/blob/main/config.json
+  type: hf-config
+features:
+  tokenMixer: KDA and Gated MLA hybrid
+  attention: Gated MLA
+  positionEncoding: RoPE; VL config also carries M-RoPE sections
+  norm: RMSNorm
+  moe: sparse MoE with one shared expert
+variants:
+- id: bailing-v3-vl
+  name: Ling-3.0-flash-VL
+  aliases:
+  - bailing_moe_v3_vl
+  descriptionZh: 视觉语言变体，使用 27 层视觉编码器，并支持图像与视频输入。
+  descriptionEn: Vision-language variant with a 27-layer vision encoder and image and video inputs.
+- id: bailing-v3-fin
+  name: Ling-3.0-flash-Fin
+  aliases:
+  - bailing_hybrid
+  descriptionZh: 金融领域文本变体，沿用 Bailing 混合解码器配置。
+  descriptionEn: Finance-domain text variant using the Bailing hybrid decoder configuration.
+diagram:
+  subtitle: KDA + Gated MLA · sparse MoE · vision branch only for VL
+  nodes:
+  - id: inputs
+    type: row
+    children:
+    - id: text_input
+      type: leaf
+      label: Text tokens
+      color: input
+    - id: vision_input
+      type: leaf
+      label: Vision inputs (VL only)
+      sub: image · video
+      color: input
+  - id: input_encoders
+    type: row
+    children:
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: vision_branch
+      type: group
+      label: Vision Encoder (VL only)
+      badge: depth 27
+      color: sky
+      children:
+      - id: vision_encoder
+        type: leaf
+        label: Qwen3-style ViT
+        sub: 27 layers · image/video features
+        color: sky
+  - id: merge
+    type: leaf
+    label: Combined input embeddings
+    sub: text and available modality features
+    color: emb
+  - id: block
+    type: group
+    label: Bailing v3 Sparse MoE Block
+    badge: x{{numLayers}}
+    sub: Pre-RMSNorm · KDA + Gated MLA · routed and shared experts
+    color: steel
+    defaultExpanded: true
+    children:
+    - id: norm1
+      type: leaf
+      label: Pre-RMSNorm
+      sub: before token mixer
+      color: norm
+    - id: mixer
+      type: row
+      children:
+      - id: kda
+        type: leaf
+        label: KDA
+        sub: linear attention path
+        color: teal
+      - id: gmla
+        type: leaf
+        label: Gated MLA
+        sub: gated attention path
+        color: attn
+    - id: r1
+      type: add
+      from: norm1
+      label: residual add
+    - id: norm2
+      type: leaf
+      label: Pre-RMSNorm
+      sub: before MoE FFN
+      color: norm
+    - id: moe
+      type: group
+      label: MoE FFN
+      badge: top-{{numExpertsPerToken}}
+      sub: expert FFN {{moeIntermediateSize}}
+      color: moe
+      defaultExpanded: true
+      children:
+      - id: router
+        type: leaf
+        label: Router
+        sub: routes to {{numExperts}} experts
+        color: teal
+      - id: routed
+        type: leaf
+        label: Routed experts x{{numExpertsPerToken}}
+        sub: per-token sparse path
+        color: ffn
+      - id: shared
+        type: leaf
+        label: Shared expert x{{numSharedExperts}}
+        sub: shared FFN path
+        color: amber
+    - id: r2
+      type: add
+      from: norm2
+      label: residual add
+  - id: final_norm
+    type: leaf
+    label: Final RMSNorm
+    color: norm
+  - id: head
+    type: leaf
+    label: LM Head
+    sub: vocab {{vocabSize}}
+    color: out

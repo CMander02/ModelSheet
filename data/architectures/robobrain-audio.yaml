@@ -1,0 +1,157 @@
+id: robobrain-audio
+family: RoboBrain Audio
+era: '2026'
+type: decoder
+normPlacement: pre
+description:
+  zh: RoboBrain Audio 将 Qwen3-VL 文本解码器、视觉编码器与 Whisper 风格音频编码器组合为音频视觉语言模型。
+  en: RoboBrain Audio combines a Qwen3-VL text decoder and vision encoder with a Whisper-style audio encoder for
+    audio-visual language modeling.
+hfOrg: BAAI/GaussianMind
+aliases:
+- robobrain_audio
+defaultParams:
+  numLayers: 36
+  numHeads: 32
+  numKvHeads: 8
+  hiddenSize: 2560
+  intermediateSize: 9728
+  contextLength: 262144
+  vocabSize: 151936
+  visionLayers: 24
+  visionHiddenSize: 1024
+  audioLayers: 32
+  audioHiddenSize: 1280
+sourceLinks:
+- label: GaussianMind config
+  url: https://huggingface.co/BAAI/GaussianMind/blob/main/config.json
+  type: hf-config
+- label: GaussianMind processor
+  url: https://huggingface.co/BAAI/GaussianMind/blob/main/processing_robobrain_audio.py
+  type: reference
+features:
+  languageBackbone: Qwen3-VL text decoder
+  visionEncoder: Qwen3-VL vision encoder
+  audioEncoder: Whisper-style audio encoder
+  positionEncoding: RoPE
+  norm: RMSNorm
+variants:
+- id: robobrain-audio-gaussianmind
+  name: GaussianMind
+  aliases:
+  - robobrain_audio
+  descriptionZh: 音频语言变体，同时接受图像、视频、音频和文本输入。
+  descriptionEn: Audio-language variant accepting image, video, audio, and text inputs.
+diagram:
+  subtitle: Qwen3-VL text decoder · vision + audio input branches
+  nodes:
+  - id: inputs
+    type: row
+    children:
+    - id: text_input
+      type: leaf
+      label: Text tokens
+      color: input
+    - id: vision_input
+      type: group
+      label: Vision inputs
+      sub: image · video
+      color: input
+      children:
+      - id: image_input
+        type: leaf
+        label: Image
+        color: sky
+      - id: video_input
+        type: leaf
+        label: Video
+        color: sky
+    - id: audio_input
+      type: leaf
+      label: Audio
+      sub: waveform / features
+      color: input
+  - id: input_encoders
+    type: row
+    children:
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: vision_branch
+      type: group
+      label: Vision Encoder
+      badge: depth {{visionLayers}}
+      color: sky
+      children:
+      - id: vision_encoder
+        type: leaf
+        label: Vision Transformer
+        sub: image/video path
+        color: sky
+    - id: audio_branch
+      type: group
+      label: Audio Encoder
+      badge: x{{audioLayers}}
+      color: purple
+      children:
+      - id: audio_encoder
+        type: leaf
+        label: Audio Transformer Encoder
+        sub: audio path
+        color: purple
+  - id: merge
+    type: leaf
+    label: Combined input embeddings
+    sub: text and available modality features
+    color: emb
+  - id: block
+    type: group
+    label: Qwen3-VL Text Decoder Block
+    badge: x{{numLayers}}
+    sub: Pre-RMSNorm · GQA · RoPE
+    color: steel
+    defaultExpanded: true
+    children:
+    - id: norm1
+      type: leaf
+      label: Pre-RMSNorm
+      sub: before attention
+      color: norm
+    - id: rope
+      type: leaf
+      label: RoPE
+      sub: multimodal position encoding
+      color: orange
+    - id: attn
+      type: leaf
+      label: GQA Attention
+      sub: Q heads {{numHeads}} · KV heads {{numKvHeads}}
+      color: attn
+    - id: r1
+      type: add
+      from: norm1
+      label: residual add
+    - id: norm2
+      type: leaf
+      label: Pre-RMSNorm
+      sub: before dense FFN
+      color: norm
+    - id: ffn
+      type: leaf
+      label: SwiGLU FFN
+      sub: intermediate {{intermediateSize}}
+      color: ffn
+    - id: r2
+      type: add
+      from: norm2
+      label: residual add
+  - id: final_norm
+    type: leaf
+    label: Final RMSNorm
+    color: norm
+  - id: head
+    type: leaf
+    label: LM Head
+    sub: vocab {{vocabSize}}
+    color: out

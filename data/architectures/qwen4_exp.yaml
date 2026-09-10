@@ -1,0 +1,125 @@
+id: qwen4_exp
+family: Qwen4 Exp
+era: '2026'
+type: decoder
+normPlacement: pre
+description:
+  zh: Qwen3.8-Flash-Next 使用 Gated DeltaNet 与 Qwen Sparse Attention 的混合解码器，并结合 n-gram embedding、稀疏 MoE 和视觉编码器。
+  en: Qwen3.8-Flash-Next is a hybrid decoder combining Gated DeltaNet, Qwen Sparse Attention, n-gram embeddings,
+    sparse MoE, and a vision encoder.
+hfOrg: Qwen/Qwen3.8-Flash-Next
+aliases:
+- qwen4_exp
+defaultParams:
+  numLayers: 48
+  numHeads: 24
+  numKvHeads: 2
+  hiddenSize: 2560
+  contextLength: 262144
+  vocabSize: 248320
+  numExperts: 512
+  numSharedExperts: 1
+  numExpertsPerToken: 10
+  numActivatedExperts: 11
+  moeIntermediateSize: 640
+  totalParameters: 179999981459
+  totalParametersLabel: 180B
+  activeParameters: 6000000000
+  activeParametersLabel: 6B
+sourceLinks:
+- label: HuggingFace model card
+  url: https://huggingface.co/Qwen/Qwen3.8-Flash-Next
+  type: hf-card
+- label: Qwen3.8 design report
+  url: https://qwen.ai/blog?id=qwen3.8-flash-next
+  type: paper
+features:
+  attention: Qwen Sparse Attention
+  tokenMixer: Gated DeltaNet
+  positionEncoding: partial RoPE / mRoPE
+  norm: RMSNorm with gated residuals
+  moe: sparse MoE
+  ngramEmbedding: 20M base vocabulary, size 3
+  layerMix: 3:1 linear attention and full attention
+  multimodal: vision encoder
+variants:
+- id: qwen3-8-flash-next
+  name: Qwen3.8-Flash-Next
+  aliases:
+  - qwen4_exp
+  descriptionZh: 48 层混合注意力、512 专家、每 token 10 个路由专家加 1 个共享专家，原生支持图像、视频与 262K 上下文。
+  descriptionEn: A 48-layer hybrid model with 512 experts, 10 routed plus 1 shared expert per token, image/video
+    input, and 262K native context.
+diagram:
+  subtitle: Gated DeltaNet + QSA · MoE top-{{numExpertsPerToken}} · active {{activeParametersLabel}}
+  nodes:
+  - id: input
+    type: leaf
+    label: Image / video / text input
+    sub: context {{contextLength}}
+    color: input
+  - id: input_encoders
+    type: row
+    children:
+    - id: emb
+      type: leaf
+      label: Token and n-gram embedding
+      sub: vocab {{vocabSize}}
+      color: emb
+    - id: vision
+      type: leaf
+      label: Vision encoder
+      sub: visual features projected to hidden size
+      color: sky
+  - id: merge
+    type: leaf
+    label: Combined text and visual embeddings
+    color: emb
+  - id: block
+    type: group
+    label: Hybrid Transformer Block
+    badge: x{{numLayers}}
+    sub: 3 linear attention layers, then 1 full attention layer
+    color: steel
+    defaultExpanded: true
+    children:
+    - id: norm
+      type: leaf
+      label: RMSNorm
+      color: norm
+    - id: mixer
+      type: row
+      children:
+      - id: delta
+        type: leaf
+        label: Gated DeltaNet
+        sub: linear attention path
+        color: teal
+      - id: qsa
+        type: leaf
+        label: Qwen Sparse Attention
+        sub: full attention path with indexer
+        color: attn
+    - id: residual
+      type: leaf
+      label: Gated residual add
+      color: resid
+    - id: moe
+      type: group
+      label: MoE FFN
+      badge: top-{{numExpertsPerToken}}
+      sub: experts x{{numExperts}} · expert FFN {{moeIntermediateSize}}
+      color: moe
+      children:
+      - id: router
+        type: leaf
+        label: Routed and shared experts
+        color: teal
+      - id: experts
+        type: leaf
+        label: SwiGLU experts
+        color: ffn
+  - id: head
+    type: leaf
+    label: LM Head
+    color: out

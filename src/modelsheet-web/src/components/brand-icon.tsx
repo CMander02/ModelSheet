@@ -194,6 +194,9 @@ const CUSTOM_LOGO_MAP: Record<string, string> = {
   "腾讯":       "/icons/providers/tencent.png",
   "Tencent":    "/icons/providers/tencent.png",
   "tencent":    "/icons/providers/tencent.png",
+  "微信":       "/icons/providers/tencent.png",
+  "Weixin":     "/icons/providers/tencent.png",
+  "weixin":     "/icons/providers/tencent.png",
 
   // Meituan
   "Meituan":    "/icons/providers/meituan.png",
@@ -241,6 +244,8 @@ const PROVIDER_KEY_MAP: Record<string, string> = {
   "Tencent":        "tencent",
   "腾讯混元":       "tencent",
   "Tencent Hunyuan": "tencent",
+  "微信":           "tencent",
+  "Weixin":         "tencent",
   "Xiaomi MiMo": "xiaomi",
   "小米 MiMo": "xiaomi",
   "360": "ai360",

@@ -1,0 +1,164 @@
+id: llada2
+family: LLaDA2
+era: '2026'
+type: decoder
+normPlacement: pre
+description:
+  zh: LLaDA2 使用块级扩散稀疏 MoE 解码器；LLaDA2.2 加入 Levenshtein 编辑，LLaDA-UI 在 LLaDA2.0 文本主干旁加入视觉编码器。
+  en: LLaDA2 uses a block-wise diffusion sparse MoE decoder. LLaDA2.2 adds Levenshtein editing, while LLaDA-UI adds
+    a vision encoder to a LLaDA2.0 text backbone.
+hfOrg: inclusionAI/LLaDA2.2-mini
+aliases:
+- llada2_moe
+- llada2vl
+defaultParams:
+  numLayers: 20
+  numHeads: 16
+  numKvHeads: 4
+  hiddenSize: 2048
+  intermediateSize: 5120
+  contextLength: 131072
+  vocabSize: 157184
+  numExperts: 256
+  numSharedExperts: 1
+  numExpertsPerToken: 8
+  numActivatedExperts: 9
+  moeIntermediateSize: 512
+sourceLinks:
+- label: LLaDA2.2-mini config
+  url: https://huggingface.co/inclusionAI/LLaDA2.2-mini/blob/main/config.json
+  type: hf-config
+- label: LLaDA-UI config
+  url: https://huggingface.co/inclusionAI/LLaDA-UI/blob/main/config.json
+  type: hf-config
+features:
+  tokenMixer: block-wise diffusion decoder
+  editing: Levenshtein DELETE and INSERT controls in LLaDA2.2
+  attention: GQA
+  positionEncoding: RoPE
+  norm: RMSNorm
+  moe: sparse MoE with one shared expert
+variants:
+- id: llada2-text
+  name: LLaDA2.2-mini
+  aliases:
+  - llada2_moe
+  descriptionZh: 文本扩散变体，配置为 20 层、256 个专家和每 token 8 个路由专家。
+  descriptionEn: Text diffusion variant configured with 20 layers, 256 experts, and 8 routed experts per token.
+- id: llada2-vl
+  name: LLaDA-UI
+  aliases:
+  - llada2vl
+  descriptionZh: GUI 视觉变体，加入 32 层视觉编码器，用于界面截图理解。
+  descriptionEn: GUI vision variant with a 32-layer vision encoder for interface screenshot understanding.
+diagram:
+  subtitle: Block-wise diffusion · Levenshtein editing in 2.2 · vision branch for UI
+  nodes:
+  - id: inputs
+    type: row
+    children:
+    - id: text_input
+      type: leaf
+      label: Text tokens
+      color: input
+    - id: ui_input
+      type: leaf
+      label: GUI screenshots (UI only)
+      sub: image input
+      color: input
+  - id: input_encoders
+    type: row
+    children:
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: vision_branch
+      type: group
+      label: Vision Encoder (UI only)
+      badge: depth 32
+      color: sky
+      children:
+      - id: vision_encoder
+        type: leaf
+        label: LLaDA Vision Encoder
+        sub: 32 layers · GUI screenshot features
+        color: sky
+  - id: merge
+    type: leaf
+    label: Combined input embeddings
+    sub: text and available modality features
+    color: emb
+  - id: block
+    type: group
+    label: LLaDA2 Diffusion MoE Block
+    badge: x{{numLayers}}
+    sub: Pre-RMSNorm · GQA · block-wise diffusion
+    color: steel
+    defaultExpanded: true
+    children:
+    - id: norm1
+      type: leaf
+      label: Pre-RMSNorm
+      sub: before attention
+      color: norm
+    - id: rope
+      type: leaf
+      label: RoPE
+      sub: rotary position embedding
+      color: orange
+    - id: attn
+      type: leaf
+      label: GQA Attention
+      sub: Q heads {{numHeads}} · KV heads {{numKvHeads}}
+      color: attn
+    - id: r1
+      type: add
+      from: norm1
+      label: residual add
+    - id: norm2
+      type: leaf
+      label: Pre-RMSNorm
+      sub: before MoE FFN
+      color: norm
+    - id: moe
+      type: group
+      label: MoE FFN
+      badge: top-{{numExpertsPerToken}}
+      sub: expert FFN {{moeIntermediateSize}}
+      color: moe
+      defaultExpanded: true
+      children:
+      - id: router
+        type: leaf
+        label: Router
+        sub: routes to {{numExperts}} experts
+        color: teal
+      - id: routed
+        type: leaf
+        label: Routed experts x{{numExpertsPerToken}}
+        sub: per-token sparse path
+        color: ffn
+      - id: shared
+        type: leaf
+        label: Shared expert x{{numSharedExperts}}
+        sub: shared FFN path
+        color: amber
+    - id: r2
+      type: add
+      from: norm2
+      label: residual add
+  - id: final_norm
+    type: leaf
+    label: Final RMSNorm
+    color: norm
+  - id: head
+    type: leaf
+    label: LM Head
+    sub: vocab {{vocabSize}}
+    color: out
+  - id: decoding
+    type: leaf
+    label: Iterative block-wise diffusion decoding
+    sub: LLaDA2.2 also supports Levenshtein edits
+    color: purple

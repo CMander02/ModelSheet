@@ -1,0 +1,122 @@
+id: hy_v4
+family: Hy4
+era: '2026'
+type: decoder
+normPlacement: pre
+description:
+  zh: Hy4 使用 Gated DeepSeek Sparse Attention、IndexCache、iHC 残差与稀疏 MoE，首层为 dense FFN，其余层为 MoE。
+  en: Hy4 combines Gated DeepSeek Sparse Attention, IndexCache, iHC residuals, and sparse MoE, with a dense first
+    layer followed by MoE layers.
+hfOrg: tencent/Hy4-preview
+aliases:
+- hy_v4
+defaultParams:
+  numLayers: 78
+  numHeads: 64
+  numKvHeads: 8
+  hiddenSize: 6144
+  contextLength: 1048576
+  vocabSize: 120832
+  numExperts: 256
+  numSharedExperts: 1
+  numExpertsPerToken: 8
+  numActivatedExperts: 9
+  moeIntermediateSize: 2048
+  totalParameters: 779960992733
+  totalParametersLabel: 780B
+  activeParameters: 49000000000
+  activeParametersLabel: 49B
+sourceLinks:
+- label: HuggingFace model card
+  url: https://huggingface.co/tencent/Hy4-preview
+  type: hf-card
+- label: ModelScope model card
+  url: https://modelscope.cn/models/Tencent-Hunyuan/Hy4-preview
+  type: modelscope
+- label: Tencent Hy4 repository
+  url: https://github.com/Tencent-Hunyuan/Hy4-preview
+  type: reference
+- label: Gated DSA paper
+  url: https://arxiv.org/abs/2512.02556
+  type: paper
+- label: IndexCache paper
+  url: https://arxiv.org/abs/2603.12201
+  type: paper
+features:
+  attention: Gated DeepSeek Sparse Attention
+  index: IndexCache cross-layer reuse
+  positionEncoding: RoPE
+  norm: RMSNorm with iHC residuals
+  moe: sparse MoE
+  layerMix: one dense FFN layer, then 77 MoE layers
+  mtp: one multi-token prediction layer
+variants:
+- id: hy4-preview
+  name: Hy4 preview
+  aliases:
+  - hy_v4
+  descriptionZh: 78 层、首层 dense、其余 77 层 MoE，256 个路由专家加 1 个共享专家，每 token 8 个路由专家。
+  descriptionEn: A 78-layer model with a dense first layer and 77 MoE layers, using 256 routed plus 1 shared expert
+    and 8 routed experts per token.
+diagram:
+  subtitle: Gated DSA + IndexCache · MoE top-{{numExpertsPerToken}} · active {{activeParametersLabel}}
+  nodes:
+  - id: input
+    type: leaf
+    label: Input tokens
+    sub: context {{contextLength}}
+    color: input
+  - id: emb
+    type: leaf
+    label: Token Embedding
+    sub: vocab {{vocabSize}}
+    color: emb
+  - id: block
+    type: group
+    label: Hy4 Transformer Block
+    badge: x{{numLayers}}
+    sub: first dense FFN, then 77 sparse MoE layers
+    color: steel
+    defaultExpanded: true
+    children:
+    - id: norm
+      type: leaf
+      label: RMSNorm
+      color: norm
+    - id: attn
+      type: group
+      label: Gated DSA
+      color: attn
+      children:
+      - id: index
+        type: leaf
+        label: IndexCache
+        sub: cross-layer sparse index reuse
+        color: sky
+      - id: mla
+        type: leaf
+        label: Gated MLA path
+        color: attn
+    - id: residual
+      type: leaf
+      label: iHC gated residual
+      color: resid
+    - id: moe
+      type: group
+      label: Dense / MoE FFN
+      badge: top-{{numExpertsPerToken}}
+      sub: experts x{{numExperts}} · expert FFN {{moeIntermediateSize}}
+      color: moe
+      children:
+      - id: router
+        type: leaf
+        label: Routed and shared experts
+        color: teal
+      - id: experts
+        type: leaf
+        label: SwiGLU experts
+        color: ffn
+  - id: head
+    type: leaf
+    label: LM Head
+    color: out

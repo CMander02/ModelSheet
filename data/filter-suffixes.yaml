@@ -89,6 +89,9 @@ rules:
   - pattern: '\b(circularnet|autopartgen|meshflow|lamp)\b'
     reason: 'non-LM vision/domain model'
 
+  - pattern: '\bCosmos3\b'
+    reason: 'robotics / physical AI foundation model'
+
   - pattern: '(?:docbee|doclayout|docblocklayout|chart2table|formula|layout(?:[-_]\d+cls)?|(?:^|[-_])table(?:[-_]cell)?(?:[-_]|$)|picodet|rt-?detr|slanet|slanext|lcnet|uvdoc|unimernet|svtr|repsvtr)'
     reason: 'document/layout/OCR utility model'
 

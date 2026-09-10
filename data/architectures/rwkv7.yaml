@@ -1,0 +1,75 @@
+id: rwkv7
+family: RWKV-7 / RWKV7 G1j
+era: "2025"
+type: decoder
+normPlacement: pre
+description:
+  zh: "RWKV-7 是无注意力的常状态循环语言模型，以 WKV 时间混合和通道混合构成解码器块。"
+  en: "RWKV-7 is an attention-free constant-state recurrent language model built from WKV time mixing and channel mixing blocks."
+paperUrl: https://arxiv.org/abs/2503.14456
+hfOrg: RWKV/RWKV7-G1j-1.5B-20260831
+aliases: [rwkv7, rwkv7_g1j]
+defaultParams:
+  numLayers: 24
+  hiddenSize: 2048
+sourceLinks:
+  - label: RWKV7 G1j config
+    url: https://huggingface.co/RWKV/RWKV7-G1j-1.5B-20260831/blob/main/config.json
+    type: hf-config
+  - label: RWKV-7 paper
+    url: https://arxiv.org/abs/2503.14456
+    type: paper
+features:
+  tokenMixer: RWKV-7 WKV time mixing
+  attention: attention-free
+  state: constant-state recurrent inference
+  ffn: channel mixing
+diagram:
+  subtitle: "RWKV-7 recurrent blocks · hidden: {{hiddenSize}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: RWKV-7 Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: time_norm
+          type: leaf
+          label: LayerNorm
+          sub: pre-norm
+          color: norm
+        - id: time_mix
+          type: leaf
+          label: WKV time mixing
+          sub: attention-free recurrent state
+          color: teal
+        - id: time_residual
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: channel_norm
+          type: leaf
+          label: LayerNorm
+          sub: pre-norm
+          color: norm
+        - id: channel_mix
+          type: leaf
+          label: Channel mixing FFN
+          color: ffn
+        - id: channel_residual
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

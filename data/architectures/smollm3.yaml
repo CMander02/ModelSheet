@@ -1,0 +1,79 @@
+id: smollm3
+family: SmolLM3
+era: "2025"
+type: decoder
+normPlacement: pre
+description:
+  zh: "SmolLM3 是稠密解码器，使用 GQA、RMSNorm、SwiGLU，并按 3:1 比例交替使用 RoPE 与 NoPE 层。"
+  en: "SmolLM3 is a dense decoder using GQA, RMSNorm, and SwiGLU, with RoPE and NoPE layers arranged in a 3:1 pattern."
+hfOrg: HuggingFaceTB/SmolLM3-3B-Base
+aliases: [smollm3]
+defaultParams:
+  numLayers: 36
+  numHeads: 16
+  numKvHeads: 4
+  hiddenSize: 2048
+sourceLinks:
+  - label: SmolLM3 base config
+    url: https://huggingface.co/HuggingFaceTB/SmolLM3-3B-Base/blob/main/config.json
+    type: hf-config
+  - label: SmolLM3 model card
+    url: https://huggingface.co/HuggingFaceTB/SmolLM3-3B-Base
+    type: model-card
+  - label: SmolLM3 technical blog
+    url: https://huggingface.co/blog/smollm3
+    type: reference
+features:
+  attention: GQA
+  positionEncoding: RoPE with every fourth layer using NoPE
+  norm: RMSNorm pre-norm
+  ffn: SwiGLU
+diagram:
+  subtitle: "GQA · RoPE/NoPE 3:1 · hidden: {{hiddenSize}}"
+  nodes:
+    - id: input
+      type: leaf
+      label: Input tokens
+      color: input
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: SmolLM3 Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          sub: pre-norm
+          color: norm
+        - id: attn
+          type: leaf
+          label: "GQA Q:{{numHeads}} KV:{{numKvHeads}}"
+          sub: RoPE / NoPE 3:1
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: norm2
+          type: leaf
+          label: RMSNorm
+          sub: pre-norm
+          color: norm
+        - id: ffn
+          type: leaf
+          label: SwiGLU FFN
+          color: ffn
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: LM Head
+      color: out

@@ -1078,8 +1078,19 @@
           "tencent"
         ],
         "ms": [
+          "Tencent-Hunyuan",
           "Tencent"
         ]
+      },
+      "region": "cn"
+    },
+    "微信": {
+      "orgs": [
+        "weixin"
+      ],
+      "i18n": {
+        "en": "Weixin",
+        "zh": "微信"
       },
       "region": "cn"
     },
@@ -1155,7 +1166,9 @@
       "region": "cn"
     },
     "Basalt Labs": {
-      "orgs": ["basaltlabsai"],
+      "orgs": [
+        "basaltlabsai"
+      ],
       "i18n": {
         "en": "Basalt Labs",
         "zh": "Basalt Labs"
@@ -1178,7 +1191,6 @@
       "region": "cn"
     }
   },
-
   "Tilde Research": {
     "orgs": [
       "tilde-research"

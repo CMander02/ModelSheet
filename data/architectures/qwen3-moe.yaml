@@ -8,7 +8,7 @@ description:
   en: "Qwen3 MoE uses routed expert FFNs on the Qwen3 Pre-RMSNorm, GQA, RoPE, and QK-RMSNorm backbone."
 paperUrl: https://arxiv.org/abs/2505.09388
 hfOrg: Qwen/Qwen3-235B-A22B
-aliases: [qwen3_moe, qwen3_5_moe, qwen3_vl_moe, qwen3_omni_moe, qwen3_coder]
+aliases: [qwen3_moe, qwen3_5_moe, qwen3_5_moe_text, qwen3_vl_moe, qwen3_omni_moe, qwen3_coder]
 defaultParams:
   numLayers: 94
   numHeads: 64
@@ -56,7 +56,7 @@ variants:
     descriptionEn: "94 layers, 128 experts, 8 active experts per token, roughly 235B total / 22B active."
   - id: qwen3-5-moe
     name: Qwen3.5 MoE
-    aliases: [qwen3_5_moe]
+    aliases: [qwen3_5_moe, qwen3_5_moe_text]
     descriptionZh: "Qwen3.5 MoE 使用更大的词表和 256/512 专家配置。"
     descriptionEn: "Qwen3.5 MoE uses a larger vocabulary and 256/512 expert configurations."
   - id: qwen3-vl-moe

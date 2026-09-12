@@ -1,10 +1,11 @@
 import {
+  readDatabase,
   jsonResponse,
   loadStaticModels,
   modelFromRow,
   providerFromRow,
   type FunctionEnv,
-} from "../_utils"
+} from "../_utils.js"
 
 function providerSlug(name: string): string {
   return name.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "provider"
@@ -15,13 +16,15 @@ export async function onRequest(context: {
   env: FunctionEnv
 }): Promise<Response> {
   const { request, env } = context
+  const db = readDatabase(env)
   const url = new URL(request.url)
   const slug = url.searchParams.get("slug") ?? url.searchParams.get("id")
   if (!slug) return jsonResponse({ error: "Missing slug" }, { status: 400 })
+  const cards = url.searchParams.get("view") === "cards"
 
   try {
-    if (env.DB) {
-      const provider = await env.DB
+    if (db) {
+      const provider = await db
         .prepare(
           `
           SELECT
@@ -39,16 +42,18 @@ export async function onRequest(context: {
         .first<Record<string, unknown>>()
       if (!provider) return jsonResponse({ error: "Provider not found" }, { status: 404 })
 
-      const modelRows = await env.DB
+      const modelRows = await db
         .prepare(
           `
-          SELECT raw_json
+          SELECT ${cards ? `id, name, provider, total_parameters, active_parameters,
+            context_length, architecture, is_moe, input_modalities_json,
+            output_modalities_json, released_at` : "raw_json"}
           FROM models
           WHERE provider_id = ?
-          ORDER BY released_at IS NULL, released_at DESC, name ASC
+          ORDER BY released_at IS NULL, released_at DESC, name ASC, id ASC
           `,
         )
-        .bind(slug)
+        .bind(provider.id)
         .all<Record<string, unknown>>()
 
       return jsonResponse({

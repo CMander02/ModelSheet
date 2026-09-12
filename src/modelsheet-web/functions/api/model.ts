@@ -1,22 +1,24 @@
 import {
+  readDatabase,
   jsonResponse,
   loadStaticModels,
   modelFromRow,
   type FunctionEnv,
-} from "../_utils"
+} from "../_utils.js"
 
 export async function onRequest(context: {
   request: Request
   env: FunctionEnv
 }): Promise<Response> {
   const { request, env } = context
+  const db = readDatabase(env)
   const url = new URL(request.url)
   const id = url.searchParams.get("id")
   if (!id) return jsonResponse({ error: "Missing id" }, { status: 400 })
 
   try {
-    if (env.DB) {
-      const row = await env.DB
+    if (db) {
+      const row = await db
         .prepare("SELECT raw_json FROM models WHERE id = ?")
         .bind(id)
         .first<Record<string, unknown>>()

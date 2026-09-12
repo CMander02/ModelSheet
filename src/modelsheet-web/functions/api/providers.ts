@@ -1,9 +1,10 @@
 import {
+  readDatabase,
   jsonResponse,
   loadStaticModels,
   providerFromRow,
   type FunctionEnv,
-} from "../_utils"
+} from "../_utils.js"
 
 function providerSlug(name: string): string {
   return name.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "provider"
@@ -14,11 +15,12 @@ export async function onRequest(context: {
   env: FunctionEnv
 }): Promise<Response> {
   const { request, env } = context
+  const db = readDatabase(env)
   const url = new URL(request.url)
 
   try {
-    if (env.DB) {
-      const rows = await env.DB
+    if (db) {
+      const rows = await db
         .prepare(
           `
           SELECT

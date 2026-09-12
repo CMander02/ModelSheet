@@ -4,7 +4,8 @@ import { Search, X } from "lucide-react"
 import type { ModelInfo, ColumnConfig, ComplexityLevel } from "@/lib/types"
 import type { Language } from "@/lib/i18n"
 import {
-  loadModelsFromFile,
+  loadModelsByIds,
+  searchModels,
   loadColumnConfigFromStorage,
   saveColumnConfigToStorage,
   getColumnConfigs,
@@ -19,7 +20,9 @@ import { Input } from "@/components/ui/input"
 import { COMPLEXITY_PRESETS } from "@/lib/model-data"
 
 export function ComparePage() {
-  const [models, setModels] = useState<ModelInfo[]>([])
+  const [suggestions, setSuggestions] = useState<{ query: string; items: ModelInfo[]; failed: boolean }>({ query: "", items: [], failed: false })
+  const [totalCount, setTotalCount] = useState(0)
+  const [loadError, setLoadError] = useState(false)
   const [columns, setColumns] = useState<ColumnConfig[]>([])
   const [selectedModels, setSelectedModels] = useState<ModelInfo[]>([])
   const [complexityLevel, setComplexityLevel] =
@@ -32,6 +35,7 @@ export function ComparePage() {
   const [searchTerm, setSearchTerm] = useState("")
 
   useEffect(() => {
+    let cancelled = false
     // Load theme
     const savedTheme =
       (localStorage.getItem("theme") as "light" | "dark") || "light"
@@ -44,11 +48,7 @@ export function ComparePage() {
 
     // Load data
     const loadData = async () => {
-      const loadedModels = await loadModelsFromFile()
       const loadedColumns = loadColumnConfigFromStorage()
-
-      // 使用真实数据
-      setModels(loadedModels)
 
       // 使用当前语言的列配置
       const currentColumns = getColumnConfigs(savedLanguage)
@@ -62,15 +62,17 @@ export function ComparePage() {
       // Load pre-selected models from sessionStorage
       try {
         const selectedIds = sessionStorage.getItem("selectedModelIds")
-        if (selectedIds) {
-          const ids = JSON.parse(selectedIds) as string[]
-          const preSelected = loadedModels.filter((m: ModelInfo) => ids.includes(m.id))
-          setSelectedModels(preSelected)
-          // Clear after loading
-          sessionStorage.removeItem("selectedModelIds")
-        }
-      } catch (error) {
-        console.error("Failed to load selected models:", error)
+        const ids = selectedIds ? JSON.parse(selectedIds) as string[] : []
+        const [preSelected, catalog] = await Promise.all([
+          loadModelsByIds(ids),
+          searchModels("", 1, 1),
+        ])
+        if (cancelled) return
+        setSelectedModels(preSelected)
+        setTotalCount(catalog.total)
+        sessionStorage.removeItem("selectedModelIds")
+      } catch {
+        if (!cancelled) setLoadError(true)
       }
 
       // Load custom fields
@@ -85,33 +87,29 @@ export function ComparePage() {
         console.error("Failed to load custom fields:", error)
       }
 
-      setIsLoading(false)
+      if (!cancelled) setIsLoading(false)
     }
 
     loadData()
+    return () => { cancelled = true }
   }, [])
 
-  // 搜索建议：最多显示5个匹配的模型
-  // 支持：1. 不区分大小写 2. 部分匹配 3. 搜索 id 中 / 前后的内容
-  const searchSuggestions = useMemo(() => {
-    if (!searchTerm.trim()) return []
-    const searchLower = searchTerm.toLowerCase()
-    return models
-      .filter((model) => {
-        // 排除已选中的模型
-        if (selectedModels.some((m) => m.id === model.id)) return false
-        // 将 id 按 / 分割，分别搜索
-        const idParts = model.id?.toLowerCase().split("/") || []
-        const searchableText = [
-          model.name?.toLowerCase(),
-          model.provider?.toLowerCase(),
-          translateProvider(model.provider, language).toLowerCase(),
-          ...idParts
-        ].filter(Boolean).join(" ")
-        return searchableText.includes(searchLower)
-      })
-      .slice(0, 5)
-  }, [models, searchTerm, selectedModels, language])
+  useEffect(() => {
+    if (!searchTerm.trim()) return
+    const controller = new AbortController()
+    const timer = setTimeout(() => {
+      searchModels(searchTerm, 1, Math.min(100, selectedModels.length + 5), undefined, controller.signal)
+        .then(result => { if (!controller.signal.aborted) setSuggestions({ query: searchTerm, items: result.items, failed: false }) })
+        .catch(() => { if (!controller.signal.aborted) setSuggestions({ query: searchTerm, items: [], failed: true }) })
+    }, 200)
+    return () => { clearTimeout(timer); controller.abort() }
+  }, [searchTerm, selectedModels])
+
+  const isSuggesting = !!searchTerm.trim() && suggestions.query !== searchTerm
+  const searchFailed = !!searchTerm.trim() && suggestions.query === searchTerm && suggestions.failed
+  const searchSuggestions = (searchTerm.trim() && suggestions.query === searchTerm ? suggestions.items : []).filter(model =>
+    !selectedModels.some(selected => selected.id === model.id),
+  ).slice(0, 5)
 
   const handleThemeToggle = () => {
     const newTheme = theme === "dark" ? "light" : "dark"
@@ -211,6 +209,9 @@ export function ComparePage() {
 
       {/* Main Content */}
       <main className="container pt-6 pb-2 space-y-4">
+        {(loadError || searchFailed) && <p role="alert" className="text-sm text-destructive">
+          {language === "zh" ? "模型查询失败，请稍后重试。" : "Model search failed. Please try again."}
+        </p>}
         {/* Search and Controls - 与主页一致 */}
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
           {/* Left: Search box with suggestions */}
@@ -222,6 +223,9 @@ export function ComparePage() {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
             />
+            {isSuggesting && <div role="status" className="absolute top-full left-0 right-0 mt-1 rounded-md border bg-background p-3 text-sm text-muted-foreground">
+              {t.common.loading}
+            </div>}
             {/* Search Suggestions Dropdown */}
             {searchSuggestions.length > 0 && (
               <div className="absolute top-full left-0 right-0 mt-1 bg-background border rounded-md shadow-lg z-50 overflow-hidden">
@@ -241,7 +245,7 @@ export function ComparePage() {
                 ))}
               </div>
             )}
-            {searchTerm && searchSuggestions.length === 0 && (
+            {searchTerm.trim() && !isSuggesting && !loadError && !searchFailed && searchSuggestions.length === 0 && (
               <div className="absolute top-full left-0 right-0 mt-1 bg-background border rounded-md shadow-lg z-50 p-4 text-center text-muted-foreground text-sm">
                 {tLocal.noResults}
               </div>
@@ -251,7 +255,7 @@ export function ComparePage() {
           {/* Center: Model count */}
           <div className="flex items-center gap-3">
             <span className="text-sm text-muted-foreground whitespace-nowrap">
-              {tLocal.modelsTotal(models.length)}
+              {tLocal.modelsTotal(totalCount)}
             </span>
           </div>
 

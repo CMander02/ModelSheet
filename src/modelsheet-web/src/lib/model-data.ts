@@ -1,6 +1,7 @@
 import type { ModelInfo, ComplexityPreset, ColumnConfig, ProviderDetail, ProviderInfo, SortConfig } from "./types"
 import type { Language } from "./i18n"
 import { getTranslations } from "./i18n"
+import { cachedJson } from "./api-cache"
 
 // 列配置结构（不包含label，label由i18n动态生成）
 const COLUMN_CONFIGS: Omit<ColumnConfig, "label">[] = [
@@ -168,18 +169,34 @@ export async function searchModels(
   q: string = "",
   page: number = 1,
   limit: number = 30,
-  sortConfig: SortConfig = { key: "releasedAt", direction: "desc" }
+  sortConfig: SortConfig = { key: "releasedAt", direction: "desc" },
+  signal?: AbortSignal,
 ): Promise<SearchResult> {
   const params = new URLSearchParams({
-    q,
+    q: q.trim().toLowerCase(),
     page: String(page),
     limit: String(limit),
     sort: sortConfig.key ?? "releasedAt",
     dir: sortConfig.direction,
   })
-  const resp = await fetch(`/api/search?${params}`)
-  if (!resp.ok) throw new Error(`Search failed: ${resp.status}`)
-  return resp.json()
+  return cachedJson(`/api/search?${params}`, signal)
+}
+
+export async function loadModelsByIds(ids: string[]): Promise<ModelInfo[]> {
+  const uniqueIds = [...new Set(ids)]
+  if (!uniqueIds.length) return []
+  const batches: Promise<ModelInfo[]>[] = []
+  for (let start = 0; start < uniqueIds.length; start += 80) {
+    const params = new URLSearchParams({ ids: uniqueIds.slice(start, start + 80).sort().join(",") })
+    batches.push(cachedJson(`/api/models?${params}`))
+  }
+  const models = (await Promise.all(batches)).flat()
+  const byId = new Map(models.map(model => [model.id, model]))
+  return uniqueIds.flatMap(id => byId.has(id) ? [byId.get(id)!] : [])
+}
+
+export function loadArchitectureModels(architecture: string): Promise<ModelInfo[]> {
+  return cachedJson(`/api/models?${new URLSearchParams({ architecture })}`)
 }
 
 export async function loadModelById(id: string): Promise<ModelInfo | null> {
@@ -196,7 +213,7 @@ export async function loadProviders(): Promise<ProviderInfo[]> {
 }
 
 export async function loadProviderBySlug(slug: string): Promise<ProviderDetail | null> {
-  const resp = await fetch(`/api/provider?slug=${encodeURIComponent(slug)}`)
+  const resp = await fetch(`/api/provider?slug=${encodeURIComponent(slug)}&view=cards`)
   if (resp.status === 404) return null
   if (!resp.ok) throw new Error(`Provider load failed: ${resp.status}`)
   return resp.json()

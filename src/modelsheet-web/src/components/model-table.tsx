@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect, useRef } from "react"
+import { memo, useState, useMemo, useCallback, useEffect, useRef } from "react"
 import type { CSSProperties } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { providerSlug, isNewThisWeek } from "@/lib/utils"
@@ -24,6 +24,7 @@ import type { ModelInfo, ColumnConfig, ComplexityLevel, SortConfig } from "@/lib
 import { COMPLEXITY_PRESETS } from "@/lib/model-data"
 import type { HomeScrollPosition } from "@/lib/model-data"
 import { translateProvider, type Language } from "@/lib/i18n"
+import { useModelVirtualizer } from "@/hooks/use-model-virtualizer"
 
 const PULL_LOAD_THRESHOLD = 72
 const PULL_MAX = 112
@@ -80,7 +81,7 @@ interface ModelTableProps {
   onScrollPositionChange?: (position: HomeScrollPosition) => void
 }
 
-export function ModelTable({
+export const ModelTable = memo(function ModelTable({
   models,
   hasMore,
   isLoadingMore,
@@ -104,7 +105,7 @@ export function ModelTable({
   const navigate = useNavigate()
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const latestScrollPositionRef = useRef<HomeScrollPosition | null>(null)
-  const scrollSaveRafRef = useRef<number | null>(null)
+  const scrollSaveTimerRef = useRef<number | null>(null)
   const restoredScrollKeyRef = useRef<number | null>(null)
   const autoLoadLockRef = useRef(false)
   const bottomPullEventsRef = useRef(0)
@@ -159,6 +160,11 @@ export function ModelTable({
       selectionWidth
     )
   }, [onModelSelect, visibleColumns])
+  const headerHeight = 41
+  const virtualizer = useModelVirtualizer("desktop", scrollRef, models, `${language}:${visibleColumns.map(c => c.key).join(",")}`, 45, headerHeight)
+  const virtualRows = virtualizer.getVirtualItems()
+  const paddingTop = virtualRows.length ? Math.max(0, virtualRows[0].start - headerHeight) : 0
+  const paddingBottom = virtualRows.length ? Math.max(0, virtualizer.getTotalSize() - virtualRows[virtualRows.length - 1].end) : 0
 
   const getColumnStyle = (column: ColumnConfig): CSSProperties => {
     const width = COLUMN_MIN_WIDTHS[column.key] ?? DEFAULT_COLUMN_WIDTH
@@ -233,9 +239,9 @@ export function ModelTable({
   }, [getCurrentScrollPosition, onScrollPositionChange])
 
   const saveCurrentScrollPosition = useCallback(() => {
-    if (scrollSaveRafRef.current != null && typeof window !== "undefined") {
-      window.cancelAnimationFrame(scrollSaveRafRef.current)
-      scrollSaveRafRef.current = null
+    if (scrollSaveTimerRef.current != null && typeof window !== "undefined") {
+      window.clearTimeout(scrollSaveTimerRef.current)
+      scrollSaveTimerRef.current = null
     }
     flushScrollPosition()
   }, [flushScrollPosition])
@@ -264,11 +270,11 @@ export function ModelTable({
       return
     }
 
-    if (scrollSaveRafRef.current != null) return
-    scrollSaveRafRef.current = window.requestAnimationFrame(() => {
-      scrollSaveRafRef.current = null
+    if (scrollSaveTimerRef.current != null) return
+    scrollSaveTimerRef.current = window.setTimeout(() => {
+      scrollSaveTimerRef.current = null
       flushScrollPosition()
-    })
+    }, 250)
   }, [flushScrollPosition, onScrollPositionChange])
 
   useEffect(() => {
@@ -281,9 +287,9 @@ export function ModelTable({
   useEffect(() => {
     return () => {
       if (pullResetTimerRef.current) clearTimeout(pullResetTimerRef.current)
-      if (scrollSaveRafRef.current != null && typeof window !== "undefined") {
-        window.cancelAnimationFrame(scrollSaveRafRef.current)
-        scrollSaveRafRef.current = null
+      if (scrollSaveTimerRef.current != null && typeof window !== "undefined") {
+        window.clearTimeout(scrollSaveTimerRef.current)
+        scrollSaveTimerRef.current = null
       }
       flushScrollPosition()
     }
@@ -379,7 +385,6 @@ export function ModelTable({
       return
     }
 
-    e.preventDefault()
     if (pullResetTimerRef.current) clearTimeout(pullResetTimerRef.current)
     bottomPullEventsRef.current += 1
 
@@ -529,10 +534,11 @@ export function ModelTable({
 
         <div
           ref={scrollRef}
+          data-model-scroll="desktop"
           className="flex-1 overflow-auto modelsheet-scroll pb-16"
           onScroll={handleScroll}
           onWheel={handleWheel}
-          style={{ scrollbarGutter: 'stable both-edges' }}
+          style={{ scrollbarGutter: 'stable both-edges', overflowAnchor: "none" }}
         >
           <table
             className="w-full caption-bottom text-sm border-collapse"
@@ -590,6 +596,7 @@ export function ModelTable({
               </tr>
             </thead>
             <tbody>
+              {paddingTop > 0 && <tr aria-hidden="true"><td colSpan={visibleColumns.length + (onModelSelect ? 1 : 0)} style={{ height: paddingTop, padding: 0, border: 0 }} /></tr>}
               {models.length === 0 ? (
                 <tr>
                   <td
@@ -600,9 +607,14 @@ export function ModelTable({
                   </td>
                 </tr>
               ) : (
-                models.map((model) => (
+                virtualRows.map((item) => {
+                  const model = models[item.index]
+                  return (
                   <tr
                     key={model.id}
+                    data-index={item.index}
+                    data-model-id={model.id}
+                    ref={virtualizer.measureElement}
                     className="group border-b transition-colors cursor-pointer"
                     onClick={(e) => handleRowClick(model, e)}
                   >
@@ -713,8 +725,9 @@ export function ModelTable({
                       )
                     })}
                   </tr>
-                ))
+                )})
               )}
+              {paddingBottom > 0 && <tr aria-hidden="true"><td colSpan={visibleColumns.length + (onModelSelect ? 1 : 0)} style={{ height: paddingBottom, padding: 0, border: 0 }} /></tr>}
             </tbody>
           </table>
 
@@ -744,4 +757,4 @@ export function ModelTable({
       </div>
     </div>
   )
-}
+})

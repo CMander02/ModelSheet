@@ -1,9 +1,10 @@
 import {
+  readDatabase,
   jsonResponse,
   loadStaticModels,
   modelFromRow,
   type FunctionEnv,
-} from "../_utils"
+} from "../_utils.js"
 
 interface SearchResponse {
   items: Record<string, unknown>[]
@@ -27,6 +28,21 @@ const SORT_COLUMNS: Record<string, string> = {
   hiddenSize: "m.hidden_size",
   intermediateSize: "m.intermediate_size",
   numExperts: "m.num_experts",
+  embeddingDim: "m.embedding_dim",
+  vocabSize: "m.vocab_size",
+  positionEncoding: "lower(m.position_encoding)",
+  activation: "lower(m.activation)",
+  normType: "lower(m.norm_type)",
+  normEps: "m.norm_eps",
+  attentionDropout: "m.attention_dropout",
+  mlpFactor: "m.mlp_factor",
+  gqaRatio: "m.gqa_ratio",
+  numSharedExperts: "m.num_shared_experts",
+  numExpertsPerToken: "m.num_experts_per_token",
+  numActivatedExperts: "m.num_activated_experts",
+  moeIntermediateSize: "CAST(m.moe_intermediate_size_json AS REAL)",
+  task: "lower(m.task)",
+  openness: "lower(m.openness)",
   releasedAt: "m.released_at",
 }
 
@@ -62,6 +78,7 @@ export async function onRequest(context: {
   env: FunctionEnv
 }): Promise<Response> {
   const { request, env } = context
+  const db = readDatabase(env)
   const url = new URL(request.url)
   const q = url.searchParams.get("q") ?? ""
   const page = Math.max(1, parseInt(url.searchParams.get("page") ?? "1", 10) || 1)
@@ -71,44 +88,45 @@ export async function onRequest(context: {
   const sortDirection = url.searchParams.get("dir") === "asc" ? "asc" : "desc"
 
   try {
-    if (env.DB) {
+    if (db) {
       const query = q.toLowerCase().trim()
+      // Provider aliases are resolved once per query instead of joining every model row.
+      // instr preserves literal substring search for names containing '%' or '_'.
       const where = query
-        ? `WHERE lower(m.name) LIKE ?
-            OR lower(m.provider) LIKE ?
-            OR lower(m.id) LIKE ?
-            OR lower(COALESCE(p.name_en, '')) LIKE ?
-            OR lower(COALESCE(p.name_zh, '')) LIKE ?
-            OR lower(COALESCE(p.orgs_json, '')) LIKE ?`
+        ? `WHERE instr(lower(m.name), ?) > 0
+            OR instr(lower(m.provider), ?) > 0
+            OR instr(lower(m.id), ?) > 0
+            OR m.provider_id IN (
+              SELECT id FROM providers
+              WHERE instr(lower(COALESCE(name_en, '')), ?) > 0
+                 OR instr(lower(COALESCE(name_zh, '')), ?) > 0
+                 OR instr(lower(COALESCE(orgs_json, '')), ?) > 0
+            )`
         : ""
-      const params = query ? Array(6).fill(`%${query}%`) : []
+      const params = query ? Array(6).fill(query) : []
       const sortColumn = SORT_COLUMNS[sortKey] ?? SORT_COLUMNS.releasedAt
       const sqlDirection = sortDirection === "asc" ? "ASC" : "DESC"
 
-      const totalRow = await env.DB
-        .prepare(`
+      const [count, rows] = await db.batch([
+        db.prepare(`
           SELECT COUNT(*) AS total
           FROM models m
-          LEFT JOIN providers p ON p.id = m.provider_id
           ${where}
         `)
-        .bind(...params)
-        .first<{ total: number }>()
-      const rows = await env.DB
-        .prepare(
+        .bind(...params),
+        db.prepare(
           `
           SELECT m.raw_json
           FROM models m
-          LEFT JOIN providers p ON p.id = m.provider_id
           ${where}
-          ORDER BY ${sortColumn} IS NULL, ${sortColumn} ${sqlDirection}, m.name ASC
+          ORDER BY ${sortColumn} IS NULL, ${sortColumn} ${sqlDirection}, m.name ASC, m.id ASC
           LIMIT ? OFFSET ?
           `,
         )
-        .bind(...params, limit, offset)
-        .all<Record<string, unknown>>()
+        .bind(...params, limit, offset),
+      ])
 
-      const total = Number(totalRow?.total ?? 0)
+      const total = Number(count.results?.[0]?.total ?? 0)
       const body: SearchResponse = {
         items: (rows.results ?? []).map(modelFromRow),
         total,
@@ -116,7 +134,9 @@ export async function onRequest(context: {
         limit,
         totalPages: Math.ceil(total / limit),
       }
-      return jsonResponse(body)
+      return jsonResponse(body, { headers: {
+        "Server-Timing": `d1;dur=${((count.meta?.duration ?? 0) + (rows.meta?.duration ?? 0)).toFixed(1)}`,
+      } })
     }
 
     const models = await loadStaticModels(env, url)

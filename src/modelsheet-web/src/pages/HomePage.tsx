@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from "react"
+import { lazy, Suspense, useEffect, useState, useCallback, useRef } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import type { ModelInfo, ColumnConfig, ComplexityLevel, SortConfig } from "@/lib/types"
 import type { Language } from "@/lib/i18n"
@@ -15,9 +15,7 @@ import {
 } from "@/lib/model-data"
 import type { HomeBrowseView, HomeScrollPosition, SearchResult } from "@/lib/model-data"
 import { getTranslations } from "@/lib/i18n"
-import { ModelTable } from "@/components/model-table"
-import { MobileModelList } from "@/components/mobile-model-list"
-import { CustomFieldSelector } from "@/components/custom-field-selector"
+import { useMobile } from "@/hooks/use-mobile"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { LanguageToggle } from "@/components/language-toggle"
 import { Button } from "@/components/ui/button"
@@ -32,9 +30,13 @@ import {
 import { Building2, ChevronDown, GitCompareArrows, Network, Search, SlidersHorizontal } from "lucide-react"
 
 const DEFAULT_SORT_CONFIG: SortConfig = { key: "releasedAt", direction: "desc" }
+const ModelTable = lazy(() => import("@/components/model-table").then(m => ({ default: m.ModelTable })))
+const MobileModelList = lazy(() => import("@/components/mobile-model-list").then(m => ({ default: m.MobileModelList })))
+const CustomFieldSelector = lazy(() => import("@/components/custom-field-selector").then(m => ({ default: m.CustomFieldSelector })))
 
 export function HomePage() {
   const navigate = useNavigate()
+  const isMobile = useMobile()
   const [models, setModels] = useState<ModelInfo[]>([])
   const [totalCount, setTotalCount] = useState(0)
   const [currentPage, setCurrentPage] = useState(1)
@@ -52,6 +54,10 @@ export function HomePage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [sortConfig, setSortConfig] = useState<SortConfig>(DEFAULT_SORT_CONFIG)
   const searchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const searchRequestRef = useRef<AbortController | null>(null)
+  const searchPendingRef = useRef(false)
+  const browseQueryRef = useRef({ term: "", sort: DEFAULT_SORT_CONFIG })
+  const [searchError, setSearchError] = useState(false)
   const [itemsPerPage] = useState(30)
   const [scrollRestorePositions, setScrollRestorePositions] =
     useState<Partial<Record<HomeBrowseView, HomeScrollPosition>>>({})
@@ -65,16 +71,31 @@ export function HomePage() {
     append: boolean = false,
     nextSort: SortConfig = DEFAULT_SORT_CONFIG,
   ) => {
+    searchRequestRef.current?.abort()
+    const controller = new AbortController()
+    searchRequestRef.current = controller
+    searchPendingRef.current = true
     setIsSearching(true)
+    setSearchError(false)
     try {
-      const result: SearchResult = await searchModels(q, page, itemsPerPage, nextSort)
+      const result: SearchResult = await searchModels(q, page, itemsPerPage, nextSort, controller.signal)
+      if (controller.signal.aborted) return
+      browseQueryRef.current = { term: q, sort: nextSort }
       setModels(prev => append ? [...prev, ...result.items] : result.items)
       setTotalCount(result.total)
       setCurrentPage(page)
       setHasMore(page < Math.ceil(result.total / itemsPerPage))
       saveSearchState(q, page, nextSort)
+    } catch {
+      if (!controller.signal.aborted) {
+        setSearchError(true)
+        setHasMore(false)
+      }
     } finally {
-      setIsSearching(false)
+      if (!controller.signal.aborted) {
+        searchPendingRef.current = false
+        setIsSearching(false)
+      }
     }
   }, [itemsPerPage])
 
@@ -84,22 +105,30 @@ export function HomePage() {
     nextSort: SortConfig = DEFAULT_SORT_CONFIG,
   ) => {
     const page = Math.max(1, savedPage || 1)
+    searchRequestRef.current?.abort()
+    const controller = new AbortController()
+    searchRequestRef.current = controller
+    searchPendingRef.current = true
     setIsSearching(true)
+    setSearchError(false)
     try {
       const targetItems = page * itemsPerPage
-      const restoreLimit = 100
       const restoredItems: ModelInfo[] = []
       let total = 0
-      let requestPage = 1
-
-      while (restoredItems.length < targetItems) {
-        const result: SearchResult = await searchModels(q, requestPage, restoreLimit, nextSort)
-        total = result.total
-        restoredItems.push(...result.items)
-        if (result.items.length === 0 || restoredItems.length >= total) break
-        requestPage += 1
+      const first = await searchModels(q, 1, itemsPerPage, nextSort, controller.signal)
+      total = first.total
+      restoredItems.push(...first.items)
+      const lastPage = Math.min(page, first.totalPages)
+      // Reuse the original page cache; bound concurrent requests after a tab reload.
+      for (let start = 2; start <= lastPage; start += 4) {
+        const results = await Promise.all(Array.from(
+          { length: Math.min(4, lastPage - start + 1) },
+          (_, i) => searchModels(q, start + i, itemsPerPage, nextSort, controller.signal),
+        ))
+        restoredItems.push(...results.flatMap(result => result.items))
       }
-
+      if (controller.signal.aborted) return
+      browseQueryRef.current = { term: q, sort: nextSort }
       const items = restoredItems.slice(0, targetItems)
       const totalPages = Math.ceil(total / itemsPerPage)
       const restoredPage = Math.max(1, Math.min(Math.ceil(items.length / itemsPerPage), totalPages || 1))
@@ -108,8 +137,16 @@ export function HomePage() {
       setCurrentPage(restoredPage)
       setHasMore(items.length < total)
       saveSearchState(q, restoredPage, nextSort)
+    } catch {
+      if (!controller.signal.aborted) {
+        setSearchError(true)
+        setHasMore(false)
+      }
     } finally {
-      setIsSearching(false)
+      if (!controller.signal.aborted) {
+        searchPendingRef.current = false
+        setIsSearching(false)
+      }
     }
   }, [itemsPerPage])
 
@@ -123,6 +160,7 @@ export function HomePage() {
   }, [])
 
   const handleSortChange = useCallback((nextSort: SortConfig) => {
+    if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current)
     resetBrowsePosition()
     setSortConfig(nextSort)
     doSearch(searchTerm, 1, false, nextSort)
@@ -130,17 +168,25 @@ export function HomePage() {
 
   const handleSearch = useCallback((value: string) => {
     setSearchTerm(value)
+    searchRequestRef.current?.abort()
+    searchPendingRef.current = true
+    setIsSearching(true)
     if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current)
     searchDebounceRef.current = setTimeout(() => {
       resetBrowsePosition()
       doSearch(value, 1, false, sortConfig)
-    }, 300)
+    }, 200)
   }, [doSearch, resetBrowsePosition, sortConfig])
 
   const loadMore = useCallback(() => {
-    if (!hasMore || isSearching) return
-    doSearch(searchTerm, currentPage + 1, true, sortConfig)
-  }, [hasMore, isSearching, searchTerm, currentPage, sortConfig, doSearch])
+    if (!hasMore || searchPendingRef.current) return
+    doSearch(browseQueryRef.current.term, currentPage + 1, true, browseQueryRef.current.sort)
+  }, [hasMore, currentPage, doSearch])
+
+  useEffect(() => () => {
+    searchRequestRef.current?.abort()
+    if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current)
+  }, [])
 
   // ─── Init ────────────────────────────────────────────────────────────────
 
@@ -185,12 +231,11 @@ export function HomePage() {
   // ─── Save state before navigating away ────────────────────────────────
 
   const handleModelClick = useCallback((model: ModelInfo) => {
-    saveSearchState(searchTerm, currentPage, sortConfig)
     if (model.id?.includes("/")) {
       const [org, name] = model.id.split("/")
       navigate(`/${org}/${name}`)
     }
-  }, [searchTerm, currentPage, sortConfig, navigate])
+  }, [navigate])
 
   const handleHomeScrollPositionChange = useCallback((view: HomeBrowseView, position: HomeScrollPosition) => {
     saveHomeScrollPosition(view, position)
@@ -217,11 +262,6 @@ export function HomePage() {
     setLanguage(lang)
     localStorage.setItem("language", lang)
     setColumns(getColumnConfigs(lang))
-  }
-
-  const handleColumnChange = (newColumns: ColumnConfig[]) => {
-    setColumns(newColumns)
-    saveColumnConfigToStorage(newColumns)
   }
 
   const handleComplexityChange = (level: ComplexityLevel) => {
@@ -251,7 +291,7 @@ export function HomePage() {
     }
   }, [])
 
-  const handleModelSelect = (modelId: string) => {
+  const handleModelSelect = useCallback((modelId: string) => {
     setSelectedModels(prev => {
       const next = new Set(prev)
       if (next.has(modelId)) {
@@ -261,14 +301,16 @@ export function HomePage() {
       }
       return next
     })
-  }
+  }, [])
 
-  const handleCompare = () => {
+  const handleClearSelection = useCallback(() => setSelectedModels(new Set()), [])
+
+  const handleCompare = useCallback(() => {
     if (selectedModels.size >= 2) {
       sessionStorage.setItem("selectedModelIds", JSON.stringify(Array.from(selectedModels)))
       navigate("/compare")
     }
-  }
+  }, [navigate, selectedModels])
 
   const t = getTranslations(language)
   const complexityLabels: Record<ComplexityLevel, string> = {
@@ -359,7 +401,7 @@ export function HomePage() {
             </span>
           </div>
 
-          <div className="relative min-w-[220px] max-w-xl flex-1">
+          <div className="relative min-w-0 lg:min-w-[220px] max-w-xl flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
               placeholder={language === "zh" ? "搜索模型..." : "Search models..."}
@@ -448,7 +490,17 @@ export function HomePage() {
       </header>
 
       {/* Main Content */}
+      {searchError && (
+        <div role="alert" className="container flex items-center gap-3 py-2 text-sm text-destructive">
+          {language === "zh" ? "查询失败，请重试。" : "Search failed. Please try again."}
+          <Button variant="outline" size="sm" onClick={() => doSearch(searchTerm, 1, false, sortConfig)}>
+            {language === "zh" ? "重试" : "Retry"}
+          </Button>
+        </div>
+      )}
+      <Suspense fallback={<div role="status" className="flex-1 animate-pulse bg-muted/30" />}>
       {/* Desktop: scrollable data table */}
+      {!isMobile && (
       <main className="hidden md:flex flex-1 overflow-hidden flex-col container pt-3 pb-3">
         <ModelTable
           models={models}
@@ -457,16 +509,12 @@ export function HomePage() {
           isLoadingMore={isSearching}
           onLoadMore={loadMore}
           columns={columns}
-          onColumnChange={handleColumnChange}
-          onComplexityChange={handleComplexityChange}
-          onCustomFieldsClick={() => setShowFieldSelector(true)}
           currentComplexity={complexityLevel}
           language={language}
           selectedModels={selectedModels}
           onModelSelect={handleModelSelect}
-          onClearSelection={() => setSelectedModels(new Set())}
+          onClearSelection={handleClearSelection}
           onCompare={handleCompare}
-          searchTerm={searchTerm}
           sortConfig={sortConfig}
           onSortChange={handleSortChange}
           onModelClick={handleModelClick}
@@ -475,8 +523,10 @@ export function HomePage() {
           onScrollPositionChange={handleDesktopScrollPositionChange}
         />
       </main>
+      )}
 
       {/* Mobile: card list */}
+      {isMobile && (
       <main className="flex md:hidden flex-1 overflow-hidden container pt-3 min-w-0">
         <MobileModelList
           models={models}
@@ -484,10 +534,8 @@ export function HomePage() {
           hasMore={hasMore}
           isLoadingMore={isSearching}
           onLoadMore={loadMore}
-          searchTerm={searchTerm}
           language={language}
           complexityLevel={complexityLevel}
-          onComplexityChange={(level) => setComplexityLevel(level as ComplexityLevel)}
           customFields={customFields}
           sortConfig={sortConfig}
           onSortChange={handleSortChange}
@@ -497,8 +545,11 @@ export function HomePage() {
           onScrollPositionChange={handleMobileScrollPositionChange}
         />
       </main>
+      )}
+      </Suspense>
 
       {/* Custom Field Selector Dialog */}
+      {showFieldSelector && <Suspense fallback={null}>
       <CustomFieldSelector
         open={showFieldSelector}
         onOpenChange={setShowFieldSelector}
@@ -506,6 +557,7 @@ export function HomePage() {
         selectedKeys={customFields.length > 0 ? customFields : columns.map(c => c.key)}
         onSave={handleCustomFieldsSave}
       />
+      </Suspense>}
     </div>
   )
 }

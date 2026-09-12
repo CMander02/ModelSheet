@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback, useRef, useEffect } from "react"
+import { memo, useMemo, useState, useCallback, useRef, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { providerSlug, isNewThisWeek } from "@/lib/utils"
 import { ArrowUpDown, Check, ChevronDown } from "lucide-react"
@@ -8,6 +8,7 @@ import type { HomeScrollPosition } from "@/lib/model-data"
 import { ModelBrandIcon, ProviderBrandIcon } from "@/components/brand-icon"
 import { ModalityIcons } from "@/components/modality-icons"
 import { formatParameters, formatContextLength } from "@/lib/formatters"
+import { useModelVirtualizer } from "@/hooks/use-model-virtualizer"
 
 // ─── helpers ───────────────────────────────────────────────────────────────
 
@@ -119,7 +120,7 @@ interface CardProps {
   cardFields: CardField[]
 }
 
-function ModelCard({ model, language, selected, onSelect, onNavigate, onBeforeNavigate, cardFields }: CardProps) {
+const ModelCard = memo(function ModelCard({ model, language, selected, onSelect, onNavigate, onBeforeNavigate, cardFields }: CardProps) {
   const isZh = language === "zh"
 
   const metricFields = cardFields.filter(
@@ -250,7 +251,7 @@ function ModelCard({ model, language, selected, onSelect, onNavigate, onBeforeNa
       </button>
     </div>
   )
-}
+})
 
 // ─── main component ────────────────────────────────────────────────────────
 
@@ -274,7 +275,7 @@ interface MobileModelListProps {
   onScrollPositionChange?: (position: HomeScrollPosition) => void
 }
 
-export function MobileModelList({
+export const MobileModelList = memo(function MobileModelList({
   models,
   totalCount,
   hasMore,
@@ -303,7 +304,7 @@ export function MobileModelList({
   // Bottom pull loading
   const scrollRef = useRef<HTMLDivElement>(null)
   const latestScrollPositionRef = useRef<HomeScrollPosition | null>(null)
-  const scrollSaveRafRef = useRef<number | null>(null)
+  const scrollSaveTimerRef = useRef<number | null>(null)
   const restoredScrollKeyRef = useRef<number | null>(null)
   const autoLoadLockRef = useRef(false)
   const bottomPullEventsRef = useRef(0)
@@ -322,6 +323,7 @@ export function MobileModelList({
   const cardFields: CardField[] = complexityLevel === "custom"
     ? customCardFields
     : (COMPLEXITY_FIELD_MAP[complexityLevel] ?? COMPLEXITY_FIELD_MAP.enthusiast)
+  const virtualizer = useModelVirtualizer("mobile", scrollRef, models, `${language}:${cardFields.join(",")}`, 135)
 
   const setPullDistance = useCallback((value: number) => {
     const next = Math.max(0, Math.min(PULL_MAX, value))
@@ -374,9 +376,9 @@ export function MobileModelList({
   }, [getCurrentScrollPosition, onScrollPositionChange])
 
   const saveCurrentScrollPosition = useCallback(() => {
-    if (scrollSaveRafRef.current != null && typeof window !== "undefined") {
-      window.cancelAnimationFrame(scrollSaveRafRef.current)
-      scrollSaveRafRef.current = null
+    if (scrollSaveTimerRef.current != null && typeof window !== "undefined") {
+      window.clearTimeout(scrollSaveTimerRef.current)
+      scrollSaveTimerRef.current = null
     }
     flushScrollPosition()
   }, [flushScrollPosition])
@@ -393,11 +395,11 @@ export function MobileModelList({
       return
     }
 
-    if (scrollSaveRafRef.current != null) return
-    scrollSaveRafRef.current = window.requestAnimationFrame(() => {
-      scrollSaveRafRef.current = null
+    if (scrollSaveTimerRef.current != null) return
+    scrollSaveTimerRef.current = window.setTimeout(() => {
+      scrollSaveTimerRef.current = null
       flushScrollPosition()
-    })
+    }, 250)
   }, [flushScrollPosition, onScrollPositionChange])
 
   const handleListScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
@@ -434,7 +436,6 @@ export function MobileModelList({
       return
     }
 
-    e.preventDefault()
     if (pullResetTimerRef.current) clearTimeout(pullResetTimerRef.current)
     bottomPullEventsRef.current += 1
 
@@ -473,7 +474,6 @@ export function MobileModelList({
       return
     }
 
-    e.preventDefault()
     if (pullResetTimerRef.current) clearTimeout(pullResetTimerRef.current)
     const next = Math.min(PULL_MAX, distance * 0.86)
     setPullDistance(next)
@@ -510,9 +510,9 @@ export function MobileModelList({
 
   useEffect(() => {
     return () => {
-      if (scrollSaveRafRef.current != null && typeof window !== "undefined") {
-        window.cancelAnimationFrame(scrollSaveRafRef.current)
-        scrollSaveRafRef.current = null
+      if (scrollSaveTimerRef.current != null && typeof window !== "undefined") {
+        window.clearTimeout(scrollSaveTimerRef.current)
+        scrollSaveTimerRef.current = null
       }
       flushScrollPosition()
     }
@@ -600,6 +600,7 @@ export function MobileModelList({
       <div className="relative flex-1 min-h-0 -mx-4 overflow-hidden">
         <div
           ref={scrollRef}
+          data-model-scroll="mobile"
           className="h-full overflow-y-auto overscroll-contain pb-28 px-4 overflow-x-hidden"
           onScroll={handleListScroll}
           onWheel={handleListWheel}
@@ -613,10 +614,18 @@ export function MobileModelList({
               {isZh ? "没有找到匹配的模型" : "No matching models found"}
             </div>
           ) : (
-            <div className="flex flex-col divide-y divide-border">
-              {models.map(model => (
-                <ModelCard
+            <div className="relative" style={{ height: virtualizer.getTotalSize(), overflowAnchor: "none" }}>
+              {virtualizer.getVirtualItems().map(item => {
+                const model = models[item.index]
+                return <div
                   key={model.id}
+                  data-index={item.index}
+                  data-model-id={model.id}
+                  ref={virtualizer.measureElement}
+                  className="absolute left-0 top-0 w-full border-b border-border"
+                  style={{ transform: `translateY(${item.start}px)` }}
+                >
+                <ModelCard
                   model={model}
                   language={language}
                   selected={selectedIds.has(model.id)}
@@ -625,7 +634,8 @@ export function MobileModelList({
                   onBeforeNavigate={saveCurrentScrollPosition}
                   cardFields={cardFields}
                 />
-              ))}
+                </div>
+              })}
             </div>
           )}
         </div>
@@ -723,4 +733,4 @@ export function MobileModelList({
 
     </div>
   )
-}
+})

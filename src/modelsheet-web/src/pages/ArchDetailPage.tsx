@@ -8,10 +8,10 @@ import { ArrowLeft, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react
 import { TYPE_COLORS } from "@/pages/ArchPage"
 import type { ArchitectureSpec, ModelInfo } from "@/lib/types"
 import { loadArchitecture, loadArchitectures, modelDiagramParams } from "@/lib/architecture-data"
-import { loadModelsFromFile } from "@/lib/model-data"
+import { loadArchitectureModels } from "@/lib/model-data"
 import { formatContextLength, formatNumber, formatParameters } from "@/lib/formatters"
 import { getTranslations, type Language } from "@/lib/i18n"
-import HuggingFaceIcon from "@lobehub/icons/es/HuggingFace"
+import HuggingFaceIcon from "@lobehub/icons/es/HuggingFace/components/Color"
 
 function displayValue(value: unknown): string {
   if (value === null || value === undefined) return ""
@@ -369,13 +369,18 @@ export function ArchDetailPage() {
       return
     }
 
-    Promise.all([loadArchitecture(archId), loadArchitectures(), loadModelsFromFile()])
+    let cancelled = false
+    setIsLoading(true)
+    Promise.all([loadArchitecture(archId), loadArchitectures(true), loadArchitectureModels(archId)])
       .then(([item, items, loadedModels]) => {
+        if (cancelled) return
         setArch(item)
         setArchitectures(items)
         setModels(loadedModels)
       })
-      .finally(() => setIsLoading(false))
+      .catch(() => { if (!cancelled) setArch(null) })
+      .finally(() => { if (!cancelled) setIsLoading(false) })
+    return () => { cancelled = true }
   }, [archId])
 
   const handleThemeToggle = () => {
@@ -634,7 +639,7 @@ export function ArchDetailPage() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-sm px-4 py-2.5 rounded-lg border hover:bg-muted transition-colors w-fit"
                   >
-                    <HuggingFaceIcon.Color size={14} />
+                    <HuggingFaceIcon size={14} />
                     HuggingFace
                   </a>
                 )}

@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react"
+import { memo, useEffect, useState, useMemo, useRef } from "react"
 import { Link, useParams, useNavigate } from "react-router-dom"
 import type { ModelInfo, ProviderInfo } from "@/lib/types"
 import type { Language } from "@/lib/i18n"
@@ -14,7 +14,7 @@ import { translateProvider } from "@/lib/i18n"
 
 // ─── Model card ───────────────────────────────────────────────────────────────
 
-function ModelCard({ model, language }: { model: ModelInfo; language: Language }) {
+const ModelCard = memo(function ModelCard({ model, language }: { model: ModelInfo; language: Language }) {
   const isZh = language === "zh"
   const [org, name] = model.id.split("/")
 
@@ -69,7 +69,7 @@ function ModelCard({ model, language }: { model: ModelInfo; language: Language }
       )}
     </Link>
   )
-}
+})
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -82,6 +82,8 @@ export function ProviderPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [language, setLanguage] = useState<Language>("zh")
   const [theme, setTheme] = useState<"light" | "dark">("light")
+  const [visibleCount, setVisibleCount] = useState(30)
+  const revealRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const savedTheme = (localStorage.getItem("theme") as "light" | "dark") || "light"
@@ -93,13 +95,29 @@ export function ProviderPage() {
       setIsLoading(false)
       return
     }
+    let cancelled = false
+    setIsLoading(true)
+    setVisibleCount(30)
     loadProviderBySlug(slug)
       .then(detail => {
+        if (cancelled) return
         setProvider(detail?.provider ?? null)
         setModels(detail?.models ?? [])
       })
-      .finally(() => setIsLoading(false))
+      .catch(() => { if (!cancelled) setProvider(null) })
+      .finally(() => { if (!cancelled) setIsLoading(false) })
+    return () => { cancelled = true }
   }, [slug])
+
+  useEffect(() => {
+    const element = revealRef.current
+    if (!element || visibleCount >= models.length) return
+    const observer = new IntersectionObserver(entries => {
+      if (entries.some(entry => entry.isIntersecting)) setVisibleCount(count => Math.min(count + 30, models.length))
+    }, { rootMargin: "600px" })
+    observer.observe(element)
+    return () => observer.disconnect()
+  }, [isLoading, models.length, visibleCount])
 
   const handleThemeToggle = () => {
     const next = theme === "dark" ? "light" : "dark"
@@ -117,7 +135,7 @@ export function ProviderPage() {
   const canonicalProvider = provider?.name
 
   const providerModels = useMemo(() => {
-    return models
+    return [...models]
       .sort((a, b) => {
         if (!a.releasedAt && !b.releasedAt) return 0
         if (!a.releasedAt) return 1
@@ -145,6 +163,7 @@ export function ProviderPage() {
     }
     return Object.entries(groups).sort(([a], [b]) => b.localeCompare(a))
   }, [providerModels, isZh])
+  const visibleIds = useMemo(() => new Set(providerModels.slice(0, visibleCount).map(model => model.id)), [providerModels, visibleCount])
 
   if (isLoading) {
     return (
@@ -225,7 +244,10 @@ export function ProviderPage() {
         </div>
 
         {/* Models grouped by year */}
-        {byYear.map(([year, yearModels]) => (
+        {byYear.map(([year, yearModels]) => {
+          const visibleModels = yearModels.filter(model => visibleIds.has(model.id))
+          if (!visibleModels.length) return null
+          return (
           <section key={year}>
             <div className="flex items-center gap-3 mb-4">
               <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{year}</span>
@@ -233,12 +255,17 @@ export function ProviderPage() {
               <span className="text-xs text-muted-foreground">{yearModels.length}</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {yearModels.map(m => (
+              {visibleModels.map(m => (
                 <ModelCard key={m.id} model={m} language={language} />
               ))}
             </div>
           </section>
-        ))}
+        )})}
+        {visibleCount < providerModels.length && <div ref={revealRef} className="flex justify-center">
+          <Button variant="outline" onClick={() => setVisibleCount(count => count + 30)}>
+            {isZh ? "加载更多" : "Load more"} ({visibleCount}/{providerModels.length})
+          </Button>
+        </div>}
       </main>
     </div>
   )

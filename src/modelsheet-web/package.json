@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && tsc -p tsconfig.functions.json --noEmit && vite build",
+    "test:api": "tsc -p tsconfig.functions.json && node --test tests/*.test.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "pages:dev": "wrangler pages dev dist",
@@ -27,6 +28,7 @@
     "@radix-ui/react-slot": "^1.2.4",
     "@radix-ui/react-toggle": "^1.1.10",
     "@radix-ui/react-toggle-group": "^1.1.11",
+    "@tanstack/react-virtual": "^3.14.12",
     "@xyflow/react": "^12.10.2",
     "lucide-react": "^0.556.0",
     "radix-ui": "^1.4.3",

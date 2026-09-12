@@ -1,134 +1,195 @@
-import { ModelIcon, ProviderIcon } from "@lobehub/icons"
+import { ModelIcon, ProviderIcon } from "./catalog-icons"
+import { createBrandAvatar } from "./brand-avatar"
 import { createElement } from "react"
-import AntGroupIcon    from "@lobehub/icons/es/AntGroup"
-import ArceeIcon       from "@lobehub/icons/es/Arcee"
-import BAAIIcon        from "@lobehub/icons/es/BAAI"
-import BaichuanIcon    from "@lobehub/icons/es/Baichuan"
-import ByteDanceIcon   from "@lobehub/icons/es/ByteDance"
-import DeepCogitoIcon  from "@lobehub/icons/es/DeepCogito"
-import InfinigenceIcon from "@lobehub/icons/es/Infinigence"
-import KimiIcon        from "@lobehub/icons/es/Kimi"
-import LiquidIcon      from "@lobehub/icons/es/Liquid"
-import LongCatIcon     from "@lobehub/icons/es/LongCat"
-import MoonshotIcon    from "@lobehub/icons/es/Moonshot"
-import NousResearchIcon from "@lobehub/icons/es/NousResearch"
-import RwkvIcon        from "@lobehub/icons/es/Rwkv"
-import SkyworkIcon     from "@lobehub/icons/es/Skywork"
-import SnowflakeIcon   from "@lobehub/icons/es/Snowflake"
-import TIIIcon         from "@lobehub/icons/es/TII"
-import UpstageIcon     from "@lobehub/icons/es/Upstage"
-import XiaomiMiMoIcon  from "@lobehub/icons/es/XiaomiMiMo"
-import YandexIcon      from "@lobehub/icons/es/Yandex"
-import LGIcon          from "@lobehub/icons/es/LG"
-import IFlyTekCloudIcon from "@lobehub/icons/es/IFlyTekCloud"
-import SparkIcon       from "@lobehub/icons/es/Spark"
+import AntGroupIconMono from "@lobehub/icons/es/AntGroup/components/Mono"
+import * as AntGroupIconStyle from "@lobehub/icons/es/AntGroup/style"
+import ArceeIconMono from "@lobehub/icons/es/Arcee/components/Mono"
+import * as ArceeIconStyle from "@lobehub/icons/es/Arcee/style"
+import BAAIIconMono from "@lobehub/icons/es/BAAI/components/Mono"
+import * as BAAIIconStyle from "@lobehub/icons/es/BAAI/style"
+import BaichuanIconMono from "@lobehub/icons/es/Baichuan/components/Mono"
+import * as BaichuanIconStyle from "@lobehub/icons/es/Baichuan/style"
+import ByteDanceIconMono from "@lobehub/icons/es/ByteDance/components/Mono"
+import * as ByteDanceIconStyle from "@lobehub/icons/es/ByteDance/style"
+import DeepCogitoIconMono from "@lobehub/icons/es/DeepCogito/components/Mono"
+import * as DeepCogitoIconStyle from "@lobehub/icons/es/DeepCogito/style"
+import InfinigenceIconMono from "@lobehub/icons/es/Infinigence/components/Mono"
+import * as InfinigenceIconStyle from "@lobehub/icons/es/Infinigence/style"
+import KimiIconMono from "@lobehub/icons/es/Kimi/components/Mono"
+import * as KimiIconStyle from "@lobehub/icons/es/Kimi/style"
+import LiquidIconMono from "@lobehub/icons/es/Liquid/components/Mono"
+import * as LiquidIconStyle from "@lobehub/icons/es/Liquid/style"
+import LongCatIconMono from "@lobehub/icons/es/LongCat/components/Mono"
+import * as LongCatIconStyle from "@lobehub/icons/es/LongCat/style"
+import MoonshotIconMono from "@lobehub/icons/es/Moonshot/components/Mono"
+import * as MoonshotIconStyle from "@lobehub/icons/es/Moonshot/style"
+import NousResearchIconMono from "@lobehub/icons/es/NousResearch/components/Mono"
+import * as NousResearchIconStyle from "@lobehub/icons/es/NousResearch/style"
+import RwkvIconMono from "@lobehub/icons/es/Rwkv/components/Mono"
+import * as RwkvIconStyle from "@lobehub/icons/es/Rwkv/style"
+import SkyworkIconMono from "@lobehub/icons/es/Skywork/components/Mono"
+import * as SkyworkIconStyle from "@lobehub/icons/es/Skywork/style"
+import SnowflakeIconMono from "@lobehub/icons/es/Snowflake/components/Mono"
+import * as SnowflakeIconStyle from "@lobehub/icons/es/Snowflake/style"
+import TIIIconMono from "@lobehub/icons/es/TII/components/Mono"
+import * as TIIIconStyle from "@lobehub/icons/es/TII/style"
+import UpstageIconMono from "@lobehub/icons/es/Upstage/components/Mono"
+import * as UpstageIconStyle from "@lobehub/icons/es/Upstage/style"
+import XiaomiMiMoIconMono from "@lobehub/icons/es/XiaomiMiMo/components/Mono"
+import * as XiaomiMiMoIconStyle from "@lobehub/icons/es/XiaomiMiMo/style"
+import YandexIconMono from "@lobehub/icons/es/Yandex/components/Mono"
+import * as YandexIconStyle from "@lobehub/icons/es/Yandex/style"
+import LGIconMono from "@lobehub/icons/es/LG/components/Mono"
+import * as LGIconStyle from "@lobehub/icons/es/LG/style"
+import IFlyTekCloudIconMono from "@lobehub/icons/es/IFlyTekCloud/components/Mono"
+import * as IFlyTekCloudIconStyle from "@lobehub/icons/es/IFlyTekCloud/style"
+import SparkIconMono from "@lobehub/icons/es/Spark/components/Mono"
+import * as SparkIconStyle from "@lobehub/icons/es/Spark/style"
+import TencentIcon from "@lobehub/icons/es/Tencent/components/Color"
+import HunyuanIcon from "@lobehub/icons/es/Hunyuan/components/Color"
+
+const AntGroupIcon = createBrandAvatar(AntGroupIconMono, AntGroupIconStyle)
+const ArceeIcon = createBrandAvatar(ArceeIconMono, ArceeIconStyle)
+const BAAIIcon = createBrandAvatar(BAAIIconMono, BAAIIconStyle)
+const BaichuanIcon = createBrandAvatar(BaichuanIconMono, BaichuanIconStyle)
+const ByteDanceIcon = createBrandAvatar(ByteDanceIconMono, ByteDanceIconStyle)
+const DeepCogitoIcon = createBrandAvatar(DeepCogitoIconMono, DeepCogitoIconStyle)
+const InfinigenceIcon = createBrandAvatar(InfinigenceIconMono, InfinigenceIconStyle)
+const KimiIcon = createBrandAvatar(KimiIconMono, KimiIconStyle)
+const LiquidIcon = createBrandAvatar(LiquidIconMono, LiquidIconStyle)
+const LongCatIcon = createBrandAvatar(LongCatIconMono, LongCatIconStyle)
+const MoonshotIcon = createBrandAvatar(MoonshotIconMono, MoonshotIconStyle)
+const NousResearchIcon = createBrandAvatar(NousResearchIconMono, NousResearchIconStyle)
+const RwkvIcon = createBrandAvatar(RwkvIconMono, RwkvIconStyle)
+const SkyworkIcon = createBrandAvatar(SkyworkIconMono, SkyworkIconStyle)
+const SnowflakeIcon = createBrandAvatar(SnowflakeIconMono, SnowflakeIconStyle)
+const TIIIcon = createBrandAvatar(TIIIconMono, TIIIconStyle)
+const UpstageIcon = createBrandAvatar(UpstageIconMono, UpstageIconStyle)
+const XiaomiMiMoIcon = createBrandAvatar(XiaomiMiMoIconMono, XiaomiMiMoIconStyle)
+const YandexIcon = createBrandAvatar(YandexIconMono, YandexIconStyle)
+const LGIcon = createBrandAvatar(LGIconMono, LGIconStyle)
+const IFlyTekCloudIcon = createBrandAvatar(IFlyTekCloudIconMono, IFlyTekCloudIconStyle)
+const SparkIcon = createBrandAvatar(SparkIconMono, SparkIconStyle)
 
 const ICON_SIZE = 18
 
 // ─── Lobehub Avatar icon map ───────────────────────────────────────────────
 // Keys: HF org slugs + provider display names (EN + ZH)
-// Values: lobehub icon component with .Avatar variant (self-contained background)
+// Values: Lobehub .Avatar or .Color components matching the brand's artwork
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AvatarIconComponent = React.ComponentType<any>
 
 const LOBEHUB_AVATAR_MAP: Record<string, AvatarIconComponent> = {
-  "LG AI":         LGIcon.Avatar,
-  "LG AI Research": LGIcon.Avatar,
-  "LG AI 研究院":    LGIcon.Avatar,
-  "LGAI-EXAONE":    LGIcon.Avatar,
+  // Tencent company and Hunyuan product identities
+  "腾讯":           TencentIcon,
+  "Tencent":        TencentIcon,
+  "tencent":        TencentIcon,
+  "腾讯混元":       HunyuanIcon,
+  "Tencent Hunyuan": HunyuanIcon,
+  "Tencent-Hunyuan": HunyuanIcon,
+  "tencent-hunyuan": HunyuanIcon,
+  "混元":           HunyuanIcon,
+  "Hunyuan":        HunyuanIcon,
+  "hunyuan":        HunyuanIcon,
 
-  "iFlyTek":       IFlyTekCloudIcon.Avatar,
-  "科大讯飞":        IFlyTekCloudIcon.Avatar,
-  "iFlytek":       IFlyTekCloudIcon.Avatar,
-  "iFlytekOpenSource": IFlyTekCloudIcon.Avatar,
-  "XHToken":       IFlyTekCloudIcon.Avatar,
+  "LG AI":         LGIcon,
+  "LG AI Research": LGIcon,
+  "LG AI 研究院":    LGIcon,
+  "LGAI-EXAONE":    LGIcon,
+
+  "iFlyTek":       IFlyTekCloudIcon,
+  "科大讯飞":        IFlyTekCloudIcon,
+  "iFlytek":       IFlyTekCloudIcon,
+  "iFlytekOpenSource": IFlyTekCloudIcon,
+  "XHToken":       IFlyTekCloudIcon,
   // Kimi — model-level (HF org) uses Kimi product icon
-  "moonshotai":    KimiIcon.Avatar,
+  "moonshotai":    KimiIcon,
 
   // Moonshot AI — provider column uses Moonshot company icon
-  "Moonshot AI":   MoonshotIcon.Avatar,
-  "月之暗面":       MoonshotIcon.Avatar,
+  "Moonshot AI":   MoonshotIcon,
+  "月之暗面":       MoonshotIcon,
 
   // Arcee AI
-  "Arcee AI":      ArceeIcon.Avatar,
-  "arcee-ai":      ArceeIcon.Avatar,
+  "Arcee AI":      ArceeIcon,
+  "arcee-ai":      ArceeIcon,
 
   // Snowflake
-  "Snowflake":     SnowflakeIcon.Avatar,
-  "snowflake":     SnowflakeIcon.Avatar,
+  "Snowflake":     SnowflakeIcon,
+  "snowflake":     SnowflakeIcon,
 
   // Yandex
-  "Yandex":        YandexIcon.Avatar,
-  "yandex":        YandexIcon.Avatar,
+  "Yandex":        YandexIcon,
+  "yandex":        YandexIcon,
 
   // ByteDance (general — Doubao / Seed)
-  "ByteDance":     ByteDanceIcon.Avatar,
-  "ByteDance Seed": ByteDanceIcon.Avatar,
-  "字节跳动":       ByteDanceIcon.Avatar,
-  "字节 Seed":      ByteDanceIcon.Avatar,
-  "ByteDance-Seed": ByteDanceIcon.Avatar,
-  "bytedance-research": ByteDanceIcon.Avatar,
+  "ByteDance":     ByteDanceIcon,
+  "ByteDance Seed": ByteDanceIcon,
+  "字节跳动":       ByteDanceIcon,
+  "字节 Seed":      ByteDanceIcon,
+  "ByteDance-Seed": ByteDanceIcon,
+  "bytedance-research": ByteDanceIcon,
 
   // Skywork / 昆仑万维
-  "Skywork":       SkyworkIcon.Avatar,
-  "昆仑万维":       SkyworkIcon.Avatar,
+  "Skywork":       SkyworkIcon,
+  "昆仑万维":       SkyworkIcon,
 
   // Deep Cogito
-  "Deep Cogito":   DeepCogitoIcon.Avatar,
-  "deepcogito":    DeepCogitoIcon.Avatar,
+  "Deep Cogito":   DeepCogitoIcon,
+  "deepcogito":    DeepCogitoIcon,
 
   // Liquid AI
-  "Liquid AI":     LiquidIcon.Avatar,
-  "LiquidAI":      LiquidIcon.Avatar,
+  "Liquid AI":     LiquidIcon,
+  "LiquidAI":      LiquidIcon,
 
   // Xiaomi
-  "Xiaomi MiMo":   XiaomiMiMoIcon.Avatar,
-  "小米 MiMo":      XiaomiMiMoIcon.Avatar,
-  "XiaomiMiMo":    XiaomiMiMoIcon.Avatar,
+  "Xiaomi MiMo":   XiaomiMiMoIcon,
+  "小米 MiMo":      XiaomiMiMoIcon,
+  "XiaomiMiMo":    XiaomiMiMoIcon,
 
   // TII
-  "TII":           TIIIcon.Avatar,
-  "tii":           TIIIcon.Avatar,
+  "TII":           TIIIcon,
+  "tii":           TIIIcon,
 
   // Upstage
-  "Upstage":       UpstageIcon.Avatar,
-  "upstage":       UpstageIcon.Avatar,
+  "Upstage":       UpstageIcon,
+  "upstage":       UpstageIcon,
 
   // Nous Research
-  "Nous Research": NousResearchIcon.Avatar,
-  "NousResearch":  NousResearchIcon.Avatar,
-  "nous-research": NousResearchIcon.Avatar,
+  "Nous Research": NousResearchIcon,
+  "NousResearch":  NousResearchIcon,
+  "nous-research": NousResearchIcon,
 
   // BAAI
-  "BAAI":          BAAIIcon.Avatar,
-  "baai":          BAAIIcon.Avatar,
+  "BAAI":          BAAIIcon,
+  "baai":          BAAIIcon,
 
   // Baichuan
-  "Baichuan":      BaichuanIcon.Avatar,
-  "Baichuan AI":   BaichuanIcon.Avatar,
-  "百川智能":       BaichuanIcon.Avatar,
-  "baichuan-inc":  BaichuanIcon.Avatar,
+  "Baichuan":      BaichuanIcon,
+  "Baichuan AI":   BaichuanIcon,
+  "百川智能":       BaichuanIcon,
+  "baichuan-inc":  BaichuanIcon,
 
   // Infinigence
-  "Infinigence":   InfinigenceIcon.Avatar,
-  "infinigence":   InfinigenceIcon.Avatar,
+  "Infinigence":   InfinigenceIcon,
+  "infinigence":   InfinigenceIcon,
 
   // RWKV
-  "RWKV":          RwkvIcon.Avatar,
-  "rwkv":          RwkvIcon.Avatar,
-  "BlinkDL":       RwkvIcon.Avatar,
+  "RWKV":          RwkvIcon,
+  "rwkv":          RwkvIcon,
+  "BlinkDL":       RwkvIcon,
 
   // Ant Group
-  "Ant Group":     AntGroupIcon.Avatar,
-  "蚂蚁集团":       AntGroupIcon.Avatar,
-  "inclusionAI":   AntGroupIcon.Avatar,
+  "Ant Group":     AntGroupIcon,
+  "AntGroup":      AntGroupIcon,
+  "蚂蚁集团":       AntGroupIcon,
+  "inclusionAI":   AntGroupIcon,
 }
 
 const MODEL_AVATAR_MAP: Record<string, AvatarIconComponent> = {
-  "meituan-longcat": LongCatIcon.Avatar,
-  "XHToken": SparkIcon.Avatar,
-  "iFlytek": SparkIcon.Avatar,
+  "meituan-longcat": LongCatIcon,
+  "XHToken": SparkIcon,
+  "iFlytek": SparkIcon,
 }
 
 // ─── Custom local image map ────────────────────────────────────────────────
@@ -223,10 +284,7 @@ const CUSTOM_LOGO_MAP: Record<string, string> = {
   "dphn":                   "/icons/providers/cognitive-computations.png",
   "cognitive-computations": "/icons/providers/cognitive-computations.png",
 
-  // Tencent
-  "腾讯":       "/icons/providers/tencent.png",
-  "Tencent":    "/icons/providers/tencent.png",
-  "tencent":    "/icons/providers/tencent.png",
+  // Weixin
   "微信":       "/icons/providers/wechat.svg",
   "Weixin":     "/icons/providers/wechat.svg",
   "weixin":     "/icons/providers/wechat.svg",
@@ -272,11 +330,6 @@ const PROVIDER_KEY_MAP: Record<string, string> = {
   "Stepfun": "stepfun",
   "阶跃星辰": "stepfun",
   "Meituan": "meituan",
-  // Tencent / Hunyuan
-  "腾讯":           "tencent",
-  "Tencent":        "tencent",
-  "腾讯混元":       "tencent",
-  "Tencent Hunyuan": "tencent",
   "Xiaomi MiMo": "xiaomi",
   "小米 MiMo": "xiaomi",
   "360": "ai360",
@@ -355,8 +408,10 @@ export function ModelBrandIcon({ model, provider, size = ICON_SIZE, className }:
   if (!model) return null
   const org = orgFromModelId(model)
 
-  // 1. Product-specific Lobehub Avatar by org slug
-  const ProductAvatarIcon = org ? MODEL_AVATAR_MAP[org] : undefined
+  // 1. Hunyuan / Hy families share the Tencent org with other research models.
+  const ProductAvatarIcon = /^tencent\/(?:hunyuan|hy(?:\d|[-_]))/i.test(model)
+    ? HunyuanIcon
+    : org ? MODEL_AVATAR_MAP[org] : undefined
   if (ProductAvatarIcon) {
     return (
       <span className={className} style={wrapperStyle}>
@@ -380,7 +435,7 @@ export function ModelBrandIcon({ model, provider, size = ICON_SIZE, className }:
   if (custom) {
     return (
       <span className={className} style={wrapperStyle}>
-        <img src={custom} alt="" width={size} height={size} style={{ borderRadius: 4, objectFit: "contain" }} />
+        <img src={custom} alt="" loading="lazy" decoding="async" width={size} height={size} style={{ borderRadius: 4, objectFit: "contain" }} />
       </span>
     )
   }
@@ -388,7 +443,7 @@ export function ModelBrandIcon({ model, provider, size = ICON_SIZE, className }:
   // 4. Lobehub ModelIcon
   return (
     <span className={className} style={wrapperStyle}>
-      <ModelIcon model={model} size={size} type="color" />
+      <ModelIcon model={model} provider={provider} size={size} />
     </span>
   )
 }
@@ -418,7 +473,7 @@ export function ProviderBrandIcon({ provider, orgHint, size = ICON_SIZE, classNa
   if (custom) {
     return (
       <span className={className} style={wrapperStyle}>
-        <img src={custom} alt="" width={size} height={size} style={{ borderRadius: 4, objectFit: "contain" }} />
+        <img src={custom} alt="" loading="lazy" decoding="async" width={size} height={size} style={{ borderRadius: 4, objectFit: "contain" }} />
       </span>
     )
   }
@@ -428,7 +483,7 @@ export function ProviderBrandIcon({ provider, orgHint, size = ICON_SIZE, classNa
   if (!key) return null
   return (
     <span className={className} style={wrapperStyle}>
-      <ProviderIcon provider={key} size={size} type="color" />
+      <ProviderIcon provider={key} size={size} />
     </span>
   )
 }

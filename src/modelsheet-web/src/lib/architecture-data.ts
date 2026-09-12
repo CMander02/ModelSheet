@@ -1,5 +1,6 @@
 import type { ArchitectureSpec, DiagramParams, ModelInfo, TreeNode } from "./types"
 import { formatContextLength, formatNumber, formatParameters } from "./formatters"
+import { cachedJson } from "./api-cache"
 
 function applyTemplate(value: unknown, params: DiagramParams): unknown {
   if (typeof value !== "string") return value
@@ -95,10 +96,8 @@ export function archMatchesFamily(arch: ArchitectureSpec, family: string): boole
   )
 }
 
-export async function loadArchitectures(): Promise<ArchitectureSpec[]> {
-  const resp = await fetch("/api/architectures")
-  if (!resp.ok) return []
-  return resp.json()
+export function loadArchitectures(summary = false): Promise<ArchitectureSpec[]> {
+  return cachedJson(`/api/architectures${summary ? "?view=summary" : ""}`)
 }
 
 export async function loadArchitecture(id: string): Promise<ArchitectureSpec | null> {

@@ -13,8 +13,8 @@ import { LanguageToggle } from "@/components/language-toggle"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { ArrowLeft, FileText, HelpCircle, Info, Lock } from "lucide-react"
-import HuggingFaceIcon from "@lobehub/icons/es/HuggingFace"
-import ModelScopeIcon from "@lobehub/icons/es/ModelScope"
+import HuggingFaceIcon from "@lobehub/icons/es/HuggingFace/components/Color"
+import ModelScopeIcon from "@lobehub/icons/es/ModelScope/components/Color"
 import type { ArchitectureSpec } from "@/lib/types"
 
 // ─── Param confidence ───────────────────────────────────────────────────────
@@ -153,18 +153,27 @@ export function ModelCardPage() {
       return
     }
 
+    let cancelled = false
+    setIsLoading(true)
+    setArchEntry(null)
     loadModelById(modelId)
       .then(async loaded => {
+        if (cancelled) return
         setModel(loaded)
+        // Render model facts as soon as they arrive; the diagram loads independently.
+        setIsLoading(false)
         if (loaded?.architecture) {
           try {
-            setArchEntry(await loadArchitecture(loaded.architecture))
+            const architecture = await loadArchitecture(loaded.architecture)
+            if (!cancelled) setArchEntry(architecture)
           } catch {
-            setArchEntry(null)
+            if (!cancelled) setArchEntry(null)
           }
         }
       })
-      .finally(() => setIsLoading(false))
+      .catch(() => { if (!cancelled) setModel(null) })
+      .finally(() => { if (!cancelled) setIsLoading(false) })
+    return () => { cancelled = true }
   }, [modelId])
 
   const handleThemeToggle = () => {
@@ -215,11 +224,11 @@ export function ModelCardPage() {
   const platformLinks = [
     model.huggingfaceUrl && (
       <PlatformLink key="hf" href={model.huggingfaceUrl}
-        icon={<HuggingFaceIcon.Color size={17} />} label="HuggingFace" />
+        icon={<HuggingFaceIcon size={17} />} label="HuggingFace" />
     ),
     model.modelscopeUrl && (
       <PlatformLink key="ms" href={model.modelscopeUrl}
-        icon={<ModelScopeIcon.Color size={17} />} label="ModelScope" />
+        icon={<ModelScopeIcon size={17} />} label="ModelScope" />
     ),
     model.arxivUrl && (
       <PlatformLink key="ax" href={model.arxivUrl}

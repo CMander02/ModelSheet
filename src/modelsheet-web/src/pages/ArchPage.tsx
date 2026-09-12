@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Link, useSearchParams, useNavigate } from "react-router-dom"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { LanguageToggle } from "@/components/language-toggle"
@@ -16,6 +16,25 @@ export const TYPE_COLORS: Record<string, string> = {
 }
 
 type TypeFilter = "all" | "encoder" | "decoder" | "encoder-decoder"
+
+function DiagramPreview({ arch }: { arch: ArchitectureSpec }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    if (!ref.current || visible) return
+    const observer = new IntersectionObserver(entries => {
+      if (entries.some(entry => entry.isIntersecting)) {
+        setVisible(true)
+        observer.disconnect()
+      }
+    }, { rootMargin: "500px" })
+    observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, [visible])
+  return <div ref={ref} className="min-h-[220px]">
+    {visible ? <ArchitectureDiagramRenderer architecture={arch} /> : <div className="h-[220px] w-48 animate-pulse rounded bg-muted/50" />}
+  </div>
+}
 
 function FilterBar({
   active, onChange, t,
@@ -62,7 +81,7 @@ function ArchCard({
     <Link to={`/arch/${arch.id}`} className="block h-full">
       <div className="group rounded-xl border bg-card flex flex-col overflow-hidden transition-all h-full hover:border-foreground/30 hover:shadow-md cursor-pointer">
         <div className="bg-muted/30 px-6 pt-4 pb-6 flex items-center justify-center min-h-[220px]">
-          <ArchitectureDiagramRenderer architecture={arch} />
+          <DiagramPreview arch={arch} />
         </div>
 
         <div className="p-4 flex flex-col gap-2 border-t">

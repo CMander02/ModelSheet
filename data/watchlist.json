@@ -16,7 +16,9 @@
     "PaddlePaddle",
     "xhtoken",
     "iflytekopensource",
-    "iflytek"
+    "iflytek",
+    "internlm",
+    "Shanghai_AI_Laboratory"
   ],
   "sources": {
     "mistralai": [
@@ -74,12 +76,20 @@
     ],
     "iflytek": [
       "ms"
+    ],
+    "internlm": [
+      "hf"
+    ],
+    "Shanghai_AI_Laboratory": [
+      "ms"
     ]
   },
   "snapshots": {
     "baidu": [],
     "xhtoken": [],
     "iflytekopensource": [],
-    "iflytek": []
+    "iflytek": [],
+    "internlm": [],
+    "Shanghai_AI_Laboratory": []
   }
 }

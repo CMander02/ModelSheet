@@ -105,6 +105,9 @@ CREATE TABLE IF NOT EXISTS models (
   name_note TEXT,
   released_at TEXT,
   updated_at TEXT,
+  model_category TEXT NOT NULL DEFAULT 'language',
+  base_model TEXT,
+  decision_types_json TEXT NOT NULL DEFAULT '[]',
   raw_json TEXT NOT NULL,
   FOREIGN KEY (provider_id) REFERENCES providers(id)
 );
@@ -148,6 +151,8 @@ CREATE INDEX IF NOT EXISTS idx_models_architecture ON models(architecture);
 CREATE INDEX IF NOT EXISTS idx_models_total_parameters ON models(total_parameters);
 CREATE INDEX IF NOT EXISTS idx_models_released_at ON models(released_at);
 CREATE INDEX IF NOT EXISTS idx_models_search ON models(name, provider, id);
+CREATE INDEX IF NOT EXISTS idx_models_category_release
+  ON models(model_category, released_at IS NULL, released_at DESC, name ASC, id ASC);
 -- Match NULL-last ordering and its tie-breakers, so browse requests can stop at LIMIT.
 CREATE INDEX IF NOT EXISTS idx_models_browse_release
   ON models(released_at IS NULL, released_at DESC, name ASC, id ASC);
@@ -558,6 +563,9 @@ def _model_row(model: dict[str, Any], provider_id_by_name: dict[str, str]) -> tu
         model.get("nameNote"),
         model.get("releasedAt"),
         model.get("updatedAt"),
+        model.get("modelCategory", "language"),
+        model.get("baseModel"),
+        _json_text(model.get("decisionTypes") or []),
         _json_text(model),
     )
 
@@ -616,11 +624,12 @@ def build_sqlite(
               num_shared_experts, num_experts_per_token, num_activated_experts,
               moe_intermediate_size_json, input_modalities_json, output_modalities_json,
               openness, task, knowledge_cutoff, parameter_confidence, parameter_source,
-              parameter_source_url, name_note, released_at, updated_at, raw_json
+              parameter_source_url, name_note, released_at, updated_at,
+              model_category, base_model, decision_types_json, raw_json
             ) VALUES (
               ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
               ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-              ?, ?, ?, ?
+              ?, ?, ?, ?, ?, ?, ?
             )
             """,
             [_model_row(m, provider_id_by_name) for m in models if isinstance(m, dict)],

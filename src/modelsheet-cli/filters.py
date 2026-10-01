@@ -15,6 +15,8 @@ from typing import Optional
 
 import yaml
 
+from .categories import model_category
+
 from .config import DATA_DIR
 
 # ── Built-in defaults (used when YAML file is missing or as fallback) ─────────
@@ -278,6 +280,10 @@ def skip_reason(
     name_reason = skip_by_name(name)
     if name_reason:
         return name_reason
+
+    # Reviewed decision families can use encoder/classifier pipeline tags.
+    if model_category(model_id) == "decision":
+        return None
 
     # 2. Skip pipeline tags (ASR, TTS, embedding, image-gen, etc.)
     if pipeline_tag and pipeline_tag in _SKIP_PIPELINE_TAGS:

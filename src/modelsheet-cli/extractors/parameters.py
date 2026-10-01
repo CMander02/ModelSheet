@@ -112,6 +112,11 @@ def _calc_parameters(ctx: ConfigContext) -> Tuple[Optional[int], Optional[int]]:
     model_type = ctx.config.get("model_type", "")
     is_moe = extract_is_moe(ctx)
 
+    # CED has different prefill/decode paths, Engram memory and DSpark draft
+    # layers. Its active count needs an explicitly sourced catalog value.
+    if model_type in {"deepseek_v41", "deepseek_v41_text"}:
+        return ctx.metadata.get("totalParameters", ctx.config.get("num_parameters")), None
+
     # Architecture calculations may estimate components such as MTP or omit
     # a vision encoder. Keep the repository tensor count for the full model.
     arch_calc = get_arch_calculator(model_type, ctx.config, ctx.metadata)

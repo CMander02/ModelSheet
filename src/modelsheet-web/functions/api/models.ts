@@ -18,12 +18,15 @@ export async function onRequest(context: {
     .map((id) => id.trim())
     .filter(Boolean)
   const architecture = url.searchParams.get("architecture")?.trim().toLowerCase()
+  const category = url.searchParams.get("category")
+  if (category && !["language", "decision"].includes(category)) return jsonResponse({ error: "Invalid model category" }, { status: 400 })
   if (ids.length > 80) return jsonResponse({ error: "At most 80 model IDs per request" }, { status: 400 })
 
   try {
     if (db) {
       const conditions: string[] = []
       const params: string[] = []
+      if (category) { conditions.push("model_category = ?"); params.push(category) }
       if (ids.length) {
         conditions.push(`id IN (${ids.map(() => "?").join(",")})`)
         params.push(...ids)
@@ -57,6 +60,7 @@ export async function onRequest(context: {
     const wanted = new Set(ids)
     return jsonResponse(models.filter((model) =>
       (!ids.length || wanted.has(String(model.id))) &&
+      (!category || (model.modelCategory ?? "language") === category) &&
       (!architecture || String(model.architecture).toLowerCase() === architecture),
     ))
   } catch (err) {

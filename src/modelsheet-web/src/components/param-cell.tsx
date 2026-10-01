@@ -10,6 +10,7 @@ import {
 interface ParamCellProps {
   value: number | null | undefined
   model: ModelInfo
+  parameter?: "totalParameters" | "activeParameters"
 }
 
 function formatNumber(v: number): string {
@@ -52,10 +53,13 @@ function SourceTooltip({ label, source, sourceUrl }: {
   )
 }
 
-export function ParamCell({ value, model }: ParamCellProps) {
+export function ParamCell({ value, model, parameter = "totalParameters" }: ParamCellProps) {
   const confidence = model.parameterConfidence ?? "official"
   const source = model.parameterSource
   const sourceUrl = model.parameterSourceUrl
+  const min = parameter === "activeParameters" ? model.activeParametersMin : model.totalParametersMin
+  const max = parameter === "activeParameters" ? model.activeParametersMax : model.totalParametersMax
+  if (min != null && max != null) return <SourceTooltip label={<span className={confidence === "rumored" ? "italic text-muted-foreground" : ""}>{confidence === "rumored" ? "~" : ""}{formatNumber(min)}–{formatNumber(max)}</span>} source={source} sourceUrl={sourceUrl} />
 
   if (value == null) {
     const hint = source ?? "Undisclosed"
@@ -122,5 +126,5 @@ export function ParamCell({ value, model }: ParamCellProps) {
     )
   }
 
-  return <span>{formatted}</span>
+  return <SourceTooltip label={<span>{formatted}</span>} source={source} sourceUrl={sourceUrl} />
 }

@@ -50,6 +50,10 @@ const COLUMN_CONFIGS: Omit<ColumnConfig, "label">[] = [
 
   // Openness (not in any preset — visible via custom field selector only)
   { key: "openness", visible: false, sortable: true, type: "string" },
+  { key: "baseModel", visible: false, sortable: true, type: "string" },
+  { key: "decisionTypes", visible: false, sortable: false, type: "array" },
+  { key: "inferenceMode", visible: false, sortable: false, type: "string" },
+  { key: "license", visible: false, sortable: false, type: "string" },
 ]
 
 // 根据语言生成列配置
@@ -57,7 +61,7 @@ export function getColumnConfigs(language: Language = "zh"): ColumnConfig[] {
   const t = getTranslations(language)
   return COLUMN_CONFIGS.map(config => ({
     ...config,
-    label: t.columns[config.key as keyof typeof t.columns] || config.key
+    label: t.columns[config.key as keyof typeof t.columns] || ({ baseModel: language === "zh" ? "基座" : "Backbone", decisionTypes: language === "zh" ? "决策类型" : "Decision types", inferenceMode: language === "zh" ? "推理方式" : "Inference", license: language === "zh" ? "许可证" : "License" } as Record<string, string>)[config.key] || config.key
   }))
 }
 
@@ -171,6 +175,7 @@ export async function searchModels(
   limit: number = 30,
   sortConfig: SortConfig = { key: "releasedAt", direction: "desc" },
   signal?: AbortSignal,
+  filters: { category?: "language" | "decision"; decisionType?: string; openness?: string; provider?: string } = {},
 ): Promise<SearchResult> {
   const params = new URLSearchParams({
     q: q.trim().toLowerCase(),
@@ -179,6 +184,7 @@ export async function searchModels(
     sort: sortConfig.key ?? "releasedAt",
     dir: sortConfig.direction,
   })
+  for (const [key, value] of Object.entries(filters)) if (value) params.set(key, value)
   return cachedJson(`/api/search?${params}`, signal)
 }
 

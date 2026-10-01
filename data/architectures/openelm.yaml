@@ -1,0 +1,51 @@
+id: openelm
+family: OpenELM
+era: '2024'
+type: decoder
+normPlacement: pre
+description:
+  zh: 使用逐层变化的注意力头数和 FFN 扩展比例，以层级缩放分配计算预算。
+  en: Layer-wise scaling varies attention heads and FFN expansion to allocate the
+    parameter budget.
+aliases:
+- openelm
+defaultParams:
+  numLayers: 16
+  hiddenSize: 1280
+sourceLinks:
+- label: Official model documentation
+  url: https://machinelearning.apple.com/research/openelm
+  type: official
+diagram:
+  subtitle: OpenELM
+  nodes:
+  - id: input
+    type: leaf
+    label: Input embeddings
+    color: input
+  - id: block
+    type: group
+    label: Model backbone
+    color: steel
+    defaultExpanded: true
+    children:
+    - id: stage0
+      type: leaf
+      label: RMSNorm + GQA (heads vary per layer)
+      color: attn
+    - id: stage1
+      type: leaf
+      label: Residual + RMSNorm
+      color: norm
+    - id: stage2
+      type: leaf
+      label: SwiGLU FFN (width varies per layer)
+      color: ffn
+    - id: stage3
+      type: leaf
+      label: Residual connection
+      color: resid
+  - id: output
+    type: leaf
+    label: Output head
+    color: out

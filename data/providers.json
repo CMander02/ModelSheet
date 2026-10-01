@@ -413,7 +413,12 @@
         "en": "Apple",
         "zh": "苹果"
       },
-      "region": "global"
+      "region": "global",
+      "scan": {
+        "hf": [
+          "apple"
+        ]
+      }
     },
     "xAI": {
       "orgs": [
@@ -1206,6 +1211,96 @@
         "zh": "Haotian Liu（个人开发者）"
       },
       "region": "global"
+    },
+    "China Telecom": {
+      "orgs": [
+        "XingChen-AGI"
+      ],
+      "region": "cn",
+      "i18n": {
+        "en": "China Telecom",
+        "zh": "中国电信"
+      },
+      "scan": {
+        "hf": [
+          "XingChen-AGI"
+        ]
+      }
+    },
+    "IQuestLab": {
+      "orgs": [
+        "IQuestLab"
+      ],
+      "region": "cn",
+      "i18n": {
+        "en": "IQuestLab",
+        "zh": "IQuest"
+      },
+      "scan": {
+        "hf": [
+          "IQuestLab"
+        ]
+      }
+    },
+    "Fastino": {
+      "orgs": [
+        "fastino"
+      ],
+      "region": "global",
+      "i18n": {
+        "en": "Fastino",
+        "zh": "Fastino"
+      },
+      "scan": {
+        "hf": [
+          "fastino"
+        ]
+      }
+    },
+    "Contrastive LM": {
+      "orgs": [
+        "Contrastive-LM"
+      ],
+      "region": "global",
+      "i18n": {
+        "en": "Contrastive LM",
+        "zh": "Contrastive LM"
+      },
+      "scan": {
+        "hf": [
+          "Contrastive-LM"
+        ]
+      }
+    },
+    "TypeSafe AI": {
+      "orgs": [
+        "typesafe"
+      ],
+      "region": "global",
+      "i18n": {
+        "en": "TypeSafe AI",
+        "zh": "TypeSafe AI"
+      },
+      "scan": {
+        "hf": [
+          "typesafe"
+        ]
+      }
+    },
+    "Convai Innovations": {
+      "orgs": [
+        "convaiinnovations"
+      ],
+      "region": "global",
+      "i18n": {
+        "en": "Convai Innovations",
+        "zh": "Convai Innovations"
+      },
+      "scan": {
+        "hf": [
+          "convaiinnovations"
+        ]
+      }
     }
   },
   "Tilde Research": {

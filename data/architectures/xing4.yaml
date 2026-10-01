@@ -1,0 +1,50 @@
+id: xing4
+family: Xing4.0
+era: '2026'
+type: decoder
+normPlacement: pre
+description:
+  zh: 中国电信星辰 4.0 使用 MLA、mHC、稀疏专家和 MTP。
+  en: China Telecom Xing4.0 combines MLA, mHC, sparse experts and MTP.
+aliases:
+- xing4_0
+defaultParams:
+  numLayers: 40
+  hiddenSize: 3584
+sourceLinks:
+- label: Official model documentation
+  url: https://huggingface.co/XingChen-AGI/Xing4.0-29B-A4B
+  type: official
+diagram:
+  subtitle: Xing4.0
+  nodes:
+  - id: input
+    type: leaf
+    label: Input embeddings
+    color: input
+  - id: block
+    type: group
+    label: Model backbone
+    color: steel
+    defaultExpanded: true
+    children:
+    - id: stage0
+      type: leaf
+      label: MLA attention
+      color: attn
+    - id: stage1
+      type: leaf
+      label: mHC residual stream
+      color: resid
+    - id: stage2
+      type: leaf
+      label: 64 routed experts + 1 shared; top 4
+      color: moe
+    - id: stage3
+      type: leaf
+      label: Auxiliary MTP
+      color: out
+  - id: output
+    type: leaf
+    label: Output head
+    color: out

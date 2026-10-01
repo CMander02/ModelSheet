@@ -10,6 +10,7 @@ from tqdm import tqdm
 
 from .config import TEMP_DIR
 from .filters import skip_reason
+from .categories import model_category
 from .extractors import (
     ConfigContext,
     # Metadata
@@ -115,6 +116,7 @@ class ParsedModel:
     # Pipeline tag
     pipeline_tag: Optional[str] = None
     task: Optional[str] = None
+    model_category: str = "language"
 
     # Metadata
     released_at: Optional[str] = None
@@ -158,6 +160,7 @@ class ModelParser:
         ctx = ConfigContext.from_configs(model_id, configs)
 
         return ParsedModel(
+            model_category=model_category(model_id),
             # Identification
             id=extract_id(ctx),
             name=extract_name(ctx),

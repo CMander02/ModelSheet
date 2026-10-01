@@ -78,7 +78,7 @@ export function HomePage() {
     setIsSearching(true)
     setSearchError(false)
     try {
-      const result: SearchResult = await searchModels(q, page, itemsPerPage, nextSort, controller.signal)
+      const result: SearchResult = await searchModels(q, page, itemsPerPage, nextSort, controller.signal, { category: "language" })
       if (controller.signal.aborted) return
       browseQueryRef.current = { term: q, sort: nextSort }
       setModels(prev => append ? [...prev, ...result.items] : result.items)
@@ -115,7 +115,7 @@ export function HomePage() {
       const targetItems = page * itemsPerPage
       const restoredItems: ModelInfo[] = []
       let total = 0
-      const first = await searchModels(q, 1, itemsPerPage, nextSort, controller.signal)
+      const first = await searchModels(q, 1, itemsPerPage, nextSort, controller.signal, { category: "language" })
       total = first.total
       restoredItems.push(...first.items)
       const lastPage = Math.min(page, first.totalPages)
@@ -123,7 +123,7 @@ export function HomePage() {
       for (let start = 2; start <= lastPage; start += 4) {
         const results = await Promise.all(Array.from(
           { length: Math.min(4, lastPage - start + 1) },
-          (_, i) => searchModels(q, start + i, itemsPerPage, nextSort, controller.signal),
+          (_, i) => searchModels(q, start + i, itemsPerPage, nextSort, controller.signal, { category: "language" }),
         ))
         restoredItems.push(...results.flatMap(result => result.items))
       }
@@ -414,6 +414,7 @@ export function HomePage() {
           <div className="ml-auto flex shrink-0 items-center gap-1.5">
             {renderComplexityMenu()}
             <div className="mx-1 h-5 w-px bg-border" />
+            <Link to="/decisions" className="text-xs font-medium px-2 hover:text-primary">{language === "zh" ? "决策模型" : "Decisions"}</Link>
             <Link to="/providers">
               <Button variant="ghost" size="sm" className="h-9 px-2.5" title={t.nav.providers} aria-label={t.nav.providers}>
                 <Building2 className="h-4 w-4" />
@@ -455,6 +456,7 @@ export function HomePage() {
               {language === "zh" ? `${totalCount} 个` : totalCount}
             </span>
             <div className="min-w-0 flex-1" />
+            <Link to="/decisions" className="text-xs font-medium px-1 hover:text-primary">{language === "zh" ? "决策" : "Decisions"}</Link>
             <Link to="/providers">
               <Button variant="ghost" size="sm" className="h-8 w-8 px-0" title={t.nav.providers} aria-label={t.nav.providers}>
                 <Building2 className="h-4 w-4" />

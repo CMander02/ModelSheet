@@ -1,0 +1,65 @@
+id: opt
+family: OPT
+era: "2022"
+type: decoder
+normPlacement: pre
+description:
+  zh: "OPT 使用多头自注意力、学习式绝对位置嵌入和 ReLU FFN。125M 采用 Pre-LayerNorm，词嵌入与输出头共享权重。"
+  en: "OPT uses multi-head self-attention, learned absolute positions and ReLU FFNs. The 125M model uses pre-LayerNorm and ties token embeddings to the output head."
+hfOrg: facebook/opt-125m
+aliases: [opt, OPTForCausalLM]
+defaultParams:
+  numLayers: 12
+  hiddenSize: 768
+  numHeads: 12
+sourceLinks:
+  - label: OPT-125M config
+    url: https://huggingface.co/facebook/opt-125m/blob/main/config.json
+    type: hf-config
+features:
+  attention: MHA
+  positionEncoding: learned absolute positions
+  norm: LayerNorm
+  ffn: ReLU
+diagram:
+  subtitle: "Learned positions · hidden: {{hiddenSize}}"
+  nodes:
+    - id: emb
+      type: leaf
+      label: Token + learned position embeddings
+      color: emb
+    - id: block
+      type: group
+      label: OPT Decoder Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm1
+          type: leaf
+          label: LayerNorm
+          color: norm
+        - id: attn
+          type: leaf
+          label: Multi-head Self-Attention
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: norm2
+          type: leaf
+          label: LayerNorm
+          color: norm
+        - id: ffn
+          type: leaf
+          label: ReLU FFN
+          color: ffn
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: Final LayerNorm + tied LM head
+      color: out

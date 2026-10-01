@@ -56,7 +56,10 @@ export function ComparePage() {
         setColumns(currentColumns)
         saveColumnConfigToStorage(currentColumns)
       } else {
-        setColumns(loadedColumns)
+        setColumns([
+          ...loadedColumns.map(column => ({ ...column, label: currentColumns.find(c => c.key === column.key)?.label ?? column.label })),
+          ...currentColumns.filter(column => !loadedColumns.some(c => c.key === column.key)),
+        ])
       }
 
       // Load pre-selected models from sessionStorage

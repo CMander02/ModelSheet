@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom"
 import type { ModelInfo } from "@/lib/types"
 import { translateProvider, type Language } from "@/lib/i18n"
 import { loadModelById } from "@/lib/model-data"
+import { decisionLabel } from "@/lib/decision-data"
 import { loadArchitecture } from "@/lib/architecture-data"
 import { cn, providerSlug } from "@/lib/utils"
 import { formatParameters, formatContextLength, formatNumber, formatDecimal, formatDate } from "@/lib/formatters"
@@ -19,10 +20,13 @@ import type { ArchitectureSpec } from "@/lib/types"
 
 // ─── Param confidence ───────────────────────────────────────────────────────
 
-function ParamValue({ value, model }: { value: number | null | undefined; model: ModelInfo }) {
+function ParamValue({ value, model, active = false }: { value: number | null | undefined; model: ModelInfo; active?: boolean }) {
   const confidence = model.parameterConfidence ?? "official"
   const source = model.parameterSource
   const sourceUrl = model.parameterSourceUrl
+  const min = active ? model.activeParametersMin : model.totalParametersMin
+  const max = active ? model.activeParametersMax : model.totalParametersMax
+  if (min != null && max != null) return <span title={source}>{confidence === "rumored" ? "~" : ""}{formatParameters(min)}–{formatParameters(max)}</span>
 
   if (value == null) {
     return <span className="text-muted-foreground font-normal" title={source ?? "Undisclosed"}>—</span>
@@ -49,7 +53,7 @@ function ParamValue({ value, model }: { value: number | null | undefined; model:
       </span>
     )
   }
-  return <span>{formatted}</span>
+  return <span title={source}>{formatted}</span>
 }
 
 // ─── Section title (divider) ────────────────────────────────────────────────
@@ -371,7 +375,7 @@ export function ModelCardPage() {
                 value={<ParamValue value={model.totalParameters} model={model} />} />
               {isMoe && (
                 <Field label={isZh ? "激活参数量" : "Active Params"}
-                  value={<ParamValue value={model.activeParameters} model={model} />} />
+                  value={<ParamValue value={model.activeParameters} model={model} active />} />
               )}
               <Field label={isZh ? "上下文长度" : "Context Length"}
                 value={model.contextLength ? formatContextLength(model.contextLength) : null} />
@@ -381,6 +385,19 @@ export function ModelCardPage() {
               {model.embeddingDim && <Field label={isZh ? "Embedding 维度" : "Emb. Dim"} value={formatNumber(model.embeddingDim)} />}
             </div>
 
+            {model.modelCategory === "decision" && <>
+              <SectionTitle>{isZh ? "决策接口" : "Decision interface"}</SectionTitle>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-5 py-5 border-b">
+                <Field label={isZh ? "基座" : "Backbone"} value={model.baseModel} />
+                <Field label={isZh ? "决策类型" : "Decision types"} value={model.decisionTypes?.map(t => decisionLabel(t, language)).join(" · ")} />
+                <Field label={isZh ? "推理方式" : "Inference"} value={model.inferenceMode && decisionLabel(model.inferenceMode, language)} />
+                <Field label={isZh ? "许可证" : "License"} value={model.license} />
+              </div>
+              <p className="py-4 text-sm text-muted-foreground leading-relaxed">{isZh ? model.descriptionZh : model.descriptionEn}</p>
+              {model.sourceUrl && <a className="text-sm underline" href={model.sourceUrl} target="_blank" rel="noopener noreferrer">{isZh ? "官方模型说明" : "Official model documentation"}</a>}
+              <Link to="/decisions" className="block text-sm text-primary py-3">{isZh ? "浏览决策模型" : "Browse decision models"}</Link>
+            </>}
+            {model.modelCategory !== "decision" && (model.descriptionZh || model.descriptionEn) && <p className="text-sm text-muted-foreground py-4 border-b">{isZh ? model.descriptionZh : model.descriptionEn}</p>}
             {/* Architecture */}
             <SectionTitle>{isZh ? "架构信息" : "Architecture"}</SectionTitle>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-8 gap-y-5 py-5 border-b">
@@ -413,13 +430,15 @@ export function ModelCardPage() {
             )}
 
             {/* Parameter provenance */}
-            {(model.parameterConfidence === "reported" || model.parameterConfidence === "rumored") && model.parameterSource && (
+            {model.parameterSource && (
               <>
                 <SectionTitle>{isZh ? "参数来源" : "Parameter Source"}</SectionTitle>
                 <p className="text-sm text-muted-foreground py-4 border-b">
                   {model.parameterConfidence === "rumored"
                     ? (isZh ? "估算 / 未经验证：" : "Rumored: ")
-                    : (isZh ? "第三方报告：" : "Reported: ")}
+                    : model.parameterConfidence === "reported"
+                      ? (isZh ? "第三方报告：" : "Reported: ")
+                      : (isZh ? "官方来源：" : "Official source: ")}
                   {model.parameterSourceUrl
                     ? <a href={model.parameterSourceUrl} target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">{model.parameterSource}</a>
                     : model.parameterSource}

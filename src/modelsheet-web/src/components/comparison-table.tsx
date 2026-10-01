@@ -12,6 +12,8 @@ import type { ModelInfo, ColumnConfig, ComplexityLevel } from "@/lib/types"
 import { COMPLEXITY_PRESETS } from "@/lib/model-data"
 import { ModelBrandIcon, ProviderBrandIcon } from "@/components/brand-icon"
 import { translateProvider, type Language } from "@/lib/i18n"
+import { decisionLabel } from "@/lib/decision-data"
+import { ParamCell } from "@/components/param-cell"
 
 interface ComparisonTableProps {
   models: ModelInfo[]
@@ -29,7 +31,8 @@ export function ComparisonTable({
   language = "zh",
 }: ComparisonTableProps) {
   const preset = COMPLEXITY_PRESETS[complexity]
-  const visibleColumns = columns.filter((col) => preset.columns.includes(col.key))
+  const decisionKeys = ["baseModel", "decisionTypes", "inferenceMode", "license", "openness"]
+  const visibleColumns = columns.filter((col) => preset.columns.includes(col.key) || (models.some(m => m.modelCategory === "decision") && decisionKeys.includes(col.key)))
 
   const formatValue = (value: any, type: string) => {
     if (value === null || value === undefined) return "-"
@@ -52,7 +55,7 @@ export function ComparisonTable({
       case "boolean":
         return value ? "✓" : "✗"
       case "array":
-        return Array.isArray(value) ? value.join(", ") : value
+        return Array.isArray(value) ? value.map(v => decisionLabel(String(v), language)).join(" · ") : value
       case "date":
         return new Date(value).toLocaleDateString()
       default:
@@ -60,7 +63,7 @@ export function ComparisonTable({
         if (value === "closed") return "🔒 Closed"
         if (value === "open-weight") return "🔓 Open-weight"
         if (value === "open-source") return "🌱 Open-source"
-        return String(value)
+        return decisionLabel(String(value), language)
     }
   }
 
@@ -128,7 +131,7 @@ export function ComparisonTable({
                   key={model.id}
                   className={getHighlightClass(column, model[column.key], model.id)}
                 >
-                  {formatValue(model[column.key], column.type)}
+                  {column.key === "totalParameters" || column.key === "activeParameters" ? <ParamCell value={model[column.key]} model={model} parameter={column.key} /> : formatValue(model[column.key], column.type)}
                 </TableCell>
               ))}
             </TableRow>

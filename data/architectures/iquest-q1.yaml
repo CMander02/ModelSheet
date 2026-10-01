@@ -1,0 +1,51 @@
+id: iquest-q1
+family: IQuest Q1
+era: '2026'
+type: decoder
+normPlacement: pre
+description:
+  zh: 使用局部与全局 GQA、部分 RoPE、256 个路由专家和 MTP，面向代码与智能体任务。
+  en: Local/global GQA, partial RoPE, 256 routed experts and MTP for coding and agentic
+    tasks.
+aliases:
+- iquest_q1
+defaultParams:
+  numLayers: 88
+  hiddenSize: 3072
+sourceLinks:
+- label: Official model documentation
+  url: https://huggingface.co/IQuestLab/IQuest-Q1
+  type: official
+diagram:
+  subtitle: IQuest Q1
+  nodes:
+  - id: input
+    type: leaf
+    label: Input embeddings
+    color: input
+  - id: block
+    type: group
+    label: Model backbone
+    color: steel
+    defaultExpanded: true
+    children:
+    - id: stage0
+      type: leaf
+      label: 3 SWA layers / 1 full GQA; partial RoPE
+      color: attn
+    - id: stage1
+      type: leaf
+      label: RMSNorm + residual
+      color: norm
+    - id: stage2
+      type: leaf
+      label: 256 routed experts; top 8 per token
+      color: moe
+    - id: stage3
+      type: leaf
+      label: Auxiliary MTP modules
+      color: out
+  - id: output
+    type: leaf
+    label: Output head
+    color: out

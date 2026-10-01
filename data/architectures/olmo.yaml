@@ -1,5 +1,5 @@
 id: olmo
-family: OLMo / OLMoE / OLMo 3
+family: OLMo / OLMo 2 / OLMo 3
 era: "2024"
 type: decoder
 normPlacement: pre
@@ -8,7 +8,7 @@ description:
   en: "OLMo emphasizes open training artifacts and uses RMSNorm, RoPE, and SwiGLU; OLMo 2/3 add QK-Norm and local/global attention mixes."
 paperUrl: https://arxiv.org/abs/2402.00838
 hfOrg: allenai/OLMo-2-1124-7B-Instruct
-aliases: [olmo, olmo2, olmo3, olmoe]
+aliases: [olmo, olmo2, olmo3]
 defaultParams:
   numLayers: 32
   numHeads: 32

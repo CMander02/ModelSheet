@@ -1,0 +1,450 @@
+{
+  "schema_version": 2,
+  "schedule_timezone": "Asia/Shanghai",
+  "schedule": "06:00 daily",
+  "page_size": 100,
+  "max_pages": 100,
+  "request_timeout_seconds": 30,
+  "workers": 4,
+  "missing_confirmations": 2,
+  "groups": [
+    {
+      "id": "mistral",
+      "name": "Mistral",
+      "monitor": {
+        "hf": [
+          "mistralai"
+        ]
+      },
+      "aliases": {
+        "hf": [
+          "mistralai"
+        ]
+      }
+    },
+    {
+      "id": "qwen",
+      "name": "Qwen",
+      "monitor": {
+        "ms": [
+          "Qwen"
+        ],
+        "hf": [
+          "Qwen"
+        ]
+      },
+      "aliases": {
+        "hf": [
+          "Qwen"
+        ],
+        "ms": [
+          "Qwen"
+        ]
+      },
+      "preferred_source": "ms"
+    },
+    {
+      "id": "deepseek",
+      "name": "DeepSeek",
+      "monitor": {
+        "ms": [
+          "deepseek-ai"
+        ],
+        "hf": [
+          "deepseek-ai"
+        ]
+      },
+      "aliases": {
+        "hf": [
+          "deepseek-ai"
+        ],
+        "ms": [
+          "deepseek-ai"
+        ]
+      },
+      "preferred_source": "ms"
+    },
+    {
+      "id": "meta-facebook",
+      "name": "Meta / facebook",
+      "monitor": {
+        "hf": [
+          "facebook"
+        ]
+      },
+      "aliases": {
+        "hf": [
+          "facebook"
+        ]
+      }
+    },
+    {
+      "id": "google",
+      "name": "Google",
+      "monitor": {
+        "hf": [
+          "google"
+        ]
+      },
+      "aliases": {
+        "hf": [
+          "google"
+        ]
+      }
+    },
+    {
+      "id": "mimo",
+      "name": "小米 MiMo",
+      "monitor": {
+        "ms": [
+          "XiaomiMiMo"
+        ],
+        "hf": [
+          "XiaomiMiMo"
+        ]
+      },
+      "aliases": {
+        "hf": [
+          "XiaomiMiMo"
+        ],
+        "ms": [
+          "XiaomiMiMo"
+        ]
+      },
+      "preferred_source": "ms"
+    },
+    {
+      "id": "moonshot",
+      "name": "Moonshot / Kimi",
+      "monitor": {
+        "hf": [
+          "moonshotai"
+        ],
+        "ms": [
+          "moonshotai"
+        ]
+      },
+      "aliases": {
+        "hf": [
+          "moonshotai"
+        ],
+        "ms": [
+          "moonshotai",
+          "moonshot-ai"
+        ]
+      },
+      "preferred_source": "ms"
+    },
+    {
+      "id": "zhipu",
+      "name": "智谱 / GLM",
+      "monitor": {
+        "hf": [
+          "zai-org"
+        ],
+        "ms": [
+          "ZhipuAI"
+        ]
+      },
+      "aliases": {
+        "hf": [
+          "zai-org",
+          "THUDM"
+        ],
+        "ms": [
+          "ZhipuAI"
+        ]
+      },
+      "preferred_source": "ms"
+    },
+    {
+      "id": "minimax",
+      "name": "MiniMax",
+      "monitor": {
+        "ms": [
+          "MiniMax"
+        ],
+        "hf": [
+          "MiniMaxAI"
+        ]
+      },
+      "aliases": {
+        "hf": [
+          "MiniMaxAI"
+        ],
+        "ms": [
+          "MiniMax",
+          "MiniMaxAI"
+        ]
+      },
+      "preferred_source": "ms"
+    },
+    {
+      "id": "baidu",
+      "name": "百度",
+      "monitor": {
+        "hf": [
+          "baidu"
+        ],
+        "ms": [
+          "PaddlePaddle"
+        ]
+      },
+      "aliases": {
+        "hf": [
+          "baidu"
+        ],
+        "ms": [
+          "PaddlePaddle"
+        ]
+      },
+      "preferred_source": "ms"
+    },
+    {
+      "id": "sparkllm",
+      "name": "SparkLLM / XHToken",
+      "monitor": {
+        "hf": [
+          "XHToken"
+        ],
+        "ms": [
+          "XHToken"
+        ]
+      },
+      "aliases": {
+        "hf": [
+          "XHToken"
+        ],
+        "ms": [
+          "XHToken"
+        ]
+      },
+      "preferred_source": "ms"
+    },
+    {
+      "id": "iflytek",
+      "name": "讯飞开源",
+      "monitor": {
+        "hf": [
+          "iFlytekOpenSource"
+        ],
+        "ms": [
+          "iflytek"
+        ]
+      },
+      "aliases": {
+        "hf": [
+          "iFlytekOpenSource"
+        ],
+        "ms": [
+          "iflytek",
+          "iFlytek"
+        ]
+      },
+      "preferred_source": "ms",
+      "model_aliases": {
+        "ms/iflytek/domux": "Domux"
+      }
+    },
+    {
+      "id": "rednote",
+      "name": "小红书 / Dots Studio",
+      "monitor": {
+        "hf": [
+          "dots-studio"
+        ],
+        "ms": [
+          "dots-studio"
+        ]
+      },
+      "aliases": {
+        "hf": [
+          "dots-studio",
+          "rednote-hilab"
+        ],
+        "ms": [
+          "dots-studio",
+          "rednote-hilab"
+        ]
+      },
+      "preferred_source": "ms"
+    },
+    {
+      "id": "jd",
+      "name": "京东 / JoyAI",
+      "monitor": {
+        "hf": [
+          "jdopensource"
+        ],
+        "ms": [
+          "jd-opensource"
+        ]
+      },
+      "aliases": {
+        "hf": [
+          "jdopensource",
+          "jd-opensource"
+        ],
+        "ms": [
+          "jd-opensource"
+        ]
+      },
+      "preferred_source": "ms"
+    },
+    {
+      "id": "meituan",
+      "name": "美团 / LongCat",
+      "monitor": {
+        "hf": [
+          "meituan-longcat"
+        ],
+        "ms": [
+          "meituan-longcat"
+        ]
+      },
+      "aliases": {
+        "hf": [
+          "meituan-longcat"
+        ],
+        "ms": [
+          "meituan-longcat"
+        ]
+      },
+      "preferred_source": "ms"
+    },
+    {
+      "id": "apple",
+      "name": "Apple",
+      "monitor": {
+        "hf": [
+          "apple"
+        ]
+      },
+      "aliases": {
+        "hf": [
+          "apple"
+        ]
+      }
+    },
+    {
+      "id": "ibm",
+      "name": "IBM Granite",
+      "monitor": {
+        "hf": [
+          "ibm-granite"
+        ]
+      },
+      "aliases": {
+        "hf": [
+          "ibm-granite"
+        ]
+      }
+    },
+    {
+      "id": "xingchen",
+      "name": "China Telecom",
+      "monitor": {
+        "hf": [
+          "XingChen-AGI"
+        ]
+      },
+      "aliases": {
+        "hf": [
+          "XingChen-AGI"
+        ]
+      }
+    },
+    {
+      "id": "iquest",
+      "name": "IQuestLab",
+      "monitor": {
+        "hf": [
+          "IQuestLab"
+        ]
+      },
+      "aliases": {
+        "hf": [
+          "IQuestLab"
+        ]
+      }
+    },
+    {
+      "id": "convai-innovations",
+      "name": "Convai Innovations",
+      "monitor": {
+        "hf": [
+          "convaiinnovations"
+        ]
+      },
+      "aliases": {
+        "hf": [
+          "convaiinnovations"
+        ]
+      }
+    },
+    {
+      "id": "fastino",
+      "name": "Fastino",
+      "monitor": {
+        "hf": [
+          "fastino"
+        ]
+      },
+      "aliases": {
+        "hf": [
+          "fastino"
+        ]
+      }
+    },
+    {
+      "id": "contrastive-lm",
+      "name": "Contrastive LM",
+      "monitor": {
+        "hf": [
+          "Contrastive-LM"
+        ]
+      },
+      "aliases": {
+        "hf": [
+          "Contrastive-LM"
+        ]
+      }
+    },
+    {
+      "id": "inclusionai",
+      "name": "Ant Group",
+      "monitor": {
+        "hf": [
+          "inclusionAI"
+        ]
+      },
+      "aliases": {
+        "hf": [
+          "inclusionAI"
+        ]
+      }
+    }
+  ],
+  "verified_on": "2026-10-01",
+  "notes": [
+    "monitor contains active source accounts; aliases are used only for identity matching and do not cause network requests.",
+    "Qwen, DeepSeek, XiaomiMiMo and MiniMax monitor both HF and ModelScope by the latest user request; GLM uses HF zai-org and MS ZhipuAI.",
+    "Keep XHToken and iflytek source streams separate; no account-merger announcement was verified.",
+    "JDONE-Research links to jdone.co.kr and is not JD.com. Excluded from the JD monitoring group.",
+    "THUDM is an identity alias; active GLM monitoring uses zai-org and ZhipuAI.",
+    "Repository revisions / timestamps indicate repository changes, not necessarily weight changes or inference availability."
+  ],
+  "evidence_urls": [
+    "https://github.com/MiniMax-AI/MiniMax-M2",
+    "https://modelscope.cn/organization/MiniMax",
+    "https://modelscope.cn/organization/moonshotai",
+    "https://huggingface.co/XHToken",
+    "https://huggingface.co/iFlytekOpenSource",
+    "https://modelscope.cn/organization/iflytek",
+    "https://huggingface.co/dots-studio",
+    "https://github.com/studio-dots-ai/dots.llm1",
+    "https://huggingface.co/jdopensource",
+    "https://huggingface.co/JDONE-Research",
+    "https://huggingface.co/meituan-longcat"
+  ]
+}

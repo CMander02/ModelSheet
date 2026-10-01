@@ -1,0 +1,78 @@
+id: deepseek-v41
+family: DeepSeek V4.1
+era: "2026"
+type: encoder-decoder
+normPlacement: pre
+description:
+  zh: "DeepSeek V4.1 Flash 使用 20 层因果编码器与 20 层解码器、CSA2、Single-Pass mHC、Engram 条件记忆和 DSpark 推测解码。官方激活参数口径为 prefill 8B、decode 16B。"
+  en: "DeepSeek V4.1 Flash uses a 20-layer causal encoder and 20-layer decoder, CSA2, Single-Pass mHC, Engram conditional memory and DSpark speculative decoding. Official active counts are 8B during prefill and 16B during decode."
+hfOrg: deepseek-ai/DeepSeek-V4.1-Flash
+aliases: [deepseek_v41, deepseek_v41_text, DeepseekV41ForCausalLM]
+defaultParams:
+  numExperts: 384
+  numExpertsPerToken: 6
+sourceLinks:
+  - label: Official model card
+    url: https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash
+    type: reference
+  - label: DeepSeek V4.1 config
+    url: https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/blob/main/config.json
+    type: hf-config
+features:
+  attention: CSA2 with shared KV and sparse index reuse
+  residual: Single-Pass mHC
+  memory: Engram conditional lookup
+  routing: top-6 of 384 with 1 shared expert
+diagram:
+  subtitle: "Causal encoder-decoder · CSA2 · Engram"
+  nodes:
+    - id: input
+      type: leaf
+      label: Text embeddings + DeepSeek-ViT / projector
+      color: input
+    - id: enc
+      type: group
+      label: Causal Encoder
+      badge: x20
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: encattn
+          type: leaf
+          label: RMSNorm + CSA2 + Single-Pass mHC
+          color: attn
+        - id: encmoe
+          type: leaf
+          label: "MoE: top-{{numExpertsPerToken}} of {{numExperts}} + shared"
+          color: moe
+        - id: memory
+          type: leaf
+          label: Engram lookup at layers 1 and 14
+          color: teal
+    - id: kv
+      type: leaf
+      label: Final encoder states → shared global KV
+      color: sky
+    - id: dec
+      type: group
+      label: Decoder
+      badge: x20
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: decattn
+          type: leaf
+          label: CSA2 + shared global KV + SWA
+          color: attn
+        - id: decmoe
+          type: leaf
+          label: "MoE: top-{{numExpertsPerToken}} of {{numExperts}} + shared"
+          color: moe
+        - id: mhc
+          type: leaf
+          label: RMSNorm + Single-Pass mHC
+          color: norm
+    - id: head
+      type: leaf
+      label: LM head + optional DSpark draft decoding
+      color: out

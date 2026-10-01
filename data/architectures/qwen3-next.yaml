@@ -1,18 +1,21 @@
 id: qwen3-next
-family: Qwen3 Next
+family: Qwen3 Next / Qwen3.5 MoE
 era: "2025"
 type: decoder
 normPlacement: pre
 description:
-  zh: "Qwen3 Next 是稀疏混合解码器，交替使用 Gated DeltaNet 与 Gated Attention，并结合 MoE FFN。"
-  en: "Qwen3 Next is a sparse hybrid decoder alternating Gated DeltaNet and Gated Attention with MoE FFNs."
+  zh: "Qwen3 Next 与 Qwen3.5 MoE 使用稀疏混合解码器，交替使用 Gated DeltaNet 与 Gated Attention，并结合 MoE FFN。"
+  en: "Qwen3 Next and Qwen3.5 MoE use sparse hybrid decoders alternating Gated DeltaNet and Gated Attention with MoE FFNs."
 hfOrg: Qwen/Qwen3-Next-80B-A3B-Instruct
-aliases: [qwen3_next]
+aliases: [qwen3_next, qwen3_5_moe, qwen3_5_moe_text]
 defaultParams:
   numLayers: 48
   numExperts: 512
   numExpertsPerToken: 10
 sourceLinks:
+  - label: Intern-S2-397B config
+    url: https://huggingface.co/internlm/Intern-S2-397B/blob/main/config.json
+    type: hf-config
   - label: Raschka gallery
     url: https://sebastianraschka.com/llm-architecture-gallery/#card-qwen3-next-80b-a3b
     type: reference
@@ -27,6 +30,11 @@ variants:
     aliases: [qwen3_next]
     descriptionZh: "图库条目中的 80B total / 3B active 混合 MoE 代表。"
     descriptionEn: "The 80B total / 3B active hybrid MoE representative in the gallery."
+  - id: qwen3-5-moe
+    name: Qwen3.5 MoE / Intern-S2-397B
+    aliases: [qwen3_5_moe, qwen3_5_moe_text]
+    descriptionZh: "混合注意力 MoE 主干；Intern-S2-397B 配置为 60 层、512 个路由专家、每 token 激活 10 个路由专家和 1 个共享专家。"
+    descriptionEn: "Hybrid-attention MoE backbone. Intern-S2-397B has 60 layers and 512 routed experts, with 10 routed experts and one shared expert active per token."
 diagram:
   subtitle: "Gated DeltaNet + Attention · MoE"
   nodes:

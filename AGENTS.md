@@ -59,9 +59,13 @@ uv run modelsheet scan --commit
 uv run modelsheet scan --commit --add
 ```
 
-Scanning is intentionally handled by an external scheduled agent/operator. Do
-not reintroduce a GitHub Action that scans HuggingFace / ModelScope and commits
-model data.
+Monitoring is managed through `modelsheet monitor`, with systemd user timers for
+background scheduling. Runtime configuration and observations live under
+`.modelsheet/monitor/` (override with `MODELSHEET_MONITOR_HOME`) and are ignored by Git.
+After initialization, `watchlist` and `scan --watchlist` use this same source list.
+Do not reintroduce a GitHub Action that scans HuggingFace / ModelScope and commits
+model data. Monitoring produces review candidates and does not publish catalog data.
+See `docs/monitoring.md` for commands, migration and source-update behavior.
 
 ### SQLite / D1 Build
 

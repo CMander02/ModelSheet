@@ -97,6 +97,7 @@ export function ProviderIcon({ provider, size = 18 }: { provider: string; size?:
 }
 
 const modelBrands: [RegExp, string][] = [
+  [/^internvl/i, "internlm"],
   [/claude/i, "claude"], [/gemini/i, "gemini"], [/gemma/i, "gemma"],
   [/grok/i, "grok"], [/llama/i, "llama"], [/phi[-\d]/i, "phi"],
   [/falcon/i, "falcon"], [/glm/i, "chatglm"], [/deepseek/i, "deepseek"],

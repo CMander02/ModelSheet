@@ -2,6 +2,8 @@ import { ModelIcon, ProviderIcon } from "./catalog-icons"
 import { createBrandAvatar } from "./brand-avatar"
 import { createElement } from "react"
 import AntGroupIconMono from "@lobehub/icons/es/AntGroup/components/Mono"
+import AppleIconMono from "@lobehub/icons/es/Apple/components/Mono"
+import * as AppleIconStyle from "@lobehub/icons/es/Apple/style"
 import * as AntGroupIconStyle from "@lobehub/icons/es/AntGroup/style"
 import ArceeIconMono from "@lobehub/icons/es/Arcee/components/Mono"
 import * as ArceeIconStyle from "@lobehub/icons/es/Arcee/style"
@@ -49,6 +51,7 @@ import TencentIcon from "@lobehub/icons/es/Tencent/components/Color"
 import HunyuanIcon from "@lobehub/icons/es/Hunyuan/components/Color"
 
 const AntGroupIcon = createBrandAvatar(AntGroupIconMono, AntGroupIconStyle)
+const AppleIcon = createBrandAvatar(AppleIconMono, AppleIconStyle)
 const ArceeIcon = createBrandAvatar(ArceeIconMono, ArceeIconStyle)
 const BAAIIcon = createBrandAvatar(BAAIIconMono, BAAIIconStyle)
 const BaichuanIcon = createBrandAvatar(BaichuanIconMono, BaichuanIconStyle)
@@ -81,6 +84,9 @@ const ICON_SIZE = 18
 type AvatarIconComponent = React.ComponentType<any>
 
 const LOBEHUB_AVATAR_MAP: Record<string, AvatarIconComponent> = {
+  "Apple": AppleIcon,
+  "apple": AppleIcon,
+  "苹果": AppleIcon,
   // Tencent company and Hunyuan product identities
   "腾讯":           TencentIcon,
   "Tencent":        TencentIcon,
@@ -231,9 +237,7 @@ const CUSTOM_LOGO_MAP: Record<string, string> = {
   "open-thoughts":  "/icons/providers/open-thoughts.png",
   "Open Thoughts":  "/icons/providers/open-thoughts.png",
 
-  // Qwen (Alibaba) — current official favicon
-  "Qwen":           "/icons/providers/qwen.png",
-  "通义千问":        "/icons/providers/qwen.png",
+  // Alibaba organizations with a shared local logo
   "Damo Academy":   "/icons/providers/qwen.png",
   "达摩院":          "/icons/providers/qwen.png",
   "alibaba-PAI":    "/icons/providers/qwen.png",
@@ -270,11 +274,6 @@ const CUSTOM_LOGO_MAP: Record<string, string> = {
   "Stepfun":        "/icons/providers/stepfun.png",
   "阶跃星辰":        "/icons/providers/stepfun.png",
 
-  // Allen AI / AI2
-  "allenai":        "/icons/providers/allen-ai.png",
-  "Allen AI":       "/icons/providers/allen-ai.png",
-  "艾伦人工智能研究院": "/icons/providers/allen-ai.png",
-
   // Poolside
   "poolside":       "/icons/providers/poolside.webp",
   "Poolside":       "/icons/providers/poolside.webp",
@@ -302,6 +301,18 @@ const CUSTOM_LOGO_MAP: Record<string, string> = {
   "ibm-granite": "/icons/providers/ibm-granite.svg",
   "ibm":          "/icons/providers/ibm-granite.svg",
   "IBM":          "/icons/providers/ibm-granite.svg",
+  "TypeSafe AI": "/icons/providers/typesafe-mark.svg",
+  "typesafe": "/icons/providers/typesafe-mark.svg",
+  "Fastino": "/icons/providers/fastino.svg",
+  "fastino": "/icons/providers/fastino.svg",
+  "Convai Innovations": "/icons/providers/convai-innovations.png",
+  "convaiinnovations": "/icons/providers/convai-innovations.png",
+  "IQuestLab": "/icons/providers/iquest.webp",
+  "Contrastive LM": "/icons/providers/contrastive-lm.webp",
+  "Contrastive-LM": "/icons/providers/contrastive-lm.webp",
+  "China Telecom": "/icons/providers/xingchen.webp",
+  "中国电信": "/icons/providers/xingchen.webp",
+  "XingChen-AGI": "/icons/providers/xingchen.webp",
 }
 
 // ─── Provider key map (for ProviderIcon fallback) ──────────────────────────
@@ -435,7 +446,7 @@ export function ModelBrandIcon({ model, provider, size = ICON_SIZE, className }:
   if (custom) {
     return (
       <span className={className} style={wrapperStyle}>
-        <img src={custom} alt="" loading="lazy" decoding="async" width={size} height={size} style={{ borderRadius: 4, objectFit: "contain" }} />
+        <img src={custom} alt="" loading="lazy" decoding="async" width={size} height={size} style={{ borderRadius: 4, objectFit: "contain", background: /(?:fastino|typesafe-mark)\.svg$/.test(custom) ? "#111" : undefined }} />
       </span>
     )
   }
@@ -473,7 +484,7 @@ export function ProviderBrandIcon({ provider, orgHint, size = ICON_SIZE, classNa
   if (custom) {
     return (
       <span className={className} style={wrapperStyle}>
-        <img src={custom} alt="" loading="lazy" decoding="async" width={size} height={size} style={{ borderRadius: 4, objectFit: "contain" }} />
+        <img src={custom} alt="" loading="lazy" decoding="async" width={size} height={size} style={{ borderRadius: 4, objectFit: "contain", background: /(?:fastino|typesafe-mark)\.svg$/.test(custom) ? "#111" : undefined }} />
       </span>
     )
   }
@@ -487,3 +498,4 @@ export function ProviderBrandIcon({ provider, orgHint, size = ICON_SIZE, classNa
     </span>
   )
 }
+

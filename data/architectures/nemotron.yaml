@@ -15,13 +15,16 @@ defaultParams:
   numExperts: 64
   numExpertsPerToken: 6
 sourceLinks:
+  - label: Nemotron 3 Super config
+    url: https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-BF16/blob/main/config.json
+    type: hf-config
   - label: Raschka gallery
     url: https://sebastianraschka.com/llm-architecture-gallery/#card-nemotron-3-nano-30b-a3b
     type: reference
 features:
   attention: few GQA layers
   tokenMixer: mostly Mamba-2
-  moe: hybrid MoE
+  ffn: dense or latent ReLU-squared MoE
 variants:
   - id: nemotron-3-nano
     name: Nemotron 3 Nano
@@ -67,18 +70,10 @@ diagram:
               label: Sparse GQA layers
               color: attn
         - id: moe
-          type: group
-          label: MoE FFN
+          type: leaf
+          label: Dense / latent MoE FFN
+          sub: ReLU-squared; shared experts in MoE variants
           color: moe
-          children:
-            - id: router
-              type: leaf
-              label: "Router top-{{numExpertsPerToken}}"
-              color: teal
-            - id: experts
-              type: leaf
-              label: "Experts x{{numExperts}}"
-              color: ffn
     - id: head
       type: leaf
       label: LM Head

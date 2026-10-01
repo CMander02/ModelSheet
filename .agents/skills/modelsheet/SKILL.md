@@ -72,7 +72,11 @@ uv run modelsheet scan --watchlist
 
 Review candidates and filter decisions before saving a snapshot or adding models. Run `--commit` or `--add` only when the requested workflow authorizes those mutations.
 
-Keep scanning under an external scheduled agent or operator. Preserve the deployment workflow as a publisher of committed snapshots.
+Use `modelsheet monitor` to manage sources, persistent scans, review tasks and
+systemd scheduling. See `docs/monitoring.md`. After initialization, `watchlist`
+and `scan --watchlist` use the same native monitoring source list. Preserve the
+deployment workflow as a publisher of committed snapshots; monitoring does not
+automatically ingest, commit or publish model data.
 
 ## Curate Facts
 

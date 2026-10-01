@@ -8,7 +8,7 @@ description:
   en: "Mistral models use RMSNorm, RoPE, SwiGLU, and GQA; early models emphasize sliding-window attention, while Mixtral and later large variants add MoE."
 paperUrl: https://arxiv.org/abs/2310.06825
 hfOrg: mistralai/Mistral-Small-3.1-24B-Base-2503
-aliases: [mistral, mistral3, mixtral, voxtral]
+aliases: [mistral, mistral3, ministral3, mixtral, voxtral]
 defaultParams:
   numLayers: 40
   numHeads: 32

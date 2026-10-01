@@ -8,7 +8,7 @@ description:
   en: "Qwen3 MoE uses routed expert FFNs on the Qwen3 Pre-RMSNorm, GQA, RoPE, and QK-RMSNorm backbone."
 paperUrl: https://arxiv.org/abs/2505.09388
 hfOrg: Qwen/Qwen3-235B-A22B
-aliases: [qwen3_moe, qwen3_5_moe, qwen3_5_moe_text, qwen3_vl_moe, qwen3_omni_moe, qwen3_coder]
+aliases: [qwen3_moe, qwen3_vl_moe, qwen3_omni_moe, qwen3_coder]
 defaultParams:
   numLayers: 94
   numHeads: 64

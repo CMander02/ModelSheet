@@ -7,5 +7,12 @@
 - `liuhaotian.jpg`: [Haotian Liu's public GitHub avatar](https://avatars.githubusercontent.com/u/6631389?v=4). His [Hugging Face profile](https://huggingface.co/liuhaotian) links to [haotian-liu on GitHub](https://github.com/haotian-liu), identifying the same individual account.
 - LG AI Research, iFLYTEK and Spark: SVG components from the existing MIT-licensed `@lobehub/icons` dependency (`LG`, `IFlyTekCloud`, `Spark`).
 - Tencent and Hunyuan: SVG components from the existing MIT-licensed `@lobehub/icons` dependency (`Tencent.Color`, `Hunyuan.Color`). Tencent uses the blue T on a transparent background, matching the standalone Tencent Icon in the [official media library](https://www.tencent.com/newsroom/media-resources/logos/). Hunyuan's blue circular mark matches the [official Tencent-Hunyuan GitHub organization](https://github.com/Tencent-Hunyuan). Model icons use Hunyuan for `tencent/Hunyuan*`, `tencent/Hy*` (numbered or hyphen/underscore-separated families), and the `Tencent-Hunyuan` organization; the Tencent provider and other Tencent models use the company mark.
-
 Brand marks and portraits identify the respective publishers; ownership remains with their respective owners.
+- `convai-innovations.png`: publisher artwork from [https://convaiinnovations.com/Logo.png](https://convaiinnovations.com/Logo.png). Brand ownership remains with the publisher.
+- `typesafe-mark.svg`: original inline TypeSafe mark from [typesafe.ai](https://typesafe.ai), cropped to the symbol by its viewBox. Brand ownership remains with TypeSafe.
+- Convai Innovations, IQuest, XingChen and Contrastive LM: official publisher profiles/sites currently provide raster artwork; SVG replacements remain open.
+- `fastino.svg`: official embedded SVG from [fastino.ai](https://fastino.ai), cropped to its mark through the viewBox.
+- `iquest.webp`: official publisher avatar linked from [HF IQuestLab](https://huggingface.co/IQuestLab); [original image](https://cdn-avatars.huggingface.co/v1/production/uploads/68c80cc3a1ca9a73c17d29f7/pjOEigZuk_UQ4dqyS482V.png).
+- `contrastive-lm.webp`: official publisher avatar linked from [HF Contrastive-LM](https://huggingface.co/Contrastive-LM); [original image](https://cdn-avatars.huggingface.co/v1/production/uploads/6aaf3334104a7bc12d7953dd/AxxfVhwu2-tDyV_0BfNnp.png).
+- `xingchen.webp`: official publisher avatar linked from [HF XingChen-AGI](https://huggingface.co/XingChen-AGI); [original image](https://cdn-avatars.huggingface.co/v1/production/uploads/64368160eef1f55654ab21dc/HGow19-5fgUcp_IEMZoXG.png).
+

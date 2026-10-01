@@ -25,6 +25,7 @@ ENV/
 env/
 
 # Data and cache
+.modelsheet/
 data/temp/
 data/modelsheet.sqlite
 data/d1/remote.sql

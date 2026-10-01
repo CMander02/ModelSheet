@@ -25,6 +25,7 @@ import { COMPLEXITY_PRESETS } from "@/lib/model-data"
 import type { HomeScrollPosition } from "@/lib/model-data"
 import { translateProvider, type Language } from "@/lib/i18n"
 import { useModelVirtualizer } from "@/hooks/use-model-virtualizer"
+import { decisionLabel } from "@/lib/decision-data"
 
 const PULL_LOAD_THRESHOLD = 72
 const PULL_MAX = 112
@@ -63,6 +64,7 @@ interface ModelTableProps {
   isLoadingMore: boolean
   onLoadMore: () => void
   columns: ColumnConfig[]
+  visibleColumnKeys?: string[]
   onColumnChange?: (columns: ColumnConfig[]) => void
   onComplexityChange?: (level: ComplexityLevel) => void
   onCustomFieldsClick?: () => void
@@ -87,6 +89,7 @@ export const ModelTable = memo(function ModelTable({
   isLoadingMore,
   onLoadMore,
   columns,
+  visibleColumnKeys,
   currentComplexity,
   onComplexityChange: _onComplexityChange,
   onCustomFieldsClick: _onCustomFieldsClick,
@@ -136,8 +139,8 @@ export const ModelTable = memo(function ModelTable({
   // Get visible columns based on complexity
   const preset = COMPLEXITY_PRESETS[currentComplexity]
   const visibleColumns = useMemo(
-    () => columns.filter((col) => preset.columns.includes(col.key)),
-    [columns, preset.columns]
+    () => columns.filter((col) => (visibleColumnKeys ?? preset.columns).includes(col.key)),
+    [columns, preset.columns, visibleColumnKeys]
   )
   const pinnedOffsets = useMemo(() => {
     const offsets = new Map<string, number>()
@@ -426,7 +429,7 @@ export const ModelTable = memo(function ModelTable({
       case "boolean":
         return value ? "✅" : "❌"
       case "array":
-        return Array.isArray(value) ? value.join(", ") : value
+        return Array.isArray(value) ? value.map(v => decisionLabel(String(v), language)).join(" · ") : value
       case "date":
         return new Date(value).toLocaleDateString()
       default:
@@ -643,7 +646,13 @@ export const ModelTable = memo(function ModelTable({
                           {(column.key === "inputModalities" || column.key === "outputModalities") ? (
                             <ModalityIcons modalities={model[column.key] || []} />
                           ) : (column.key === "totalParameters" || column.key === "activeParameters") ? (
-                            <ParamCell value={model[column.key]} model={model} />
+                            <ParamCell value={model[column.key]} model={model} parameter={column.key} />
+                          ) : column.key === "decisionTypes" ? (
+                            <div className="flex flex-wrap gap-1">{model.decisionTypes?.map(type => <span key={type} className="rounded bg-primary/10 px-1.5 py-0.5 text-[11px] text-primary">{decisionLabel(type, language)}</span>)}</div>
+                          ) : column.key === "baseModel" && model.baseModel ? (
+                            <a href={`https://huggingface.co/${model.baseModel}`} target="_blank" rel="noopener noreferrer" title={model.baseModel} onClick={e => e.stopPropagation()} className="block truncate text-xs hover:text-primary hover:underline">{model.baseModel}</a>
+                          ) : column.key === "inferenceMode" && model.inferenceMode ? (
+                            <span className="text-xs">{decisionLabel(model.inferenceMode, language)}</span>
                           ) : column.key === "name" ? (
                             <>
                               {isNewThisWeek(model.releasedAt) && (

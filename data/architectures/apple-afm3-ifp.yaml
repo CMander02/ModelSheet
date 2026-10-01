@@ -1,0 +1,49 @@
+id: apple-afm3-ifp
+family: Apple AFM 3 Core Advanced
+era: '2026'
+type: decoder
+normPlacement: pre
+description:
+  zh: 20B 权重存于 NAND；按请求选取路由专家并与共享权重组合，形成 1–4B 激活的 DRAM 模型。
+  en: 20B weights in NAND; per-prompt expert selection combines routed and shared
+    weights into a 1–4B active DRAM model.
+aliases:
+- apple_afm3_ifp
+defaultParams: {}
+sourceLinks:
+- label: Official model documentation
+  url: https://machinelearning.apple.com/research/introducing-third-generation-of-apple-foundation-models
+  type: official
+diagram:
+  subtitle: Apple AFM 3 Core Advanced
+  nodes:
+  - id: input
+    type: leaf
+    label: Input embeddings
+    color: input
+  - id: block
+    type: group
+    label: Model backbone
+    color: steel
+    defaultExpanded: true
+    children:
+    - id: stage0
+      type: leaf
+      label: Dense prompt-dependent expert selection
+      color: attn
+    - id: stage1
+      type: leaf
+      label: Shared FFN weights + selected routed experts
+      color: moe
+    - id: stage2
+      type: leaf
+      label: Load selected expert weights from NAND to DRAM
+      color: resid
+    - id: stage3
+      type: leaf
+      label: Periodically reselect experts during generation
+      color: out
+  - id: output
+    type: leaf
+    label: Output head
+    color: out

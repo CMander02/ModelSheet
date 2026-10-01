@@ -4,7 +4,7 @@
  */
 
 import { X, ChevronDown, ChevronUp } from "lucide-react"
-import { useState } from "react"
+import { Fragment, useState } from "react"
 import { Button } from "@/components/ui/button"
 import type { ModelInfo, ColumnConfig, ComplexityLevel } from "@/lib/types"
 import { COMPLEXITY_PRESETS } from "@/lib/model-data"
@@ -12,6 +12,7 @@ import { formatValue, getHighlightClass } from "@/lib/formatters"
 import { ModelBrandIcon, ProviderBrandIcon } from "@/components/brand-icon"
 import { ParamCell } from "@/components/param-cell"
 import { translateProvider, type Language } from "@/lib/i18n"
+import { decisionLabel } from "@/lib/decision-data"
 
 interface EnhancedComparisonTableProps {
   models: ModelInfo[]
@@ -28,6 +29,7 @@ const ARCH_KEYS     = ["architecture", "numLayers", "numHeads", "numKvHeads", "h
 const MOE_KEYS      = ["isMoe", "numExperts", "numSharedExperts", "numExpertsPerToken", "numActivatedExperts", "moeIntermediateSize"]
 const TOKEN_KEYS    = ["hasChatTemplate", "bosToken", "eosToken"]
 const TYPE_KEYS     = ["isAdapter", "baseModel"]
+const DECISION_KEYS = ["baseModel", "decisionTypes", "inferenceMode", "license", "openness"]
 
 const SECTION_LABELS: Record<string, string> = {
   basic:        "基础参数",
@@ -35,6 +37,10 @@ const SECTION_LABELS: Record<string, string> = {
   moe:          "MoE 配置",
   tokenizer:    "Tokenizer",
   type:         "类型标记",
+  decision:     "决策接口",
+}
+const SECTION_LABELS_EN: Record<string, string> = {
+  basic: "Parameters", architecture: "Architecture", moe: "MoE", tokenizer: "Tokenizer", type: "Model type", decision: "Decision interface",
 }
 
 export function EnhancedComparisonTable({
@@ -53,14 +59,16 @@ export function EnhancedComparisonTable({
   })
 
   const preset = COMPLEXITY_PRESETS[complexity]
-  const visible = columns.filter(c => preset.columns.includes(c.key))
+  const hasDecision = models.some(model => model.modelCategory === "decision")
+  const visible = columns.filter(c => preset.columns.includes(c.key) || (hasDecision && DECISION_KEYS.includes(c.key)))
 
   const sections: { id: string; cols: ColumnConfig[] }[] = [
     { id: "basic",        cols: visible.filter(c => BASIC_KEYS.includes(c.key)) },
     { id: "architecture", cols: visible.filter(c => ARCH_KEYS.includes(c.key)) },
     { id: "moe",          cols: visible.filter(c => MOE_KEYS.includes(c.key) && models.some(m => m.isMoe)) },
     { id: "tokenizer",    cols: visible.filter(c => TOKEN_KEYS.includes(c.key)) },
-    { id: "type",         cols: visible.filter(c => TYPE_KEYS.includes(c.key)) },
+    { id: "type",         cols: visible.filter(c => TYPE_KEYS.includes(c.key) && !(hasDecision && DECISION_KEYS.includes(c.key))) },
+    { id: "decision",     cols: hasDecision ? visible.filter(c => DECISION_KEYS.includes(c.key)) : [] },
   ].filter(s => s.cols.length > 0)
 
   const toggle = (id: string) => setCollapsed(p => ({ ...p, [id]: !p[id] }))
@@ -117,7 +125,7 @@ export function EnhancedComparisonTable({
 
         {/* ── Sections ── */}
         {sections.map(section => (
-          <>
+          <Fragment key={section.id}>
             {/* Section header — spans all columns */}
             <div
               key={`hdr-${section.id}`}
@@ -129,7 +137,7 @@ export function EnhancedComparisonTable({
                 className="w-full flex items-center justify-between px-4 py-2.5 bg-muted/40 hover:bg-muted/60 transition-colors border-b"
               >
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  {SECTION_LABELS[section.id]}
+                  {(language === "zh" ? SECTION_LABELS : SECTION_LABELS_EN)[section.id]}
                 </span>
                 {collapsed[section.id]
                   ? <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
@@ -146,7 +154,7 @@ export function EnhancedComparisonTable({
               const isLast = rowIdx === section.cols.length - 1
 
               return (
-                <>
+                <Fragment key={col.key}>
                   {/* Label cell */}
                   <div
                     key={`label-${section.id}-${col.key}`}
@@ -169,7 +177,13 @@ export function EnhancedComparisonTable({
                       >
                         <span className={`text-sm font-semibold tabular-nums ${highlight} ${highlight ? "px-1.5 py-0.5 rounded" : ""}`}>
                           {col.key === "totalParameters" || col.key === "activeParameters" ? (
-                            <ParamCell value={raw as number} model={model} />
+                            <ParamCell value={raw as number} model={model} parameter={col.key} />
+                          ) : col.key === "decisionTypes" && Array.isArray(raw) ? (
+                            raw.map(value => decisionLabel(String(value), language)).join(" · ")
+                          ) : col.key === "inferenceMode" && raw ? (
+                            decisionLabel(String(raw), language)
+                          ) : col.key === "baseModel" && raw ? (
+                            <a href={`https://huggingface.co/${raw}`} target="_blank" rel="noopener noreferrer" className="text-xs hover:underline break-all">{String(raw)}</a>
                           ) : col.key === "huggingfaceUrl" && raw ? (
                             <a href={raw as string} target="_blank" rel="noopener noreferrer"
                               className="hover:text-primary hover:underline text-xs">
@@ -187,10 +201,10 @@ export function EnhancedComparisonTable({
                       </div>
                     )
                   })}
-                </>
+                </Fragment>
               )
             })}
-          </>
+          </Fragment>
         ))}
       </div>
     </div>

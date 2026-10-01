@@ -547,6 +547,11 @@ def get_scan_orgs_from_watchlist(source_filter: Optional[str] = None) -> list[tu
     Returns:
         List of (source, org) tuples
     """
+    from .monitor_store import config_file, load, validate
+    if config_file().exists():
+        _, targets = validate(load())
+        return [(t['source'], t['org']) for t in targets
+                if not source_filter or t['source'] == source_filter]
     wl = load_watchlist()
     srcs = wl.get("sources", {})
     result = []

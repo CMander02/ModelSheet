@@ -1,0 +1,72 @@
+id: molmo2
+family: Molmo 2
+era: "2025"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Molmo 2 通过视觉 Transformer、注意力池化适配器和语言解码器处理图像与视频。4B 变体使用 Qwen3 风格 QK-RMSNorm、GQA 和密集 SwiGLU。"
+  en: "Molmo 2 combines a vision Transformer, an attention-pooling adapter and a language decoder for images and video. The 4B variant uses Qwen3-style QK-RMSNorm, GQA and dense SwiGLU."
+hfOrg: allenai/Molmo2-4B
+aliases: [molmo2, molmo2_text, Molmo2ForConditionalGeneration]
+defaultParams:
+  numLayers: 36
+  hiddenSize: 2560
+sourceLinks:
+  - label: Molmo2-4B config
+    url: https://huggingface.co/allenai/Molmo2-4B/blob/main/config.json
+    type: hf-config
+features:
+  vision: Vision Transformer and attention-pooling adapter
+  attention: GQA with QK-RMSNorm
+  norm: RMSNorm
+  ffn: SwiGLU
+diagram:
+  subtitle: "Vision + language · hidden: {{hiddenSize}}"
+  nodes:
+    - id: vision
+      type: leaf
+      label: Images / frames → Vision Transformer
+      color: input
+    - id: adapter
+      type: leaf
+      label: Attention pooling + MLP adapter
+      color: emb
+    - id: tokens
+      type: leaf
+      label: Visual tokens + text embeddings
+      color: emb
+    - id: block
+      type: group
+      label: Language Decoder Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attn
+          type: leaf
+          label: GQA + QK-RMSNorm + RoPE
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: norm2
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: ffn
+          type: leaf
+          label: SwiGLU FFN
+          color: ffn
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: RMSNorm + LM head
+      color: out

@@ -11,6 +11,15 @@ from .parser import ParsedModel
 console = Console()
 
 
+def merge_model(existing: dict, parsed: dict) -> dict:
+    """Refresh parsed facts while retaining manually reviewed catalog fields."""
+    merged = existing | parsed
+    for key in existing.get("curatedFields", []):
+        if key in existing:
+            merged[key] = existing[key]
+    return merged
+
+
 class ModelExporter:
     """Exports parsed model data to JSON."""
 
@@ -57,6 +66,7 @@ class ModelExporter:
             "provider": model.provider,
             "huggingfaceUrl": model.huggingface_url,
             "techReport": model.tech_report,
+            "modelCategory": model.model_category,
         }
 
         # Add optional fields only if they have values

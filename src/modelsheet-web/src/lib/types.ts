@@ -7,6 +7,18 @@ export interface ModelInfo {
   modelscopeUrl?: string
   arxivUrl?: string        // arXiv paper URL
   techReport?: string      // Technical report URL
+  modelCategory?: "language" | "decision"
+  baseModel?: string
+  decisionTypes?: Array<"choice" | "score" | "ranking" | "routing" | "abstention">
+  inferenceMode?: "single-forward" | "contrastive" | "api"
+  license?: string
+  descriptionZh?: string
+  descriptionEn?: string
+  sourceUrl?: string
+  activeParametersMin?: number
+  activeParametersMax?: number
+  totalParametersMin?: number
+  totalParametersMax?: number
 
   // Basic specs
   totalParameters?: number

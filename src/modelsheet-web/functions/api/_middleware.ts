@@ -2,8 +2,8 @@ import type { FunctionEnv } from "../_utils.js"
 
 const CACHE_SECONDS = 300
 const QUERY_KEYS: Record<string, string[]> = {
-  "/api/search": ["q", "page", "limit", "sort", "dir"],
-  "/api/models": ["ids", "architecture"],
+  "/api/search": ["q", "page", "limit", "sort", "dir", "category", "decisionType", "openness", "provider"],
+  "/api/models": ["ids", "architecture", "category"],
   "/api/model": ["id"],
   "/api/providers": [],
   "/api/provider": ["slug", "id", "view"],

@@ -94,15 +94,29 @@ def extract_arxiv_url(ctx: ConfigContext) -> Optional[str]:
     """Extract arXiv URL from metadata tags or README.
 
     Priority:
-        1. API tags array (arxiv:XXXX.XXXXX format)
-        2. README.md content (arxiv.org URLs or HuggingFace paper URLs)
+        1. README paper link explicitly labelled with this versioned model family
+        2. API tags array (arxiv:XXXX.XXXXX format)
+        3. README.md content (arxiv.org URLs or HuggingFace paper URLs)
 
     Examples:
         - arxiv:2401.04088 -> https://arxiv.org/abs/2401.04088
         - https://arxiv.org/pdf/2312.11805v1 -> https://arxiv.org/abs/2312.11805
         - https://huggingface.co/papers/2401.04088 -> https://arxiv.org/abs/2401.04088
     """
-    # Priority 1: Check tags
+    # Family navigation often lists papers from several generations. Prefer an
+    # exact label match (e.g. InternVL3_5 -> InternVL3.5) over the first old tag.
+    readme = ctx.metadata.get("readme")
+    family = ctx.model_id.split("/")[-1].split("-")[0]
+    if readme and any(char.isdigit() for char in family):
+        family_key = re.sub(r"[^a-z0-9]", "", family.lower())
+        markdown = readme.replace(r"\[", "").replace(r"\]", "")
+        for label, url in re.findall(r"\[([^\[\]]+)\]\((https?://[^\s)]+)\)", markdown):
+            if re.sub(r"[^a-z0-9]", "", label.lower()) == family_key:
+                arxiv_id = _extract_arxiv_id_from_readme(url)
+                if arxiv_id:
+                    return f"https://arxiv.org/abs/{arxiv_id}"
+
+    # Priority 2: Check tags
     tags = ctx.metadata.get("tags", [])
     if isinstance(tags, list):
         # Pattern: arxiv:XXXX.XXXXX (year month . number), strip version if present
@@ -115,8 +129,7 @@ def extract_arxiv_url(ctx: ConfigContext) -> Optional[str]:
                     arxiv_id = match.group(1)
                     return f"https://arxiv.org/abs/{arxiv_id}"
 
-    # Priority 2: Check README content
-    readme = ctx.metadata.get("readme")
+    # Priority 3: Check remaining README content
     if readme:
         arxiv_id = _extract_arxiv_id_from_readme(readme)
         if arxiv_id:

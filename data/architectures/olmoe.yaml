@@ -1,0 +1,64 @@
+id: olmoe
+family: OLMoE
+era: "2024"
+type: decoder
+normPlacement: pre
+description:
+  zh: "OLMoE 使用 16 层稀疏解码器，每层从 64 个 SwiGLU 专家中激活 8 个；注意力采用 QK-RMSNorm 和 RoPE。"
+  en: "OLMoE uses 16 sparse decoder layers, activating 8 of 64 SwiGLU experts per layer, with QK-RMSNorm and RoPE attention."
+hfOrg: allenai/OLMoE-1B-7B-0125-Instruct
+aliases: [olmoe, OlmoeForCausalLM]
+defaultParams:
+  numLayers: 16
+  numExperts: 64
+  numExpertsPerToken: 8
+sourceLinks:
+  - label: OLMoE config
+    url: https://huggingface.co/allenai/OLMoE-1B-7B-0125-Instruct/blob/main/config.json
+    type: hf-config
+features:
+  attention: MHA with QK-RMSNorm
+  ffn: SwiGLU experts
+  routing: top-8 of 64, no shared experts
+diagram:
+  subtitle: "QK-RMSNorm · MoE top-{{numExpertsPerToken}}"
+  nodes:
+    - id: emb
+      type: leaf
+      label: Token Embedding
+      color: emb
+    - id: block
+      type: group
+      label: OLMoE Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attn
+          type: leaf
+          label: MHA + QK-RMSNorm + RoPE
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: norm2
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: moe
+          type: leaf
+          label: "SwiGLU experts: {{numExpertsPerToken}} / {{numExperts}}"
+          color: moe
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: RMSNorm + untied LM head
+      color: out

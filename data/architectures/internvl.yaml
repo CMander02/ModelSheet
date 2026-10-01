@@ -1,0 +1,64 @@
+id: internvl
+family: InternVL / InternVL3.5
+era: "2024"
+type: decoder
+normPlacement: pre
+description:
+  zh: "InternVL 使用 ViT–MLP–LLM 结构，将动态高分辨率图像块编码后输入语言模型。InternVL3.5 支持密集与 MoE 主干；Flash 变体通过视觉分辨率路由器选择视觉 token 压缩率。"
+  en: "InternVL uses a ViT–MLP–LLM design to encode dynamic high-resolution image tiles for a language model. InternVL3.5 supports dense and MoE backbones; Flash variants select visual-token compression rates with a Visual Resolution Router."
+paperUrl: https://arxiv.org/abs/2508.18265
+hfOrg: OpenGVLab/InternVL3_5-8B-Flash
+aliases: [internvl_chat, internvl, InternVLChatModel, InternVLForConditionalGeneration]
+defaultParams:
+  numLayers: 36
+sourceLinks:
+  - label: InternVL3.5 official architecture
+    url: https://internvl.github.io/blog/2025-08-26-InternVL-3.5/
+    type: reference
+  - label: InternVL3.5 Flash config
+    url: https://huggingface.co/OpenGVLab/InternVL3_5-8B-Flash/blob/main/config.json
+    type: hf-config
+features:
+  vision: dynamic image tiling with InternViT
+  connector: pixel shuffle and MLP projector
+  flash: Visual Resolution Router
+  language: dense and MoE backbones
+diagram:
+  subtitle: "InternViT → pixel shuffle / MLP → language model"
+  nodes:
+    - id: image
+      type: leaf
+      label: Images / video frames → dynamic tiles
+      color: input
+    - id: vision
+      type: leaf
+      label: InternViT vision encoder
+      color: attn
+    - id: router
+      type: leaf
+      label: Pixel shuffle + Visual Resolution Router
+      sub: adaptive compression in Flash variants
+      color: teal
+    - id: connector
+      type: leaf
+      label: MLP projector + text embeddings
+      color: emb
+    - id: decoder
+      type: group
+      label: Language Decoder
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: attn
+          type: leaf
+          label: Normalization + causal self-attention
+          color: attn
+        - id: ffn
+          type: leaf
+          label: Dense / MoE FFN
+          color: ffn
+    - id: head
+      type: leaf
+      label: Final norm + LM head
+      color: out

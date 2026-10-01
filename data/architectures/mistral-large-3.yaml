@@ -1,0 +1,70 @@
+id: mistral-large-3
+family: Mistral Large 3
+era: "2025"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Mistral Large 3 结合视觉编码器、MLA 和细粒度 MoE。61 层语言主干的前 3 层使用密集 FFN，其余层激活 4 个路由专家和 1 个共享专家。"
+  en: "Mistral Large 3 combines a vision encoder, MLA and granular MoE. Its 61-layer language backbone starts with 3 dense FFNs; remaining layers activate 4 routed experts and 1 shared expert."
+hfOrg: mistralai/Mistral-Large-3-675B-Instruct-2512
+aliases: [mistral_large_3, MistralLarge3ForCausalLM]
+defaultParams:
+  numLayers: 61
+  numExperts: 128
+  numExpertsPerToken: 4
+sourceLinks:
+  - label: Mistral Large 3 parameters
+    url: https://huggingface.co/mistralai/Mistral-Large-3-675B-Instruct-2512/blob/main/params.json
+    type: hf-config
+  - label: Official model card
+    url: https://huggingface.co/mistralai/Mistral-Large-3-675B-Instruct-2512
+    type: reference
+features:
+  attention: Multi-head Latent Attention
+  ffn: 3 dense layers, 58 MoE layers
+  routing: top-4 of 128 with 1 shared expert
+  vision: 48-layer vision Transformer
+diagram:
+  subtitle: "MLA · granular MoE · vision encoder"
+  nodes:
+    - id: input
+      type: leaf
+      label: Text embeddings + vision encoder / adapter
+      color: input
+    - id: block
+      type: group
+      label: Language Decoder Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: attn
+          type: leaf
+          label: MLA + RoPE
+          sub: low-rank Q / KV projections
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: norm2
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: ffn
+          type: leaf
+          label: Dense FFN (first 3) / MoE FFN
+          sub: "top-{{numExpertsPerToken}} of {{numExperts}} + shared expert"
+          color: moe
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: RMSNorm + LM head
+      color: out

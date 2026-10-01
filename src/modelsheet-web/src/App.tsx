@@ -4,6 +4,7 @@ import { HomePage } from "@/pages/HomePage"
 import { SiteFooter } from "@/components/site-footer"
 
 const ComparePage = lazy(() => import("@/pages/ComparePage").then(m => ({ default: m.ComparePage })))
+const DecisionModelsPage = lazy(() => import("@/pages/DecisionModelsPage").then(m => ({ default: m.DecisionModelsPage })))
 const ModelCardPage = lazy(() => import("@/pages/ModelCardPage").then(m => ({ default: m.ModelCardPage })))
 const ArchPage = lazy(() => import("@/pages/ArchPage").then(m => ({ default: m.ArchPage })))
 const ArchDetailPage = lazy(() => import("@/pages/ArchDetailPage").then(m => ({ default: m.ArchDetailPage })))
@@ -18,6 +19,7 @@ function App() {
           <Suspense fallback={<div className="flex flex-1 items-center justify-center text-muted-foreground" role="status">Loading…</div>}>
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/decisions" element={<DecisionModelsPage />} />
             <Route path="/compare" element={<ComparePage />} />
             <Route path="/arch" element={<ArchPage />} />
             <Route path="/arch/:archId" element={<ArchDetailPage />} />

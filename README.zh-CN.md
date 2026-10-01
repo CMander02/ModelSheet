@@ -14,7 +14,7 @@ ModelSheet 是一个可浏览的语言模型目录，展示参数量、架构、
 
 ModelSheet 会解析模型配置文件，把不同来源的模型信息整理成统一的 JSON 目录。前端是 React 静态站点，支持搜索、筛选和横向对比模型。
 
-- 已收录 **2000+** 个模型，并可通过外部定时扫描持续更新
+- 已收录 **2000+** 个模型，可通过 CLI 管理定时监控并审查新模型候选
 - 覆盖 Qwen、Llama、Mistral、DeepSeek、Gemma 等主流开源权重模型
 - 以精简条目收录 GPT、Claude、Gemini 等闭源前沿模型，便于横向参考
 - 数据在本地生成并提交到仓库，不在运行时调用 LLM，避免幻觉数据
@@ -36,6 +36,21 @@ uv pip install -e .
 # 或使用 pip
 pip install -e .
 ```
+
+### 管理监控
+
+```bash
+uv run modelsheet monitor init
+uv run modelsheet monitor start
+uv run modelsheet monitor status
+uv run modelsheet monitor list
+uv run modelsheet monitor tasks
+```
+
+ModelSheet 自己管理 HF/ModelScope 来源、扫描记录和待审查任务。
+用 `monitor start/stop/schedule` 管理后台定时任务，`monitor run` 立即扫描。
+初始化后，原有 `watchlist` 命令也使用同一份配置。
+配置迁移、来源管理和运行说明见[监控文档](docs/monitoring.md)。
 
 ### 添加模型
 

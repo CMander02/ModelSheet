@@ -1,0 +1,65 @@
+id: qwen3-5-dense
+family: Qwen3.5 / Qwen3.6 Dense
+era: "2026"
+type: decoder
+normPlacement: pre
+description:
+  zh: "Qwen3.5/3.6 密集多模态主干以 3:1 比例交替使用 Gated DeltaNet 和 Gated Attention，每层配备密集 SwiGLU FFN。"
+  en: "Qwen3.5/3.6 dense multimodal backbones alternate Gated DeltaNet and Gated Attention in a 3:1 ratio, with dense SwiGLU FFNs."
+hfOrg: Qwen/Qwen3.6-27B
+aliases: [qwen3_5, qwen3_5_text]
+defaultParams:
+  numLayers: 64
+  hiddenSize: 5120
+sourceLinks:
+  - label: Qwen3.6-27B config
+    url: https://huggingface.co/Qwen/Qwen3.6-27B/blob/main/config.json
+    type: hf-config
+features:
+  attention: gated GQA
+  tokenMixer: Gated DeltaNet
+  ffn: dense SwiGLU
+  layerMix: 3 linear-attention layers, 1 full-attention layer
+diagram:
+  subtitle: "Gated DeltaNet + Gated Attention · dense FFN"
+  nodes:
+    - id: input
+      type: leaf
+      label: Text embeddings + encoded visual tokens
+      color: input
+    - id: block
+      type: group
+      label: Hybrid Decoder Block
+      badge: "x{{numLayers}}"
+      color: steel
+      defaultExpanded: true
+      children:
+        - id: norm1
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: mixer
+          type: leaf
+          label: Gated DeltaNet / Gated Attention
+          sub: "3:1 layer schedule"
+          color: attn
+        - id: r1
+          type: leaf
+          label: "+ residual"
+          color: resid
+        - id: norm2
+          type: leaf
+          label: RMSNorm
+          color: norm
+        - id: ffn
+          type: leaf
+          label: Dense SwiGLU FFN
+          color: ffn
+        - id: r2
+          type: leaf
+          label: "+ residual"
+          color: resid
+    - id: head
+      type: leaf
+      label: RMSNorm + LM head
+      color: out

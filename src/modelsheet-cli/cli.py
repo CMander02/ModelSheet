@@ -88,6 +88,8 @@ app = typer.Typer(
 
     \\b
     [bold]Subcommand groups:[/bold]
+        monitor init / start / stop / status       # manage background monitoring
+        monitor list / add / remove / tasks        # monitoring sources and review queue
         model add / list / show / remove          # manage model database
         scan                                       # scan for new models
         scan --watchlist / watchlist               # manage monitoring list
@@ -114,6 +116,9 @@ except Exception:
     pass
 
 console = Console(theme=custom_theme)
+
+from .monitor_cli import app as monitor_app
+app.add_typer(monitor_app, name="monitor")
 
 
 # ═════════════════════════════════════════════════════════════════════════════
@@ -357,7 +362,8 @@ def add(
         if new_model.id in existing_ids:
             for i, m in enumerate(merged_models):
                 if m['id'] == new_model.id:
-                    merged_models[i] = new_data
+                    from .exporter import merge_model
+                    merged_models[i] = merge_model(m, new_data)
                     updated_count += 1
                     break
         else:
@@ -958,7 +964,8 @@ def model_add(
             else:
                 for i, em in enumerate(existing_models):
                     if em['id'] == pm.id:
-                        merged[i] = data
+                        from .exporter import merge_model
+                        merged[i] = merge_model(em, data)
                         updated += 1
                         break
 
@@ -2110,6 +2117,11 @@ def watchlist_cmd(
         # Search with details
         modelsheet watchlist search --verbose
     """
+    from .monitor_store import config_file
+    if config_file().exists():
+        from .monitor_cli import guarded, legacy_watchlist
+        return guarded(legacy_watchlist)(action, orgs or [], huggingface, modelscope)
+
     from .scanner import (
         watchlist_add_orgs, watchlist_remove_orgs, watchlist_get_orgs,
         load_watchlist, save_watchlist, fetch_hf_org_models,

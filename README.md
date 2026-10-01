@@ -37,6 +37,21 @@ uv pip install -e .
 pip install -e .
 ```
 
+### Manage monitoring
+
+```bash
+uv run modelsheet monitor init
+uv run modelsheet monitor start
+uv run modelsheet monitor status
+uv run modelsheet monitor list
+uv run modelsheet monitor tasks
+```
+
+ModelSheet manages HF/ModelScope source groups, persistent scans and review tasks.
+The background timer is managed through `monitor start/stop/schedule`; `monitor run`
+scans immediately. See [native monitoring](docs/monitoring.md) for configuration,
+migration, source management and existing `watchlist` compatibility.
+
 ### Add models
 
 ```bash

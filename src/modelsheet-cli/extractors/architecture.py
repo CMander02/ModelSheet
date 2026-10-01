@@ -43,6 +43,7 @@ def extract_num_layers(ctx: ConfigContext) -> Optional[int]:
         "num_hidden_layers",
         "n_layer",
         "num_layers",
+        "num_transformer_layers",
     )
     if value is not None:
         return value
@@ -91,6 +92,7 @@ def extract_hidden_size(ctx: ConfigContext) -> Optional[int]:
         "hidden_size",
         "n_embd",
         "d_model",
+        "model_dim",
     )
 
 
@@ -116,6 +118,7 @@ def extract_intermediate_size(ctx: ConfigContext) -> Optional[int]:
         ctx.config,
         "intermediate_size",
         "n_inner",
+        "ffn_dim",
     )
 
     # Handle list of per-layer intermediate sizes (e.g., Gemma 3n)
@@ -143,6 +146,7 @@ def extract_context_length(ctx: ConfigContext) -> Optional[int]:
         "n_positions",
         "max_sequence_length",
         "model_max_length",
+        "max_context_length",
     )
 
 
@@ -159,6 +163,7 @@ def extract_activation(ctx: ConfigContext) -> Optional[str]:
         "activation_function",
         "mlp_hidden_act",
         "mamba_hidden_act",
+        "activation_fn_name",
     )
 
 
@@ -172,8 +177,10 @@ def extract_norm_type(ctx: ConfigContext) -> Optional[str]:
     """
     model_type = ctx.config.get("model_type", "").lower()
     # Nemotron-H keeps a legacy LayerNorm epsilon key, but its backbone uses RMSNorm.
-    if model_type == "nemotron_h" or "rms_norm_eps" in ctx.config:
+    if model_type in {"nemotron_h", "molmo2", "molmo2_text"} or "rms_norm_eps" in ctx.config:
         return "RMSNorm"
+    if model_type == "opt":
+        return "LayerNorm"
     if "layer_norm_eps" in ctx.config or "layer_norm_epsilon" in ctx.config:
         return "LayerNorm"
     # Infer from model type
@@ -206,6 +213,8 @@ def extract_position_encoding(ctx: ConfigContext) -> Optional[str]:
         - Contains alibi/use_alibi -> ALiBi
         - Contains rotary_pct -> RoPE (partial)
     """
+    if ctx.config.get("model_type") == "opt":
+        return "Learned absolute"
     if (
         ctx.config.get("rope_scaling")
         or ctx.config.get("rope_theta")

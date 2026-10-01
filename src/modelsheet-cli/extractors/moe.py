@@ -76,6 +76,9 @@ def extract_moe_intermediate_size(ctx: ConfigContext) -> Optional[int]:
     Source: config.json moe_intermediate_size
     Note: May differ from regular intermediate_size for MoE experts
     """
+    nested = ctx.config.get("llm_config", ctx.config.get("text_config", {}))
+    if ctx.config.get("model_type") in {"olmoe", "gpt_oss"} or nested.get("model_type") == "gpt_oss":
+        return get_first_of(ctx.config, "moe_intermediate_size", "intermediate_size")
     return ctx.config.get("moe_intermediate_size")
 
 

@@ -16,7 +16,7 @@ for (const file of readdirSync(migrations).filter(file => file.endsWith(".sql"))
   sqlite.exec(readFileSync(new URL(file, migrations), "utf8"))
 }
 sqlite.exec(readFileSync(new URL("../../../data/d1/seed.sql", import.meta.url), "utf8"))
-const corpus = sqlite.prepare(`SELECT m.raw_json, m.name, m.provider, m.id, p.name_en, p.name_zh, p.orgs_json
+const corpus = sqlite.prepare(`SELECT m.raw_json, m.name, m.provider, m.id, m.base_model, p.name_en, p.name_zh, p.orgs_json
   FROM models m LEFT JOIN providers p ON p.id = m.provider_id`).all()
 
 function database() {
@@ -65,7 +65,7 @@ function sortReference(items, key, dir) {
 
 test("search preserves literal, bilingual and provider alias matching", async () => {
   for (const q of ["", "Qwen", "通义千问", "meta-llama", "DeepSeek", "_", "%", "no-such-model-xyz"]) {
-    const expected = corpus.filter(row => [row.name, row.provider, row.id, row.name_en, row.name_zh, row.orgs_json]
+    const expected = corpus.filter(row => [row.name, row.provider, row.id, row.base_model, row.name_en, row.name_zh, row.orgs_json]
       .some(value => String(value ?? "").toLowerCase().includes(q.toLowerCase())))
       .map(row => JSON.parse(row.raw_json))
     const { body, calls } = await invoke(search, `/api/search?${new URLSearchParams({ q })}`)
@@ -74,6 +74,20 @@ test("search preserves literal, bilingual and provider alias matching", async ()
     assert.equal(calls.batch, 1)
     assert.deepEqual(calls.sessions, ["first-unconstrained"])
   }
+})
+
+test("decision category, backbone search and combined filters agree with catalog data", async () => {
+  const all=corpus.map(row => JSON.parse(row.raw_json))
+  const decisions=all.filter(m => m.modelCategory === "decision")
+  const {body}=await invoke(search,"/api/search?category=decision&limit=100")
+  assert.equal(body.total,decisions.length)
+  assert.ok(body.items.every(m => m.modelCategory === "decision"))
+  const filtered=await invoke(search,"/api/search?category=decision&q=Qwen&decisionType=choice&openness=open-weight")
+  assert.equal(filtered.body.total,decisions.filter(m => m.baseModel?.includes("Qwen") && m.decisionTypes.includes("choice") && m.openness==="open-weight").length)
+  const language=await invoke(search,"/api/search?category=language")
+  assert.equal(language.body.total,all.length-decisions.length)
+  assert.notEqual(cacheKey(request("/api/search?category=decision")).url,cacheKey(request("/api/search?category=language")).url)
+  assert.notEqual(cacheKey(request("/api/search?category=decision&decisionType=choice")).url,cacheKey(request("/api/search?category=decision&decisionType=score")).url)
 })
 
 test("sorting and page boundaries agree with catalog facts, including missing values", async () => {

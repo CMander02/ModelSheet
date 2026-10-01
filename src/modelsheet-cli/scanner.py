@@ -92,13 +92,13 @@ def fetch_ms_org_models(
     """Fetch all models for an org from ModelScope API (PUT-based).
 
     ModelScope API changed from GET to PUT. Uses:
-      PUT {MS_API_URL}/api/v1/models/
+      PUT {MS_API_URL}/api/v1/models
       Body: {"Path": org, "PageNumber": n, "PageSize": limit}
 
     Returns list of dicts compatible with HF format.
     """
     models = []
-    url = f"{MS_API_URL}/api/v1/models/"
+    url = f"{MS_API_URL}/api/v1/models"
     headers = {
         "Content-Type": "application/json",
         "Accept": "application/json",

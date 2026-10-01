@@ -77,7 +77,8 @@ def hf_models(client, org, size, max_pages):
 def ms_models(client, org, size, max_pages):
     models = {}
     for page in range(1, max_pages + 1):
-        response = request(client, 'PUT', BASE['ms'] + '/api/v1/models/',
+        # Use the canonical path so paginated PUT bodies are sent directly.
+        response = request(client, 'PUT', BASE['ms'] + '/api/v1/models',
                            json={'Path': org, 'PageNumber': page, 'PageSize': size})
         data = response.json()
         if data.get('Success') is not True or data.get('Code') != 200:

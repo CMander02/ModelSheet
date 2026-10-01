@@ -86,6 +86,7 @@ class PaginationTests(unittest.TestCase):
     def test_ms_short_page_does_not_end_before_total(self):
         pages = []
         def handler(request):
+            self.assertEqual(request.url.path, '/api/v1/models')
             page = json.loads(request.content)['PageNumber']
             pages.append(page)
             return httpx.Response(200, json={'Success': True, 'Code': 200,

@@ -8,7 +8,7 @@ from modelsheet_cli.exporter import merge_model
 
 class DecisionCatalogTests(unittest.TestCase):
     def test_reviewed_encoder_families_pass_filters_without_opening_generic_classifiers(self):
-        for mid in ['convaiinnovations/laya', 'fastino/GLiNER2.5-multi-Decide', 'internlm/Intern-Decision-4B']:
+        for mid in ['convaiinnovations/laya', 'fastino/GLiNER2.5-multi-Decide', 'internlm/Intern-Decision-4B', 'Shanghai_AI_Laboratory/Intern-Decision-4B']:
             self.assertEqual(model_category(mid), 'decision')
             self.assertIsNone(skip_reason(mid, pipeline_tag='text-classification', model_type='bert'))
         self.assertIsNotNone(skip_reason('other/classifier', pipeline_tag='text-classification'))

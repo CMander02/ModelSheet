@@ -2,6 +2,7 @@
 
 DECISION_FAMILIES = {
     "internlm": ("intern-decision-",),
+    "shanghai_ai_laboratory": ("intern-decision-",),
     "convaiinnovations": ("laya", "laya-multilingual", "laya-typed-decisions"),
     "fastino": ("gliner2.5-decide", "gliner2.5-multi-decide"),
     "contrastive-lm": ("clm-v0.1-",),

@@ -100,6 +100,20 @@ class PaginationTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'API failure'):
                 m.ms_models(client, 'Qwen', 100, 10)
 
+    def test_ms_restarts_incomplete_listing_without_mixing_attempts(self):
+        pages=[]
+        def handler(request):
+            self.assertEqual(request.headers['Cache-Control'], 'no-cache')
+            page=json.loads(request.content)['PageNumber']
+            pages.append(page)
+            name='stale' if len(pages)<=2 else f'fresh-{page}'
+            return httpx.Response(200,json={'Success':True,'Code':200,
+                'Data':{'Models':[{'Path':'Qwen','Name':name}],'TotalCount':2}})
+        with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+            result=m.ms_models(client,'Qwen',100,10)
+        self.assertEqual(pages,[1,2,1,2])
+        self.assertEqual({model['id'] for model in result},{'Qwen/fresh-1','Qwen/fresh-2'})
+
     def test_ms_incomplete_repeated_page_is_error(self):
         response = {'Success': True, 'Code': 200, 'Data': {'Models': [{'Path': 'Qwen', 'Name': 'A'}], 'TotalCount': 2}}
         with httpx.Client(transport=httpx.MockTransport(lambda _: httpx.Response(200, json=response))) as client:

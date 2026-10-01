@@ -97,6 +97,10 @@ baseline. A repository must be absent from two complete successful scans before 
 is marked unlisted. Successful sources continue to update when another source fails;
 the overall scan exits with status 2 and records a partial report.
 
+ModelScope requests use the canonical endpoint and revalidate page responses.
+An incomplete listing is retried once from page one with a fresh collection;
+partial attempts are never combined into a complete baseline.
+
 The first scan of an added source builds a baseline. Later scans distinguish newly
 discovered models, new sources, repository updates and listing changes. An added
 source does not cause old repositories to be announced as new releases. Repository

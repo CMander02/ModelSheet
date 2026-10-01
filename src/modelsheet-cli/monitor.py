@@ -75,11 +75,23 @@ def hf_models(client, org, size, max_pages):
 
 
 def ms_models(client, org, size, max_pages):
+    # Listings can change between pages. Retry once from a fresh first page;
+    # an incomplete second attempt still leaves the previous baseline intact.
+    for attempt in range(2):
+        try:
+            return _ms_models(client, org, size, max_pages)
+        except ValueError:
+            if attempt:
+                raise
+
+
+def _ms_models(client, org, size, max_pages):
     models = {}
     for page in range(1, max_pages + 1):
         # Use the canonical path so paginated PUT bodies are sent directly.
         response = request(client, 'PUT', BASE['ms'] + '/api/v1/models',
-                           json={'Path': org, 'PageNumber': page, 'PageSize': size})
+                           json={'Path': org, 'PageNumber': page, 'PageSize': size},
+                           headers={'Cache-Control': 'no-cache'})
         data = response.json()
         if data.get('Success') is not True or data.get('Code') != 200:
             raise ValueError(f"ModelScope API failure: {data.get('Code')} {data.get('Message')}")

@@ -1,0 +1,39 @@
+id: k2_horizon
+family: K2 Horizon / Jais 3
+era: '2026'
+type: decoder
+description:
+  zh: Jais 3 使用 K2 Horizon 主干，包含 dense、稀疏 MoE 和 MoVA 变体。下图仅显示家族概览。
+  en: Jais 3 uses K2 Horizon backbones with dense, sparse MoE and MoVA variants. Diagram
+    shows the family overview only.
+hfOrg: inception42/Jais-3-MoVA-36B-A4B
+aliases:
+- k2_horizon
+sourceLinks:
+- label: Official model card
+  url: https://huggingface.co/inception42/Jais-3-MoVA-36B-A4B
+  type: reference
+diagram:
+  subtitle: K2 Horizon / Jais 3 · architecture overview
+  nodes:
+  - id: step0
+    type: leaf
+    label: Text embeddings
+    sub: Arabic-centric Jais 3 training
+    color: input
+  - id: step1
+    type: leaf
+    label: Transformer attention
+    sub: GQA; MoVA variant additionally routes value experts
+    color: emb
+  - id: step2
+    type: leaf
+    label: Feed-forward blocks
+    sub: Dense or sparse MoE depending on variant
+    color: steel
+  - id: step3
+    type: leaf
+    label: Text output
+    sub: Autoregressive generation
+    color: out
+normPlacement: pre

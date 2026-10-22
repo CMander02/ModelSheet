@@ -42,7 +42,8 @@
     },
     "Meta": {
       "orgs": [
-        "facebook"
+        "facebook",
+        "meta-models"
       ],
       "i18n": {
         "en": "Meta",
@@ -1301,6 +1302,36 @@
           "convaiinnovations"
         ]
       }
+    },
+    "Reflection": {
+      "orgs": [
+        "reflection"
+      ],
+      "i18n": {
+        "en": "Reflection",
+        "zh": "Reflection"
+      },
+      "region": "global"
+    },
+    "Yifan Yu": {
+      "orgs": [
+        "yifanyu"
+      ],
+      "i18n": {
+        "en": "Yifan Yu",
+        "zh": "Yifan Yu"
+      },
+      "region": "global"
+    },
+    "Inception42": {
+      "orgs": [
+        "inception42"
+      ],
+      "i18n": {
+        "en": "Inception42",
+        "zh": "Inception42"
+      },
+      "region": "global"
     }
   },
   "Tilde Research": {

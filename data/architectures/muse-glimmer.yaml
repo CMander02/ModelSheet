@@ -1,0 +1,39 @@
+id: muse_glimmer
+family: Muse Glimmer
+era: '2026'
+type: decoder
+description:
+  zh: Meta 的多模态模型，结合视觉感知编码器与语言主干，针对本地代理任务设计。
+  en: Meta multimodal model combining a perception encoder and language backbone for
+    local agentic tasks.
+hfOrg: meta-models/Muse-Glimmer-30B
+aliases:
+- muse_glimmer
+sourceLinks:
+- label: Official model card
+  url: https://huggingface.co/meta-models/Muse-Glimmer-30B
+  type: reference
+diagram:
+  subtitle: Muse Glimmer · architecture overview
+  nodes:
+  - id: step0
+    type: leaf
+    label: Text and images
+    sub: Multimodal input
+    color: input
+  - id: step1
+    type: leaf
+    label: Text embeddings + perception encoder
+    sub: Vision features condition the language model
+    color: emb
+  - id: step2
+    type: leaf
+    label: Language backbone
+    sub: Causal language model
+    color: steel
+  - id: step3
+    type: leaf
+    label: Text output
+    sub: Reasoning and tool use
+    color: out
+normPlacement: pre

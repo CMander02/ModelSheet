@@ -1,0 +1,39 @@
+id: kolibri1
+family: Kolibri
+era: '2026'
+type: decoder
+description:
+  zh: 50 层稀疏 MoE 解码器，使用局部及全局注意力，每层 384 个路由专家和一个共享专家。
+  en: 50-layer sparse MoE decoder with local and global attention, 384 routed experts
+    and one shared expert per layer.
+hfOrg: Aleph-Alpha/Kolibri-1
+aliases:
+- kolibri1
+sourceLinks:
+- label: Official model card
+  url: https://huggingface.co/Aleph-Alpha/Kolibri-1
+  type: reference
+diagram:
+  subtitle: Kolibri · architecture overview
+  nodes:
+  - id: step0
+    type: leaf
+    label: Text embeddings
+    sub: 128,000-token vocabulary
+    color: input
+  - id: step1
+    type: leaf
+    label: 50 transformer layers
+    sub: GQA; four sliding layers then one full-attention layer
+    color: emb
+  - id: step2
+    type: leaf
+    label: Sparse MoE FFN
+    sub: 6 routed experts + 1 shared expert per token
+    color: steel
+  - id: step3
+    type: leaf
+    label: Text output
+    sub: Autoregressive generation
+    color: out
+normPlacement: pre

@@ -1,0 +1,39 @@
+id: beam
+family: Beam
+era: '2026'
+type: decoder
+description:
+  zh: Reflection 的稀疏 MoE 模型，混合滑动窗口与全局注意力；前 3 层为 dense FFN。
+  en: Sparse MoE with sliding and full attention; the first three layers use dense
+    FFNs.
+hfOrg: reflection/Beam-1.0-501B-A23B
+aliases:
+- beam
+sourceLinks:
+- label: Official model card
+  url: https://huggingface.co/reflection/Beam-1.0-501B-A23B
+  type: reference
+diagram:
+  subtitle: Beam · architecture overview
+  nodes:
+  - id: step0
+    type: leaf
+    label: Text embeddings
+    sub: 151,936-token vocabulary
+    color: input
+  - id: step1
+    type: leaf
+    label: 52 transformer layers
+    sub: Sliding and full attention; GQA
+    color: emb
+  - id: step2
+    type: leaf
+    label: Dense / sparse FFN
+    sub: First 3 dense; 256 routed experts, top 8 in sparse layers
+    color: steel
+  - id: step3
+    type: leaf
+    label: Text output
+    sub: Autoregressive generation
+    color: out
+normPlacement: pre

@@ -1,0 +1,39 @@
+id: qwendlm
+family: QwenDLM / ORL
+era: '2026'
+type: decoder
+description:
+  zh: 由 Qwen3-4B 转换的 256-token 块扩散模型；ORL 是其后训练方法。
+  en: 256-token block diffusion converted from Qwen3-4B. ORL is a post-training method,
+    not a larger backbone.
+hfOrg: yifanyu/QwenDLM-4B-ORL
+aliases:
+- qwendlm
+sourceLinks:
+- label: Official model card
+  url: https://huggingface.co/yifanyu/QwenDLM-4B-ORL
+  type: reference
+diagram:
+  subtitle: QwenDLM / ORL · architecture overview
+  nodes:
+  - id: step0
+    type: leaf
+    label: Prompt + noisy block
+    sub: 256-token diffusion block
+    color: input
+  - id: step1
+    type: leaf
+    label: SDAR / Qwen3-derived transformer
+    sub: Bidirectional attention inside the noisy block
+    color: emb
+  - id: step2
+    type: leaf
+    label: Iterative block refinement
+    sub: ORL checkpoint uses on-policy residual learning
+    color: steel
+  - id: step3
+    type: leaf
+    label: Text output
+    sub: Parallel token generation
+    color: out
+normPlacement: pre

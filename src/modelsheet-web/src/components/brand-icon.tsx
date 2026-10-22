@@ -1,3 +1,4 @@
+import AlephAlphaIcon from "@lobehub/icons/es/AlephAlpha/components/Avatar"
 import { ModelIcon, ProviderIcon } from "./catalog-icons"
 import { createBrandAvatar } from "./brand-avatar"
 import { createElement } from "react"
@@ -84,6 +85,8 @@ const ICON_SIZE = 18
 type AvatarIconComponent = React.ComponentType<any>
 
 const LOBEHUB_AVATAR_MAP: Record<string, AvatarIconComponent> = {
+  "Aleph Alpha": AlephAlphaIcon,
+  "Aleph-Alpha": AlephAlphaIcon,
   "Apple": AppleIcon,
   "apple": AppleIcon,
   "苹果": AppleIcon,
@@ -202,6 +205,12 @@ const MODEL_AVATAR_MAP: Record<string, AvatarIconComponent> = {
 // Only for providers NOT in lobehub at all.
 
 const CUSTOM_LOGO_MAP: Record<string, string> = {
+  "Reflection": "/icons/providers/reflection.svg",
+  "reflection": "/icons/providers/reflection.svg",
+  "Yifan Yu": "/icons/providers/yifan-yu.jpg",
+  "yifanyu": "/icons/providers/yifan-yu.jpg",
+  "Inception42": "/icons/providers/inception42.webp",
+  "inception42": "/icons/providers/inception42.webp",
   // NEX — Shanghai Innovation Institute and partner teams
   "nex-agi": "/icons/providers/nex-agi-mark.svg",
   "Nex AGI": "/icons/providers/nex-agi-mark.svg",

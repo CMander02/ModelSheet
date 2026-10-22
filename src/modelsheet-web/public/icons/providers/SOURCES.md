@@ -16,3 +16,8 @@ Brand marks and portraits identify the respective publishers; ownership remains 
 - `contrastive-lm.webp`: official publisher avatar linked from [HF Contrastive-LM](https://huggingface.co/Contrastive-LM); [original image](https://cdn-avatars.huggingface.co/v1/production/uploads/6aaf3334104a7bc12d7953dd/AxxfVhwu2-tDyV_0BfNnp.png).
 - `xingchen.webp`: official publisher avatar linked from [HF XingChen-AGI](https://huggingface.co/XingChen-AGI); [original image](https://cdn-avatars.huggingface.co/v1/production/uploads/64368160eef1f55654ab21dc/HGow19-5fgUcp_IEMZoXG.png).
 
+
+- Aleph Alpha: existing MIT-licensed `@lobehub/icons` AlephAlpha SVG component.
+- `reflection.svg`: original favicon from [Reflection](https://reflection.ai/icon.svg); brand ownership remains with Reflection.
+- `yifan-yu.jpg`: [Yifan Yu’s official personal-site portrait](https://yifan1130.github.io/assets/img/prof_pic.jpg), linked from his HF profile. Personal site and ORL repository offer no publisher SVG; portrait used as fallback.
+- `inception42.webp`: [official Inception42 HF profile artwork](https://cdn-avatars.huggingface.co/v1/production/uploads/626237d9bbcbd1c34f1bb231/_mFJsrNRuAw6SciTfr9Aw.jpeg). Official website blocks automated access; no traceable SVG found in the installed icon collection or public search. This is distinct from Inception Labs. Brand ownership remains with Inception42.

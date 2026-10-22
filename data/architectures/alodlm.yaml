@@ -1,0 +1,39 @@
+id: alodlm
+family: ALoDLM
+era: '2026'
+type: decoder
+description:
+  zh: 自适应循环扩散语言模型；由 Qwen3 初始化，共享 Transformer 层并迭代优化未确定 token。
+  en: Adaptively looped diffusion language models initialized from Qwen3; shared transformer
+    layers refine unresolved token states.
+hfOrg: amazon/ALoDLM-8B
+aliases:
+- alodlm
+sourceLinks:
+- label: Official model card
+  url: https://huggingface.co/amazon/ALoDLM-8B
+  type: reference
+diagram:
+  subtitle: ALoDLM · architecture overview
+  nodes:
+  - id: step0
+    type: leaf
+    label: Prompt + unresolved tokens
+    sub: Token embeddings
+    color: input
+  - id: step1
+    type: leaf
+    label: Shared Qwen3-derived transformer
+    sub: Repeated latent refinement; adaptive recurrence
+    color: emb
+  - id: step2
+    type: leaf
+    label: Confidence + halting policy
+    sub: Commit tokens and repeat until resolved
+    color: steel
+  - id: step3
+    type: leaf
+    label: Text output
+    sub: Non-autoregressive diffusion decoding
+    color: out
+normPlacement: pre

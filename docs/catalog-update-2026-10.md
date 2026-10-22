@@ -25,3 +25,15 @@ Parameter estimates sourced from `anpaure/frontier-model-sizes` have been remove
 The generic parser's active-parameter estimates did not match the model cards for Kolibri, Beam, Jais MoE and Hy-Memory. Those values are curated from the official cards, with `curatedFields` preserving them on refresh. No broad parser update is bundled here. ALoDLM and QwenDLM receive separate architecture identities so diffusion decoding is not presented as ordinary autoregressive Qwen3.
 
 Publisher icons reuse existing SVG components where available. Reflection uses its official SVG. Yifan Yu and Inception42 use traceable raster artwork pending suitable SVGs; see the artwork source list.
+
+## Shanghai AI Lab follow-up
+
+Reviewed on 2026-10-22, adding two open-weight checkpoints and one hosted release:
+
+- [Sage-A1.5](https://huggingface.co/InternScience/Sage-A1.5): scientific agentic model based on Qwen3.6-35B-A3B and Agents-A1. The official tensor count is 35,951,822,704, including vision and MTP weights. Its text inference path activates 3,454,988,928 parameters. HF repository creation timestamp: 2026-10-15T08:34:39Z.
+- [MLExpert](https://huggingface.co/InternScience/MLExpert): autonomous machine learning engineering model based on Qwen3.6-35B-A3B. The released tensor count is 34,660,610,688, with 3,454,988,928 active parameters. Its weight index contains no vision or MTP tensors despite those fields remaining in the config; the official serving examples use `--language-model-only`. Input is curated as text only. HF repository creation timestamp: 2026-10-01T03:51:49Z.
+- [Atria Dawn](https://github.com/atria-asi/Atria-Dawn): the full release is available through the official API. Its model table advertises 512K context, while both weight download columns still say “Coming soon”. It is cataloged as closed until weights become available, separately from the existing open-weight Preview. The README names a 744B GLM-5.2 foundation; that is not treated as a verified full-checkpoint count, so parameter fields remain unset. Its release timestamp comes from the [first official full-release update](https://github.com/atria-asi/Atria-Dawn/commit/ce5c439f37841b1875b58d85bcb830903116517c), 2026-10-14T09:32:05Z. The 512K model-table update followed on October 19; older client examples still use 256K.
+
+For both Qwen-based checkpoints, active parameters include embeddings, the LM head, attention, routers and shared experts, plus eight routed experts per layer; they exclude vision and MTP. Independently checked against MLExpert's tensor total: `34,660,610,688 - 40 × (256 - 8) × 3 × 2048 × 512 = 3,454,988,928`.
+
+Their verified ModelScope mirrors use [InternScience/Sage-A1.5](https://modelscope.cn/models/InternScience/Sage-A1.5) and [InternScience/MLExpert](https://modelscope.cn/models/InternScience/MLExpert), rather than the CLI's default Shanghai_AI_Laboratory namespace. These URLs and MLExpert's text-only modality are protected by `curatedFields`. The existing Shanghai AI Lab / InternLM SVG mapping is reused.
